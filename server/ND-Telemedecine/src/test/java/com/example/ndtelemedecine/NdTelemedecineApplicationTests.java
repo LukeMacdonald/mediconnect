@@ -1,13 +1,13 @@
-package com.ndtelemed.NDtelemedicine;
+package com.example.ndtelemedecine;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class NdTelemedicineApplicationTests {
+class NdTelemedecineApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+    @Test
+    void contextLoads() {
+    }
 
 }
