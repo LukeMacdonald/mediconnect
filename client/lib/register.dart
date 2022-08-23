@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:client/blank.dart';
 import 'package:http/http.dart' as http;
 import 'user.dart';
+import 'log_in.dart';
 
 class Registration extends StatefulWidget {
   const Registration({Key? key}) : super(key: key);
@@ -12,7 +13,6 @@ class Registration extends StatefulWidget {
 }
 
 class _Registration extends State<Registration> {
-
   User user = User("", "");
   String passwordConfirm = "";
 
@@ -21,11 +21,11 @@ class _Registration extends State<Registration> {
   bool isCheckedD = false;
 
   // Patient Registration Widgets
-  Widget patientEmail(){
+  Widget patientEmail() {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children:<Widget>[
-          const SizedBox(height:10),
+        children: <Widget>[
+          const SizedBox(height: 10),
           Container(
             constraints: const BoxConstraints(minWidth: 100, maxWidth: 500),
             alignment: Alignment.centerLeft,
@@ -33,9 +33,11 @@ class _Registration extends State<Registration> {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
                 boxShadow: const [
-                  BoxShadow(color: Colors.black26, blurRadius: 6, offset:  Offset(0,2))
-                ]
-            ),
+                  BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 6,
+                      offset: Offset(0, 2))
+                ]),
             height: 60,
             child: TextFormField(
               controller: TextEditingController(text: user.email),
@@ -52,20 +54,19 @@ class _Registration extends State<Registration> {
               style: const TextStyle(color: Colors.black87),
               decoration: const InputDecoration(
                   border: InputBorder.none,
-                  contentPadding: EdgeInsets.only(top:15),
+                  contentPadding: EdgeInsets.only(top: 15),
                   prefixIcon: Icon(Icons.email),
                   hintText: 'Email',
-                  hintStyle: TextStyle(color: Colors.black38)
-              ),
+                  hintStyle: TextStyle(color: Colors.black38)),
             ),
           )
-        ]
-    );
+        ]);
   }
-  Widget patientPassword(){
+
+  Widget patientPassword() {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children:<Widget>[
+        children: <Widget>[
           Container(
             constraints: const BoxConstraints(minWidth: 100, maxWidth: 500),
             alignment: Alignment.centerLeft,
@@ -73,9 +74,11 @@ class _Registration extends State<Registration> {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
                 boxShadow: const [
-                  BoxShadow(color: Colors.black26, blurRadius: 6, offset:  Offset(0,2))
-                ]
-            ),
+                  BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 6,
+                      offset: Offset(0, 2))
+                ]),
             height: 60,
             child: TextFormField(
               obscureText: true,
@@ -86,20 +89,21 @@ class _Registration extends State<Registration> {
               style: const TextStyle(color: Colors.black87),
               decoration: const InputDecoration(
                   border: InputBorder.none,
-                  contentPadding: EdgeInsets.only(top:15),
-                  prefixIcon: Icon(Icons.lock,),
+                  contentPadding: EdgeInsets.only(top: 15),
+                  prefixIcon: Icon(
+                    Icons.lock,
+                  ),
                   hintText: 'Password',
-                  hintStyle: TextStyle(color: Colors.black38)
-              ),
+                  hintStyle: TextStyle(color: Colors.black38)),
             ),
           )
-        ]
-    );
+        ]);
   }
-  Widget patientPassword2(){
+
+  Widget patientPassword2() {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children:<Widget>[
+        children: <Widget>[
           Container(
             constraints: const BoxConstraints(minWidth: 100, maxWidth: 500),
             alignment: Alignment.centerLeft,
@@ -107,9 +111,11 @@ class _Registration extends State<Registration> {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
                 boxShadow: const [
-                  BoxShadow(color: Colors.black26, blurRadius: 6, offset:  Offset(0,2))
-                ]
-            ),
+                  BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 6,
+                      offset: Offset(0, 2))
+                ]),
             height: 60,
             child: TextFormField(
               obscureText: true,
@@ -120,65 +126,63 @@ class _Registration extends State<Registration> {
               style: const TextStyle(color: Colors.black87),
               decoration: const InputDecoration(
                   border: InputBorder.none,
-                  contentPadding: EdgeInsets.only(top:15),
-                  prefixIcon: Icon(Icons.lock,),
+                  contentPadding: EdgeInsets.only(top: 15),
+                  prefixIcon: Icon(
+                    Icons.lock,
+                  ),
                   hintText: 'Confirm Password',
-                  hintStyle: TextStyle(color: Colors.black38)
-              ),
+                  hintStyle: TextStyle(color: Colors.black38)),
             ),
           )
-        ]
-    );
+        ]);
   }
-  Widget patientCreateBtn(){
+
+  Widget patientCreateBtn() {
     return Container(
         constraints: const BoxConstraints(minWidth: 70, maxWidth: 500),
-
         child: ElevatedButton(
             onPressed: () => {
-              if (passwordConfirm == user.password){
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const Blank())
-                  )
-              }
-              else{
-                showDialog<String>(
-                context: context,
-                builder: (BuildContext context) =>
-                  AlertDialog(
-                    content: const Text('Passwords Don\'t Match'),
-                    actions: <Widget>[
-                      TextButton(
-                          onPressed: () => Navigator.pop(context, 'Cancel'),
-                          child: const Text('Cancel')
-                      ),
-                      TextButton(
-                          onPressed: () => Navigator.pop(context, 'OK'),
-                          child: const Text('OK'),
-                      ),
-                    ]
-                )
-                )
-              }
-            },
+                  if (passwordConfirm == user.password)
+                    {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const Blank()))
+                    }
+                  else
+                    {
+                      showDialog<String>(
+                          context: context,
+                          builder: (BuildContext context) => AlertDialog(
+                                  content: const Text('Passwords Don\'t Match'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                        onPressed: () =>
+                                            Navigator.pop(context, 'Cancel'),
+                                        child: const Text('Cancel')),
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(context, 'OK'),
+                                      child: const Text('OK'),
+                                    ),
+                                  ]))
+                    }
+                },
             style: ElevatedButton.styleFrom(
-                minimumSize: const Size(230,50),
+                minimumSize: const Size(230, 50),
                 padding: const EdgeInsets.all(15),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                primary: const Color.fromRGBO(57, 210, 192, 1)
-            ),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                primary: const Color.fromRGBO(57, 210, 192, 1)),
             child: Text('Create Account',
                 style: GoogleFonts.lexendDeca(
                   textStyle: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,
                   ),
-                )
-            )
-        )
-    );
+                ))));
   }
+
   Widget patientCheckBox() {
     return Container(
         constraints: const BoxConstraints(minWidth: 70, maxWidth: 300),
@@ -189,8 +193,7 @@ class _Registration extends State<Registration> {
           title: const Text("Skip Profile Creation",
               style: TextStyle(
                 color: Colors.white,
-              )
-          ),
+              )),
           side: const BorderSide(
             color: Colors.white,
             width: 1.5,
@@ -201,34 +204,44 @@ class _Registration extends State<Registration> {
               isCheckedP = value!;
             });
           },
-        )
-    );
+        ));
   }
+
   Widget patientRegistration() {
     return SingleChildScrollView(
         physics: const NeverScrollableScrollPhysics(),
-        child: Column(
-            children: [
-              const Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0)),
-              patientEmail(),
-              const Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0)),
-              patientPassword(),
-              const Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0)),
-              patientPassword2(),
-              patientCheckBox(),
-              patientCreateBtn(),
-              const Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0))
-            ]
-        )
-    );
+        child: Column(children: [
+          const Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0)),
+          patientEmail(),
+          const Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0)),
+          patientPassword(),
+          const Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0)),
+          patientPassword2(),
+          patientCheckBox(),
+          patientCreateBtn(),
+          const Padding(padding: EdgeInsets.fromLTRB(0, 15, 0, 0)),
+          const Text("Already Have an Account?",
+              style: TextStyle(color: Colors.white)),
+          TextButton(
+            onPressed: () => {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const LogIn()))
+            },
+            child: const Text("Log In",
+                style: TextStyle(
+                  color: Colors.white,
+                  decoration: TextDecoration.underline,
+                )),
+          )
+        ]));
   }
 
   // Doctor Registration Widgets
-  Widget doctorEmail(){
+  Widget doctorEmail() {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children:<Widget>[
-          const SizedBox(height:10),
+        children: <Widget>[
+          const SizedBox(height: 10),
           Container(
             constraints: const BoxConstraints(minWidth: 100, maxWidth: 500),
             alignment: Alignment.centerLeft,
@@ -236,33 +249,34 @@ class _Registration extends State<Registration> {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
                 boxShadow: const [
-                  BoxShadow(color: Colors.black26, blurRadius: 6, offset:  Offset(0,2))
-                ]
-            ),
+                  BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 6,
+                      offset: Offset(0, 2))
+                ]),
             height: 60,
             child: TextFormField(
               controller: TextEditingController(text: user.email),
               onChanged: (val) {
-                user.email= val;
+                user.email = val;
               },
               keyboardType: TextInputType.emailAddress,
               style: const TextStyle(color: Colors.black87),
               decoration: const InputDecoration(
                   border: InputBorder.none,
-                  contentPadding: EdgeInsets.only(top:15),
+                  contentPadding: EdgeInsets.only(top: 15),
                   prefixIcon: Icon(Icons.email),
                   hintText: 'Email',
-                  hintStyle: TextStyle(color: Colors.black38)
-              ),
+                  hintStyle: TextStyle(color: Colors.black38)),
             ),
           )
-        ]
-    );
+        ]);
   }
-  Widget doctorPassword(){
+
+  Widget doctorPassword() {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children:<Widget>[
+        children: <Widget>[
           Container(
             constraints: const BoxConstraints(minWidth: 100, maxWidth: 500),
             alignment: Alignment.centerLeft,
@@ -270,11 +284,13 @@ class _Registration extends State<Registration> {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
                 boxShadow: const [
-                  BoxShadow(color: Colors.black26, blurRadius: 6, offset:  Offset(0,2))
-                ]
-            ),
+                  BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 6,
+                      offset: Offset(0, 2))
+                ]),
             height: 60,
-            child:  TextFormField(
+            child: TextFormField(
               obscureText: true,
               controller: TextEditingController(text: user.password),
               onChanged: (val) {
@@ -283,20 +299,21 @@ class _Registration extends State<Registration> {
               style: const TextStyle(color: Colors.black87),
               decoration: const InputDecoration(
                   border: InputBorder.none,
-                  contentPadding: EdgeInsets.only(top:15),
-                  prefixIcon: Icon(Icons.lock,),
+                  contentPadding: EdgeInsets.only(top: 15),
+                  prefixIcon: Icon(
+                    Icons.lock,
+                  ),
                   hintText: 'Password',
-                  hintStyle: TextStyle(color: Colors.black38)
-              ),
+                  hintStyle: TextStyle(color: Colors.black38)),
             ),
           )
-        ]
-    );
+        ]);
   }
-  Widget doctorPassword2(){
+
+  Widget doctorPassword2() {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children:<Widget>[
+        children: <Widget>[
           Container(
             constraints: const BoxConstraints(minWidth: 100, maxWidth: 500),
             alignment: Alignment.centerLeft,
@@ -304,9 +321,11 @@ class _Registration extends State<Registration> {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
                 boxShadow: const [
-                  BoxShadow(color: Colors.black26, blurRadius: 6, offset:  Offset(0,2))
-                ]
-            ),
+                  BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 6,
+                      offset: Offset(0, 2))
+                ]),
             height: 60,
             child: TextFormField(
               obscureText: true,
@@ -317,65 +336,63 @@ class _Registration extends State<Registration> {
               style: const TextStyle(color: Colors.black87),
               decoration: const InputDecoration(
                   border: InputBorder.none,
-                  contentPadding: EdgeInsets.only(top:15),
-                  prefixIcon: Icon(Icons.lock,),
+                  contentPadding: EdgeInsets.only(top: 15),
+                  prefixIcon: Icon(
+                    Icons.lock,
+                  ),
                   hintText: 'Confirm Password',
-                  hintStyle: TextStyle(color: Colors.black38)
-              ),
+                  hintStyle: TextStyle(color: Colors.black38)),
             ),
           )
-        ]
-    );
+        ]);
   }
-  Widget doctorCreateBtn(){
+
+  Widget doctorCreateBtn() {
     return Container(
         constraints: const BoxConstraints(minWidth: 70, maxWidth: 500),
-
         child: ElevatedButton(
             onPressed: () => {
-              if (passwordConfirm == user.password){
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const Blank())
-                )
-              }
-              else{
-                showDialog<String>(
-                  context: context,
-                  builder: (BuildContext context) =>
-                    AlertDialog(
-                        content: const Text('Passwords Don\'t Match'),
-                        actions: <Widget>[
-                          TextButton(
-                              onPressed: () => Navigator.pop(context, 'Cancel'),
-                              child: const Text('Cancel')
-                          ),
-                          TextButton(
-                            onPressed: () => Navigator.pop(context, 'OK'),
-                            child: const Text('OK'),
-                          ),
-                        ]
-                    )
-                )
-              }
-            },
+                  if (passwordConfirm == user.password)
+                    {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const Blank()))
+                    }
+                  else
+                    {
+                      showDialog<String>(
+                          context: context,
+                          builder: (BuildContext context) => AlertDialog(
+                                  content: const Text('Passwords Don\'t Match'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                        onPressed: () =>
+                                            Navigator.pop(context, 'Cancel'),
+                                        child: const Text('Cancel')),
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(context, 'OK'),
+                                      child: const Text('OK'),
+                                    ),
+                                  ]))
+                    }
+                },
             style: ElevatedButton.styleFrom(
-                minimumSize: const Size(230,50),
+                minimumSize: const Size(230, 50),
                 padding: const EdgeInsets.all(15),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                primary: const Color.fromRGBO(57, 210, 192, 1)
-            ),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                primary: const Color.fromRGBO(57, 210, 192, 1)),
             child: Text('Create Account',
                 style: GoogleFonts.lexendDeca(
                   textStyle: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,
                   ),
-                )
-            )
-        )
-    );
+                ))));
   }
+
   Widget doctorCheckBox() {
     return Container(
         constraints: const BoxConstraints(minWidth: 70, maxWidth: 300),
@@ -383,10 +400,8 @@ class _Registration extends State<Registration> {
         child: CheckboxListTile(
           checkColor: Colors.white,
           value: isCheckedD,
-          title: const Text(
-              "Skip Profile Creation",
-              style: TextStyle(color: Colors.white)
-          ),
+          title: const Text("Skip Profile Creation",
+              style: TextStyle(color: Colors.white)),
           side: const BorderSide(
             color: Colors.white,
             width: 1.5,
@@ -397,14 +412,14 @@ class _Registration extends State<Registration> {
               isCheckedD = value!;
             });
           },
-        )
-    );
+        ));
   }
-  Widget doctorVerification(){
+
+  Widget doctorVerification() {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children:<Widget>[
-          const SizedBox(height:10),
+        children: <Widget>[
+          const SizedBox(height: 10),
           Container(
             constraints: const BoxConstraints(minWidth: 100, maxWidth: 500),
             alignment: Alignment.centerLeft,
@@ -412,46 +427,53 @@ class _Registration extends State<Registration> {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
                 boxShadow: const [
-                  BoxShadow(color: Colors.black26, blurRadius: 6, offset:  Offset(0,2))
-                ]
-            ),
+                  BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 6,
+                      offset: Offset(0, 2))
+                ]),
             height: 60,
             child: const TextField(
               keyboardType: TextInputType.number,
               style: TextStyle(color: Colors.black87),
               decoration: InputDecoration(
                   border: InputBorder.none,
-                  contentPadding: EdgeInsets.only(top:15),
+                  contentPadding: EdgeInsets.only(top: 15),
                   prefixIcon: Icon(Icons.verified),
                   hintText: 'Verification Code',
-                  hintStyle: TextStyle(color: Colors.black38)
-              ),
+                  hintStyle: TextStyle(color: Colors.black38)),
             ),
           )
-        ]
-    );
+        ]);
   }
+
   Widget doctorRegistration() {
     return SingleChildScrollView(
         physics: const NeverScrollableScrollPhysics(),
-        child: Column(
-            children: [
-              const Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0)),
-              doctorEmail(),
-              const Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0)),
-              doctorVerification(),
-              const Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0)),
-              doctorPassword(),
-              const Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0)),
-              doctorPassword2(),
-              doctorCheckBox(),
-              doctorCreateBtn(),
-              const Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 30))
-            ]
-        )
-    );
+        child: Column(children: [
+          const Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0)),
+          doctorEmail(),
+          const Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0)),
+          doctorVerification(),
+          const Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0)),
+          doctorPassword(),
+          const Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0)),
+          doctorPassword2(),
+          doctorCheckBox(),
+          doctorCreateBtn(),
+          const Padding(padding: EdgeInsets.fromLTRB(0, 15, 0, 0)),
+          const Text("Already Have an Account?",
+              style: TextStyle(color: Colors.white)),
+          TextButton(
+            onPressed: () => {},
+            child: const Text("Log In",
+                style: TextStyle(
+                  color: Colors.white,
+                  decoration: TextDecoration.underline,
+                )),
+          )
+        ]));
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -464,69 +486,65 @@ class _Registration extends State<Registration> {
                         image: const AssetImage('images/background.jpeg'),
                         fit: BoxFit.cover,
                         colorFilter: ColorFilter.mode(
-                            Colors.black.withOpacity(0.5),
-                            BlendMode.darken
-                        )
-                    )
-                ),
-                child:Column(
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                        Container(
-                            width: double.infinity,
-                            height: 20,
-                            decoration: const BoxDecoration(color: Colors.transparent)
-                        ),
-                      Image.asset('images/Logo.png', height: 150),
-                      Text(
-                          'Sign Up',
-
-                          style: GoogleFonts.roboto(
-                              textStyle: const TextStyle(
-                                  color:Colors.white,
-                                  fontSize: 60
-                              ),
-                          )
-                      ),
-                      Padding(padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
-                          child: Container(
-                              //height: MediaQuery.of(context).size.height * 1,
-                              constraints: const BoxConstraints(maxWidth: 700, maxHeight: 580),
-                              decoration: const BoxDecoration(color: Color(0x00FFFFFF)),
-                              child: DefaultTabController(
-                                  length: 2,
-                                  initialIndex: 0,
-                                  child: Column(
-                                      children: [
-                                          const TabBar(
-                                              isScrollable: true,
-                                              labelColor: Colors.white,
-                                              labelStyle: TextStyle(fontSize: 14.0),
-                                              indicatorColor: Colors.cyan,
-                                              tabs: [
-                                                  Tab(text: 'Patient',),
-                                                  Tab(text: 'Doctor',),
-                                              ],
-                                          ),
-                                          Expanded(
-                                              child: TabBarView(
-                                                  physics: const NeverScrollableScrollPhysics(),
-                                                  children: [
-                                                      patientRegistration(),
-                                                      doctorRegistration()
-                                                  ],
-                                              ),
-                                          ),
-                                      ],
+                            Colors.black.withOpacity(0.5), BlendMode.darken))),
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                        width: double.infinity,
+                        height: 20,
+                        decoration:
+                            const BoxDecoration(color: Colors.transparent)),
+                    Image.asset('images/Logo.png', height: 150),
+                    Text('Sign Up',
+                        style: GoogleFonts.roboto(
+                          textStyle: const TextStyle(
+                              color: Colors.white, fontSize: 60),
+                        )),
+                    Padding(
+                      padding:
+                          const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
+                      child: Container(
+                        //height: MediaQuery.of(context).size.height * 1,
+                        constraints:
+                            const BoxConstraints(maxWidth: 700, maxHeight: 580),
+                        decoration:
+                            const BoxDecoration(color: Color(0x00FFFFFF)),
+                        child: DefaultTabController(
+                          length: 2,
+                          initialIndex: 0,
+                          child: Column(
+                            children: [
+                              const TabBar(
+                                isScrollable: true,
+                                labelColor: Colors.white,
+                                labelStyle: TextStyle(fontSize: 14.0),
+                                indicatorColor: Colors.cyan,
+                                tabs: [
+                                  Tab(
+                                    text: 'Patient',
                                   ),
+                                  Tab(
+                                    text: 'Doctor',
+                                  ),
+                                ],
                               ),
+                              Expanded(
+                                child: TabBarView(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  children: [
+                                    patientRegistration(),
+                                    doctorRegistration(),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
+                        ),
                       ),
-                    ],
-                )
-            )
-        )
-    );
+                    ),
+                  ],
+                ))));
   }
 }
