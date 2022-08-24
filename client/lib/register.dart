@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:client/medical_history.dart';
 import 'package:http/http.dart' as http;
+
 import 'user.dart';
 import 'log_in.dart';
 
@@ -15,6 +18,14 @@ class Registration extends StatefulWidget {
 class _Registration extends State<Registration> {
   User user = User("", "");
   String passwordConfirm = "";
+
+  String url = "http://localhost:8080/register";
+
+  Future save() async {
+    await http.post(Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({'email': user.email, 'password': user.password}));
+  }
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
   bool isCheckedP = false;
@@ -144,6 +155,7 @@ class _Registration extends State<Registration> {
             onPressed: () => {
                   if (passwordConfirm == user.password)
                     {
+                      save(),
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -162,8 +174,9 @@ class _Registration extends State<Registration> {
                                             Navigator.pop(context, 'Cancel'),
                                         child: const Text('Cancel')),
                                     TextButton(
-                                      onPressed: () =>
-                                          Navigator.pop(context, 'OK'),
+                                      onPressed: () {
+                                        Navigator.pop(context, 'OK');
+                                      },
                                       child: const Text('OK'),
                                     ),
                                   ]))
@@ -355,6 +368,7 @@ class _Registration extends State<Registration> {
             onPressed: () => {
                   if (passwordConfirm == user.password)
                     {
+                      save(),
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -373,8 +387,9 @@ class _Registration extends State<Registration> {
                                             Navigator.pop(context, 'Cancel'),
                                         child: const Text('Cancel')),
                                     TextButton(
-                                      onPressed: () =>
-                                          Navigator.pop(context, 'OK'),
+                                      onPressed: () {
+                                        Navigator.pop(context, 'OK');
+                                      },
                                       child: const Text('OK'),
                                     ),
                                   ]))
