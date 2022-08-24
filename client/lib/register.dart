@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:client/blank.dart';
+import 'package:client/medical_history.dart';
 import 'package:http/http.dart' as http;
 import 'user.dart';
 import 'log_in.dart';
@@ -147,7 +147,8 @@ class _Registration extends State<Registration> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const Blank()))
+                              builder: (context) =>
+                                  const MedicalHistoryCopyWidget()))
                     }
                   else
                     {
@@ -357,7 +358,8 @@ class _Registration extends State<Registration> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const Blank()))
+                              builder: (context) =>
+                                  const MedicalHistoryCopyWidget()))
                     }
                   else
                     {
@@ -479,72 +481,69 @@ class _Registration extends State<Registration> {
   Widget build(BuildContext context) {
     return Scaffold(
         key: scaffoldKey,
-        body: SingleChildScrollView(
-            child: Container(
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: const AssetImage('images/background.jpeg'),
-                        fit: BoxFit.cover,
-                        colorFilter: ColorFilter.mode(
-                            Colors.black.withOpacity(0.5), BlendMode.darken))),
+        body: Container(
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: const AssetImage('images/background.jpeg'),
+                    colorFilter: ColorFilter.mode(
+                        Colors.black.withOpacity(0.5), BlendMode.darken))),
+            child: SingleChildScrollView(
                 child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                        width: double.infinity,
-                        height: 20,
-                        decoration:
-                            const BoxDecoration(color: Colors.transparent)),
-                    Image.asset('images/Logo.png', height: 150),
-                    Text('Sign Up',
-                        style: GoogleFonts.roboto(
-                          textStyle: const TextStyle(
-                              color: Colors.white, fontSize: 60),
-                        )),
-                    Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
-                      child: Container(
-                        //height: MediaQuery.of(context).size.height * 1,
-                        constraints:
-                            const BoxConstraints(maxWidth: 700, maxHeight: 580),
-                        decoration:
-                            const BoxDecoration(color: Color(0x00FFFFFF)),
-                        child: DefaultTabController(
-                          length: 2,
-                          initialIndex: 0,
-                          child: Column(
-                            children: [
-                              const TabBar(
-                                isScrollable: true,
-                                labelColor: Colors.white,
-                                labelStyle: TextStyle(fontSize: 14.0),
-                                indicatorColor: Colors.cyan,
-                                tabs: [
-                                  Tab(
-                                    text: 'Patient',
-                                  ),
-                                  Tab(
-                                    text: 'Doctor',
-                                  ),
-                                ],
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                    width: double.infinity,
+                    height: 20,
+                    decoration: const BoxDecoration(color: Colors.transparent)),
+                Image.asset('images/Logo.png', height: 150),
+                Text('Sign Up',
+                    style: GoogleFonts.roboto(
+                      textStyle:
+                          const TextStyle(color: Colors.white, fontSize: 60),
+                    )),
+                Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
+                  child: Container(
+                    //height: MediaQuery.of(context).size.height * 1,
+                    constraints:
+                        const BoxConstraints(maxWidth: 700, maxHeight: 580),
+                    decoration: const BoxDecoration(color: Color(0x00FFFFFF)),
+                    child: DefaultTabController(
+                      length: 2,
+                      initialIndex: 0,
+                      child: Column(
+                        children: [
+                          const TabBar(
+                            isScrollable: true,
+                            labelColor: Colors.white,
+                            labelStyle: TextStyle(fontSize: 14.0),
+                            indicatorColor: Colors.cyan,
+                            tabs: [
+                              Tab(
+                                text: 'Patient',
                               ),
-                              Expanded(
-                                child: TabBarView(
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  children: [
-                                    patientRegistration(),
-                                    doctorRegistration(),
-                                  ],
-                                ),
+                              Tab(
+                                text: 'Doctor',
                               ),
                             ],
                           ),
-                        ),
+                          Expanded(
+                            child: TabBarView(
+                              physics: const NeverScrollableScrollPhysics(),
+                              children: [
+                                patientRegistration(),
+                                doctorRegistration(),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ))));
+                  ),
+                ),
+              ],
+            ))));
   }
 }
