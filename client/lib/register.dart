@@ -155,7 +155,7 @@ class _Registration extends State<Registration> {
             onPressed: () => {
                   if (passwordConfirm == user.password)
                     {
-                      save(),
+                      //save(),
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -368,7 +368,7 @@ class _Registration extends State<Registration> {
             onPressed: () => {
                   if (passwordConfirm == user.password)
                     {
-                      save(),
+                      //save(),
                       Navigator.push(
                           context,
                           MaterialPageRoute(

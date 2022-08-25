@@ -1,44 +1,8 @@
 import 'package:client/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import "dashboard.dart";
-
-class LinkedLabelRadio extends StatelessWidget {
-  const LinkedLabelRadio({
-    Key? key,
-    required this.label,
-    required this.padding,
-    required this.groupValue,
-    required this.value,
-    required this.onChanged,
-  }) : super(key: key);
-
-  final String label;
-  final EdgeInsets padding;
-  final bool groupValue;
-  final bool value;
-  final ValueChanged<bool> onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: padding,
-      child: Row(
-        children: <Widget>[
-          Radio<bool>(
-              groupValue: groupValue,
-              value: value,
-              onChanged: (bool? newValue) {
-                onChanged(newValue!);
-              }),
-          Text(
-            label,
-          ),
-        ],
-      ),
-    );
-  }
-}
 
 class MedicalHistoryCopyWidget extends StatefulWidget {
   const MedicalHistoryCopyWidget({Key? key}) : super(key: key);
@@ -50,6 +14,7 @@ class MedicalHistoryCopyWidget extends StatefulWidget {
 
 class _MedicalHistoryCopyWidgetState extends State<MedicalHistoryCopyWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
   bool smoke = false;
   bool drink = false;
   bool medication = false;
@@ -60,7 +25,7 @@ class _MedicalHistoryCopyWidgetState extends State<MedicalHistoryCopyWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(15, 0, 0, 0),
+          padding: EdgeInsetsDirectional.fromSTEB(15, 0, 0, 15),
           child: Text(
             'Are you currently taking any medication?',
             style: TextStyle(
@@ -69,27 +34,21 @@ class _MedicalHistoryCopyWidgetState extends State<MedicalHistoryCopyWidget> {
                 fontSize: 16),
           ),
         ),
-        LinkedLabelRadio(
-          label: 'Yes',
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          value: true,
-          groupValue: medication,
-          onChanged: (bool newValue) {
-            setState(() {
-              medication = newValue;
-            });
+        CustomRadioButton(
+          buttonLables: const ['Yes', 'No'],
+          buttonValues: const ['Yes', 'No'],
+          radioButtonValue: (value) => {
+            if (value == 'Yes') {drink = true} else {drink = false},
           },
-        ),
-        LinkedLabelRadio(
-          label: 'No',
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          value: false,
-          groupValue: medication,
-          onChanged: (bool newValue) {
-            setState(() {
-              medication = newValue;
-            });
-          },
+          enableButtonWrap: true,
+          elevation: 5,
+          autoWidth: true,
+          enableShape: true,
+          unSelectedBorderColor: const Color.fromARGB(255, 245, 245, 245),
+          selectedBorderColor: const Color.fromRGBO(57, 210, 192, 1),
+          unSelectedColor: const Color.fromARGB(255, 245, 245, 245),
+          selectedColor: const Color.fromRGBO(57, 210, 192, 1),
+          padding: 5,
         ),
         Padding(
           padding: const EdgeInsetsDirectional.fromSTEB(10, 10, 10, 0),
@@ -162,27 +121,21 @@ class _MedicalHistoryCopyWidgetState extends State<MedicalHistoryCopyWidget> {
             ),
           ),
         ),
-        LinkedLabelRadio(
-          label: 'Yes',
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          value: true,
-          groupValue: smoke,
-          onChanged: (bool newValue) {
-            setState(() {
-              smoke = newValue;
-            });
+        CustomRadioButton(
+          buttonLables: const ['Yes', 'No'],
+          buttonValues: const ['Yes', 'No'],
+          radioButtonValue: (value) => {
+            if (value == 'Yes') {smoke = true} else {smoke = false},
           },
-        ),
-        LinkedLabelRadio(
-          label: 'No',
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          value: false,
-          groupValue: smoke,
-          onChanged: (bool newValue) {
-            setState(() {
-              smoke = newValue;
-            });
-          },
+          enableButtonWrap: true,
+          elevation: 5,
+          autoWidth: true,
+          enableShape: true,
+          unSelectedBorderColor: const Color.fromARGB(255, 245, 245, 245),
+          selectedBorderColor: const Color.fromRGBO(57, 210, 192, 1),
+          unSelectedColor: const Color.fromARGB(255, 245, 245, 245),
+          selectedColor: const Color.fromRGBO(57, 210, 192, 1),
+          padding: 5,
         ),
         const Padding(
           padding: EdgeInsetsDirectional.fromSTEB(15, 10, 0, 0),
@@ -194,27 +147,21 @@ class _MedicalHistoryCopyWidgetState extends State<MedicalHistoryCopyWidget> {
                 fontSize: 16),
           ),
         ),
-        LinkedLabelRadio(
-          label: 'Yes',
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          value: true,
-          groupValue: drink,
-          onChanged: (bool newValue) {
-            setState(() {
-              drink = newValue;
-            });
+        CustomRadioButton(
+          buttonLables: const ['Yes', 'No'],
+          buttonValues: const ['Yes', 'No'],
+          radioButtonValue: (value) => {
+            if (value == 'Yes') {drink = true} else {drink = false},
           },
-        ),
-        LinkedLabelRadio(
-          label: 'No',
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          value: false,
-          groupValue: drink,
-          onChanged: (bool newValue) {
-            setState(() {
-              drink = newValue;
-            });
-          },
+          enableButtonWrap: true,
+          elevation: 5,
+          autoWidth: true,
+          enableShape: true,
+          unSelectedBorderColor: const Color.fromARGB(255, 245, 245, 245),
+          selectedBorderColor: const Color.fromRGBO(57, 210, 192, 1),
+          unSelectedColor: const Color.fromARGB(255, 245, 245, 245),
+          selectedColor: const Color.fromRGBO(57, 210, 192, 1),
+          padding: 5,
         ),
         const Padding(
           padding: EdgeInsetsDirectional.fromSTEB(15, 10, 0, 0),
@@ -266,6 +213,35 @@ class _MedicalHistoryCopyWidgetState extends State<MedicalHistoryCopyWidget> {
       verticalDirection: VerticalDirection.down,
       clipBehavior: Clip.none,
       children: [
+        CustomCheckBoxGroup(
+          buttonLables: const [
+            'Cancer',
+            'Diabetes',
+            'Cardiac Disease',
+            'Asthma',
+            'Alzheimer\'s',
+            'Depresseion',
+          ],
+          buttonValuesList: const [
+            'Cancer',
+            'Diabetes',
+            'Cardiac Disease',
+            'Asthma',
+            'Alzheimer\'s',
+            'Depresseion',
+          ],
+          checkBoxButtonValues: (values) => {},
+          horizontal: false,
+          enableButtonWrap: true,
+          elevation: 5,
+          width: 150,
+          enableShape: true,
+          unSelectedBorderColor: const Color.fromARGB(255, 245, 245, 245),
+          selectedBorderColor: const Color.fromRGBO(57, 210, 192, 1),
+          unSelectedColor: const Color.fromARGB(255, 245, 245, 245),
+          selectedColor: const Color.fromRGBO(57, 210, 192, 1),
+          padding: 5,
+        ),
         Padding(
           padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 10, 0),
           child: Container(
@@ -351,15 +327,32 @@ class _MedicalHistoryCopyWidgetState extends State<MedicalHistoryCopyWidget> {
       verticalDirection: VerticalDirection.down,
       clipBehavior: Clip.none,
       children: [
-        Column(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [],
-        ),
-        Column(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [],
+        CustomCheckBoxGroup(
+          buttonLables: const [
+            'Hearing Impairment',
+            'Vision Impairment',
+            'Autism',
+            'Mobility Disability ',
+            'Cerebral Palsy',
+          ],
+          buttonValuesList: const [
+            'Hearing Impairment',
+            'Vision Impairment',
+            'Autism',
+            'Mobility Disability ',
+            'Cerebral Palsy',
+          ],
+          checkBoxButtonValues: (values) => print(values),
+          horizontal: false,
+          enableButtonWrap: true,
+          elevation: 5,
+          width: 150,
+          enableShape: true,
+          unSelectedBorderColor: Color.fromARGB(255, 245, 245, 245),
+          selectedBorderColor: const Color.fromRGBO(57, 210, 192, 1),
+          unSelectedColor: Color.fromARGB(255, 245, 245, 245),
+          selectedColor: const Color.fromRGBO(57, 210, 192, 1),
+          padding: 5,
         ),
         Padding(
           padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 10, 20),
