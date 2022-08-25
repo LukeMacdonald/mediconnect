@@ -1,5 +1,7 @@
 class User {
   String email;
   String password;
-  User(this.email, this.password);
+  String role;
+
+  User(this.email, this.password, this.role);
 }

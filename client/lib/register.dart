@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:client/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:client/medical_history.dart';
@@ -16,7 +17,7 @@ class Registration extends StatefulWidget {
 }
 
 class _Registration extends State<Registration> {
-  User user = User("", "");
+  User user = User("", "", "");
   String passwordConfirm = "";
 
   String url = "http://localhost:8080/register";
@@ -24,7 +25,11 @@ class _Registration extends State<Registration> {
   Future save() async {
     await http.post(Uri.parse(url),
         headers: {'Content-Type': 'application/json'},
-        body: json.encode({'email': user.email, 'password': user.password}));
+        body: json.encode({
+          'email': user.email,
+          'password': user.password,
+          'role': user.role
+        }));
   }
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -155,7 +160,8 @@ class _Registration extends State<Registration> {
             onPressed: () => {
                   if (passwordConfirm == user.password)
                     {
-                      //save(),
+                      user.role = "Patient",
+                      save(),
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -368,12 +374,12 @@ class _Registration extends State<Registration> {
             onPressed: () => {
                   if (passwordConfirm == user.password)
                     {
-                      //save(),
+                      user.role = "Doctor",
+                      save(),
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  const MedicalHistoryCopyWidget()))
+                              builder: (context) => const Dashboard()))
                     }
                   else
                     {
