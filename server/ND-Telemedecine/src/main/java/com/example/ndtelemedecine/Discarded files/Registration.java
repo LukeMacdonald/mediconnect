@@ -6,10 +6,11 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 
 @SpringBootApplication
 @CrossOrigin
-public class NdTelemedecineApplication {
+public class Registration {
 
     public static void main(String[] args) {
-        SpringApplication.run(NdTelemedecineApplication.class, args);
+        SpringApplication.run(Registration.class, args);
     }
 
 }
+
