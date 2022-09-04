@@ -158,7 +158,39 @@ class _Registration extends State<Registration> {
         constraints: const BoxConstraints(minWidth: 70, maxWidth: 500),
         child: ElevatedButton(
             onPressed: () => {
-                  if (passwordConfirm == user.password)
+                  if (user.email == "")
+                    {
+                      showDialog<String>(
+                          context: context,
+                          builder: (BuildContext context) => AlertDialog(
+                                  content: const Text('Email is empty'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context, 'OK');
+                                      },
+                                      child: const Text('OK'),
+                                    ),
+                                  ]))
+                    }
+                  else if (user.password == "" || passwordConfirm == "")
+                    {
+                      showDialog<String>(
+                          context: context,
+                          builder: (BuildContext context) => AlertDialog(
+                                  content:
+                                      const Text('A password input is empty'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context, 'OK');
+                                      },
+                                      child: const Text('OK'),
+                                    ),
+                                  ]))
+                    }
+                  else if (passwordConfirm == user.password &&
+                      user.password != "")
                     {
                       user.role = "Patient",
                       save(),
@@ -175,10 +207,6 @@ class _Registration extends State<Registration> {
                           builder: (BuildContext context) => AlertDialog(
                                   content: const Text('Passwords Don\'t Match'),
                                   actions: <Widget>[
-                                    TextButton(
-                                        onPressed: () =>
-                                            Navigator.pop(context, 'Cancel'),
-                                        child: const Text('Cancel')),
                                     TextButton(
                                       onPressed: () {
                                         Navigator.pop(context, 'OK');
