@@ -40,8 +40,8 @@ class _LogIn extends State<LogIn> {
               onChanged: (val) {
                 user.email = val;
               },
-              validator: (value) {
-                if (value == "") {
+              validator: (val) {
+                if (val == null || val.isEmpty) {
                   return 'Email is Empty';
                 }
                 return null;
@@ -82,6 +82,12 @@ class _LogIn extends State<LogIn> {
               onChanged: (val) {
                 user.password = val;
               },
+              validator: (val) {
+                if (val == null || val.isEmpty) {
+                  return 'Password is Empty';
+                }
+                return null;
+              },
               style: const TextStyle(color: Colors.black87),
               decoration: const InputDecoration(
                   border: InputBorder.none,
@@ -101,10 +107,29 @@ class _LogIn extends State<LogIn> {
         constraints: const BoxConstraints(minWidth: 70, maxWidth: 500),
         child: ElevatedButton(
             onPressed: () => {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const Dashboard()))
+                  if (user.email == "" || user.password == "")
+                    {
+                      showDialog<String>(
+                          context: context,
+                          builder: (BuildContext context) => AlertDialog(
+                                  content:
+                                      const Text('An input field is empty'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context, 'OK');
+                                      },
+                                      child: const Text('OK'),
+                                    ),
+                                  ]))
+                    }
+                  else
+                    {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const Dashboard()))
+                    }
                 },
             style: ElevatedButton.styleFrom(
                 minimumSize: const Size(230, 50),
