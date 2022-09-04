@@ -3,12 +3,15 @@ package com.example.ndtelemedecine;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ndtelemedecine.User.UserRepo;
+import com.example.ndtelemedecine.User.Exception.ApiRequestException;
 import com.example.ndtelemedecine.User.User;
 
 @RestController
@@ -27,9 +30,33 @@ public class APIControllers {
         return userRepo.findAll();
     }
 
-    @PostMapping(value="/SaveUser")
-    public String saveUser(@RequestBody User user) {
-        userRepo.save(user);
-        return "Saved user...";
+    // Can be used to check if an email already exists as well. Will always return, even if empty.
+    @GetMapping(value="/GetUser/Email")
+    public ResponseEntity<List<User>> getUserByEmail(@RequestBody User user) {
+        return new ResponseEntity<List<User>>(userRepo.findByEmail(user.getEmail()), HttpStatus.OK);
+    }
+
+    @PostMapping(value="/Register")
+    public String register(@RequestBody User user) {
+        
+        if (getUserByEmail(user).getBody().isEmpty()) {
+            userRepo.save(user);
+            return "Saved user...";
+        }
+        else {
+            throw new ApiRequestException("User already exists in system!");
+        }
+    }
+
+    // Verifies user details
+    @GetMapping(value="/LogIn")
+    public ResponseEntity<User> LogIn(@RequestBody User user) {
+        return new ResponseEntity<User>(userRepo.findByEmailAndPassword(user.getEmail(), user.getPassword()), HttpStatus.OK);
+    }
+
+    // Get users by role
+    @GetMapping(value="/GetUser/Role")
+    public ResponseEntity<List<User>> getUserByRole(@RequestBody User user) {
+        return new ResponseEntity<List<User>>(userRepo.findByRole(user.getRole()), HttpStatus.OK);
     }
 }
