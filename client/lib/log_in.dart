@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:client/blank.dart';
+import 'package:client/medical_history.dart';
 import 'package:http/http.dart' as http;
 import 'user.dart';
 import 'register.dart';
+import "dashboard.dart";
 
 class LogIn extends StatefulWidget {
   const LogIn({Key? key}) : super(key: key);
@@ -13,7 +14,7 @@ class LogIn extends StatefulWidget {
 }
 
 class _LogIn extends State<LogIn> {
-  User user = User("", "");
+  User user = User("", "", "");
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   Widget userEmail() {
@@ -100,8 +101,10 @@ class _LogIn extends State<LogIn> {
         constraints: const BoxConstraints(minWidth: 70, maxWidth: 500),
         child: ElevatedButton(
             onPressed: () => {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const Blank()))
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const Dashboard()))
                 },
             style: ElevatedButton.styleFrom(
                 minimumSize: const Size(230, 50),
@@ -147,44 +150,44 @@ class _LogIn extends State<LogIn> {
         ]));
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         key: scaffoldKey,
-        body: SingleChildScrollView(
-            child: Container(
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: const AssetImage('images/background.jpeg'),
-                        fit: BoxFit.cover,
-                        colorFilter: ColorFilter.mode(
-                            Colors.black.withOpacity(0.5), BlendMode.darken))),
+        body: Container(
+            height: MediaQuery.of(context).size.height * 1,
+            decoration: BoxDecoration(
+                color: const Color(0xFF14181B),
+                image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: const AssetImage('images/background.jpeg'),
+                    colorFilter: ColorFilter.mode(
+                        Colors.black.withOpacity(0.5), BlendMode.darken))),
+            child: SingleChildScrollView(
                 child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                        width: double.infinity,
-                        height: 20,
-                        decoration:
-                            const BoxDecoration(color: Colors.transparent)),
-                    Image.asset('images/Logo.png', height: 150),
-                    Text('Sign In',
-                        style: GoogleFonts.roboto(
-                          textStyle: const TextStyle(
-                              color: Colors.white, fontSize: 60),
-                        )),
-                    Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
-                      child: Container(
-                          //height: MediaQuery.of(context).size.height * 1,
-                          constraints: const BoxConstraints(
-                              minWidth: 700, minHeight: 580),
-                          decoration:
-                              const BoxDecoration(color: Color(0x00FFFFFF)),
-                          child: userLogIn()),
-                    ),
-                  ],
-                ))));
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                    width: double.infinity,
+                    height: 20,
+                    decoration: const BoxDecoration(color: Colors.transparent)),
+                Image.asset('images/Logo.png', height: 150),
+                Text('Sign In',
+                    style: GoogleFonts.roboto(
+                      textStyle:
+                          const TextStyle(color: Colors.white, fontSize: 60),
+                    )),
+                Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
+                  child: Container(
+                      //height: MediaQuery.of(context).size.height * 1,
+                      constraints:
+                          const BoxConstraints(minWidth: 700, minHeight: 580),
+                      decoration: const BoxDecoration(color: Color(0x00FFFFFF)),
+                      child: userLogIn()),
+                ),
+              ],
+            ))));
   }
 }
