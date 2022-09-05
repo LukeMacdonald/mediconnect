@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:client/dashboard.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:client/medical_history.dart';
 import 'package:http/http.dart' as http;
@@ -32,6 +33,8 @@ class _Registration extends State<Registration> {
         }));
   }
 
+  String verificationCode = "";
+  String tempCodeGenerated = "1234";
   final scaffoldKey = GlobalKey<ScaffoldState>();
   bool isCheckedP = false;
   bool isCheckedD = false;
@@ -419,26 +422,94 @@ class _Registration extends State<Registration> {
         constraints: const BoxConstraints(minWidth: 70, maxWidth: 500),
         child: ElevatedButton(
             onPressed: () => {
-                  if (passwordConfirm == user.password)
+                  if (verificationCode == tempCodeGenerated)
                     {
-                      user.role = "Doctor",
-                      save(),
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const Dashboard()))
+                      if (user.email == "")
+                        {
+                          showDialog<String>(
+                              context: context,
+                              builder: (BuildContext context) => AlertDialog(
+                                      content: const Text('Email is empty'),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context, 'OK');
+                                          },
+                                          child: const Text('OK'),
+                                        ),
+                                      ]))
+                        }
+                      else if (user.password == "" || passwordConfirm == "")
+                        {
+                          showDialog<String>(
+                              context: context,
+                              builder: (BuildContext context) => AlertDialog(
+                                      content: const Text(
+                                          'A password input is empty'),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context, 'OK');
+                                          },
+                                          child: const Text('OK'),
+                                        ),
+                                      ]))
+                        }
+                      else if (passwordConfirm == user.password &&
+                          user.password != "")
+                        {
+                          if (user.emailValid(user.email) == true)
+                            {
+                              user.role = "Doctor",
+                              save(),
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const Dashboard()))
+                            }
+                          else
+                            {
+                              showDialog<String>(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      AlertDialog(
+                                          content: const Text(
+                                              'Email is in invalid format'),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.pop(context, 'OK');
+                                              },
+                                              child: const Text('OK'),
+                                            ),
+                                          ]))
+                            }
+                        }
+                      else
+                        {
+                          showDialog<String>(
+                              context: context,
+                              builder: (BuildContext context) => AlertDialog(
+                                      content:
+                                          const Text('Passwords Don\'t Match'),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context, 'OK');
+                                          },
+                                          child: const Text('OK'),
+                                        ),
+                                      ]))
+                        }
                     }
                   else
                     {
                       showDialog<String>(
                           context: context,
                           builder: (BuildContext context) => AlertDialog(
-                                  content: const Text('Passwords Don\'t Match'),
+                                  content:
+                                      const Text('Verification code invalid'),
                                   actions: <Widget>[
-                                    TextButton(
-                                        onPressed: () =>
-                                            Navigator.pop(context, 'Cancel'),
-                                        child: const Text('Cancel')),
                                     TextButton(
                                       onPressed: () {
                                         Navigator.pop(context, 'OK');
@@ -503,8 +574,9 @@ class _Registration extends State<Registration> {
                       offset: Offset(0, 2))
                 ]),
             height: 60,
-            child: const TextField(
+            child: TextField(
               keyboardType: TextInputType.number,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               style: TextStyle(color: Colors.black87),
               decoration: InputDecoration(
                   border: InputBorder.none,
@@ -512,6 +584,9 @@ class _Registration extends State<Registration> {
                   prefixIcon: Icon(Icons.verified),
                   hintText: 'Verification Code',
                   hintStyle: TextStyle(color: Colors.black38)),
+              onChanged: (val) {
+                verificationCode = val;
+              },
             ),
           )
         ]);
