@@ -25,7 +25,10 @@ jobs:
         
     - name: Change directory
       run:
-        ls
+          cd server
+    
+    - name: View server
+      run: ls
         
     - name: Build with Maven
       run: mvn -B package --f pom.xml
