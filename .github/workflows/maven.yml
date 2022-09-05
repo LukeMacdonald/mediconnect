@@ -25,6 +25,7 @@ jobs:
         
     - name: Change directory
       run:
+        ls -a
         cd .\server\ND-Telemedecine\
         
     - name: Build with Maven
