@@ -20,7 +20,7 @@ class _Registration extends State<Registration> {
   User user = User("", "", "");
   String passwordConfirm = "";
 
-  String url = "http://localhost:8080/register";
+  String url = "http://localhost:8080/Register";
 
   Future save() async {
     await http.post(Uri.parse(url),
@@ -60,8 +60,8 @@ class _Registration extends State<Registration> {
               onChanged: (val) {
                 user.email = val;
               },
-              validator: (value) {
-                if (value == "") {
+              validator: (val) {
+                if (val == "") {
                   return 'Email is Empty';
                 }
                 return null;
@@ -192,13 +192,32 @@ class _Registration extends State<Registration> {
                   else if (passwordConfirm == user.password &&
                       user.password != "")
                     {
-                      user.role = "Patient",
-                      save(),
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  const MedicalHistoryCopyWidget()))
+                      if (user.emailValid(user.email) == true)
+                        {
+                          user.role = "Patient",
+                          save(),
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const MedicalHistoryCopyWidget()))
+                        }
+                      else
+                        {
+                          showDialog<String>(
+                              context: context,
+                              builder: (BuildContext context) => AlertDialog(
+                                      content: const Text(
+                                          'Email is in invalid format'),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context, 'OK');
+                                          },
+                                          child: const Text('OK'),
+                                        ),
+                                      ]))
+                        }
                     }
                   else
                     {
