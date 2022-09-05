@@ -25,7 +25,7 @@ jobs:
         
     - name: Change directory
       run:
-        cd server/ND-Telemedicine
+        cd .\server\ND-Telemedecine\
         
     - name: Build with Maven
       run: mvn -B package --f pom.xml
