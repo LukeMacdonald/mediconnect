@@ -197,7 +197,7 @@ class _Registration extends State<Registration> {
                     {
                       if (user.emailValid(user.email) == true)
                         {
-                          user.role = "Patient",
+                          user.role = "patient",
                           save(),
                           Navigator.push(
                               context,
@@ -460,7 +460,7 @@ class _Registration extends State<Registration> {
                         {
                           if (user.emailValid(user.email) == true)
                             {
-                              user.role = "Doctor",
+                              user.role = "doctor",
                               save(),
                               Navigator.push(
                                   context,
