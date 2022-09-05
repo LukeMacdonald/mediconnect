@@ -13,12 +13,17 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.ndtelemedecine.User.UserRepo;
 import com.example.ndtelemedecine.User.Exception.ApiRequestException;
 import com.example.ndtelemedecine.User.User;
+import com.example.ndtelemedecine.DoctorAvailability.AvailabilityRepo;
+import com.example.ndtelemedecine.DoctorAvailability.Availability;
 
 @RestController
 public class APIControllers {
     
     @Autowired
     private UserRepo userRepo;
+    
+    @Autowired
+    private AvailabilityRepo availRepo;
 
     @GetMapping(value="/")
     public String mainPage() {
@@ -47,7 +52,7 @@ public class APIControllers {
             throw new ApiRequestException("User already exists in system!");
         }
     }
-
+    
     // Verifies user details
     @GetMapping(value="/LogIn")
     public ResponseEntity<User> LogIn(@RequestBody User user) {
@@ -58,5 +63,12 @@ public class APIControllers {
     @GetMapping(value="/GetUser/Role")
     public ResponseEntity<List<User>> getUserByRole(@RequestBody User user) {
         return new ResponseEntity<List<User>>(userRepo.findByRole(user.getRole()), HttpStatus.OK);
+    }
+
+    // Sets a Availability For Doctor
+    @PostMapping(value = "/SetDoctorAvailability")
+    public String availability(@RequestBody List<Availability> avail){
+        availRepo.saveAll(avail);
+        return "Set Doctor Availability";
     }
 }
