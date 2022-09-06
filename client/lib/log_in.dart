@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'user.dart';
 import 'register.dart';
 import "dashboard.dart";
+import 'dart:convert';
 
 class LogIn extends StatefulWidget {
   const LogIn({Key? key}) : super(key: key);
@@ -15,7 +16,45 @@ class LogIn extends StatefulWidget {
 
 class _LogIn extends State<LogIn> {
   User user = User("", "", "");
+  String url = "http://localhost:8080/LogInAttempt";
+  String url2 = "http://localhost:8080/LogIn";
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  Future login() async {
+    var response = await http.post(Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'email': user.email,
+          'password': user.password,
+        }));
+    if (!mounted) return;
+    if (response.body == "false") {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  const MedicalHistoryCopyWidget())); // Should direct to profile creation page
+    } else if (response.body == "true") {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => const Dashboard()));
+    } else {
+      alert("User does not exist");
+    }
+  }
+
+  Future<String?> alert(String message) {
+    return showDialog<String>(
+        context: context,
+        builder: (BuildContext context) =>
+            AlertDialog(content: Text(message), actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context, 'OK');
+                },
+                child: const Text('OK'),
+              ),
+            ]));
+  }
 
   Widget userEmail() {
     return Column(
@@ -108,28 +147,9 @@ class _LogIn extends State<LogIn> {
         child: ElevatedButton(
             onPressed: () => {
                   if (user.email == "" || user.password == "")
-                    {
-                      showDialog<String>(
-                          context: context,
-                          builder: (BuildContext context) => AlertDialog(
-                                  content:
-                                      const Text('An input field is empty'),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context, 'OK');
-                                      },
-                                      child: const Text('OK'),
-                                    ),
-                                  ]))
-                    }
+                    {alert("An input field is empty")}
                   else
-                    {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const Dashboard()))
-                    }
+                    {login()}
                 },
             style: ElevatedButton.styleFrom(
                 minimumSize: const Size(230, 50),

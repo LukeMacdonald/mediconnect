@@ -18,7 +18,6 @@ class Registration extends StatefulWidget {
 }
 
 class _Registration extends State<Registration> {
-
   User user = User("", "", "");
   String passwordConfirm = "";
   String verificationCode = "";
@@ -27,19 +26,18 @@ class _Registration extends State<Registration> {
   String url2 = "http://localhost:8080/DoctorVerification";
 
   Future checkVerification() async {
-      final response = await http.post(Uri.parse(url2),
-          headers: {'Content-Type': 'application/json'},
-          body: json.encode({
-            'email': user.email,
-            'code': verificationCode,
-          }));
-      String responseMessage = response.body;
-      if (responseMessage == "Codes Matched!"){
-        save();
-      }
-      else{
-        alert(responseMessage);
-      }
+    final response = await http.post(Uri.parse(url2),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'email': user.email,
+          'code': verificationCode,
+        }));
+    String responseMessage = response.body;
+    if (responseMessage == "Codes Matched!") {
+      save();
+    } else {
+      alert(responseMessage);
+    }
   }
 
   Future save() async {
@@ -53,34 +51,29 @@ class _Registration extends State<Registration> {
     //print(response.body);
     if (response.body == "Saved user...") {
       if (!mounted) return;
-      if(user.role == 'patient') {
+      if (user.role == 'patient') {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) =>
-                const MedicalHistoryCopyWidget()));
-      }
-      else if (user.role == 'doctor') {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                const Dashboard()));
+                builder: (context) => const MedicalHistoryCopyWidget()));
+      } else if (user.role == 'doctor') {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const Dashboard()));
       }
     } else {
       alert("Email Already Taken!");
     }
   }
+
   final scaffoldKey = GlobalKey<ScaffoldState>();
   bool isCheckedP = false;
   bool isCheckedD = false;
 
-  Future<String?> alert(String message){
+  Future<String?> alert(String message) {
     return showDialog<String>(
         context: context,
-        builder: (BuildContext context) => AlertDialog(
-            content: Text(message),
-            actions: <Widget>[
+        builder: (BuildContext context) =>
+            AlertDialog(content: Text(message), actions: <Widget>[
               TextButton(
                 onPressed: () {
                   Navigator.pop(context, 'OK');
@@ -88,8 +81,8 @@ class _Registration extends State<Registration> {
                 child: const Text('OK'),
               ),
             ]));
-
   }
+
   // Patient Registration Widgets
   Widget patientEmail() {
     return Column(
@@ -213,13 +206,9 @@ class _Registration extends State<Registration> {
         child: ElevatedButton(
             onPressed: () => {
                   if (user.email == "")
-                    {
-                      alert('Email is empty')
-                    }
+                    {alert('Email is empty')}
                   else if (user.password == "" || passwordConfirm == "")
-                    {
-                      alert('A password input is empty')
-                    }
+                    {alert('A password input is empty')}
                   else if (passwordConfirm == user.password &&
                       user.password != "")
                     {
@@ -229,14 +218,10 @@ class _Registration extends State<Registration> {
                           save(),
                         }
                       else
-                        {
-                          alert('Email is in invalid format')
-                        }
+                        {alert('Email is in invalid format')}
                     }
                   else
-                    {
-                      alert('Passwords Don\'t Match')
-                    }
+                    {alert('Passwords Don\'t Match')}
                 },
             style: ElevatedButton.styleFrom(
                 minimumSize: const Size(230, 50),
@@ -422,32 +407,20 @@ class _Registration extends State<Registration> {
         constraints: const BoxConstraints(minWidth: 70, maxWidth: 500),
         child: ElevatedButton(
             onPressed: () => {
-                      if (user.email == "")
-                        {
-                          alert('Email is empty!')
-                        }
-                      else if (user.password == "" || passwordConfirm == "")
-                        {
-                          alert('A password input is empty')
-                        }
-                      else if (passwordConfirm == user.password &&
-                          user.password != "")
-                        {
-                          if (user.emailValid(user.email) == true)
-                            {
-                              user.role = 'doctor',
-                              checkVerification()
-                            }
-                          else
-                            {
-                              alert('Email is in invalid format!')
-                            }
-                        }
+                  if (user.email == "")
+                    {alert('Email is empty!')}
+                  else if (user.password == "" || passwordConfirm == "")
+                    {alert('A password input is empty')}
+                  else if (passwordConfirm == user.password &&
+                      user.password != "")
+                    {
+                      if (user.emailValid(user.email) == true)
+                        {user.role = 'doctor', checkVerification()}
                       else
-                        {
-                          alert('Passwords Don\'t Match')
-                        }
-
+                        {alert('Email is in invalid format!')}
+                    }
+                  else
+                    {alert('Passwords Don\'t Match')}
                 },
             style: ElevatedButton.styleFrom(
                 minimumSize: const Size(230, 50),
