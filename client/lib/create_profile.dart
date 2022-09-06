@@ -46,6 +46,20 @@ class _ProfileCreation extends State<ProfileCreation> {
   bool isCheckedP = false;
   bool isCheckedD = false;
 
+  Future<String?> alert(String message) {
+    return showDialog<String>(
+        context: context,
+        builder: (BuildContext context) =>
+            AlertDialog(content: Text(message), actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context, 'OK');
+                },
+                child: const Text('OK'),
+              ),
+            ]));
+  }
+
   // User Profile Creationg Widgets
   Widget userGivenName() {
     return Row(
@@ -313,81 +327,18 @@ class _ProfileCreation extends State<ProfileCreation> {
         child: ElevatedButton(
             onPressed: () => {
                   if (firstName == "")
-                    {
-                      showDialog<String>(
-                          context: context,
-                          builder: (BuildContext context) => AlertDialog(
-                                  content: const Text('First Name is Empty'),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context, 'OK');
-                                      },
-                                      child: const Text('OK'),
-                                    ),
-                                  ]))
-                    }
+                    {alert('First Name is empty')}
                   else if (lastName == "")
-                    {
-                      showDialog<String>(
-                          context: context,
-                          builder: (BuildContext context) => AlertDialog(
-                                  content: const Text('Last Name is Empty'),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context, 'OK');
-                                      },
-                                      child: const Text('OK'),
-                                    ),
-                                  ]))
-                    }
+                    {alert('Last Name is Empty')}
                   else if (dateInput.text == "")
-                    {
-                      showDialog<String>(
-                          context: context,
-                          builder: (BuildContext context) => AlertDialog(
-                                  content: const Text('Date of Birth is Empty'),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context, 'OK');
-                                      },
-                                      child: const Text('OK'),
-                                    ),
-                                  ]))
-                    }
+                    {alert('Date of Birth is Empty')}
                   else if (phoneNumber == "")
-                    {
-                      showDialog<String>(
-                          context: context,
-                          builder: (BuildContext context) => AlertDialog(
-                                  content: const Text('Phone Number is Empty'),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context, 'OK');
-                                      },
-                                      child: const Text('OK'),
-                                    ),
-                                  ]))
-                    }
+                    {alert('Phone Number is Empty')}
                   else if (passwordConfirm == "" || user.password == "")
-                    {
-                      showDialog<String>(
-                          context: context,
-                          builder: (BuildContext context) => AlertDialog(
-                                  content: const Text('Password is Empty'),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context, 'OK');
-                                      },
-                                      child: const Text('OK'),
-                                    ),
-                                  ]))
-                    }
-                  else if (passwordConfirm == user.password)
+                    {alert('A password input is empty')}
+                  else if (passwordConfirm != user.password)
+                    {alert('Passwords Don\'t Match')}
+                  else
                     {
                       showDialog<String>(
                           context: context,
@@ -407,21 +358,6 @@ class _ProfileCreation extends State<ProfileCreation> {
                       //     MaterialPageRoute(
                       //         builder: (context) =>
                       //             const MedicalHistoryCopyWidget()))
-                    }
-                  else
-                    {
-                      showDialog<String>(
-                          context: context,
-                          builder: (BuildContext context) => AlertDialog(
-                                  content: const Text('Passwords Don\'t Match'),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context, 'OK');
-                                      },
-                                      child: const Text('OK'),
-                                    ),
-                                  ]))
                     }
                 },
             style: ElevatedButton.styleFrom(
