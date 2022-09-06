@@ -33,7 +33,7 @@ class _LogIn extends State<LogIn> {
           context,
           MaterialPageRoute(
               builder: (context) =>
-                  const MedicalHistoryCopyWidget())); // Should direct to profile creation page
+                  const MedicalHistory())); // Should direct to profile creation page
     } else if (response.body == "true") {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => const Dashboard()));
