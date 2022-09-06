@@ -16,7 +16,7 @@ class ProfileCreation extends StatefulWidget {
 
 class _ProfileCreation extends State<ProfileCreation> {
   // TODO: Need new variables for user class
-  User user = User("", "");
+  User user = User("", "", "");
   TextEditingController dateInput = TextEditingController();
   String firstName = "";
   String lastName = "";
@@ -35,7 +35,11 @@ class _ProfileCreation extends State<ProfileCreation> {
   Future save() async {
     await http.post(Uri.parse(url),
         headers: {'Content-Type': 'application/json'},
-        body: json.encode({'email': user.email, 'password': user.password}));
+        body: json.encode({
+          'email': user.email,
+          'password': user.password,
+          'role': user.role
+        }));
   }
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
