@@ -18,11 +18,29 @@ class Registration extends StatefulWidget {
 }
 
 class _Registration extends State<Registration> {
+
   User user = User("", "", "");
   String passwordConfirm = "";
-  bool empty = false;
+  String verificationCode = "";
 
   String url = "http://localhost:8080/Register";
+  String url2 = "http://localhost:8080/DoctorVerification";
+
+  Future checkVerification() async {
+      final response = await http.post(Uri.parse(url2),
+          headers: {'Content-Type': 'application/json'},
+          body: json.encode({
+            'email': user.email,
+            'code': verificationCode,
+          }));
+      String responseMessage = response.body;
+      if (responseMessage == "Codes Matched!"){
+        save();
+      }
+      else{
+        alert(responseMessage);
+      }
+  }
 
   Future save() async {
     final response = await http.post(Uri.parse(url),
@@ -50,26 +68,28 @@ class _Registration extends State<Registration> {
                 const Dashboard()));
       }
     } else {
-      showDialog<String>(
-          context: context,
-          builder: (BuildContext context) => AlertDialog(
-                  content: const Text('Email Already Taken'),
-                  actions: <Widget>[
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pop(context, 'OK');
-                      },
-                      child: const Text('OK'),
-                    ),
-                  ]));
+      alert("Email Already Taken!");
     }
   }
-  String verificationCode = "";
-  String tempCodeGenerated = "1234";
   final scaffoldKey = GlobalKey<ScaffoldState>();
   bool isCheckedP = false;
   bool isCheckedD = false;
 
+  Future<String?> alert(String message){
+    return showDialog<String>(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+            content: Text(message),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context, 'OK');
+                },
+                child: const Text('OK'),
+              ),
+            ]));
+
+  }
   // Patient Registration Widgets
   Widget patientEmail() {
     return Column(
@@ -194,34 +214,11 @@ class _Registration extends State<Registration> {
             onPressed: () => {
                   if (user.email == "")
                     {
-                      showDialog<String>(
-                          context: context,
-                          builder: (BuildContext context) => AlertDialog(
-                                  content: const Text('Email is empty'),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context, 'OK');
-                                      },
-                                      child: const Text('OK'),
-                                    ),
-                                  ]))
+                      alert('Email is empty')
                     }
                   else if (user.password == "" || passwordConfirm == "")
                     {
-                      showDialog<String>(
-                          context: context,
-                          builder: (BuildContext context) => AlertDialog(
-                                  content:
-                                      const Text('A password input is empty'),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context, 'OK');
-                                      },
-                                      child: const Text('OK'),
-                                    ),
-                                  ]))
+                      alert('A password input is empty')
                     }
                   else if (passwordConfirm == user.password &&
                       user.password != "")
@@ -233,35 +230,12 @@ class _Registration extends State<Registration> {
                         }
                       else
                         {
-                          showDialog<String>(
-                              context: context,
-                              builder: (BuildContext context) => AlertDialog(
-                                      content: const Text(
-                                          'Email is in invalid format'),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.pop(context, 'OK');
-                                          },
-                                          child: const Text('OK'),
-                                        ),
-                                      ]))
+                          alert('Email is in invalid format')
                         }
                     }
                   else
                     {
-                      showDialog<String>(
-                          context: context,
-                          builder: (BuildContext context) => AlertDialog(
-                                  content: const Text('Passwords Don\'t Match'),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context, 'OK');
-                                      },
-                                      child: const Text('OK'),
-                                    ),
-                                  ]))
+                      alert('Passwords Don\'t Match')
                     }
                 },
             style: ElevatedButton.styleFrom(
@@ -448,38 +422,13 @@ class _Registration extends State<Registration> {
         constraints: const BoxConstraints(minWidth: 70, maxWidth: 500),
         child: ElevatedButton(
             onPressed: () => {
-                  if (verificationCode == tempCodeGenerated)
-                    {
                       if (user.email == "")
                         {
-                          showDialog<String>(
-                              context: context,
-                              builder: (BuildContext context) => AlertDialog(
-                                      content: const Text('Email is empty'),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.pop(context, 'OK');
-                                          },
-                                          child: const Text('OK'),
-                                        ),
-                                      ]))
+                          alert('Email is empty!')
                         }
                       else if (user.password == "" || passwordConfirm == "")
                         {
-                          showDialog<String>(
-                              context: context,
-                              builder: (BuildContext context) => AlertDialog(
-                                      content: const Text(
-                                          'A password input is empty'),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.pop(context, 'OK');
-                                          },
-                                          child: const Text('OK'),
-                                        ),
-                                      ]))
+                          alert('A password input is empty')
                         }
                       else if (passwordConfirm == user.password &&
                           user.password != "")
@@ -487,59 +436,18 @@ class _Registration extends State<Registration> {
                           if (user.emailValid(user.email) == true)
                             {
                               user.role = 'doctor',
-                              save()
+                              checkVerification()
                             }
                           else
                             {
-                              showDialog<String>(
-                                  context: context,
-                                  builder: (BuildContext context) =>
-                                      AlertDialog(
-                                          content: const Text(
-                                              'Email is in invalid format'),
-                                          actions: <Widget>[
-                                            TextButton(
-                                              onPressed: () {
-                                                Navigator.pop(context, 'OK');
-                                              },
-                                              child: const Text('OK'),
-                                            ),
-                                          ]))
+                              alert('Email is in invalid format!')
                             }
                         }
                       else
                         {
-                          showDialog<String>(
-                              context: context,
-                              builder: (BuildContext context) => AlertDialog(
-                                      content:
-                                          const Text('Passwords Don\'t Match'),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.pop(context, 'OK');
-                                          },
-                                          child: const Text('OK'),
-                                        ),
-                                      ]))
+                          alert('Passwords Don\'t Match')
                         }
-                    }
-                  else
-                    {
-                      showDialog<String>(
-                          context: context,
-                          builder: (BuildContext context) => AlertDialog(
-                                  content:
-                                      const Text('Verification code invalid'),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context, 'OK');
-                                      },
-                                      child: const Text('OK'),
-                                    ),
-                                  ]))
-                    }
+
                 },
             style: ElevatedButton.styleFrom(
                 minimumSize: const Size(230, 50),

@@ -5,16 +5,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.example.ndtelemedecine.User.UserRepo;
 import com.example.ndtelemedecine.User.Exception.ApiRequestException;
-import com.example.ndtelemedecine.User.User;
-import com.example.ndtelemedecine.DoctorAvailability.AvailabilityRepo;
-import com.example.ndtelemedecine.DoctorAvailability.Availability;
+import com.example.ndtelemedecine.User.*;
+import com.example.ndtelemedecine.DoctorAvailability.*;
+import com.example.ndtelemedecine.DoctorVerificiation.*;
 
 @RestController
 public class APIControllers {
@@ -24,6 +20,9 @@ public class APIControllers {
     
     @Autowired
     private AvailabilityRepo availRepo;
+
+    @Autowired
+    private VerificationRepo verRepo;
 
     @GetMapping(value="/")
     public String mainPage() {
@@ -70,5 +69,22 @@ public class APIControllers {
     public String availability(@RequestBody List<Availability> avail){
         availRepo.saveAll(avail);
         return "Set Doctor Availability";
+    }
+    // Checks Verification For Doctor
+    @PostMapping(value = "/DoctorVerification")
+    public String verification(@RequestBody Verification veri){
+        Verification veri2 = verRepo.findByEmail(veri.getEmail());
+        if(veri2 == null){
+            return "SuperAdmin has Not Approved!";
+        }
+        if(veri2.getCode() == veri.getCode()){
+            return "Codes Matched!";
+        }
+        else if(veri2.getCode() != veri.getCode()){
+            return "Codes Did Not Match!";
+        }
+        else{
+            return "Unknown Issue!";
+        }
     }
 }
