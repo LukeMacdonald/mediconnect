@@ -4,15 +4,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import "dashboard.dart";
 
-class MedicalHistoryCopyWidget extends StatefulWidget {
-  const MedicalHistoryCopyWidget({Key? key}) : super(key: key);
+class MedicalHistory extends StatefulWidget {
+  const MedicalHistory({Key? key}) : super(key: key);
 
   @override
-  _MedicalHistoryCopyWidgetState createState() =>
-      _MedicalHistoryCopyWidgetState();
+  State<MedicalHistory> createState() => _MedicalHistory();
 }
 
-class _MedicalHistoryCopyWidgetState extends State<MedicalHistoryCopyWidget> {
+class _MedicalHistory extends State<MedicalHistory> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   bool smoke = false;
@@ -182,11 +181,11 @@ class _MedicalHistoryCopyWidgetState extends State<MedicalHistoryCopyWidget> {
         constraints: const BoxConstraints(minWidth: 70, maxWidth: 500),
         child: ElevatedButton(
             onPressed: () => {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const Dashboard()))
-                },
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const Dashboard()))
+            },
             style: ElevatedButton.styleFrom(
                 minimumSize: const Size(230, 50),
                 padding: const EdgeInsets.all(15),
@@ -450,7 +449,7 @@ class _MedicalHistoryCopyWidgetState extends State<MedicalHistoryCopyWidget> {
                   children: [
                     Padding(
                       padding:
-                          const EdgeInsetsDirectional.fromSTEB(0, 50, 0, 0),
+                      const EdgeInsetsDirectional.fromSTEB(0, 50, 0, 0),
                       child: Container(
                         width: 700,
                         decoration: BoxDecoration(
@@ -490,18 +489,18 @@ class _MedicalHistoryCopyWidgetState extends State<MedicalHistoryCopyWidget> {
                                   child: Column(
                                     mainAxisSize: MainAxisSize.max,
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    CrossAxisAlignment.start,
                                     children: [
                                       Wrap(
                                         spacing: 0,
                                         runSpacing: 0,
                                         alignment: WrapAlignment.start,
                                         crossAxisAlignment:
-                                            WrapCrossAlignment.start,
+                                        WrapCrossAlignment.start,
                                         direction: Axis.horizontal,
                                         runAlignment: WrapAlignment.start,
                                         verticalDirection:
-                                            VerticalDirection.down,
+                                        VerticalDirection.down,
                                         clipBehavior: Clip.none,
                                         children: [
                                           Padding(
@@ -513,9 +512,9 @@ class _MedicalHistoryCopyWidgetState extends State<MedicalHistoryCopyWidget> {
                                                 color: Colors.white,
                                                 borderRadius: BorderRadius.only(
                                                   bottomLeft:
-                                                      Radius.circular(0),
+                                                  Radius.circular(0),
                                                   bottomRight:
-                                                      Radius.circular(0),
+                                                  Radius.circular(0),
                                                   topLeft: Radius.circular(10),
                                                   topRight: Radius.circular(10),
                                                 ),

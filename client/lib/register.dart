@@ -58,7 +58,7 @@ class _Registration extends State<Registration> {
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                const MedicalHistoryCopyWidget()));
+                const MedicalHistory()));
       }
       else if (user.role == 'doctor') {
         Navigator.push(
