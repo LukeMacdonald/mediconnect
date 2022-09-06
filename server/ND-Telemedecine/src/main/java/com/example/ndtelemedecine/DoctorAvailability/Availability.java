@@ -46,5 +46,4 @@ public class Availability implements Serializable {
         return this.day_of_week;
     }
     
-
 }

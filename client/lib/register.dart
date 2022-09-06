@@ -20,19 +20,50 @@ class Registration extends StatefulWidget {
 class _Registration extends State<Registration> {
   User user = User("", "", "");
   String passwordConfirm = "";
+  bool empty = false;
 
   String url = "http://localhost:8080/Register";
 
   Future save() async {
-    await http.post(Uri.parse(url),
+    final response = await http.post(Uri.parse(url),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
           'email': user.email,
           'password': user.password,
           'role': user.role
         }));
+    //print(response.body);
+    if (response.body == "Saved user...") {
+      if (!mounted) return;
+      if(user.role == 'patient') {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                const MedicalHistoryCopyWidget()));
+      }
+      else if (user.role == 'doctor') {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                const Dashboard()));
+      }
+    } else {
+      showDialog<String>(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+                  content: const Text('Email Already Taken'),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context, 'OK');
+                      },
+                      child: const Text('OK'),
+                    ),
+                  ]));
+    }
   }
-
   String verificationCode = "";
   String tempCodeGenerated = "1234";
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -197,13 +228,8 @@ class _Registration extends State<Registration> {
                     {
                       if (user.emailValid(user.email) == true)
                         {
-                          user.role = "patient",
+                          user.role = 'patient',
                           save(),
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const MedicalHistoryCopyWidget()))
                         }
                       else
                         {
@@ -460,12 +486,8 @@ class _Registration extends State<Registration> {
                         {
                           if (user.emailValid(user.email) == true)
                             {
-                              user.role = "doctor",
-                              save(),
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const Dashboard()))
+                              user.role = 'doctor',
+                              save()
                             }
                           else
                             {
@@ -577,8 +599,8 @@ class _Registration extends State<Registration> {
             child: TextField(
               keyboardType: TextInputType.number,
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              style: TextStyle(color: Colors.black87),
-              decoration: InputDecoration(
+              style: const TextStyle(color: Colors.black87),
+              decoration: const InputDecoration(
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.only(top: 15),
                   prefixIcon: Icon(Icons.verified),
