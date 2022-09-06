@@ -10,6 +10,10 @@ class Dashboard extends StatefulWidget {
 class _Dashboard extends State<Dashboard> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+  // Call for userFound and establish user.dart fields
+  // String url = "http://localhost:8080/LogIn";
+  // response = await http.get(Uri.parse(url));
+
   Widget build(BuildContext context) {
     return Scaffold(
         key: scaffoldKey,

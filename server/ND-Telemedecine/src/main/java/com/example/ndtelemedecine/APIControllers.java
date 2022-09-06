@@ -17,6 +17,8 @@ public class APIControllers {
     
     @Autowired
     private UserRepo userRepo;
+
+    private User userFound;
     
     @Autowired
     private AvailabilityRepo availRepo;
@@ -51,11 +53,27 @@ public class APIControllers {
             throw new ApiRequestException("User already exists in system!");
         }
     }
-    
-    // Verifies user details
+
+    // Search whilst verifying for user details and store the found user
+    @PostMapping(value="/LogInAttempt")
+    public boolean LogInAttempt(@RequestBody User user) {
+        Boolean returnVal = false;
+        if (userRepo.findByEmailAndPassword(user.getEmail(), user.getPassword()) != null){
+            userFound = userRepo.findByEmailAndPassword(user.getEmail(), user.getPassword());
+            if (userFound.getFirstName() != null){
+                returnVal = true;
+            }
+        }
+        else{
+            throw new ApiRequestException("User does not exist");
+        }
+        return returnVal;
+    }
+
+    // Returns current user
     @GetMapping(value="/LogIn")
-    public ResponseEntity<User> LogIn(@RequestBody User user) {
-        return new ResponseEntity<User>(userRepo.findByEmailAndPassword(user.getEmail(), user.getPassword()), HttpStatus.OK);
+    public ResponseEntity<User> LogIn() {
+        return new ResponseEntity<User>(userFound, HttpStatus.OK);
     }
 
     // Get users by role
