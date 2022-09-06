@@ -14,7 +14,7 @@ class LogIn extends StatefulWidget {
 }
 
 class _LogIn extends State<LogIn> {
-  User user = User("", "");
+  User user = User("", "", "");
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   Widget userEmail() {
