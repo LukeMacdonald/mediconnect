@@ -118,8 +118,15 @@ public class APIControllers {
     // Sets a Availability For Doctor
     @PostMapping(value = "/SetDoctorAvailability")
     public String availability(@RequestBody Availability avail){
-        availRepo.save(avail);
-        return "Set Doctor Availability";
+        String message;
+        if(avail.getday_of_week() > 7 || avail.getday_of_week() < 0){
+            message = "Incorrect Day of Week Entry!";
+        }
+        else {
+            availRepo.save(avail);
+            message = "Availability Set!";
+        }
+        return message;
     }
     // Sets a Availability For Doctor
     @GetMapping(value = "/GetAllDoctorAvailability")
