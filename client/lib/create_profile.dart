@@ -235,47 +235,51 @@ class _ProfileCreation extends State<ProfileCreation> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           const SizedBox(height: 10),
-          Container(
-              constraints: const BoxConstraints(minWidth: 100, maxWidth: 500),
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: const [
-                    BoxShadow(
-                        color: Colors.black26,
-                        blurRadius: 6,
-                        offset: Offset(0, 2))
-                  ]),
-              height: 60,
-              //TODO: change to a date_time_picker
-              child: Center(
-                  child: TextField(
-                      controller: dateInput,
-                      decoration: const InputDecoration(
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.only(top: 15),
-                          prefixIcon: Icon(Icons.calendar_today),
-                          hintText: 'Date of Birth',
-                          hintStyle: TextStyle(color: Colors.black38)),
-                      readOnly: true,
-                      // set it true, user cannot edit text
-                      onTap: () async {
-                        DateTime? pickedDate = await showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(1950),
-                          lastDate: DateTime.now(),
-                          initialEntryMode: DatePickerEntryMode.calendarOnly,
-                        );
+          Align(
+              alignment: const AlignmentDirectional(-0.18, 0.05),
+              child: Container(
+                  constraints:
+                      const BoxConstraints(minWidth: 100, maxWidth: 350),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: const [
+                        BoxShadow(
+                            color: Colors.black26,
+                            blurRadius: 6,
+                            offset: Offset(0, 2))
+                      ]),
+                  height: 60,
+                  //TODO: change to a date_time_picker
+                  child: Center(
+                      child: TextField(
+                          controller: dateInput,
+                          decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              contentPadding: EdgeInsets.only(top: 15),
+                              prefixIcon: Icon(Icons.calendar_today),
+                              hintText: 'Date of Birth',
+                              hintStyle: TextStyle(color: Colors.black38)),
+                          readOnly: true,
+                          // set it true, user cannot edit text
+                          onTap: () async {
+                            DateTime? pickedDate = await showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime(1950),
+                              lastDate: DateTime.now(),
+                              initialEntryMode:
+                                  DatePickerEntryMode.calendarOnly,
+                            );
 
-                        if (pickedDate != null) {
-                          String formattedDate =
-                              DateFormat('dd-MM-yyyy').format(pickedDate);
-                          setState(() {
-                            dateInput.text = formattedDate;
-                          });
-                        }
-                      })))
+                            if (pickedDate != null) {
+                              String formattedDate =
+                                  DateFormat('dd-MM-yyyy').format(pickedDate);
+                              setState(() {
+                                dateInput.text = formattedDate;
+                              });
+                            }
+                          }))))
         ]);
   }
 
@@ -284,40 +288,42 @@ class _ProfileCreation extends State<ProfileCreation> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           const SizedBox(height: 10),
-          Container(
-            constraints: const BoxConstraints(minWidth: 100, maxWidth: 500),
-            decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: const [
-                  BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 6,
-                      offset: Offset(0, 2))
-                ]),
-            height: 60,
-            child: TextFormField(
-              //TODO: change variable to phone number
-              controller: TextEditingController(text: phoneNumber),
-              onChanged: (val) {
-                phoneNumber = val;
-              },
-              validator: (val) {
-                if (val == "") {
-                  return 'Phone Number is Empty';
-                }
-                return null;
-              },
-              keyboardType: TextInputType.phone,
-              style: const TextStyle(color: Colors.black87),
-              decoration: const InputDecoration(
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.only(top: 15),
-                  prefixIcon: Icon(Icons.phone),
-                  hintText: 'Phone Number',
-                  hintStyle: TextStyle(color: Colors.black38)),
-            ),
-          )
+          Align(
+              alignment: const AlignmentDirectional(-0.18, 0.05),
+              child: Container(
+                constraints: const BoxConstraints(minWidth: 100, maxWidth: 350),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: const [
+                      BoxShadow(
+                          color: Colors.black26,
+                          blurRadius: 6,
+                          offset: Offset(0, 2))
+                    ]),
+                height: 60,
+                child: TextFormField(
+                  //TODO: change variable to phone number
+                  controller: TextEditingController(text: phoneNumber),
+                  onChanged: (val) {
+                    phoneNumber = val;
+                  },
+                  validator: (val) {
+                    if (val == "") {
+                      return 'Phone Number is Empty';
+                    }
+                    return null;
+                  },
+                  keyboardType: TextInputType.phone,
+                  style: const TextStyle(color: Colors.black87),
+                  decoration: const InputDecoration(
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.only(top: 15),
+                      prefixIcon: Icon(Icons.phone_iphone),
+                      hintText: 'Phone Number',
+                      hintStyle: TextStyle(color: Colors.black38)),
+                ),
+              ))
         ]);
   }
 
