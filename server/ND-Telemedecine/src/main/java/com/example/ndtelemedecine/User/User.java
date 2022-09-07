@@ -12,12 +12,6 @@ import javax.persistence.Id;
 
 @Entity
 public class User {
-    private enum Role {
-        patient,
-        doctor,
-        superuser
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;

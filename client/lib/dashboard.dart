@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -10,6 +9,10 @@ class Dashboard extends StatefulWidget {
 
 class _Dashboard extends State<Dashboard> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  // Call for userFound and establish user.dart fields
+  // String url = "http://localhost:8080/LogIn";
+  // response = await http.get(Uri.parse(url));
 
   Widget build(BuildContext context) {
     return Scaffold(
