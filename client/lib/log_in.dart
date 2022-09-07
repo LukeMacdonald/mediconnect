@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:client/medical_history.dart';
+import 'package:client/create_profile.dart';
 import 'package:http/http.dart' as http;
 import 'user.dart';
 import 'register.dart';
@@ -33,7 +33,7 @@ class _LogIn extends State<LogIn> {
           context,
           MaterialPageRoute(
               builder: (context) =>
-                  const MedicalHistory())); // Should direct to profile creation page
+              const ProfileCreation())); // Should direct to profile creation page
     } else if (response.body == "true") {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => const Dashboard()));

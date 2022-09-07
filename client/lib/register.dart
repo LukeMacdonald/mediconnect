@@ -4,7 +4,7 @@ import 'package:client/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:client/medical_history.dart';
+import 'package:client/create_profile.dart';
 import 'package:http/http.dart' as http;
 
 import 'user.dart';
@@ -55,7 +55,7 @@ class _Registration extends State<Registration> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => const MedicalHistory()));
+                builder: (context) => const ProfileCreation()));
       } else if (user.role == 'doctor') {
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => const Dashboard()));

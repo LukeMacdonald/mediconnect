@@ -80,4 +80,7 @@ public class User {
     public Role getRole() {
         return this.role;
     }
+    public long getID(){
+        return this.id;
+    }
 }
