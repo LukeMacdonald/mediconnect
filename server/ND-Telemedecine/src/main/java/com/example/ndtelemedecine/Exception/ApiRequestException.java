@@ -1,4 +1,4 @@
-package com.example.ndtelemedecine.User.Exception;
+package com.example.ndtelemedecine.Exception;
 
 public class ApiRequestException extends RuntimeException {
     

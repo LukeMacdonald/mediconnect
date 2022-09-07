@@ -55,7 +55,7 @@ class _Registration extends State<Registration> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => const ProfileCreation()));
+                builder: (context) => ProfileCreation(user: user)));
       } else if (user.role == 'doctor') {
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => const Dashboard()));

@@ -1,4 +1,4 @@
-package com.example.ndtelemedecine.User.Exception;
+package com.example.ndtelemedecine.Exception;
 
 import java.time.ZonedDateTime;
 
@@ -13,6 +13,12 @@ public class ApiException {
         this.message = message;
         this.httpStatus = httpStatus;
         this.timestamp = timestamp;
+    }
+
+    public ApiException(String string) {
+        this.message = string;
+        this.httpStatus = HttpStatus.BAD_REQUEST;
+        this.timestamp = ZonedDateTime.now();
     }
 
     public String getMessage() {

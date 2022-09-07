@@ -7,10 +7,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.ndtelemedecine.User.Exception.ApiRequestException;
 import com.example.ndtelemedecine.User.*;
 import com.example.ndtelemedecine.DoctorAvailability.*;
 import com.example.ndtelemedecine.DoctorVerificiation.*;
+import com.example.ndtelemedecine.Exception.ApiRequestException;
 
 @RestController
 public class APIControllers {
@@ -44,7 +44,9 @@ public class APIControllers {
 
     @PostMapping(value="/Register")
     public String register(@RequestBody User user) {
-        
+        System.out.println("Saving user with the following details:");
+        System.out.println("Email: " + user.getEmail());
+        System.out.println("Password: " + user.getPassword());
         if (getUserByEmail(user).getBody().isEmpty()) {
             userRepo.save(user);
             return "Saved user...";
@@ -76,6 +78,31 @@ public class APIControllers {
         return new ResponseEntity<User>(userFound, HttpStatus.OK);
     }
 
+    // Assumed that user has filled in all details 
+
+    @PostMapping(value="/UpdateUser")
+    public String UpdateUser(@RequestBody User user) {
+        System.out.println("Saving user with the following details:");
+        System.out.println("Updating user with the following details:");
+        System.out.println("Name: " + user.getFirstName() + user.getFirstName());
+        System.out.println("Phone Number: " + user.getPhoneNumber());
+        System.out.println("DoB: " + user.getDob());
+        if (!getUserByEmail(user).getBody().isEmpty()) {
+            
+            // Get that user's role and add to the user to update 
+            // (Case where logging in does not pass user's role to front-end, but registering can)
+            user.setRole(userRepo.findByEmail(user.getEmail()).get(0).getRole().toString());
+            user.setID(userRepo.findByEmail(user.getEmail()).get(0).getID());
+            System.out.println("User's role is: " + user.getRole());
+            
+            userRepo.save(user);
+            return "Saved user...";
+        }
+        else {
+            throw new ApiRequestException("User already exists in system!");
+        }
+    }
+
     // Get users by role
     @GetMapping(value="/GetUser/Role")
     public ResponseEntity<List<User>> getUserByRole(@RequestBody User user) {
@@ -97,7 +124,7 @@ public class APIControllers {
     // Sets a Availability For Doctor
     @GetMapping(value = "/GetAllDoctorAvailability")
     public  ResponseEntity<List<Availability>> doctorsAvailability(){
-        return new ResponseEntity<>(availRepo.findByDoctorId(userFound.getID()), HttpStatus.OK);
+        return new ResponseEntity<>(availRepo.findBydoctorId(userFound.getID()), HttpStatus.OK);
     }
     // Checks Verification For Doctor
     @PostMapping(value = "/DoctorVerification")

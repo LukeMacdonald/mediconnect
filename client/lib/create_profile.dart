@@ -5,18 +5,24 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
+import 'dart:developer';
 import 'user.dart';
 
 class ProfileCreation extends StatefulWidget {
-  const ProfileCreation({Key? key}) : super(key: key);
+  User user;
+  ProfileCreation({Key? key, required this.user}) : super(key: key);
 
   @override
-  State<ProfileCreation> createState() => _ProfileCreation();
+  State<ProfileCreation> createState() => _ProfileCreation(user);
 }
 
 class _ProfileCreation extends State<ProfileCreation> {
   // TODO: Need new variables for user class
-  User user = User("", "", "");
+  // User user = User("", "", "");
+
+  User user;
+  _ProfileCreation(this.user);
+
   TextEditingController dateInput = TextEditingController();
   String firstName = "";
   String lastName = "";
@@ -30,7 +36,7 @@ class _ProfileCreation extends State<ProfileCreation> {
     super.initState();
   }
 
-  String url = "http://localhost:8080/profile_creation";
+  String url = "http://localhost:8080/UpdateUser";
 
   Future save() async {
     await http.post(Uri.parse(url),
@@ -38,7 +44,11 @@ class _ProfileCreation extends State<ProfileCreation> {
         body: json.encode({
           'email': user.email,
           'password': user.password,
-          'role': user.role
+          'role': user.role,
+          'firstName': user.firstName,
+          'lastName': user.lastName,
+          'phoneNumber': user.phoneNumber,
+          'dob': user.dob
         }));
   }
 
@@ -269,11 +279,13 @@ class _ProfileCreation extends State<ProfileCreation> {
                         );
 
                         if (pickedDate != null) {
-                          String formattedDate =
-                              DateFormat('dd-MM-yyyy').format(pickedDate);
+                          String formattedDate = DateFormat('yyyy-MM-dd').format(
+                              pickedDate); // Note that backend needs this format for string to be converted!!
                           setState(() {
                             dateInput.text = formattedDate;
+                            // Will be converted in backend
                           });
+                          user.dob = dateInput.text;
                         }
                       })))
         ]);
@@ -340,6 +352,15 @@ class _ProfileCreation extends State<ProfileCreation> {
                     {alert('Passwords Don\'t Match')}
                   else
                     {
+                      // I'll change it to the actual user variables later i swear
+                      // Backend will assume all data given is not empty
+                      // Role can be empty
+                      user.firstName = firstName,
+                      user.lastName = lastName,
+                      // user.dob = DOB,      // Commented out for now because user.dob is directly updated
+                      user.phoneNumber = phoneNumber,
+                      user.printUser(),
+                      save(), //Need listener if save successful here, otherwise print error
                       showDialog<String>(
                           context: context,
                           builder: (BuildContext context) => AlertDialog(
@@ -352,7 +373,7 @@ class _ProfileCreation extends State<ProfileCreation> {
                                       child: const Text('OK'),
                                     ),
                                   ]))
-                      //save(),
+                      // save(),
                       // Navigator.push(
                       //     context,
                       //     MaterialPageRoute(

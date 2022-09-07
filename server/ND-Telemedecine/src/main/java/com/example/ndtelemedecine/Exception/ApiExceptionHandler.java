@@ -1,4 +1,4 @@
-package com.example.ndtelemedecine.User.Exception;
+package com.example.ndtelemedecine.Exception;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;

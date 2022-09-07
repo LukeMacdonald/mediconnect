@@ -1,5 +1,7 @@
 package com.example.ndtelemedecine.User;
 
+import java.sql.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -7,6 +9,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+
 
 // This file describes the characteristics for all users.
 
@@ -16,30 +19,39 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column
-    private String  first_name;
+    @Column(name="first_name")
+    private String  firstName;
 
-    @Column
-    private String  last_name;
+    @Column(name="last_name")
+    private String  lastName;
 
-    @Column
+    @Column(name="dob")
+    private Date dob;
+
+    @Column(name="phone_number")
+    private String phoneNumber;
+
+    @Column(name="email")
     private String  email;
 
-    @Column
+    @Column(name="password")
     private String  password;
 
     @Column(columnDefinition = "ENUM('patient', 'doctor', 'superuser')")
     @Enumerated(EnumType.STRING)
     private Role    role;
 
-    // Below is not needed, as the db autogenerates it.
-    // private int     id;
-
     public void setFirstName(String first_name) {
-        this.first_name = first_name;
+        this.firstName = first_name;
     }
     public void setLastName(String last_name) {
-        this.last_name = last_name;
+        this.lastName = last_name;
+    }
+    public void setDob(Date dob) {
+        this.dob = dob;
+    }
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
     public void setEmail(String email) {
         this.email = email;
@@ -47,7 +59,7 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
-
+    
     public void setRole(String role) {
         switch (role) {
             case "patient":
@@ -61,14 +73,29 @@ public class User {
             case "superuser":
                 this.role = Role.superuser;
                 break;
+            
+            // TODO: Add some sort of check if an invalid role was given.
+            default:
+                break;
         }
     }
 
+    // This particular function is used for updating a user by setting the user's ID to what's passed in as a parameter.
+    public void setID(long id) {
+        this.id = id;
+    }
+
     public String getFirstName() {
-        return this.first_name;
+        return this.firstName;
     }
     public String getLastName() {
-        return this.last_name;
+        return this.lastName;
+    }
+    public Date getDob() {
+        return this.dob;
+    }
+    public String getPhoneNumber() {
+        return this.phoneNumber;
     }
     public String getEmail() {
         return this.email;

@@ -32,8 +32,8 @@ class _LogIn extends State<LogIn> {
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) =>
-              const ProfileCreation())); // Should direct to profile creation page
+              builder: (context) => ProfileCreation(
+                  user: user))); // Should direct to profile creation page
     } else if (response.body == "true") {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => const Dashboard()));

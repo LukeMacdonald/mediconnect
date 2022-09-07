@@ -12,38 +12,38 @@ import javax.persistence.IdClass;
 public class Availability implements Serializable {
 
     @Id
-    private int  doctor_id;
+    private int  doctorId;
     @Id
-    private String start_time;
+    private String startTime;
     @Id
-    private String end_time;
+    private String endTime;
     @Id
-    private int day_of_week;
+    private int dayOfWeek;
 
     public void setdoctor_id(int doctor_id) {
-        this.doctor_id= doctor_id;
+        this.doctorId= doctor_id;
     }
     public void setstart_time(String start_time){
-        this.start_time = start_time;
+        this.startTime = start_time;
     }
     public void setend_time(String end_time){
-        this.end_time = end_time;
+        this.endTime = end_time;
     }
     public void setday_of_week(int day_of_week){
-        this.day_of_week = day_of_week;
+        this.dayOfWeek = day_of_week;
     }
 
     public int get_doctor_id() {
-        return this.doctor_id;
+        return this.doctorId;
     }
     public String get_start_time(){
-        return this.start_time;
+        return this.startTime;
     }
     public String get_end_time(){
-        return this.end_time;
+        return this.endTime;
     }
     public int getday_of_week(){
-        return this.day_of_week;
+        return this.dayOfWeek;
     }
     
 }
