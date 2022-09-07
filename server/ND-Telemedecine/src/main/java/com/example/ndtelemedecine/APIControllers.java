@@ -83,10 +83,21 @@ public class APIControllers {
     }
 
     // Sets a Availability For Doctor
-    @PostMapping(value = "/SetDoctorAvailability")
+    @PostMapping(value = "/SetMultipleDoctorAvailability")
     public String availability(@RequestBody List<Availability> avail){
         availRepo.saveAll(avail);
         return "Set Doctor Availability";
+    }
+    // Sets a Availability For Doctor
+    @PostMapping(value = "/SetDoctorAvailability")
+    public String availability(@RequestBody Availability avail){
+        availRepo.save(avail);
+        return "Set Doctor Availability";
+    }
+    // Sets a Availability For Doctor
+    @GetMapping(value = "/GetAllDoctorAvailability")
+    public  ResponseEntity<List<Availability>> doctorsAvailability(){
+        return new ResponseEntity<>(availRepo.findByDoctorId(userFound.getID()), HttpStatus.OK);
     }
     // Checks Verification For Doctor
     @PostMapping(value = "/DoctorVerification")
