@@ -528,7 +528,9 @@ class _Registration extends State<Registration> {
     return Scaffold(
         key: scaffoldKey,
         body: Container(
+            height: MediaQuery.of(context).size.height * 1,
             decoration: BoxDecoration(
+                color: const Color(0xFF14181B),
                 image: DecorationImage(
                     fit: BoxFit.cover,
                     image: const AssetImage('images/background.jpeg'),
@@ -536,14 +538,14 @@ class _Registration extends State<Registration> {
                         Colors.black.withOpacity(0.5), BlendMode.darken))),
             child: SingleChildScrollView(
                 child: Column(
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                    width: double.infinity,
-                    height: 20,
-                    decoration: const BoxDecoration(color: Colors.transparent)),
-                Image.asset('images/Logo.png', height: 150),
+                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                        width: double.infinity,
+                        height: 20,
+                        decoration: const BoxDecoration(color: Colors.transparent)),
+                    Image.asset('images/Logo.png', height: 150),
                 Text('Sign Up',
                     style: GoogleFonts.roboto(
                       textStyle:
