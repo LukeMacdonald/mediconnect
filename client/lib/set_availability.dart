@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 
 import 'user.dart';
 
-//TODO: https://stackoverflow.com/questions/59425633/flutter-create-dynamic-textfield-when-button-click
+//TODO: Dynamically add textfields
 class SetAvailability extends StatefulWidget {
   const SetAvailability({Key? key}) : super(key: key);
 
@@ -17,9 +17,6 @@ class SetAvailability extends StatefulWidget {
 class _SetAvailability extends State<SetAvailability> {
   User user = User("", "", "");
   // TextEditingController dateInput = TextEditingController();
-  var dayTECs = <int, TextEditingController>{};
-  var hourTECs = <int, TextEditingController>{};
-  List<Entry> entries = [];
   String url = "http://localhost:8080/set_availability";
 
   // Change this for connection to backend
@@ -103,19 +100,98 @@ class _SetAvailability extends State<SetAvailability> {
               child: Row(
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(380, 0, 0, 0),
-                    child: Container(
-                      constraints:
-                          const BoxConstraints(minWidth: 200, maxWidth: 200),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
+                  Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                        child: Container(
+                          constraints: const BoxConstraints(
+                              minWidth: 100, maxWidth: 200),
+                          alignment: Alignment.centerLeft,
+                          decoration: BoxDecoration(
+                              color: const Color(0x86C6F7FD),
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: const [
+                                BoxShadow(
+                                    color: Colors.black26,
+                                    blurRadius: 6,
+                                    offset: Offset(0, 2))
+                              ]),
+                          height: 60,
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(20, 0, 0, 20),
+                            child: TextFormField(
+                              // keyboardType: TextInputType.name,
+                              style: const TextStyle(color: Colors.black),
+                              decoration: const InputDecoration(
+                                  border: InputBorder.none,
+                                  contentPadding: EdgeInsets.only(top: 15),
+                                  hintText: 'Day',
+                                  hintStyle: TextStyle(color: Colors.black)),
+                            ),
+                          ),
+                        ),
                       ),
-                      child: const Icon(Icons.calendar_today_rounded,
-                          color: Colors.black, size: 200),
-                    ),
-                  ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                        child: Container(
+                          constraints: const BoxConstraints(
+                              minWidth: 100, maxWidth: 200),
+                          alignment: Alignment.centerLeft,
+                          decoration: BoxDecoration(
+                              color: const Color(0x86C6F7FD),
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: const [
+                                BoxShadow(
+                                    color: Colors.black26,
+                                    blurRadius: 6,
+                                    offset: Offset(0, 2))
+                              ]),
+                          height: 60,
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(20, 0, 0, 20),
+                            child: TextFormField(
+                              // keyboardType: TextInputType.name,
+                              style: const TextStyle(color: Colors.black),
+                              decoration: const InputDecoration(
+                                  border: InputBorder.none,
+                                  contentPadding: EdgeInsets.only(top: 15),
+                                  hintText: 'Hour',
+                                  hintStyle: TextStyle(color: Colors.black)),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                          padding:
+                              const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                          child: Container(
+                              child: ElevatedButton(
+                            onPressed: () {},
+                            child: Icon(Icons.add, color: Colors.white),
+                            style: ElevatedButton.styleFrom(
+                              shape: CircleBorder(),
+                              padding: EdgeInsets.all(20),
+                              primary: Colors.grey,
+                              onPrimary: Colors.black,
+                            ),
+                          ))),
+                      Padding(
+                        padding:
+                            const EdgeInsetsDirectional.fromSTEB(80, 0, 0, 0),
+                        child: Container(
+                          constraints: const BoxConstraints(
+                              minWidth: 200, maxWidth: 200),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: const Icon(Icons.calendar_today_rounded,
+                              color: Colors.black, size: 200),
+                        ),
+                      ),
+                    ],
+                  )
                 ],
               ))
         ]));
@@ -160,10 +236,4 @@ class _SetAvailability extends State<SetAvailability> {
               ],
             ))));
   }
-}
-
-class Entry {
-  final String? day;
-  final String? hour;
-  Entry(this.day, this.hour);
 }
