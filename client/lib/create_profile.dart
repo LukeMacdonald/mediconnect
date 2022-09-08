@@ -17,16 +17,12 @@ class ProfileCreation extends StatefulWidget {
 }
 
 class _ProfileCreation extends State<ProfileCreation> {
-  // TODO: Need new variables for user class
-  // User user = User("", "", "");
-
   User user;
   _ProfileCreation(this.user);
 
   TextEditingController dateInput = TextEditingController();
   String firstName = "";
   String lastName = "";
-  String DOB = "";
   String phoneNumber = "";
   String passwordConfirm = "";
 
@@ -92,7 +88,6 @@ class _ProfileCreation extends State<ProfileCreation> {
                 ]),
             height: 60,
             child: TextFormField(
-              //TODO: change variable from user.email first name
               controller: TextEditingController(text: firstName),
               onChanged: (val) {
                 firstName = val;
@@ -129,7 +124,6 @@ class _ProfileCreation extends State<ProfileCreation> {
                   ]),
               height: 60,
               child: TextFormField(
-                //TODO: change variable from user.email to last name
                 controller: TextEditingController(text: lastName),
                 onChanged: (val) {
                   lastName = val;
@@ -214,7 +208,6 @@ class _ProfileCreation extends State<ProfileCreation> {
               height: 60,
               child: TextFormField(
                 obscureText: true,
-                //TODO: change variable from user.email to confirm password
                 controller: TextEditingController(text: passwordConfirm),
                 onChanged: (val) {
                   passwordConfirm = val;
@@ -241,12 +234,13 @@ class _ProfileCreation extends State<ProfileCreation> {
   }
 
   Widget userDOB() {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          const SizedBox(height: 10),
-          Container(
-              constraints: const BoxConstraints(minWidth: 100, maxWidth: 500),
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
+        Widget>[
+      const SizedBox(height: 10),
+      Align(
+          alignment: const AlignmentDirectional(-0.18, 0.05),
+          child: Container(
+              constraints: const BoxConstraints(minWidth: 100, maxWidth: 350),
               decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10),
@@ -257,7 +251,6 @@ class _ProfileCreation extends State<ProfileCreation> {
                         offset: Offset(0, 2))
                   ]),
               height: 60,
-              //TODO: change to a date_time_picker
               child: Center(
                   child: TextField(
                       controller: dateInput,
@@ -287,8 +280,8 @@ class _ProfileCreation extends State<ProfileCreation> {
                           });
                           user.dob = dateInput.text;
                         }
-                      })))
-        ]);
+                      }))))
+    ]);
   }
 
   Widget userPhoneNumber() {
@@ -296,40 +289,41 @@ class _ProfileCreation extends State<ProfileCreation> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           const SizedBox(height: 10),
-          Container(
-            constraints: const BoxConstraints(minWidth: 100, maxWidth: 500),
-            decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: const [
-                  BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 6,
-                      offset: Offset(0, 2))
-                ]),
-            height: 60,
-            child: TextFormField(
-              //TODO: change variable to phone number
-              controller: TextEditingController(text: phoneNumber),
-              onChanged: (val) {
-                phoneNumber = val;
-              },
-              validator: (val) {
-                if (val == "") {
-                  return 'Phone Number is Empty';
-                }
-                return null;
-              },
-              keyboardType: TextInputType.phone,
-              style: const TextStyle(color: Colors.black87),
-              decoration: const InputDecoration(
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.only(top: 15),
-                  prefixIcon: Icon(Icons.phone),
-                  hintText: 'Phone Number',
-                  hintStyle: TextStyle(color: Colors.black38)),
-            ),
-          )
+          Align(
+              alignment: const AlignmentDirectional(-0.18, 0.05),
+              child: Container(
+                constraints: const BoxConstraints(minWidth: 100, maxWidth: 350),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: const [
+                      BoxShadow(
+                          color: Colors.black26,
+                          blurRadius: 6,
+                          offset: Offset(0, 2))
+                    ]),
+                height: 60,
+                child: TextFormField(
+                  controller: TextEditingController(text: phoneNumber),
+                  onChanged: (val) {
+                    phoneNumber = val;
+                  },
+                  validator: (val) {
+                    if (val == "") {
+                      return 'Phone Number is Empty';
+                    }
+                    return null;
+                  },
+                  keyboardType: TextInputType.phone,
+                  style: const TextStyle(color: Colors.black87),
+                  decoration: const InputDecoration(
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.only(top: 15),
+                      prefixIcon: Icon(Icons.phone_iphone),
+                      hintText: 'Phone Number',
+                      hintStyle: TextStyle(color: Colors.black38)),
+                ),
+              ))
         ]);
   }
 
@@ -373,12 +367,6 @@ class _ProfileCreation extends State<ProfileCreation> {
                                       child: const Text('OK'),
                                     ),
                                   ]))
-                      // save(),
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) =>
-                      //             const MedicalHistoryCopyWidget()))
                     }
                 },
             style: ElevatedButton.styleFrom(
