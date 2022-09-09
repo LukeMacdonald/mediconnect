@@ -70,10 +70,10 @@ class _ProfileCreation extends State<ProfileCreation> {
   // User Profile Creationg Widgets
   Widget userGivenName() {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         const SizedBox(height: 10),
-        const Padding(padding: EdgeInsets.fromLTRB(220, 0, 0, 0)),
         Row(mainAxisSize: MainAxisSize.max, children: [
           Container(
             constraints: const BoxConstraints(minWidth: 100, maxWidth: 240),
@@ -153,10 +153,10 @@ class _ProfileCreation extends State<ProfileCreation> {
 
   Widget userPassword() {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         const SizedBox(height: 10),
-        const Padding(padding: EdgeInsets.fromLTRB(220, 0, 0, 0)),
         Row(mainAxisSize: MainAxisSize.max, children: [
           Container(
             constraints: const BoxConstraints(minWidth: 100, maxWidth: 240),
