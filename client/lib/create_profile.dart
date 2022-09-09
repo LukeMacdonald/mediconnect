@@ -234,13 +234,12 @@ class _ProfileCreation extends State<ProfileCreation> {
   }
 
   Widget userDOB() {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
-        Widget>[
-      const SizedBox(height: 10),
-      Align(
-          alignment: const AlignmentDirectional(-0.18, 0.05),
-          child: Container(
-              constraints: const BoxConstraints(minWidth: 100, maxWidth: 350),
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          const SizedBox(height: 10),
+          Container(
+              constraints: const BoxConstraints(minWidth: 100, maxWidth: 500),
               decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10),
@@ -280,8 +279,8 @@ class _ProfileCreation extends State<ProfileCreation> {
                           });
                           user.dob = dateInput.text;
                         }
-                      }))))
-    ]);
+                      })))
+        ]);
   }
 
   Widget userPhoneNumber() {
@@ -289,41 +288,39 @@ class _ProfileCreation extends State<ProfileCreation> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           const SizedBox(height: 10),
-          Align(
-              alignment: const AlignmentDirectional(-0.18, 0.05),
-              child: Container(
-                constraints: const BoxConstraints(minWidth: 100, maxWidth: 350),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: const [
-                      BoxShadow(
-                          color: Colors.black26,
-                          blurRadius: 6,
-                          offset: Offset(0, 2))
-                    ]),
-                height: 60,
-                child: TextFormField(
-                  controller: TextEditingController(text: phoneNumber),
-                  onChanged: (val) {
-                    phoneNumber = val;
-                  },
-                  validator: (val) {
-                    if (val == "") {
-                      return 'Phone Number is Empty';
-                    }
-                    return null;
-                  },
-                  keyboardType: TextInputType.phone,
-                  style: const TextStyle(color: Colors.black87),
-                  decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.only(top: 15),
-                      prefixIcon: Icon(Icons.phone_iphone),
-                      hintText: 'Phone Number',
-                      hintStyle: TextStyle(color: Colors.black38)),
-                ),
-              ))
+          Container(
+            constraints: const BoxConstraints(minWidth: 100, maxWidth: 500),
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: const [
+                  BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 6,
+                      offset: Offset(0, 2))
+                ]),
+            height: 60,
+            child: TextFormField(
+              controller: TextEditingController(text: phoneNumber),
+              onChanged: (val) {
+                phoneNumber = val;
+              },
+              validator: (val) {
+                if (val == "") {
+                  return 'Phone Number is Empty';
+                }
+                return null;
+              },
+              keyboardType: TextInputType.phone,
+              style: const TextStyle(color: Colors.black87),
+              decoration: const InputDecoration(
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.only(top: 15),
+                  prefixIcon: Icon(Icons.phone_iphone),
+                  hintText: 'Phone Number',
+                  hintStyle: TextStyle(color: Colors.black38)),
+            ),
+          )
         ]);
   }
 
