@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'medical_history.dart';
 
 import 'dart:developer';
 import 'user.dart';
@@ -359,7 +360,10 @@ class _ProfileCreation extends State<ProfileCreation> {
                                   actions: <Widget>[
                                     TextButton(
                                       onPressed: () {
-                                        Navigator.pop(context, 'OK');
+                                        Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                        builder: (context) => const MedicalHistory()));
                                       },
                                       child: const Text('OK'),
                                     ),
