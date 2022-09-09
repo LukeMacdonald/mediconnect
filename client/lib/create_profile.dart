@@ -73,7 +73,7 @@ class _ProfileCreation extends State<ProfileCreation> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         const SizedBox(height: 10),
-        const Padding(padding: EdgeInsets.fromLTRB(360, 0, 0, 0)),
+        const Padding(padding: EdgeInsets.fromLTRB(220, 0, 0, 0)),
         Row(mainAxisSize: MainAxisSize.max, children: [
           Container(
             constraints: const BoxConstraints(minWidth: 100, maxWidth: 240),
@@ -156,7 +156,7 @@ class _ProfileCreation extends State<ProfileCreation> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         const SizedBox(height: 10),
-        const Padding(padding: EdgeInsets.fromLTRB(360, 0, 0, 0)),
+        const Padding(padding: EdgeInsets.fromLTRB(220, 0, 0, 0)),
         Row(mainAxisSize: MainAxisSize.max, children: [
           Container(
             constraints: const BoxConstraints(minWidth: 100, maxWidth: 240),
@@ -361,9 +361,10 @@ class _ProfileCreation extends State<ProfileCreation> {
                                     TextButton(
                                       onPressed: () {
                                         Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                        builder: (context) => const MedicalHistory()));
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const MedicalHistory()));
                                       },
                                       child: const Text('OK'),
                                     ),
