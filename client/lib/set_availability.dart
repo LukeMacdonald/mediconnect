@@ -30,6 +30,50 @@ class _SetAvailability extends State<SetAvailability> {
         }));
   }
 
+  final List<Map> _availability = [
+    {'Day': 'Monday', 'Hour': '9:00 - 10:00'},
+    {'Day': 'Monday', 'Hour': '13:00 - 14:00'},
+    {'Day': 'Thursday', 'Hour': '11:00 - 12:00'},
+  ];
+
+  String dayValue = 'Day';
+  String hourValue = 'Hour';
+  final _days = [
+    'Day',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+  ];
+  // Change the type if necessary
+  final _hours = [
+    'Hour',
+    '9:00 - 10:00',
+    '10:00 - 11:00',
+    '11:00 - 12:00',
+    '12:00 - 13:00',
+    '13:00 - 14:00',
+    '14:00 - 15:00',
+    '15:00 - 16:00',
+    '16:00 - 17:00'
+  ];
+
+  Future<String?> alert(String message) {
+    return showDialog<String>(
+        context: context,
+        builder: (BuildContext context) =>
+            AlertDialog(content: Text(message), actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context, 'OK');
+                },
+                child: const Text('OK'),
+              ),
+            ]));
+  }
+
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   Widget availabilityList() {
@@ -50,15 +94,9 @@ class _SetAvailability extends State<SetAvailability> {
                         offset: Offset(0, 2))
                   ]),
               height: 60,
-              // TODO: add a list of the set availibility (list_view)
-              child: Text(
-                  '    List of Each Day of the Week and the option to select what hours the doctor is available to work',
-                  style: GoogleFonts.lexendDeca(
-                    textStyle: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                    ),
-                  )))
+              // LISTVIEW
+              // TODO: Get the entire list of the specific doctor
+              child: SizedBox(height: 200, child: _createTable()))
         ]);
   }
 
@@ -75,7 +113,7 @@ class _SetAvailability extends State<SetAvailability> {
           const Padding(padding: EdgeInsets.fromLTRB(0, 15, 0, 0)),
           availabilityList(),
           Align(
-              alignment: const AlignmentDirectional(-0.57, 0.05),
+              alignment: const AlignmentDirectional(-0.35, 0.05),
               child: Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
                 child: Text('Specific Dates Not Available',
@@ -120,14 +158,31 @@ class _SetAvailability extends State<SetAvailability> {
                           height: 60,
                           child: Padding(
                             padding: const EdgeInsets.fromLTRB(20, 0, 0, 20),
-                            child: TextFormField(
-                              // keyboardType: TextInputType.name,
-                              style: const TextStyle(color: Colors.black),
+                            child: DropdownButtonFormField(
                               decoration: const InputDecoration(
-                                  border: InputBorder.none,
-                                  contentPadding: EdgeInsets.only(top: 15),
-                                  hintText: 'Day',
-                                  hintStyle: TextStyle(color: Colors.black)),
+                                border: InputBorder.none,
+                                contentPadding: EdgeInsets.only(top: 15),
+                              ),
+                              // Initial Value
+                              value: dayValue,
+
+                              // Down Arrow Icon
+                              icon: const Icon(Icons.keyboard_arrow_down),
+
+                              // Array list of items
+                              items: _days.map((String days) {
+                                return DropdownMenuItem(
+                                  value: days,
+                                  child: Text(days),
+                                );
+                              }).toList(),
+                              // After selecting the desired option,it will
+                              // change button value to selected value
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  dayValue = newValue!;
+                                });
+                              },
                             ),
                           ),
                         ),
@@ -150,14 +205,31 @@ class _SetAvailability extends State<SetAvailability> {
                           height: 60,
                           child: Padding(
                             padding: const EdgeInsets.fromLTRB(20, 0, 0, 20),
-                            child: TextFormField(
-                              // keyboardType: TextInputType.name,
-                              style: const TextStyle(color: Colors.black),
+                            child: DropdownButtonFormField(
                               decoration: const InputDecoration(
-                                  border: InputBorder.none,
-                                  contentPadding: EdgeInsets.only(top: 15),
-                                  hintText: 'Hour',
-                                  hintStyle: TextStyle(color: Colors.black)),
+                                border: InputBorder.none,
+                                contentPadding: EdgeInsets.only(top: 15),
+                              ),
+                              // Initial Value
+                              value: hourValue,
+
+                              // Down Arrow Icon
+                              icon: const Icon(Icons.keyboard_arrow_down),
+
+                              // Array list of items
+                              items: _hours.map((String hours) {
+                                return DropdownMenuItem(
+                                  value: hours,
+                                  child: Text(hours),
+                                );
+                              }).toList(),
+                              // After selecting the desired option,it will
+                              // change button value to selected value
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  hourValue = newValue!;
+                                });
+                              },
                             ),
                           ),
                         ),
@@ -167,12 +239,33 @@ class _SetAvailability extends State<SetAvailability> {
                               const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
                           child: Container(
                               child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              if (dayValue == 'Day') {
+                                {
+                                  alert('Please Enter A Day');
+                                }
+                              } else if (hourValue == 'Hour') {
+                                {
+                                  alert('Please Enter A Time');
+                                }
+                              } else {
+                                //TODO: Backend work
+                                {
+                                  alert('Valid Availability');
+                                  // Refresh the page
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (BuildContext context) =>
+                                              super.widget));
+                                }
+                              }
+                            },
                             child: Icon(Icons.add, color: Colors.white),
                             style: ElevatedButton.styleFrom(
                               shape: CircleBorder(),
                               padding: EdgeInsets.all(20),
-                              primary: Colors.grey,
+                              primary: Color.fromARGB(255, 129, 125, 125),
                               onPrimary: Colors.black,
                             ),
                           ))),
@@ -235,5 +328,23 @@ class _SetAvailability extends State<SetAvailability> {
                 ),
               ],
             ))));
+  }
+
+  DataTable _createTable() {
+    return DataTable(columns: _createColumns(), rows: _createRows());
+  }
+
+  List<DataColumn> _createColumns() {
+    return [
+      const DataColumn(label: Text('Day')),
+      const DataColumn(label: Text('Time Range'))
+    ];
+  }
+
+  List<DataRow> _createRows() {
+    return _availability
+        .map((map) => DataRow(
+            cells: [DataCell(Text(map['Day'])), DataCell(Text(map['Hour']))]))
+        .toList();
   }
 }
