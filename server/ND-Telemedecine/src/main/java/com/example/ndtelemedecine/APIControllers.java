@@ -130,8 +130,10 @@ public class APIControllers {
     }
     // Sets a Availability For Doctor
     @GetMapping(value = "/GetAllDoctorAvailability")
-    public  ResponseEntity<List<Availability>> doctorsAvailability(){
-        return new ResponseEntity<>(availRepo.findBydoctorId(userFound.getID()), HttpStatus.OK);
+    public List<Availability> doctorsAvailability(){
+        userFound = new User();
+        userFound.setID(123);
+        return availRepo.findByDoctorId(userFound.getID());
     }
     // Checks Verification For Doctor
     @PostMapping(value = "/DoctorVerification")
@@ -150,4 +152,5 @@ public class APIControllers {
             return "Unknown Issue!";
         }
     }
+
 }
