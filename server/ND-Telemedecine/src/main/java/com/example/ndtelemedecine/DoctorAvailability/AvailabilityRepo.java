@@ -6,8 +6,8 @@ import java.util.*;
 
 public interface AvailabilityRepo extends JpaRepository<Availability, Long>  {
 
-    List<Availability>      findBydoctorId(long id);
+    List<Availability>      findByDoctorId(int id);
     List<Availability>      findBydayOfWeek(int day);
-    List<Availability>      findBydoctorIdAndDayOfWeek(long id,int day);
+    List<Availability>      findBydoctorIdAndDayOfWeek(int id,int day);
     
 }

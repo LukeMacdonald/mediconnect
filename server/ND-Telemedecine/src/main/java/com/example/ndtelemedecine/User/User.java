@@ -17,7 +17,7 @@ import javax.persistence.Id;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private int id;
 
     @Column(name="first_name")
     private String  firstName;
@@ -81,7 +81,7 @@ public class User {
     }
 
     // This particular function is used for updating a user by setting the user's ID to what's passed in as a parameter.
-    public void setID(long id) {
+    public void setID(int id) {
         this.id = id;
     }
 
@@ -107,7 +107,7 @@ public class User {
     public Role getRole() {
         return this.role;
     }
-    public long getID(){
+    public int getID(){
         return this.id;
     }
 }
