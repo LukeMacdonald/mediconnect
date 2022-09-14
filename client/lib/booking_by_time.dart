@@ -18,7 +18,6 @@ class _BookingByTime extends State<BookingByTime> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   String url = "http://localhost:8080/booking_by_time";
-  String url2 = "http://localhost:8080/GetAllDoctorsAvailabilities";
   //Not sure if url needed
 
   TextEditingController dateInput = TextEditingController();
@@ -37,7 +36,8 @@ class _BookingByTime extends State<BookingByTime> {
   int? doctorId;
 
   Future getAvailability() async {
-    final response = await http.get(Uri.parse(url2));
+    final response = await http
+        .get(Uri.parse("http://localhost:8080/GetAllDoctorsAvailabilities"));
     var responseData = json.decode(response.body);
     print(response.body);
     String day = "";
@@ -70,8 +70,15 @@ class _BookingByTime extends State<BookingByTime> {
           " - " +
           availiability["_end_time"]
               .substring(0, availiability["_end_time"].length - 3);
-      _booking.add({'Doctor': "Jamal", 'Day': day, 'Hour': time});
+
+      final responseName = await http.get(Uri.parse(
+          "http://localhost:8080/GetUserFullName/" + doctorId.toString()));
+      var responseDataName = responseName.body;
+
+      _booking.add(
+          {'Doctor': responseDataName.toString(), 'Day': day, 'Hour': time});
     }
+    setState(() {});
   }
 
   final List<String> _hours = [

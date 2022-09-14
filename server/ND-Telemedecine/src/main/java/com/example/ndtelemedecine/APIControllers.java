@@ -168,7 +168,7 @@ public class APIControllers {
     // Get the users full name from id
     @GetMapping(value = "/GetUserFullName/{id}")
     public String getUserFullName(@PathVariable("id") int id){
-        return (userRepo.findById(id).getFirstName() + userRepo.findById(id).getLastName()) ;
+        return (userRepo.findById(id).getFirstName() + " " + userRepo.findById(id).getLastName()) ;
     }
 
 }
