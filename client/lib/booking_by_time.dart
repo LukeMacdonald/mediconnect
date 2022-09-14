@@ -18,6 +18,7 @@ class _BookingByTime extends State<BookingByTime> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   String url = "http://localhost:8080/booking_by_time";
+  String url2 = "http://localhost:8080/GetAllDoctorsAvailabilities";
   //Not sure if url needed
 
   TextEditingController dateInput = TextEditingController();
@@ -26,11 +27,53 @@ class _BookingByTime extends State<BookingByTime> {
   void initState() {
     dateInput.text = ""; //set the initial value of text field
     super.initState();
+    getAvailability();
+    //print(_booking);
   }
 
   final List<Map> _booking = [];
   final List<String> _doctors = ['Doctor'];
   String doctorValue = 'Doctor';
+  int? doctorId;
+
+  Future getAvailability() async {
+    final response = await http.get(Uri.parse(url2));
+    var responseData = json.decode(response.body);
+    print(response.body);
+    String day = "";
+
+    for (var availiability in responseData) {
+      switch (availiability["day_of_week"]) {
+        case 1:
+          day = 'Monday';
+          break;
+        case 2:
+          day = 'Tuesday';
+          break;
+        case 3:
+          day = 'Wednesday';
+          break;
+        case 4:
+          day = 'Thursday';
+          break;
+        case 5:
+          day = 'Friday';
+          break;
+        case 6:
+          day = 'Saturday';
+          break;
+      }
+      // Provided the doctor has gone through the dashboard, we simply take the doctor_id from their current availiabilities
+      doctorId = availiability["_doctor_id"];
+      String time = availiability["_start_time"]
+              .substring(0, availiability["_start_time"].length - 3) +
+          " - " +
+          availiability["_end_time"]
+              .substring(0, availiability["_end_time"].length - 3);
+      _booking.add({'Doctor': "Jamal", 'Day': day, 'Hour': time});
+    }
+  }
+
   final List<String> _hours = [
     'Hour',
     '09:00 - 10:00',
@@ -65,6 +108,7 @@ class _BookingByTime extends State<BookingByTime> {
               // LISTVIEW
               child: SizedBox(
                 height: 200,
+                child: _createTable(),
               ))
         ]);
   }
@@ -359,6 +403,7 @@ class _BookingByTime extends State<BookingByTime> {
 
   List<DataColumn> _createColumns() {
     return [
+      const DataColumn(label: Text('Doctor')),
       const DataColumn(label: Text('Day')),
       const DataColumn(label: Text('Time Range'))
     ];
@@ -366,8 +411,11 @@ class _BookingByTime extends State<BookingByTime> {
 
   List<DataRow> _createRows() {
     return _booking
-        .map((map) => DataRow(
-            cells: [DataCell(Text(map['Day'])), DataCell(Text(map['Hour']))]))
+        .map((map) => DataRow(cells: [
+              DataCell(Text(map['Doctor'])),
+              DataCell(Text(map['Day'])),
+              DataCell(Text(map['Hour']))
+            ]))
         .toList();
   }
 }

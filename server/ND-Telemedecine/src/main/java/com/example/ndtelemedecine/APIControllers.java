@@ -1,5 +1,6 @@
 package com.example.ndtelemedecine;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -136,6 +137,16 @@ public class APIControllers {
         userFound.setID(123);
         return availRepo.findByDoctorId(userFound.getID());
     }
+
+    @GetMapping(value = "/GetAllDoctorsAvailabilities")
+    public List<Availability> getDoctorsAvailabilities(){
+        List<Availability> allAvailabilities = new ArrayList<>();
+        for(int i = 1;i < 7;i++){
+            allAvailabilities.addAll(availRepo.findBydayOfWeek(i));
+        }
+        return allAvailabilities;
+    }
+
     // Checks Verification For Doctor
     @PostMapping(value = "/DoctorVerification")
     public String verification(@RequestBody Verification veri){
@@ -152,6 +163,12 @@ public class APIControllers {
         else{
             return "Unknown Issue!";
         }
+    }
+
+    // Get the users full name from id
+    @GetMapping(value = "/GetUserFullName/{id}")
+    public String getUserFullName(@PathVariable("id") int id){
+        return (userRepo.findById(id).getFirstName() + userRepo.findById(id).getLastName()) ;
     }
 
 }
