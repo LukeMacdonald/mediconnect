@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:collection/equality.dart';
 
 import 'user.dart';
 
-//TODO: Dynamically add textfields
 class SetAvailability extends StatefulWidget {
   const SetAvailability({Key? key}) : super(key: key);
 
@@ -17,25 +17,87 @@ class SetAvailability extends StatefulWidget {
 class _SetAvailability extends State<SetAvailability> {
   User user = User("", "", "");
   // TextEditingController dateInput = TextEditingController();
-  String url = "http://localhost:8080/set_availability";
+  String url = "http://localhost:8080/SetDoctorAvailability";
+  String url2 = "http://localhost:8080/GetAllDoctorAvailability";
+  int? doctorId;
 
-  // Change this for connection to backend
   Future save() async {
-    await http.post(Uri.parse(url),
+    int? day;
+    switch (dayValue) {
+      case "Monday":
+        day = 1;
+        break;
+      case 'Tuesday':
+        day = 2;
+        break;
+      case 'Wednesday':
+        day = 3;
+        break;
+      case 'Thursday':
+        day = 4;
+        break;
+      case 'Friday':
+        day = 5;
+        break;
+      case 'Saturday':
+        day = 6;
+        break;
+    }
+    final response = await http.post(Uri.parse(url),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
-          'email': user.email,
-          'password': user.password,
-          'role': user.role
+          'doctor_id': doctorId,
+          'day_of_week': day,
+          'start_time': hourValue.substring(0, 5),
+          'end_time': hourValue.substring(
+            8,
+          )
         }));
   }
 
-  final List<Map> _availability = [
-    {'Day': 'Monday', 'Hour': '9:00 - 10:00'},
-    {'Day': 'Monday', 'Hour': '13:00 - 14:00'},
-    {'Day': 'Thursday', 'Hour': '11:00 - 12:00'},
-  ];
+  final List<Map> _availability = [];
+  @override
+  void initState() {
+    super.initState();
+    getAvailability();
+  }
 
+  Future getAvailability() async {
+    final response = await http.get(Uri.parse(url2));
+    var responseData = json.decode(response.body);
+    String day = "";
+
+    for (var availiability in responseData) {
+      switch (availiability["day_of_week"]) {
+        case 1:
+          day = 'Monday';
+          break;
+        case 2:
+          day = 'Tuesday';
+          break;
+        case 3:
+          day = 'Wednesday';
+          break;
+        case 4:
+          day = 'Thursday';
+          break;
+        case 5:
+          day = 'Friday';
+          break;
+        case 6:
+          day = 'Saturday';
+          break;
+      }
+      // Provided the doctor has gone through the dashboard, we simply take the doctor_id from their current availiabilities
+      doctorId = availiability["_doctor_id"];
+      String time = availiability["_start_time"]
+              .substring(0, availiability["_start_time"].length - 3) +
+          " - " +
+          availiability["_end_time"]
+              .substring(0, availiability["_end_time"].length - 3);
+      _availability.add({'Day': day, 'Hour': time});
+    }
+  }
   String dayValue = 'Day';
   String hourValue = 'Hour';
   final _days = [
@@ -50,7 +112,7 @@ class _SetAvailability extends State<SetAvailability> {
   // Change the type if necessary
   final _hours = [
     'Hour',
-    '9:00 - 10:00',
+    '09:00 - 10:00',
     '10:00 - 11:00',
     '11:00 - 12:00',
     '12:00 - 13:00',
@@ -95,7 +157,6 @@ class _SetAvailability extends State<SetAvailability> {
                   ]),
               height: 60,
               // LISTVIEW
-              // TODO: Get the entire list of the specific doctor
               child: SizedBox(height: 200, child: _createTable()))
         ]);
   }
@@ -178,10 +239,8 @@ class _SetAvailability extends State<SetAvailability> {
                               }).toList(),
                               // After selecting the desired option,it will
                               // change button value to selected value
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  dayValue = newValue!;
-                                });
+                              onChanged: (value) {
+                                dayValue = value.toString();
                               },
                             ),
                           ),
@@ -225,10 +284,8 @@ class _SetAvailability extends State<SetAvailability> {
                               }).toList(),
                               // After selecting the desired option,it will
                               // change button value to selected value
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  hourValue = newValue!;
-                                });
+                              onChanged: (value) {
+                                hourValue = value.toString();
                               },
                             ),
                           ),
@@ -249,23 +306,33 @@ class _SetAvailability extends State<SetAvailability> {
                                   alert('Please Enter A Time');
                                 }
                               } else {
-                                //TODO: Backend work
                                 {
-                                  alert('Valid Availability');
-                                  // Refresh the page
-                                  Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (BuildContext context) =>
-                                              super.widget));
+                                  // Map Equality comparsion to dynamically compare the keys and its current values to compare to what exists
+                                  if (_availability.any((element) =>
+                                      const MapEquality().equals(element, {
+                                        'Day': dayValue,
+                                        'Hour': hourValue
+                                      }))) {
+                                    alert('Invalid Avaliability');
+                                  } else {
+                                    alert('Valid Availability');
+                                    setState(() {
+                                      _availability.add(
+                                          {'Day': dayValue, 'Hour': hourValue});
+                                    });
+
+                                    // Save the availability
+                                    save();
+                                  }
+
                                 }
                               }
                             },
                             child: Icon(Icons.add, color: Colors.white),
                             style: ElevatedButton.styleFrom(
-                              shape: CircleBorder(),
-                              padding: EdgeInsets.all(20),
-                              primary: Color.fromARGB(255, 129, 125, 125),
+                              shape: const CircleBorder(),
+                              padding: const EdgeInsets.all(20),
+                              primary: const Color.fromARGB(255, 129, 125, 125),
                               onPrimary: Colors.black,
                             ),
                           ))),
@@ -329,9 +396,9 @@ class _SetAvailability extends State<SetAvailability> {
               ],
             ))));
   }
-
-  DataTable _createTable() {
-    return DataTable(columns: _createColumns(), rows: _createRows());
+  Widget _createTable() {
+    return SingleChildScrollView(
+        child: DataTable(columns: _createColumns(), rows: _createRows()));
   }
 
   List<DataColumn> _createColumns() {

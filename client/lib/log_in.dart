@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:client/medical_history.dart';
+import 'package:client/create_profile.dart';
 import 'package:http/http.dart' as http;
 import 'user.dart';
 import 'register.dart';
 import "dashboard.dart";
+import 'dart:convert';
+
 
 class LogIn extends StatefulWidget {
   const LogIn({Key? key}) : super(key: key);
@@ -15,7 +17,45 @@ class LogIn extends StatefulWidget {
 
 class _LogIn extends State<LogIn> {
   User user = User("", "", "");
+  String url = "http://localhost:8080/LogInAttempt";
+  String url2 = "http://localhost:8080/LogIn";
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  Future login() async {
+    var response = await http.post(Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'email': user.email,
+          'password': user.password,
+        }));
+    if (!mounted) return;
+    if (response.body == "false") {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ProfileCreation(
+                  user: user))); // Should direct to profile creation page
+    } else if (response.body == "true") {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => const Dashboard()));
+    } else {
+      alert("User does not exist");
+    }
+  }
+
+  Future<String?> alert(String message) {
+    return showDialog<String>(
+        context: context,
+        builder: (BuildContext context) =>
+            AlertDialog(content: Text(message), actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context, 'OK');
+                },
+                child: const Text('OK'),
+              ),
+            ]));
+  }
 
   Widget userEmail() {
     return Column(
@@ -40,8 +80,8 @@ class _LogIn extends State<LogIn> {
               onChanged: (val) {
                 user.email = val;
               },
-              validator: (value) {
-                if (value == "") {
+              validator: (val) {
+                if (val == null || val.isEmpty) {
                   return 'Email is Empty';
                 }
                 return null;
@@ -82,6 +122,12 @@ class _LogIn extends State<LogIn> {
               onChanged: (val) {
                 user.password = val;
               },
+              validator: (val) {
+                if (val == null || val.isEmpty) {
+                  return 'Password is Empty';
+                }
+                return null;
+              },
               style: const TextStyle(color: Colors.black87),
               decoration: const InputDecoration(
                   border: InputBorder.none,
@@ -101,10 +147,10 @@ class _LogIn extends State<LogIn> {
         constraints: const BoxConstraints(minWidth: 70, maxWidth: 500),
         child: ElevatedButton(
             onPressed: () => {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const Dashboard()))
+                  if (user.email == "" || user.password == "")
+                    {alert("An input field is empty")}
+                  else
+                    {login()}
                 },
             style: ElevatedButton.styleFrom(
                 minimumSize: const Size(230, 50),

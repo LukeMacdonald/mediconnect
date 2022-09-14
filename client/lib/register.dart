@@ -2,8 +2,9 @@ import 'dart:convert';
 
 import 'package:client/dashboard.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:client/medical_history.dart';
+import 'package:client/create_profile.dart';
 import 'package:http/http.dart' as http;
 
 import 'user.dart';
@@ -19,6 +20,50 @@ class Registration extends StatefulWidget {
 class _Registration extends State<Registration> {
   User user = User("", "", "");
   String passwordConfirm = "";
+  String verificationCode = "";
+
+  String url = "http://localhost:8080/Register";
+  String url2 = "http://localhost:8080/DoctorVerification";
+
+  Future checkVerification() async {
+    final response = await http.post(Uri.parse(url2),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'email': user.email,
+          'code': verificationCode,
+        }));
+    String responseMessage = response.body;
+    if (responseMessage == "Codes Matched!") {
+      save();
+    } else {
+      alert(responseMessage);
+    }
+  }
+
+  Future save() async {
+    final response = await http.post(Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'email': user.email,
+          'password': user.password,
+          'role': user.role
+        }));
+    //print(response.body);
+    if (response.body == "Saved user...") {
+      if (!mounted) return;
+      if (user.role == 'patient') {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ProfileCreation(user: user)));
+      } else if (user.role == 'doctor') {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const Dashboard()));
+      }
+    } else {
+      alert("Email Already Taken!");
+    }
+  }
 
   String url = "http://localhost:8080/register";
 
@@ -35,6 +80,20 @@ class _Registration extends State<Registration> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   bool isCheckedP = false;
   bool isCheckedD = false;
+
+  Future<String?> alert(String message) {
+    return showDialog<String>(
+        context: context,
+        builder: (BuildContext context) =>
+            AlertDialog(content: Text(message), actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context, 'OK');
+                },
+                child: const Text('OK'),
+              ),
+            ]));
+  }
 
   // Patient Registration Widgets
   Widget patientEmail() {
@@ -60,8 +119,8 @@ class _Registration extends State<Registration> {
               onChanged: (val) {
                 user.email = val;
               },
-              validator: (value) {
-                if (value == "") {
+              validator: (val) {
+                if (val == "") {
                   return 'Email is Empty';
                 }
                 return null;
@@ -158,35 +217,23 @@ class _Registration extends State<Registration> {
         constraints: const BoxConstraints(minWidth: 70, maxWidth: 500),
         child: ElevatedButton(
             onPressed: () => {
-                  if (passwordConfirm == user.password)
+                  if (user.email == "")
+                    {alert('Email is empty')}
+                  else if (user.password == "" || passwordConfirm == "")
+                    {alert('A password input is empty')}
+                  else if (passwordConfirm == user.password &&
+                      user.password != "")
                     {
-                      user.role = "Patient",
-                      save(),
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  const MedicalHistoryCopyWidget()))
+                      if (user.emailValid(user.email) == true)
+                        {
+                          user.role = 'patient',
+                          save(),
+                        }
+                      else
+                        {alert('Email is in invalid format')}
                     }
                   else
-                    {
-                      showDialog<String>(
-                          context: context,
-                          builder: (BuildContext context) => AlertDialog(
-                                  content: const Text('Passwords Don\'t Match'),
-                                  actions: <Widget>[
-                                    TextButton(
-                                        onPressed: () =>
-                                            Navigator.pop(context, 'Cancel'),
-                                        child: const Text('Cancel')),
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context, 'OK');
-                                      },
-                                      child: const Text('OK'),
-                                    ),
-                                  ]))
-                    }
+                    {alert('Passwords Don\'t Match')}
                 },
             style: ElevatedButton.styleFrom(
                 minimumSize: const Size(230, 50),
@@ -372,34 +419,20 @@ class _Registration extends State<Registration> {
         constraints: const BoxConstraints(minWidth: 70, maxWidth: 500),
         child: ElevatedButton(
             onPressed: () => {
-                  if (passwordConfirm == user.password)
+                  if (user.email == "")
+                    {alert('Email is empty!')}
+                  else if (user.password == "" || passwordConfirm == "")
+                    {alert('A password input is empty')}
+                  else if (passwordConfirm == user.password &&
+                      user.password != "")
                     {
-                      user.role = "Doctor",
-                      save(),
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const Dashboard()))
+                      if (user.emailValid(user.email) == true)
+                        {user.role = 'doctor', checkVerification()}
+                      else
+                        {alert('Email is in invalid format!')}
                     }
                   else
-                    {
-                      showDialog<String>(
-                          context: context,
-                          builder: (BuildContext context) => AlertDialog(
-                                  content: const Text('Passwords Don\'t Match'),
-                                  actions: <Widget>[
-                                    TextButton(
-                                        onPressed: () =>
-                                            Navigator.pop(context, 'Cancel'),
-                                        child: const Text('Cancel')),
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context, 'OK');
-                                      },
-                                      child: const Text('OK'),
-                                    ),
-                                  ]))
-                    }
+                    {alert('Passwords Don\'t Match')}
                 },
             style: ElevatedButton.styleFrom(
                 minimumSize: const Size(230, 50),
@@ -456,15 +489,19 @@ class _Registration extends State<Registration> {
                       offset: Offset(0, 2))
                 ]),
             height: 60,
-            child: const TextField(
+            child: TextField(
               keyboardType: TextInputType.number,
-              style: TextStyle(color: Colors.black87),
-              decoration: InputDecoration(
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              style: const TextStyle(color: Colors.black87),
+              decoration: const InputDecoration(
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.only(top: 15),
                   prefixIcon: Icon(Icons.verified),
                   hintText: 'Verification Code',
                   hintStyle: TextStyle(color: Colors.black38)),
+              onChanged: (val) {
+                verificationCode = val;
+              },
             ),
           )
         ]);
@@ -503,7 +540,9 @@ class _Registration extends State<Registration> {
     return Scaffold(
         key: scaffoldKey,
         body: Container(
+            height: MediaQuery.of(context).size.height * 1,
             decoration: BoxDecoration(
+                color: const Color(0xFF14181B),
                 image: DecorationImage(
                     fit: BoxFit.cover,
                     image: const AssetImage('images/background.jpeg'),
@@ -511,14 +550,14 @@ class _Registration extends State<Registration> {
                         Colors.black.withOpacity(0.5), BlendMode.darken))),
             child: SingleChildScrollView(
                 child: Column(
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                    width: double.infinity,
-                    height: 20,
-                    decoration: const BoxDecoration(color: Colors.transparent)),
-                Image.asset('images/Logo.png', height: 150),
+                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                        width: double.infinity,
+                        height: 20,
+                        decoration: const BoxDecoration(color: Colors.transparent)),
+                    Image.asset('images/Logo.png', height: 150),
                 Text('Sign Up',
                     style: GoogleFonts.roboto(
                       textStyle:

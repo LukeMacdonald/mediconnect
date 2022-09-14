@@ -3,43 +3,85 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import "dashboard.dart";
+import 'package:client/styles/custom_styles.dart';
+import 'package:client/user_medical.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-class MedicalHistoryCopyWidget extends StatefulWidget {
-  const MedicalHistoryCopyWidget({Key? key}) : super(key: key);
+
+class MedicalHistory extends StatefulWidget {
+  const MedicalHistory({Key? key}) : super(key: key);
 
   @override
-  _MedicalHistoryCopyWidgetState createState() =>
-      _MedicalHistoryCopyWidgetState();
+  State<MedicalHistory> createState() => _MedicalHistory();
 }
 
-class _MedicalHistoryCopyWidgetState extends State<MedicalHistoryCopyWidget> {
+class _MedicalHistory extends State<MedicalHistory> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  TextEditingController ill = TextEditingController();
+  TextEditingController med = TextEditingController();
+  TextEditingController dis = TextEditingController();
+  UserMedicalHistory user = UserMedicalHistory();
 
   bool smoke = false;
   bool drink = false;
   bool medication = false;
+  bool _disabled = true;
+
+  List<String> setillnesses = ['Cancer', 'Diabetes', 'Cardiac Disease',
+    'Asthma', 'Alzheimer\'s', 'Depression',];
+
+  List<String> medications = [];
+  List<String> setdisabilites = ['Hearing Impairment', 'Vision Impairment',
+    'Autism', 'Mobility Disability ','Cerebral Palsy'];
+
+  List<Object?> selecteddisability = [];
+  List<Object?> selectedMeds = [];
+  List<Object?> selectedillnesses = [];
+
+  String url = "URL to save medical profile";
+  String url2 = "URL to medications";
+  String url3 = "URL to illnesses";
+  String ur4 = "URL to disabilites";
+  String url5 = "URL to get user id";
+
+  Future save() async {
+    var response = await http.post(Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'id': user.id,
+          'smokes': user.smokes,
+          'drinks': user.drinks,
+          'medication': user.medications,
+        }));
+    // ADD MORE LATER
+  }
 
   Widget checks() {
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Wrap(
       children: [
         const Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(15, 0, 0, 15),
+          padding: EdgeInsetsDirectional.fromSTEB(20, 0, 0, 15),
           child: Text(
             'Are you currently taking any medication?',
-            style: TextStyle(
-                fontFamily: 'Poppins',
-                fontWeight: FontWeight.normal,
-                fontSize: 16),
+            style: CustomTextStyle.nameOfTextStyle,
           ),
         ),
         CustomRadioButton(
+          spacing: 50,
           buttonLables: const ['Yes', 'No'],
           buttonValues: const ['Yes', 'No'],
-          radioButtonValue: (value) => {
-            if (value == 'Yes') {drink = true} else {drink = false},
-          },
+          radioButtonValue: (value) {
+            if (value == 'Yes') {medication = true;
+            setState(() {
+              _disabled = false;
+            });}
+            else {
+              medication = false;
+              setState(() {
+                _disabled = true;
+              });}},
           enableButtonWrap: true,
           elevation: 5,
           autoWidth: true,
@@ -50,75 +92,103 @@ class _MedicalHistoryCopyWidgetState extends State<MedicalHistoryCopyWidget> {
           selectedColor: const Color.fromRGBO(57, 210, 192, 1),
           padding: 5,
         ),
-        Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(10, 10, 10, 0),
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            height: 100,
-            constraints: const BoxConstraints(
-              maxWidth: double.infinity,
-            ),
-            decoration: BoxDecoration(
-              color: const Color(0xFFECECEC),
-              boxShadow: const [
-                BoxShadow(
-                  blurRadius: 4,
-                  color: Color(0x33000000),
-                  offset: Offset(0, 2),
-                )
-              ],
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(15, 0, 0, 0),
-              child: TextFormField(
-                autofocus: true,
-                obscureText: false,
-                decoration: const InputDecoration(
-                  hintText: 'What Medications are you taking?\n[List Here]',
-                  hintStyle: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.normal,
-                      fontSize: 16),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Color(0x00000000),
-                      width: 1,
-                    ),
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(4.0),
-                      topRight: Radius.circular(4.0),
-                    ),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Color(0x00000000),
-                      width: 1,
-                    ),
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(4.0),
-                      topRight: Radius.circular(4.0),
-                    ),
-                  ),
-                ),
-                style: const TextStyle(
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.normal,
-                    fontSize: 16),
-                keyboardType: TextInputType.multiline,
+        Wrap(
+            spacing: 30,
+            children: [
+              CustomCheckBoxGroup(
+                buttonLables: medications,
+                buttonValuesList: medications,
+                checkBoxButtonValues: (values){
+                  selectedMeds = values;},
+                enableButtonWrap: true,
+                elevation: 5,
+                width: 150,
+                enableShape: true,
+                unSelectedBorderColor: const Color.fromARGB(255, 245, 245, 245),
+                selectedBorderColor: const Color.fromRGBO(57, 210, 192, 1),
+                unSelectedColor: const Color.fromARGB(255, 245, 245, 245),
+                selectedColor: const Color.fromRGBO(57, 210, 192, 1),
+                padding: 5,
               ),
-            ),
-          ),
-        ),
+              Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(60, 10, 10, 0),
+                  child:
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 50,
+                      constraints: const BoxConstraints(
+                        maxWidth: 400,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFECECEC),
+                        boxShadow: const [
+                          BoxShadow(
+                            blurRadius: 4,
+                            color: Color(0x33000000),
+                            offset: Offset(0, 2),
+                          )
+                        ],
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child:
+                      Padding(
+                        padding: const EdgeInsetsDirectional.fromSTEB(5, 0, 0, 0),
+                        child: TextFormField(
+                          enabled: !_disabled,
+                          controller: med,
+                          decoration: const InputDecoration(
+                            hintText: 'What Medications Do You Take?',
+                            hintStyle: CustomTextStyle.nameOfTextStyle,
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Color(0x00000000),
+                                width: 1,
+                              ),
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(4.0),
+                                topRight: Radius.circular(4.0),
+                              ),
+                            ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Color(0x00000000),
+                              ),
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(4.0),
+                                topRight: Radius.circular(4.0),
+                              ),
+                            ),
+                          ),
+                          style: CustomTextStyle.nameOfTextStyle,
+                        ),
+                      ),
+                    ),),
+                    Padding(
+                      padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
+                      child: FloatingActionButton(
+                        onPressed: (){
+                          if(med.text !="What Medications Do You Take?" && med.text !="" && !setillnesses.contains(ill.text)){
+                            setState(() {
+                              medications.add(med.text);
+                              selectedMeds.add(med.text);
+                              med.clear();
+                            });
+                          }
+                          },
+                        backgroundColor: const Color.fromRGBO(57, 210, 192, 1),
+                        elevation: 8,
+                        child: const Icon(
+                          Icons.add_rounded,
+                          color: Colors.white,
+                          size: 28,
+                        ),
+                      ),
+                    ),
         const Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(15, 10, 0, 0),
+          padding: EdgeInsetsDirectional.fromSTEB(20, 15, 0, 15),
           child: Text(
             'Do you smoke?',
-            style: TextStyle(
-              fontFamily: 'Poppins',
-              fontWeight: FontWeight.normal,
-              fontSize: 16,
-            ),
+            style: CustomTextStyle.nameOfTextStyle,
           ),
         ),
         CustomRadioButton(
@@ -131,6 +201,7 @@ class _MedicalHistoryCopyWidgetState extends State<MedicalHistoryCopyWidget> {
           elevation: 5,
           autoWidth: true,
           enableShape: true,
+          spacing: 50,
           unSelectedBorderColor: const Color.fromARGB(255, 245, 245, 245),
           selectedBorderColor: const Color.fromRGBO(57, 210, 192, 1),
           unSelectedColor: const Color.fromARGB(255, 245, 245, 245),
@@ -138,13 +209,11 @@ class _MedicalHistoryCopyWidgetState extends State<MedicalHistoryCopyWidget> {
           padding: 5,
         ),
         const Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(15, 10, 0, 0),
+
+          padding: EdgeInsetsDirectional.fromSTEB(20, 15, 0, 15),
           child: Text(
             'Do you drink alcohol?',
-            style: TextStyle(
-                fontFamily: 'Poppins',
-                fontWeight: FontWeight.normal,
-                fontSize: 16),
+            style: CustomTextStyle.nameOfTextStyle,
           ),
         ),
         CustomRadioButton(
@@ -155,6 +224,8 @@ class _MedicalHistoryCopyWidgetState extends State<MedicalHistoryCopyWidget> {
           },
           enableButtonWrap: true,
           elevation: 5,
+          spacing: 50,
+
           autoWidth: true,
           enableShape: true,
           unSelectedBorderColor: const Color.fromARGB(255, 245, 245, 245),
@@ -164,29 +235,31 @@ class _MedicalHistoryCopyWidgetState extends State<MedicalHistoryCopyWidget> {
           padding: 5,
         ),
         const Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(15, 10, 0, 0),
+          padding: EdgeInsetsDirectional.fromSTEB(15, 20, 0, 0),
           child: Text(
             'Do you have any illnesses?',
-            style: TextStyle(
-                fontFamily: 'Poppins',
-                fontWeight: FontWeight.normal,
-                fontSize: 16),
+            style: CustomTextStyle.nameOfTextStyle,
           ),
         ),
       ],
-    );
+    )]);
   }
-
   Widget submit() {
     return Container(
         constraints: const BoxConstraints(minWidth: 70, maxWidth: 500),
         child: ElevatedButton(
             onPressed: () => {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const Dashboard()))
-                },
+              user.medications = medication,
+              user.smokes = smoke,
+              user.drinks = drink,
+              user.illnesses = selectedillnesses,
+              user.meds = selectedMeds,
+              user.disabilities = selecteddisability,
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const Dashboard()))
+            },
             style: ElevatedButton.styleFrom(
                 minimumSize: const Size(230, 50),
                 padding: const EdgeInsets.all(15),
@@ -201,37 +274,17 @@ class _MedicalHistoryCopyWidgetState extends State<MedicalHistoryCopyWidget> {
                   ),
                 ))));
   }
-
   Widget illnesses() {
     return Wrap(
       spacing: 30,
-      runSpacing: 0,
-      alignment: WrapAlignment.start,
-      crossAxisAlignment: WrapCrossAlignment.start,
-      direction: Axis.horizontal,
-      runAlignment: WrapAlignment.start,
-      verticalDirection: VerticalDirection.down,
-      clipBehavior: Clip.none,
+      crossAxisAlignment: WrapCrossAlignment.center,
       children: [
         CustomCheckBoxGroup(
-          buttonLables: const [
-            'Cancer',
-            'Diabetes',
-            'Cardiac Disease',
-            'Asthma',
-            'Alzheimer\'s',
-            'Depresseion',
-          ],
-          buttonValuesList: const [
-            'Cancer',
-            'Diabetes',
-            'Cardiac Disease',
-            'Asthma',
-            'Alzheimer\'s',
-            'Depresseion',
-          ],
-          checkBoxButtonValues: (values) => {},
-          horizontal: false,
+          buttonLables: setillnesses,
+          buttonValuesList: setillnesses,
+          checkBoxButtonValues: (values){
+            selectedillnesses = values;
+            },
           enableButtonWrap: true,
           elevation: 5,
           width: 150,
@@ -243,12 +296,12 @@ class _MedicalHistoryCopyWidgetState extends State<MedicalHistoryCopyWidget> {
           padding: 5,
         ),
         Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 10, 0),
+          padding: const EdgeInsetsDirectional.fromSTEB(60, 10, 10, 0),
           child: Container(
             width: MediaQuery.of(context).size.width,
-            height: 100,
+            height: 50,
             constraints: const BoxConstraints(
-              maxWidth: double.infinity,
+              maxWidth: 400,
             ),
             decoration: BoxDecoration(
               color: const Color(0xFFECECEC),
@@ -261,17 +314,17 @@ class _MedicalHistoryCopyWidgetState extends State<MedicalHistoryCopyWidget> {
               ],
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Padding(
+            child:Padding(
+
               padding: const EdgeInsetsDirectional.fromSTEB(15, 0, 0, 0),
               child: TextFormField(
                 autofocus: true,
                 obscureText: false,
+                controller: ill,
                 decoration: const InputDecoration(
                   hintText: 'Any Other not on list?',
-                  hintStyle: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.normal,
-                      fontSize: 16),
+                  hintStyle: CustomTextStyle.nameOfTextStyle,
+
                   enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(
                       color: Color(0x00000000),
@@ -293,129 +346,135 @@ class _MedicalHistoryCopyWidgetState extends State<MedicalHistoryCopyWidget> {
                     ),
                   ),
                 ),
-                style: const TextStyle(
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.normal,
-                    fontSize: 16),
-                keyboardType: TextInputType.multiline,
+                style: CustomTextStyle.nameOfTextStyle
+              ),
+            ),
+          ),),
+          Padding(
+          padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
+            child: FloatingActionButton(
+              onPressed: (){
+                if(ill.text !="Any Other not on list?" && !setillnesses.contains(ill.text)){
+                  setState(() {
+                    setillnesses.add(ill.text);
+                    ill.clear();
+                  });
+                }
+                },
+              backgroundColor: const Color.fromRGBO(57, 210, 192, 1),
+              elevation: 8,
+              child: const Icon(
+                Icons.add_rounded,
+                color: Colors.white,
+                size: 28,
               ),
             ),
           ),
-        ),
+
         const Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
+          padding: EdgeInsetsDirectional.fromSTEB(20, 20, 0, 20),
           child: Text(
             'Do you have any Disabilities?',
-            style: TextStyle(
-                fontFamily: 'Poppins',
-                fontWeight: FontWeight.normal,
-                fontSize: 16),
+            style: CustomTextStyle.nameOfTextStyle,
           ),
         ),
-      ],
-    );
+      ]);
   }
-
-  Widget disabilites() {
+  Widget disabilities() {
     return Wrap(
-      spacing: 60,
-      runSpacing: 0,
-      alignment: WrapAlignment.start,
-      crossAxisAlignment: WrapCrossAlignment.start,
-      direction: Axis.horizontal,
-      runAlignment: WrapAlignment.start,
-      verticalDirection: VerticalDirection.down,
-      clipBehavior: Clip.none,
-      children: [
-        CustomCheckBoxGroup(
-          buttonLables: const [
-            'Hearing Impairment',
-            'Vision Impairment',
-            'Autism',
-            'Mobility Disability ',
-            'Cerebral Palsy',
-          ],
-          buttonValuesList: const [
-            'Hearing Impairment',
-            'Vision Impairment',
-            'Autism',
-            'Mobility Disability ',
-            'Cerebral Palsy',
-          ],
-          checkBoxButtonValues: (values) => print(values),
-          horizontal: false,
-          enableButtonWrap: true,
-          elevation: 5,
-          width: 150,
-          enableShape: true,
-          unSelectedBorderColor: Color.fromARGB(255, 245, 245, 245),
-          selectedBorderColor: const Color.fromRGBO(57, 210, 192, 1),
-          unSelectedColor: Color.fromARGB(255, 245, 245, 245),
-          selectedColor: const Color.fromRGBO(57, 210, 192, 1),
-          padding: 5,
-        ),
-        Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 10, 20),
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            height: 100,
-            constraints: const BoxConstraints(
-              maxWidth: double.infinity,
-            ),
-            decoration: BoxDecoration(
-              color: const Color(0xFFECECEC),
-              boxShadow: const [
-                BoxShadow(
-                  blurRadius: 4,
-                  color: Color(0x33000000),
-                  offset: Offset(0, 2),
-                )
-              ],
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(15, 0, 0, 0),
-              child: TextFormField(
-                autofocus: true,
-                obscureText: false,
-                decoration: const InputDecoration(
-                  hintText: 'Any Other not on list?',
-                  hintStyle: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.normal,
-                      fontSize: 16),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Color(0x00000000),
-                      width: 1,
-                    ),
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(4.0),
-                      topRight: Radius.circular(4.0),
+        spacing: 30,
+        alignment: WrapAlignment.center,
+        children: [
+          CustomCheckBoxGroup(
+            buttonLables: setdisabilites,
+            buttonValuesList: setdisabilites,
+            checkBoxButtonValues: (values){
+              selecteddisability = values;
+            },
+            enableButtonWrap: true,
+            elevation: 5,
+            width: 150,
+            enableShape: true,
+            unSelectedBorderColor: const Color.fromARGB(255, 245, 245, 245),
+            selectedBorderColor: const Color.fromRGBO(57, 210, 192, 1),
+            unSelectedColor: const Color.fromARGB(255, 245, 245, 245),
+            selectedColor: const Color.fromRGBO(57, 210, 192, 1),
+            padding: 5,
+          ),
+          Padding(
+              padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 10, 20),
+              child:Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 50,
+                  constraints: const BoxConstraints(
+                    maxWidth: 400,
+                  ),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFECECEC),
+                    boxShadow: const [
+                      BoxShadow(
+                        blurRadius: 4,
+                        color: Color(0x33000000),
+                        offset: Offset(0, 2),
+                      )
+                    ],
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child:
+                  Padding(
+                    padding: const EdgeInsetsDirectional.fromSTEB(15, 0, 0, 0),
+                    child: TextFormField(
+                      autofocus: true,
+                      controller: dis,
+                      decoration: const InputDecoration(
+                        hintText: 'Any Other not on list?',
+                        hintStyle: CustomTextStyle.nameOfTextStyle,
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color(0x00000000),
+                            width: 1,
+                          ),
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(4.0),
+                            topRight: Radius.circular(4.0),
+                          ),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color(0x00000000),
+                            width: 1,
+                          ),
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(4.0),
+                            topRight: Radius.circular(4.0),
+                          ),
+                        ),
+                      ),
+                      style: CustomTextStyle.nameOfTextStyle,
                     ),
                   ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Color(0x00000000),
-                      width: 1,
-                    ),
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(4.0),
-                      topRight: Radius.circular(4.0),
+                ),),
+                Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
+                  child: FloatingActionButton(
+                    onPressed: (){
+                      if(dis.text !="Any Other not on list?" && !setdisabilites.contains(dis.text)){
+                        setState(() {
+                          setdisabilites.add(dis.text);
+                          dis.clear();
+                        });
+                      }
+                    },
+                    backgroundColor: const Color.fromRGBO(57, 210, 192, 1),
+                    elevation: 8,
+                    child: const Icon(
+                      Icons.add_rounded,
+                      color: Colors.white,
+                      size: 28,
                     ),
                   ),
                 ),
-                style: const TextStyle(
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.normal,
-                    fontSize: 16),
-                keyboardType: TextInputType.multiline,
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
+    ]);
   }
 
   @override
@@ -446,11 +505,11 @@ class _MedicalHistoryCopyWidgetState extends State<MedicalHistoryCopyWidget> {
               ),
               child: SingleChildScrollView(
                 child: Column(
-                  mainAxisSize: MainAxisSize.max,
                   children: [
                     Padding(
                       padding:
-                          const EdgeInsetsDirectional.fromSTEB(0, 50, 0, 0),
+                      const EdgeInsetsDirectional.fromSTEB(0, 50, 0, 0),
+
                       child: Container(
                         width: 700,
                         decoration: BoxDecoration(
@@ -466,8 +525,6 @@ class _MedicalHistoryCopyWidgetState extends State<MedicalHistoryCopyWidget> {
                         ),
                         child: SingleChildScrollView(
                           child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               const Text(
                                 'Medical History',
@@ -488,21 +545,11 @@ class _MedicalHistoryCopyWidgetState extends State<MedicalHistoryCopyWidget> {
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                   child: Column(
-                                    mainAxisSize: MainAxisSize.max,
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    CrossAxisAlignment.start,
                                     children: [
                                       Wrap(
-                                        spacing: 0,
-                                        runSpacing: 0,
-                                        alignment: WrapAlignment.start,
-                                        crossAxisAlignment:
-                                            WrapCrossAlignment.start,
-                                        direction: Axis.horizontal,
-                                        runAlignment: WrapAlignment.start,
-                                        verticalDirection:
-                                            VerticalDirection.down,
-                                        clipBehavior: Clip.none,
+
                                         children: [
                                           Padding(
                                             padding: const EdgeInsetsDirectional
@@ -513,9 +560,9 @@ class _MedicalHistoryCopyWidgetState extends State<MedicalHistoryCopyWidget> {
                                                 color: Colors.white,
                                                 borderRadius: BorderRadius.only(
                                                   bottomLeft:
-                                                      Radius.circular(0),
+                                                  Radius.circular(0),
                                                   bottomRight:
-                                                      Radius.circular(0),
+                                                  Radius.circular(0),
                                                   topLeft: Radius.circular(10),
                                                   topRight: Radius.circular(10),
                                                 ),
@@ -527,13 +574,13 @@ class _MedicalHistoryCopyWidgetState extends State<MedicalHistoryCopyWidget> {
                                       ),
                                       Padding(
                                         padding: const EdgeInsetsDirectional
-                                            .fromSTEB(20, 0, 0, 0),
+                                            .fromSTEB(5, 0, 5, 0),
                                         child: illnesses(),
                                       ),
                                       Padding(
                                         padding: const EdgeInsetsDirectional
-                                            .fromSTEB(20, 0, 0, 0),
-                                        child: disabilites(),
+                                            .fromSTEB(5, 0, 5, 0),
+                                        child: disabilities(),
                                       ),
                                     ],
                                   ),
@@ -541,7 +588,7 @@ class _MedicalHistoryCopyWidgetState extends State<MedicalHistoryCopyWidget> {
                               ),
                               Padding(
                                 padding: const EdgeInsetsDirectional.fromSTEB(
-                                    10, 70, 10, 30),
+                                    5, 70, 5, 30),
                                 child: Container(
                                     width: double.infinity,
                                     height: 60,
@@ -568,3 +615,4 @@ class _MedicalHistoryCopyWidgetState extends State<MedicalHistoryCopyWidget> {
         ));
   }
 }
+
