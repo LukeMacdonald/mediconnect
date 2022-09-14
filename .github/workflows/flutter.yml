@@ -10,6 +10,8 @@ on:
     branches: [ "main" ,"develop","database_to_backend"]
   pull_request:
     branches: [ "main","develop","database_to_backend"]
+    paths:
+      - ".github/workflows/flutter.yaml"
 
 jobs:
   build:
