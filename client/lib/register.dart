@@ -65,18 +65,6 @@ class _Registration extends State<Registration> {
     }
   }
 
-  String url = "http://localhost:8080/register";
-
-  Future save() async {
-    await http.post(Uri.parse(url),
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode({
-          'email': user.email,
-          'password': user.password,
-          'role': user.role
-        }));
-  }
-
   final scaffoldKey = GlobalKey<ScaffoldState>();
   bool isCheckedP = false;
   bool isCheckedD = false;
@@ -550,14 +538,14 @@ class _Registration extends State<Registration> {
                         Colors.black.withOpacity(0.5), BlendMode.darken))),
             child: SingleChildScrollView(
                 child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                        width: double.infinity,
-                        height: 20,
-                        decoration: const BoxDecoration(color: Colors.transparent)),
-                    Image.asset('images/Logo.png', height: 150),
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                    width: double.infinity,
+                    height: 20,
+                    decoration: const BoxDecoration(color: Colors.transparent)),
+                Image.asset('images/Logo.png', height: 150),
                 Text('Sign Up',
                     style: GoogleFonts.roboto(
                       textStyle:
