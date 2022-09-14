@@ -7,8 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.ndtelemedecine.User.*;
 import com.example.ndtelemedecine.DoctorAvailability.*;
+import com.example.ndtelemedecine.User.UserRepo;
+import com.example.ndtelemedecine.User.User;
 import com.example.ndtelemedecine.DoctorVerificiation.*;
 import com.example.ndtelemedecine.Exception.ApiRequestException;
 
