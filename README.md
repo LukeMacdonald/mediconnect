@@ -1,4 +1,4 @@
 # ND-Telemedicine-App
-This branch attempts to communicate between backend and database. Branched from commit 98efdd238bae47a3199a1358de317ef7305a37d4
+This branch creates unit testing for patients/doctors registering and logging into the system.
 
 Front end using Dart (Flutter) with backend Java (Springboot)

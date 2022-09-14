@@ -50,6 +50,12 @@ public class APIControllers {
         return new ResponseEntity<List<User>>(userRepo.findByEmail(user.getEmail()), HttpStatus.OK);
     }
 
+    // Returns just the user object
+    @GetMapping(value="/GetUserBy/Email")
+    public User getUserObjByEmail(@RequestBody User user) {
+        return userRepo.findByEmailAndPassword(user.getEmail(), user.getPassword());
+    }
+
     @PostMapping(value="/Register")
     public String register(@RequestBody User user) {
         System.out.println("Saving user with the following details:");
@@ -139,7 +145,7 @@ public class APIControllers {
     // Sets a Availability For Doctor
     @GetMapping(value = "/GetAllDoctorAvailability")
     public List<Availability> doctorsAvailability(){
-        userFound = new User();
+        User userFound = new User();
         userFound.setID(123);
         return availRepo.findByDoctorId(userFound.getID());
     }
