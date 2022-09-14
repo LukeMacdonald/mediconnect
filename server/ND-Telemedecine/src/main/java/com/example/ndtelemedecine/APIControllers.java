@@ -1,5 +1,6 @@
 package com.example.ndtelemedecine;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.example.ndtelemedecine.DoctorAppointment.*;
 import com.example.ndtelemedecine.DoctorAvailability.*;
 import com.example.ndtelemedecine.User.UserRepo;
 import com.example.ndtelemedecine.User.User;
@@ -27,6 +29,10 @@ public class APIControllers {
 
     @Autowired
     private VerificationRepo verRepo;
+
+    @Autowired
+    private AppointmentRepo appointRepo;
+    
 
     @GetMapping(value="/")
     public String mainPage() {
@@ -169,6 +175,30 @@ public class APIControllers {
     @GetMapping(value = "/GetUserFullName/{id}")
     public String getUserFullName(@PathVariable("id") int id){
         return (userRepo.findById(id).getFirstName() + " " + userRepo.findById(id).getLastName()) ;
+    }
+
+    // Search for appointment based off the doctors ID, the date of the appointment and time, determine if its valid or not
+    @GetMapping(value="/SearchAppointment/{id}/{date}/{start_time}")
+    public Boolean validateAppointment(@PathVariable("id") int id, @PathVariable("date") Date date, @PathVariable("start_time") String time){
+        Appointment validAppoint = appointRepo.findByDoctorIdAndDateAndTime(id, date, time);
+        System.out.println(validAppoint);
+        Boolean validate = true;
+        if (validAppoint == null){
+            validate = false;
+        }return validate;
+    }
+
+    // Save appointment
+    @PostMapping(value="/SetAppointment")
+    public String saveAppointment(@RequestBody Appointment appoint){
+        System.out.println(appoint.getAppointId());
+        System.out.println(appoint.getPatientId());
+        System.out.println(appoint.getDoctorId());
+        System.out.println(appoint.getDate());
+        System.out.println(appoint.getTime());
+        System.out.println(appoint.getCurTime());
+        //appointRepo.save(appoint);
+        return "Appointment successfuly saved";
     }
 
 }

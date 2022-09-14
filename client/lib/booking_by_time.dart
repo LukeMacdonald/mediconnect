@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'user.dart';
+import 'package:collection/equality.dart';
 
 import 'package:flutter/material.dart';
 
@@ -18,6 +19,7 @@ class _BookingByTime extends State<BookingByTime> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   String url = "http://localhost:8080/booking_by_time";
+  String? daySelected;
   //Not sure if url needed
 
   TextEditingController dateInput = TextEditingController();
@@ -31,9 +33,14 @@ class _BookingByTime extends State<BookingByTime> {
   }
 
   final List<Map> _booking = [];
+  final List<Map> doctorIdToNames = [];
   final List<String> _doctors = ['Doctor'];
   String doctorValue = 'Doctor';
   int? doctorId;
+
+  // TODO: Assign the user ID when traversed into this dart page
+  // Currently set to a temporary ID to simulate
+  int patientId = 1;
 
   Future getAvailability() async {
     final response = await http
@@ -79,9 +86,40 @@ class _BookingByTime extends State<BookingByTime> {
           {'Doctor': responseDataName.toString(), 'Day': day, 'Hour': time});
       if (!_doctors.contains(responseDataName.toString())) {
         _doctors.add(responseDataName.toString());
+        doctorIdToNames.add({
+          'doctor_id': doctorId,
+          'Doctor_Name': responseDataName.toString()
+        });
       }
     }
     setState(() {});
+  }
+
+  Future save(int doctorId, String date, String startTime) async {
+    print(DateFormat("HH:mm:ss").format(DateTime.now()));
+    final response =
+        await http.post(Uri.parse("http://localhost:8080/SetAppointment"),
+            headers: {'Content-Type': 'application/json'},
+            body: json.encode({
+              'patient_id': patientId,
+              'doctor_id': doctorId,
+              'date': date,
+              'time': startTime,
+              'current_time':
+                  DateFormat("HH:mm:ss").format(DateTime.now()).toString()
+            }));
+  }
+
+  Future checkAppointment(int id, String date, String startTime) async {
+    final response = await http.get(Uri.parse(
+        "http://localhost:8080/SearchAppointment/$id/$date/$startTime"));
+    var responseData = response.body;
+    if (responseData == 'false') {
+      save(id, date, startTime);
+    } else {
+      alert(
+          "An appointment has already been made for this doctor on date selected");
+    }
   }
 
   final List<String> _hours = [
@@ -96,6 +134,20 @@ class _BookingByTime extends State<BookingByTime> {
     '16:00 - 17:00'
   ];
   String hourValue = 'Hour';
+
+  Future<String?> alert(String message) {
+    return showDialog<String>(
+        context: context,
+        builder: (BuildContext context) =>
+            AlertDialog(content: Text(message), actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context, 'OK');
+                },
+                child: const Text('OK'),
+              ),
+            ]));
+  }
 
   Widget bookingList() {
     return Column(
@@ -267,6 +319,9 @@ class _BookingByTime extends State<BookingByTime> {
                                                   setState(() {
                                                     dateInput.text =
                                                         formattedDate;
+                                                    daySelected =
+                                                        DateFormat('EEEE')
+                                                            .format(pickedDate);
                                                     // Will be converted in backend
                                                   });
                                                   // user.dob = dateInput.text;
@@ -279,6 +334,46 @@ class _BookingByTime extends State<BookingByTime> {
                                       child: ElevatedButton(
                                     onPressed: () {
                                       //TODO: functions on backend
+                                      if (doctorValue == 'Doctor') {
+                                        alert("Select a doctor");
+                                      } else if (dateInput.text == "") {
+                                        alert("Provide a date");
+                                      } else if (hourValue == 'Hour') {
+                                        alert("Select a hour range");
+                                      } else {
+                                        if ((_booking.any((element) =>
+                                                const MapEquality().equals(
+                                                    element, {
+                                                  'Doctor': doctorValue,
+                                                  'Day': daySelected,
+                                                  'Hour': hourValue
+                                                }))) &&
+                                            (DateTime.now().isBefore(
+                                                DateTime.parse(
+                                                    dateInput.text.toString() +
+                                                        " " +
+                                                        hourValue.substring(
+                                                            0, 5))))) {
+                                          // Boolean Function to check whether it exists
+                                          // If true then valid and proceed with save() call
+                                          // Else, place an alert about appointment is already filled by the doctor
+                                          int id = 0;
+                                          doctorIdToNames.forEach((element) {
+                                            if (element['Doctor_Name'] ==
+                                                doctorValue) {
+                                              id = element['doctor_id'];
+                                            }
+                                          });
+                                          if (id == 0) {
+                                            alert('Invalid Doctor ID');
+                                          } else {
+                                            checkAppointment(id, dateInput.text,
+                                                hourValue.substring(0, 5));
+                                          }
+                                        } else {
+                                          alert('Invalid Booking Appointment');
+                                        }
+                                      }
                                     },
                                     child: Text('Confirm',
                                         style: GoogleFonts.lexendDeca(
