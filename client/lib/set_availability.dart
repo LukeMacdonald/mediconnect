@@ -98,7 +98,6 @@ class _SetAvailability extends State<SetAvailability> {
       _availability.add({'Day': day, 'Hour': time});
     }
   }
-
   String dayValue = 'Day';
   String hourValue = 'Hour';
   final _days = [
@@ -325,6 +324,7 @@ class _SetAvailability extends State<SetAvailability> {
                                     // Save the availability
                                     save();
                                   }
+
                                 }
                               }
                             },
@@ -359,7 +359,6 @@ class _SetAvailability extends State<SetAvailability> {
 
   @override
   Widget build(BuildContext context) {
-    //getAvailability();
     return Scaffold(
         key: scaffoldKey,
         body: Container(
@@ -397,7 +396,6 @@ class _SetAvailability extends State<SetAvailability> {
               ],
             ))));
   }
-
   Widget _createTable() {
     return SingleChildScrollView(
         child: DataTable(columns: _createColumns(), rows: _createRows()));

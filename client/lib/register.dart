@@ -65,6 +65,18 @@ class _Registration extends State<Registration> {
     }
   }
 
+  String url = "http://localhost:8080/register";
+
+  Future save() async {
+    await http.post(Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'email': user.email,
+          'password': user.password,
+          'role': user.role
+        }));
+  }
+
   final scaffoldKey = GlobalKey<ScaffoldState>();
   bool isCheckedP = false;
   bool isCheckedD = false;

@@ -209,6 +209,7 @@ class _MedicalHistory extends State<MedicalHistory> {
           padding: 5,
         ),
         const Padding(
+
           padding: EdgeInsetsDirectional.fromSTEB(20, 15, 0, 15),
           child: Text(
             'Do you drink alcohol?',
@@ -224,6 +225,7 @@ class _MedicalHistory extends State<MedicalHistory> {
           enableButtonWrap: true,
           elevation: 5,
           spacing: 50,
+
           autoWidth: true,
           enableShape: true,
           unSelectedBorderColor: const Color.fromARGB(255, 245, 245, 245),
@@ -313,6 +315,7 @@ class _MedicalHistory extends State<MedicalHistory> {
               borderRadius: BorderRadius.circular(10),
             ),
             child:Padding(
+
               padding: const EdgeInsetsDirectional.fromSTEB(15, 0, 0, 0),
               child: TextFormField(
                 autofocus: true,
@@ -321,6 +324,7 @@ class _MedicalHistory extends State<MedicalHistory> {
                 decoration: const InputDecoration(
                   hintText: 'Any Other not on list?',
                   hintStyle: CustomTextStyle.nameOfTextStyle,
+
                   enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(
                       color: Color(0x00000000),
@@ -505,6 +509,7 @@ class _MedicalHistory extends State<MedicalHistory> {
                     Padding(
                       padding:
                       const EdgeInsetsDirectional.fromSTEB(0, 50, 0, 0),
+
                       child: Container(
                         width: 700,
                         decoration: BoxDecoration(
@@ -544,6 +549,7 @@ class _MedicalHistory extends State<MedicalHistory> {
                                     CrossAxisAlignment.start,
                                     children: [
                                       Wrap(
+
                                         children: [
                                           Padding(
                                             padding: const EdgeInsetsDirectional
@@ -609,3 +615,4 @@ class _MedicalHistory extends State<MedicalHistory> {
         ));
   }
 }
+
