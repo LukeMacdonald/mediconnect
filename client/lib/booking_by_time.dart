@@ -77,6 +77,9 @@ class _BookingByTime extends State<BookingByTime> {
 
       _booking.add(
           {'Doctor': responseDataName.toString(), 'Day': day, 'Hour': time});
+      if (!_doctors.contains(responseDataName.toString())) {
+        _doctors.add(responseDataName.toString());
+      }
     }
     setState(() {});
   }
