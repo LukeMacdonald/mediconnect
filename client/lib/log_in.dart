@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:client/create_profile.dart';
 import 'package:http/http.dart' as http;
-import 'user.dart';
 import 'register.dart';
 import "dashboard.dart";
 import 'dart:convert';
-
+import 'utilities/user.dart';
 
 class LogIn extends StatefulWidget {
   const LogIn({Key? key}) : super(key: key);

@@ -1,6 +1,7 @@
-package com.example.ndtelemedecine.DoctorAvailability;
+package com.example.ndtelemedecine.Repositories;
 
 
+import com.example.ndtelemedecine.Models.Availability;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.*;
 

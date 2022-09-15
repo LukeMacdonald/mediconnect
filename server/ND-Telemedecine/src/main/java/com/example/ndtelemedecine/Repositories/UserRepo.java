@@ -1,7 +1,9 @@
-package com.example.ndtelemedecine.User;
+package com.example.ndtelemedecine.Repositories;
 
 import java.util.List;
 
+import com.example.ndtelemedecine.Models.Role;
+import com.example.ndtelemedecine.Models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepo extends JpaRepository<User, Long>  {

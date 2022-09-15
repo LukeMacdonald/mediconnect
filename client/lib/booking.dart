@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'utilities/user.dart';
 
-import 'user.dart';
 import 'booking_by_time.dart';
 import 'package:flutter/material.dart';
 

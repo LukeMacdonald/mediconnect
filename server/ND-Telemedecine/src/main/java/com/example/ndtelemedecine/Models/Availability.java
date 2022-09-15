@@ -1,5 +1,5 @@
 
-package com.example.ndtelemedecine.DoctorAvailability;
+package com.example.ndtelemedecine.Models;
 import java.io.Serializable;
 
 import javax.persistence.Entity;

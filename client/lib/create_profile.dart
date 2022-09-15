@@ -5,8 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'medical_history.dart';
-
-import 'user.dart';
+import 'utilities/user.dart';
 
 class ProfileCreation extends StatefulWidget {
   User user;
@@ -31,6 +30,7 @@ class _ProfileCreation extends State<ProfileCreation> {
     dateInput.text = ""; //set the initial value of text field
     super.initState();
   }
+
   String url = "http://localhost:8080/UpdateUser";
 
   Future save() async {
@@ -349,7 +349,6 @@ class _ProfileCreation extends State<ProfileCreation> {
                       user.lastName = lastName,
                       // user.dob = DOB,      // Commented out for now because user.dob is directly updated
                       user.phoneNumber = phoneNumber,
-                      user.printUser(),
                       save(), //Need listener if save successful here, otherwise print error
                       showDialog<String>(
                           context: context,
@@ -367,7 +366,6 @@ class _ProfileCreation extends State<ProfileCreation> {
                                       child: const Text('OK'),
                                     ),
                                   ]))
-
                     }
                 },
             style: ElevatedButton.styleFrom(

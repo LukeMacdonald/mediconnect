@@ -22,38 +22,34 @@ class _MedicalHistory extends State<MedicalHistory> {
   TextEditingController ill = TextEditingController();
   TextEditingController med = TextEditingController();
   TextEditingController dis = TextEditingController();
-  UserMedicalHistory user = UserMedicalHistory();
+  UserMedicalHistory userHistory = UserMedicalHistory();
 
-  bool smoke = false;
-  bool drink = false;
-  bool medication = false;
-  bool _disabled = true;
 
-  List<String> setillnesses = ['Cancer', 'Diabetes', 'Cardiac Disease',
+  bool? _disabled = true;
+
+  List<String> presetIllnesses = ['Cancer', 'Diabetes', 'Cardiac Disease',
     'Asthma', 'Alzheimer\'s', 'Depression',];
 
   List<String> medications = [];
-  List<String> setdisabilites = ['Hearing Impairment', 'Vision Impairment',
+  List<String> presetDisabilities = ['Hearing Impairment', 'Vision Impairment',
     'Autism', 'Mobility Disability ','Cerebral Palsy'];
 
-  List<Object?> selecteddisability = [];
   List<Object?> selectedMeds = [];
-  List<Object?> selectedillnesses = [];
 
   String url = "URL to save medical profile";
   String url2 = "URL to medications";
   String url3 = "URL to illnesses";
-  String ur4 = "URL to disabilites";
+  String ur4 = "URL to disabilities";
   String url5 = "URL to get user id";
 
   Future save() async {
-    var response = await http.post(Uri.parse(url),
+    await http.post(Uri.parse(url),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
-          'id': user.id,
-          'smokes': user.smokes,
-          'drinks': user.drinks,
-          'medication': user.medications,
+          'id': 1,
+          'smokes': userHistory.smokes,
+          'drinks': userHistory.drinks,
+          'medication': userHistory.medications,
         }));
     // ADD MORE LATER
   }
@@ -73,12 +69,12 @@ class _MedicalHistory extends State<MedicalHistory> {
           buttonLables: const ['Yes', 'No'],
           buttonValues: const ['Yes', 'No'],
           radioButtonValue: (value) {
-            if (value == 'Yes') {medication = true;
+            if (value == 'Yes') {userHistory.medications = true;
             setState(() {
               _disabled = false;
             });}
             else {
-              medication = false;
+              userHistory.medications = false;
               setState(() {
                 _disabled = true;
               });}},
@@ -134,7 +130,7 @@ class _MedicalHistory extends State<MedicalHistory> {
                       Padding(
                         padding: const EdgeInsetsDirectional.fromSTEB(5, 0, 0, 0),
                         child: TextFormField(
-                          enabled: !_disabled,
+                          enabled: !_disabled!,
                           controller: med,
                           decoration: const InputDecoration(
                             hintText: 'What Medications Do You Take?',
@@ -167,7 +163,7 @@ class _MedicalHistory extends State<MedicalHistory> {
                       padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
                       child: FloatingActionButton(
                         onPressed: (){
-                          if(med.text !="What Medications Do You Take?" && med.text !="" && !setillnesses.contains(ill.text)){
+                          if(med.text !="What Medications Do You Take?" && med.text !="" && !selectedMeds.contains(ill.text)){
                             setState(() {
                               medications.add(med.text);
                               selectedMeds.add(med.text);
@@ -195,7 +191,7 @@ class _MedicalHistory extends State<MedicalHistory> {
           buttonLables: const ['Yes', 'No'],
           buttonValues: const ['Yes', 'No'],
           radioButtonValue: (value) => {
-            if (value == 'Yes') {smoke = true} else {smoke = false},
+            if (value == 'Yes') {userHistory.smokes = true} else {userHistory.smokes = false},
           },
           enableButtonWrap: true,
           elevation: 5,
@@ -220,7 +216,7 @@ class _MedicalHistory extends State<MedicalHistory> {
           buttonLables: const ['Yes', 'No'],
           buttonValues: const ['Yes', 'No'],
           radioButtonValue: (value) => {
-            if (value == 'Yes') {drink = true} else {drink = false},
+            if (value == 'Yes') {userHistory.drinks = true} else {userHistory.drinks = false},
           },
           enableButtonWrap: true,
           elevation: 5,
@@ -249,12 +245,7 @@ class _MedicalHistory extends State<MedicalHistory> {
         constraints: const BoxConstraints(minWidth: 70, maxWidth: 500),
         child: ElevatedButton(
             onPressed: () => {
-              user.medications = medication,
-              user.smokes = smoke,
-              user.drinks = drink,
-              user.illnesses = selectedillnesses,
-              user.meds = selectedMeds,
-              user.disabilities = selecteddisability,
+              userHistory.meds = selectedMeds,
               Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -280,10 +271,10 @@ class _MedicalHistory extends State<MedicalHistory> {
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
         CustomCheckBoxGroup(
-          buttonLables: setillnesses,
-          buttonValuesList: setillnesses,
+          buttonLables: presetIllnesses,
+          buttonValuesList: presetIllnesses,
           checkBoxButtonValues: (values){
-            selectedillnesses = values;
+            userHistory.illnesses = values;
             },
           enableButtonWrap: true,
           elevation: 5,
@@ -354,9 +345,9 @@ class _MedicalHistory extends State<MedicalHistory> {
           padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
             child: FloatingActionButton(
               onPressed: (){
-                if(ill.text !="Any Other not on list?" && !setillnesses.contains(ill.text)){
+                if(ill.text !="Any Other not on list?" && !presetIllnesses.contains(ill.text)){
                   setState(() {
-                    setillnesses.add(ill.text);
+                    presetIllnesses.add(ill.text);
                     ill.clear();
                   });
                 }
@@ -386,10 +377,10 @@ class _MedicalHistory extends State<MedicalHistory> {
         alignment: WrapAlignment.center,
         children: [
           CustomCheckBoxGroup(
-            buttonLables: setdisabilites,
-            buttonValuesList: setdisabilites,
+            buttonLables: presetDisabilities,
+            buttonValuesList: presetDisabilities,
             checkBoxButtonValues: (values){
-              selecteddisability = values;
+              userHistory.disabilities = values;
             },
             enableButtonWrap: true,
             elevation: 5,
@@ -458,9 +449,9 @@ class _MedicalHistory extends State<MedicalHistory> {
                   padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
                   child: FloatingActionButton(
                     onPressed: (){
-                      if(dis.text !="Any Other not on list?" && !setdisabilites.contains(dis.text)){
+                      if(dis.text !="Any Other not on list?" && !presetDisabilities.contains(dis.text)){
                         setState(() {
-                          setdisabilites.add(dis.text);
+                          presetDisabilities.add(dis.text);
                           dis.clear();
                         });
                       }

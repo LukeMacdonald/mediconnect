@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
-
-import 'user.dart';
+import 'utilities/appointment.dart';
+import 'utilities/user.dart';
 
 class SetAvailability extends StatefulWidget {
   const SetAvailability({Key? key}) : super(key: key);
@@ -22,27 +22,7 @@ class _SetAvailability extends State<SetAvailability> {
   int? doctorId;
 
   Future save() async {
-    int? day;
-    switch (dayValue) {
-      case "Monday":
-        day = 1;
-        break;
-      case 'Tuesday':
-        day = 2;
-        break;
-      case 'Wednesday':
-        day = 3;
-        break;
-      case 'Thursday':
-        day = 4;
-        break;
-      case 'Friday':
-        day = 5;
-        break;
-      case 'Saturday':
-        day = 6;
-        break;
-    }
+    int day = getDayIntFromDayString(dayValue);
     await http.post(Uri.parse(url),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
@@ -68,26 +48,7 @@ class _SetAvailability extends State<SetAvailability> {
     String day = "";
 
     for (var availability in responseData) {
-      switch (availability["day_of_week"]) {
-        case 1:
-          day = 'Monday';
-          break;
-        case 2:
-          day = 'Tuesday';
-          break;
-        case 3:
-          day = 'Wednesday';
-          break;
-        case 4:
-          day = 'Thursday';
-          break;
-        case 5:
-          day = 'Friday';
-          break;
-        case 6:
-          day = 'Saturday';
-          break;
-      }
+      day = getDayStringFrontDayInt(availability["day_of_week"]);
       // Provided the doctor has gone through the dashboard, we simply take the doctor_id from their current availabilities
       doctorId = availability["_doctor_id"];
       String time = availability["_start_time"]
@@ -98,6 +59,7 @@ class _SetAvailability extends State<SetAvailability> {
       _availability.add({'Day': day, 'Hour': time});
     }
   }
+
   String dayValue = 'Day';
   String hourValue = 'Hour';
   final _days = [
@@ -296,42 +258,39 @@ class _SetAvailability extends State<SetAvailability> {
                               const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
                           child: ElevatedButton(
                             onPressed: () {
-                          if (dayValue == 'Day') {
-                            {
-                              alert('Please Enter A Day');
-                            }
-                          } else if (hourValue == 'Hour') {
-                            {
-                              alert('Please Enter A Time');
-                            }
-                          } else {
-                            {
-                              // Map Equality comparison to dynamically compare the keys and its current values to compare to what exists
-                              if (_availability.any((element) =>
-                                  mapEquals(element, {
-                                    'Day': dayValue,
-                                    'Hour': hourValue
-                                  }))) {
-                                alert('Invalid Availability');
+                              if (dayValue == 'Day') {
+                                {
+                                  alert('Please Enter A Day');
+                                }
+                              } else if (hourValue == 'Hour') {
+                                {
+                                  alert('Please Enter A Time');
+                                }
                               } else {
-                                alert('Valid Availability');
-                                setState(() {
-                                  _availability.add(
-                                      {'Day': dayValue, 'Hour': hourValue});
-                                });
+                                {
+                                  // Map Equality comparison to dynamically compare the keys and its current values to compare to what exists
+                                  if (_availability.any((element) => mapEquals(
+                                      element,
+                                      {'Day': dayValue, 'Hour': hourValue}))) {
+                                    alert('Invalid Availability');
+                                  } else {
+                                    alert('Valid Availability');
+                                    setState(() {
+                                      _availability.add(
+                                          {'Day': dayValue, 'Hour': hourValue});
+                                    });
 
-                                // Save the availability
-                                save();
+                                    // Save the availability
+                                    save();
+                                  }
+                                }
                               }
-
-                            }
-                          }
                             },
                             style: ElevatedButton.styleFrom(
-                          shape: const CircleBorder(),
-                          padding: const EdgeInsets.all(20),
-                          primary: const Color.fromARGB(255, 129, 125, 125),
-                          onPrimary: Colors.black,
+                              shape: const CircleBorder(),
+                              padding: const EdgeInsets.all(20),
+                              primary: const Color.fromARGB(255, 129, 125, 125),
+                              onPrimary: Colors.black,
                             ),
                             child: const Icon(Icons.add, color: Colors.white),
                           )),
@@ -395,6 +354,7 @@ class _SetAvailability extends State<SetAvailability> {
               ],
             ))));
   }
+
   Widget _createTable() {
     return SingleChildScrollView(
         child: DataTable(columns: _createColumns(), rows: _createRows()));

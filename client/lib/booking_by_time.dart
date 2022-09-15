@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:flutter/foundation.dart';
+import 'utilities/appointment.dart';
 
 import 'package:flutter/material.dart';
 
@@ -48,26 +49,7 @@ class _BookingByTime extends State<BookingByTime> {
     String day = "";
 
     for (var availability in responseData) {
-      switch (availability["day_of_week"]) {
-        case 1:
-          day = 'Monday';
-          break;
-        case 2:
-          day = 'Tuesday';
-          break;
-        case 3:
-          day = 'Wednesday';
-          break;
-        case 4:
-          day = 'Thursday';
-          break;
-        case 5:
-          day = 'Friday';
-          break;
-        case 6:
-          day = 'Saturday';
-          break;
-      }
+      day = getDayStringFrontDayInt(availability["day_of_week"]);
       // Provided the doctor has gone through the dashboard, we simply take the doctor_id from their current availabilities
       doctorId = availability["_doctor_id"];
       String time = availability["_start_time"]
@@ -76,10 +58,9 @@ class _BookingByTime extends State<BookingByTime> {
           availability["_end_time"]
               .substring(0, availability["_end_time"].length - 3);
 
-      final responseName = await http.get(Uri.parse(
-          "http://localhost:8080/GetUserFullName/$doctorId"));
+      final responseName = await http
+          .get(Uri.parse("http://localhost:8080/GetUserFullName/$doctorId"));
       var responseDataName = responseName.body;
-
       _booking.add(
           {'Doctor': responseDataName.toString(), 'Day': day, 'Hour': time});
       if (!_doctors.contains(responseDataName.toString())) {
@@ -94,16 +75,15 @@ class _BookingByTime extends State<BookingByTime> {
   }
 
   Future save(int doctorId, String date, String startTime) async {
-        await http.post(Uri.parse("http://localhost:8080/SetAppointment"),
-            headers: {'Content-Type': 'application/json'},
-            body: json.encode({
-              'patient': patientId,
-              'doctor': doctorId,
-              'date': date,
-              'time': startTime,
-              'today':
-                  DateFormat("HH:mm:ss").format(DateTime.now()).toString()
-            }));
+    await http.post(Uri.parse("http://localhost:8080/SetAppointment"),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'patient': patientId,
+          'doctor': doctorId,
+          'date': date,
+          'time': startTime,
+          'today': DateFormat("HH:mm:ss").format(DateTime.now()).toString()
+        }));
   }
 
   Future checkAppointment(int id, String date, String startTime) async {
@@ -328,62 +308,59 @@ class _BookingByTime extends State<BookingByTime> {
                                       0, 10, 0, 0),
                                   child: ElevatedButton(
                                     onPressed: () {
-                                  //TODO: functions on backend
-                                  if (doctorValue == 'Doctor') {
-                                    alert("Select a doctor");
-                                  } else if (dateInput.text == "") {
-                                    alert("Provide a date");
-                                  } else if (hourValue == 'Hour') {
-                                    alert("Select a hour range");
-                                  } else {
-                                    if ((_booking.any((element) =>
-                                             mapEquals(
-                                                element, {
-                                              'Doctor': doctorValue,
-                                              'Day': daySelected,
-                                              'Hour': hourValue
-                                            }))) &&
-                                        (DateTime.now().isBefore(
-                                            DateTime.parse(
-                                                "${dateInput.text} ${hourValue.substring(
-                                                        0, 5)}")))) {
-                                      // Boolean Function to check whether it exists
-                                      // If true then valid and proceed with save() call
-                                      // Else, place an alert about appointment is already filled by the doctor
-                                      int id = 0;
-                                      for (var element in doctorIdToNames) {
-                                        if (element['Doctor_Name'] ==
-                                            doctorValue) {
-                                          id = element['doctor_id'];
+                                      //TODO: functions on backend
+                                      if (doctorValue == 'Doctor') {
+                                        alert("Select a doctor");
+                                      } else if (dateInput.text == "") {
+                                        alert("Provide a date");
+                                      } else if (hourValue == 'Hour') {
+                                        alert("Select a hour range");
+                                      } else {
+                                        if ((_booking.any((element) =>
+                                                mapEquals(element, {
+                                                  'Doctor': doctorValue,
+                                                  'Day': daySelected,
+                                                  'Hour': hourValue
+                                                }))) &&
+                                            (DateTime.now().isBefore(DateTime.parse(
+                                                "${dateInput.text} ${hourValue.substring(0, 5)}")))) {
+                                          // Boolean Function to check whether it exists
+                                          // If true then valid and proceed with save() call
+                                          // Else, place an alert about appointment is already filled by the doctor
+                                          int id = 0;
+                                          for (var element in doctorIdToNames) {
+                                            if (element['Doctor_Name'] ==
+                                                doctorValue) {
+                                              id = element['doctor_id'];
+                                            }
+                                          }
+                                          if (id == 0) {
+                                            alert('Invalid Doctor ID');
+                                          } else {
+                                            checkAppointment(id, dateInput.text,
+                                                hourValue.substring(0, 5));
+                                          }
+                                        } else {
+                                          alert('Invalid Booking Appointment');
                                         }
                                       }
-                                      if (id == 0) {
-                                        alert('Invalid Doctor ID');
-                                      } else {
-                                        checkAppointment(id, dateInput.text,
-                                            hourValue.substring(0, 5));
-                                      }
-                                    } else {
-                                      alert('Invalid Booking Appointment');
-                                    }
-                                  }
                                     },
                                     style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(10)),
-                                  padding: const EdgeInsets.all(20),
-                                  primary: const Color.fromARGB(
-                                      255, 129, 125, 125),
-                                  onPrimary: Colors.black,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      padding: const EdgeInsets.all(20),
+                                      primary: const Color.fromARGB(
+                                          255, 129, 125, 125),
+                                      onPrimary: Colors.black,
                                     ),
                                     child: Text('Confirm',
-                                    style: GoogleFonts.lexendDeca(
-                                      textStyle: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                      ),
-                                    )),
+                                        style: GoogleFonts.lexendDeca(
+                                          textStyle: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                          ),
+                                        )),
                                   )),
                             ],
                           )),

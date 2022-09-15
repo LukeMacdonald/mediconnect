@@ -1,4 +1,6 @@
-package com.example.ndtelemedecine.User;
+package com.example.ndtelemedecine.Models;
+
+import com.example.ndtelemedecine.Models.Role;
 
 import java.sql.Date;
 
@@ -39,7 +41,7 @@ public class User {
 
     @Column(columnDefinition = "ENUM('patient', 'doctor', 'superuser')")
     @Enumerated(EnumType.STRING)
-    private Role    role;
+    private Role role;
 
     public User(){}
 

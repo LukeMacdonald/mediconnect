@@ -1,4 +1,4 @@
-package com.example.ndtelemedecine.DoctorAppointment;
+package com.example.ndtelemedecine.Models;
 
 import java.sql.Date;
 

@@ -1,32 +1,26 @@
 package com.example.ndtelemedecine;
 
-import com.example.ndtelemedecine.User.User;
-import com.example.ndtelemedecine.User.UserRepo;
+import com.example.ndtelemedecine.Models.User;
+import com.example.ndtelemedecine.Repositories.UserRepo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
-
-import static org.mockito.ArgumentMatchers.contains;
+import com.example.ndtelemedecine.controller.UserApiController;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.catalina.connector.Response;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.mockito.internal.matchers.Contains;
-import org.mockito.internal.matchers.Matches;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -39,7 +33,7 @@ class NdTelemedecineApplicationTests {
     private MockMvc mockMvc;
 
     @SpyBean
-    private APIControllers mockApiController;
+    private UserApiController mockApiController;
 
     @MockBean
     private UserRepo mockUserRepo;

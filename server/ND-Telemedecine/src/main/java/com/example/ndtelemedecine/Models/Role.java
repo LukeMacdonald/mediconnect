@@ -1,4 +1,4 @@
-package com.example.ndtelemedecine.User;
+package com.example.ndtelemedecine.Models;
 
 public enum Role {
     patient(1),

@@ -1,14 +1,13 @@
 import 'dart:convert';
-
 import 'package:client/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:client/create_profile.dart';
 import 'package:http/http.dart' as http;
-
-import 'user.dart';
+import 'utilities/user.dart';
 import 'log_in.dart';
+import 'utilities/authentication.dart';
 
 class Registration extends StatefulWidget {
   const Registration({Key? key}) : super(key: key);

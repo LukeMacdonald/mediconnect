@@ -1,3 +1,4 @@
+import 'package:client/medical_history.dart';
 import 'package:flutter/material.dart';
 import 'log_in.dart';
 
