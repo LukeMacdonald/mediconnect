@@ -1,4 +1,4 @@
-package com.example.ndtelemedecine.controller;
+package com.example.ndtelemedecine.Controllers;
 
 import com.example.ndtelemedecine.Models.Availability;
 import com.example.ndtelemedecine.Repositories.AvailabilityRepo;

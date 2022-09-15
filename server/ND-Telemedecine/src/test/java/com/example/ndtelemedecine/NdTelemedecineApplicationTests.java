@@ -5,7 +5,7 @@ import com.example.ndtelemedecine.Repositories.UserRepo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.example.ndtelemedecine.controller.UserApiController;
+import com.example.ndtelemedecine.Controllers.UserApiController;
 
 import java.util.ArrayList;
 import java.util.Arrays;

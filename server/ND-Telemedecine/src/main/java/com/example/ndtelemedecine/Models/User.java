@@ -1,7 +1,4 @@
 package com.example.ndtelemedecine.Models;
-
-import com.example.ndtelemedecine.Models.Role;
-
 import java.sql.Date;
 
 import javax.persistence.Column;
