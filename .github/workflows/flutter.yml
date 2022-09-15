@@ -5,13 +5,7 @@
 
 name: Flutter
 
-on:
-  push:
-    branches: [ "main" ,"develop","database_to_backend"]
-  pull_request:
-    branches: [ "main","develop","database_to_backend"]
-    paths:
-      - ".github/workflows/flutter.yaml"
+on: [push, pull_request]
 
 jobs:
   build:
@@ -23,5 +17,8 @@ jobs:
       with:
         channel: 'stable'
     - run: client/flutter pub get
+      working-directory: client
     - run: client/flutter test
+      working-directory: client
     - run: client/flutter build web
+      working-directory: client
