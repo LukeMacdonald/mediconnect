@@ -1,0 +1,19 @@
+name: Flutter
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - uses: subosito/flutter-action@v2
+      with:
+        channel: 'stable'
+    - run: flutter pub get
+      working-directory: client
+    - run: flutter test
+      working-directory: client
+    - run: flutter build web
+      working-directory: client
