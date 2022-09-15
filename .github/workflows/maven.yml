@@ -19,4 +19,4 @@ jobs:
     - name: Build with Maven
       run: mvn -f server/ND-Telemedecine -B package --f pom.xml
     - name: Test
-      run: mvn --batch-mode -Dmaven.test.failure.ignore=true test
+      run: mvn -f server/ND-Telemedecine --batch-mode -Dmaven.test.failure.ignore=true test
