@@ -186,8 +186,7 @@ public class APIControllers {
     // Search for appointment based off the doctors ID, the date of the appointment and time, determine if its valid or not
     @GetMapping(value="/SearchAppointment/{id}/{date}/{start_time}")
     public Boolean validateAppointment(@PathVariable("id") int id, @PathVariable("date") Date date, @PathVariable("start_time") String time){
-        Appointment validAppoint = appointRepo.findByDoctorIdAndDateAndTime(id, date, time);
-        System.out.println(validAppoint);
+        Appointment validAppoint = appointRepo.findAppointmentByDoctorAndDateAndTime(id, date, time);
         Boolean validate = true;
         if (validAppoint == null){
             validate = false;
@@ -197,13 +196,13 @@ public class APIControllers {
     // Save appointment
     @PostMapping(value="/SetAppointment")
     public String saveAppointment(@RequestBody Appointment appoint){
-        System.out.println(appoint.getAppointId());
-        System.out.println(appoint.getPatientId());
-        System.out.println(appoint.getDoctorId());
+        System.out.println(appoint.getId());
+        System.out.println(appoint.getPatient());
+        System.out.println(appoint.getDoctor());
         System.out.println(appoint.getDate());
         System.out.println(appoint.getTime());
-        System.out.println(appoint.getCurTime());
-        //appointRepo.save(appoint);
+        System.out.println(appoint.getToday());
+        appointRepo.save(appoint);
         return "Appointment successfuly saved";
     }
 

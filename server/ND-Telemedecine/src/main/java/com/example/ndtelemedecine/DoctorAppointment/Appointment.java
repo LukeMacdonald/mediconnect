@@ -14,29 +14,24 @@ public class Appointment{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name="patient_id")
-    private int  patientId;
-
-    @Column(name="doctor_id")
-    private int  doctorId;
-
+    @Column(name="patient")
+    private int  patient;
+    @Column(name="doctor")
+    private int doctor;
     @Column(name="date")
     private Date date;
-
     @Column(name="time")
     private String time;
-
-    @Column(name="current_time")
-    private String currentTime;
-
-    public void setAppointId(int id){
+    @Column(name="today")
+    private String today;
+    public void setId(int id){
         this.id = id;
     }
-    public void setPatientId(int patientId) {
-        this.patientId = patientId;
+    public void setPatient(int patient) {
+        this.patient = patient;
     }
-    public void setDoctorId(int doctorId) {
-        this.doctorId = doctorId;
+    public void setDoctorId(int doctor) {
+        this.doctor = doctor;
     }
     public void setDate(Date date) {
         this.date = date;
@@ -44,18 +39,18 @@ public class Appointment{
     public void setTime(String time){
         this.time = time;
     }
-    public void setCurTime(String curTime){
-        this.currentTime = curTime;
+    public void setToday(String today){
+        this.today = today;
     }
 
-    public int getAppointId(){
+    public int getId(){
         return this.id;
     }
-    public int getPatientId(){
-        return this.patientId;
+    public int getPatient(){
+        return this.patient;
     }
-    public int getDoctorId(){
-        return this.doctorId;
+    public int getDoctor(){
+        return this.doctor;
     }
     public Date getDate(){
         return this.date;
@@ -63,7 +58,7 @@ public class Appointment{
     public String getTime(){
         return this.time;
     }
-    public String getCurTime(){
-        return this.currentTime;
+    public String getToday(){
+        return this.today;
     }
 }
