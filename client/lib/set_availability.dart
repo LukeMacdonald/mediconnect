@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
-import 'package:collection/equality.dart';
+import 'package:flutter/foundation.dart';
 
 import 'user.dart';
 
@@ -43,7 +43,7 @@ class _SetAvailability extends State<SetAvailability> {
         day = 6;
         break;
     }
-    final response = await http.post(Uri.parse(url),
+    await http.post(Uri.parse(url),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
           'doctor_id': doctorId,
@@ -67,8 +67,8 @@ class _SetAvailability extends State<SetAvailability> {
     var responseData = json.decode(response.body);
     String day = "";
 
-    for (var availiability in responseData) {
-      switch (availiability["day_of_week"]) {
+    for (var availability in responseData) {
+      switch (availability["day_of_week"]) {
         case 1:
           day = 'Monday';
           break;
@@ -88,13 +88,13 @@ class _SetAvailability extends State<SetAvailability> {
           day = 'Saturday';
           break;
       }
-      // Provided the doctor has gone through the dashboard, we simply take the doctor_id from their current availiabilities
-      doctorId = availiability["_doctor_id"];
-      String time = availiability["_start_time"]
-              .substring(0, availiability["_start_time"].length - 3) +
+      // Provided the doctor has gone through the dashboard, we simply take the doctor_id from their current availabilities
+      doctorId = availability["_doctor_id"];
+      String time = availability["_start_time"]
+              .substring(0, availability["_start_time"].length - 3) +
           " - " +
-          availiability["_end_time"]
-              .substring(0, availiability["_end_time"].length - 3);
+          availability["_end_time"]
+              .substring(0, availability["_end_time"].length - 3);
       _availability.add({'Day': day, 'Hour': time});
     }
   }
@@ -294,48 +294,47 @@ class _SetAvailability extends State<SetAvailability> {
                       Padding(
                           padding:
                               const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-                          child: Container(
-                              child: ElevatedButton(
+                          child: ElevatedButton(
                             onPressed: () {
-                              if (dayValue == 'Day') {
-                                {
-                                  alert('Please Enter A Day');
-                                }
-                              } else if (hourValue == 'Hour') {
-                                {
-                                  alert('Please Enter A Time');
-                                }
+                          if (dayValue == 'Day') {
+                            {
+                              alert('Please Enter A Day');
+                            }
+                          } else if (hourValue == 'Hour') {
+                            {
+                              alert('Please Enter A Time');
+                            }
+                          } else {
+                            {
+                              // Map Equality comparison to dynamically compare the keys and its current values to compare to what exists
+                              if (_availability.any((element) =>
+                                  mapEquals(element, {
+                                    'Day': dayValue,
+                                    'Hour': hourValue
+                                  }))) {
+                                alert('Invalid Availability');
                               } else {
-                                {
-                                  // Map Equality comparsion to dynamically compare the keys and its current values to compare to what exists
-                                  if (_availability.any((element) =>
-                                      const MapEquality().equals(element, {
-                                        'Day': dayValue,
-                                        'Hour': hourValue
-                                      }))) {
-                                    alert('Invalid Avaliability');
-                                  } else {
-                                    alert('Valid Availability');
-                                    setState(() {
-                                      _availability.add(
-                                          {'Day': dayValue, 'Hour': hourValue});
-                                    });
+                                alert('Valid Availability');
+                                setState(() {
+                                  _availability.add(
+                                      {'Day': dayValue, 'Hour': hourValue});
+                                });
 
-                                    // Save the availability
-                                    save();
-                                  }
-
-                                }
+                                // Save the availability
+                                save();
                               }
+
+                            }
+                          }
                             },
-                            child: Icon(Icons.add, color: Colors.white),
                             style: ElevatedButton.styleFrom(
-                              shape: const CircleBorder(),
-                              padding: const EdgeInsets.all(20),
-                              primary: const Color.fromARGB(255, 129, 125, 125),
-                              onPrimary: Colors.black,
+                          shape: const CircleBorder(),
+                          padding: const EdgeInsets.all(20),
+                          primary: const Color.fromARGB(255, 129, 125, 125),
+                          onPrimary: Colors.black,
                             ),
-                          ))),
+                            child: const Icon(Icons.add, color: Colors.white),
+                          )),
                       Padding(
                         padding:
                             const EdgeInsetsDirectional.fromSTEB(80, 0, 0, 0),

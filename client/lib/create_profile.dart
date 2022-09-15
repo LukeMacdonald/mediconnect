@@ -6,7 +6,6 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'medical_history.dart';
 
-import 'dart:developer';
 import 'user.dart';
 
 class ProfileCreation extends StatefulWidget {
@@ -66,7 +65,7 @@ class _ProfileCreation extends State<ProfileCreation> {
             ]));
   }
 
-  // User Profile Creationg Widgets
+  // User Profile Creation Widgets
   Widget userGivenName() {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,

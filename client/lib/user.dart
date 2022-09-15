@@ -18,11 +18,11 @@ class User {
   // For debugging
   void printUser() {
     print("User Details: ");
-    print("Name: " + firstName + lastName);
-    print("Email: " + email);
-    print("Password: " + password);
-    print("Phone Number: " + phoneNumber);
-    print("Role: " + role);
-    print("Date Of Birth: " + dob);
+    print("Name: $firstName$lastName");
+    print("Email: $email");
+    print("Password: $password");
+    print("Phone Number: $phoneNumber");
+    print("Role: $role");
+    print("Date Of Birth: $dob");
   }
 }
