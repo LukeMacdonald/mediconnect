@@ -66,4 +66,14 @@ public class UserApiController {
     public String getUserFullName(@PathVariable("id") int id){
         return (userRepo.findById(id).getFirstName() + " " + userRepo.findById(id).getLastName()) ;
     }
+    @GetMapping(value = "/GetUserID/{email}")
+    public int getUserIdFromEmail(@PathVariable("email") String email){
+        User user = userRepo.findUserByEmail(email);
+        if (user != null){
+            return user.getID();
+        }
+        else {
+            return -1;
+        }
+    }
 }

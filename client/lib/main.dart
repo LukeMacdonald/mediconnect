@@ -1,4 +1,3 @@
-import 'package:client/medical_history.dart';
 import 'package:flutter/material.dart';
 import 'log_in.dart';
 
@@ -8,6 +7,7 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
+
 
   // This widget is the root of your application.
   @override

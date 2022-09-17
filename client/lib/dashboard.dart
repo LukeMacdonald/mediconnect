@@ -1,21 +1,22 @@
+import 'package:client/utilities/user.dart';
 import 'package:flutter/material.dart';
 
-
-
 class Dashboard extends StatefulWidget {
-  const Dashboard({Key? key}) : super(key: key);
+  final User user;
+  const Dashboard({Key? key,required this.user}) : super(key: key);
 
   @override
-  _Dashboard createState() => _Dashboard();
+  State<Dashboard> createState() => _Dashboard(user);
 }
-
 class _Dashboard extends State<Dashboard> {
+  _Dashboard(this.user);
   final scaffoldKey = GlobalKey<ScaffoldState>();
-
+  User user;
 
   // Call for userFound and establish user.dart fields
   // String url = "http://localhost:8080/LogIn";
   // response = await http.get(Uri.parse(url));
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         key: scaffoldKey,

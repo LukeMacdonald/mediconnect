@@ -27,7 +27,9 @@ class _LogIn extends State<LogIn> {
           'email': user.email,
           'password': user.password,
         }));
+    user.setId();
     if (!mounted) return;
+
     if (response.body == "false") {
       Navigator.push(
           context,
@@ -36,7 +38,7 @@ class _LogIn extends State<LogIn> {
                   user: user))); // Should direct to profile creation page
     } else if (response.body == "true") {
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const Dashboard()));
+          context, MaterialPageRoute(builder: (context) => Dashboard(user: user)));
     } else {
       alert("User does not exist");
     }
@@ -184,7 +186,7 @@ class _LogIn extends State<LogIn> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => Registration(),
+                          builder: (context) => const Registration(),
                         )),
                   },
               child: const Text("Sign Up",
