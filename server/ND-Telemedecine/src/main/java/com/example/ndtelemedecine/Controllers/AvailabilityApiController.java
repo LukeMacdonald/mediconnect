@@ -6,10 +6,7 @@ import com.example.ndtelemedecine.Repositories.AvailabilityRepo;
 import com.example.ndtelemedecine.Models.User;
 import com.example.ndtelemedecine.Repositories.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,11 +48,9 @@ public class AvailabilityApiController {
         }
     }
     // Sets an Availability For Doctor
-    @GetMapping(value = "/GetAllDoctorAvailability")
-    public List<Availability> doctorsAvailability(){
-        User userFound = new User();
-        userFound.setID(123);
-        return availRepo.findByDoctorId(userFound.getID());
+    @GetMapping(value = "/GetAllDoctorAvailability/{id}")
+    public List<Availability> doctorsAvailability(@PathVariable("id") int id){
+        return availRepo.findByDoctorId(id);
     }
     @GetMapping(value = "/GetAllDoctorsAvailabilities")
     public List<Availability> getDoctorsAvailabilities(){
