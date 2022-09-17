@@ -4,6 +4,7 @@
 
 ## Members
 * s3906344 (Anton Angelo)
+* s3902121 (Jeffrey Siaw)
 * xxxxx
 * xxxxx
 * xxxxx
