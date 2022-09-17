@@ -8,7 +8,7 @@ import com.example.ndtelemedecine.Repositories.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+
 import java.util.List;
 
 @RestController
@@ -54,10 +54,6 @@ public class AvailabilityApiController {
     }
     @GetMapping(value = "/GetAllDoctorsAvailabilities")
     public List<Availability> getDoctorsAvailabilities(){
-        List<Availability> allAvailabilities = new ArrayList<>();
-        for(int i = 1;i < 7;i++){
-            allAvailabilities.addAll(availRepo.findBydayOfWeek(i));
-        }
-        return allAvailabilities;
+        return availRepo.findAll();
     }
 }
