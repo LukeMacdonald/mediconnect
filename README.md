@@ -13,7 +13,7 @@
 
 * Github repository : https://github.com/LukeMacdonald/ND-Telemedicine-App
 * jira Board : https://lukemacdonald2.atlassian.net/jira/software/projects/SG1/boards/1
-* Google Docs : N/A
+* Google Docs : https://drive.google.com/drive/folders/185IAOrQImEoBMZPBEjyWyC5Q_VbY7f01?usp=sharing
 
 	
 ## Code documentation - Release 0.1.0 - date
