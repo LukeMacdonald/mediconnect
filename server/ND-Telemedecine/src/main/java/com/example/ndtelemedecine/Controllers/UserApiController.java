@@ -34,7 +34,7 @@ public class UserApiController {
     }
 
     // Assumed that user has filled in all details
-    @PostMapping(value="/UpdateUser")
+    @PutMapping(value="/UpdateUser")
     public String UpdateUser(@RequestBody User user) {
         System.out.println("Saving user with the following details:");
         System.out.println("Updating user with the following details:");
