@@ -16,8 +16,6 @@ public class UserApiController {
     @Autowired
     private UserRepo userRepo;
 
-    private User userFound;
-
     @GetMapping(value="/Users")
     public List<User> getUsers() {
         return userRepo.findAll();

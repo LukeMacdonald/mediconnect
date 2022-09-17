@@ -8,10 +8,7 @@ import com.example.ndtelemedecine.Repositories.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class AuthenticationApiController {
@@ -52,10 +49,10 @@ public class AuthenticationApiController {
     }
     // Returns current user
 
-    @GetMapping(value="/LogIn")
-    public ResponseEntity<User> LogIn() {
-
-        return new ResponseEntity<User>(userFound, HttpStatus.OK);
+    @GetMapping(value="/LogIn/{email}")
+    public ResponseEntity<User> LogIn(@PathVariable("email") String email) {
+        User user = userRepo.findUserByEmail(email);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
     // Checks Verification For Doctor
 
