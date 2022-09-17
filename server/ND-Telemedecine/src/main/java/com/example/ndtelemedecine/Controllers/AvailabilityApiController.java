@@ -1,6 +1,7 @@
 package com.example.ndtelemedecine.Controllers;
 
 import com.example.ndtelemedecine.Models.Availability;
+import com.example.ndtelemedecine.Models.Role;
 import com.example.ndtelemedecine.Repositories.AvailabilityRepo;
 import com.example.ndtelemedecine.Models.User;
 import com.example.ndtelemedecine.Repositories.UserRepo;
@@ -35,27 +36,19 @@ public class AvailabilityApiController {
 
         int day = avail.getday_of_week();
 
-        String start = avail.get_start_time();
-
-        String end = avail.get_end_time();
-
-        if (!user.getRole().equals("doctor")){
+        if (user.getRole() != Role.doctor){
             return "User Is Not A Doctor!";
         }
         if(day >= 7 ){
             return "Incorrect Entry: Day of Week Entered was To High";
         }
-        if(day <= 0 ){
+        else if(day <= 0 ){
             return "Incorrect Entry: Day of Week Entered was To Low";
         }
-        if(end.compareTo(start) < 0){
-            return "Incorrect Entry: End Time was Earlier than Start Time";
+        else{
+            availRepo.save(avail);
+            return "Availability Set!";
         }
-        if(end.compareTo(start) == 0){
-            return "Incorrect Entry: End and Start Times must be different";
-        }
-        availRepo.save(avail);
-        return "Availability Set!";
     }
     // Sets an Availability For Doctor
     @GetMapping(value = "/GetAllDoctorAvailability")
