@@ -100,7 +100,6 @@ class _SetAvailability extends State<SetAvailability> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-
   Widget submit() {
     return Container(
         constraints: const BoxConstraints(minWidth: 70, maxWidth: 500),
@@ -109,7 +108,7 @@ class _SetAvailability extends State<SetAvailability> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => Dashboard(user:user)))
+                      builder: (context) => DoctorDashboard(user:user)))
             },
             style: ElevatedButton.styleFrom(
                 minimumSize: const Size(230, 50),

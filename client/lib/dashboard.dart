@@ -1,21 +1,25 @@
+import 'package:client/add_doctor.dart';
+import 'package:client/booking_by_time.dart';
+import 'package:client/set_availability.dart';
 import 'package:client/utilities/user.dart';
 import 'package:flutter/material.dart';
+import 'utilities/dashboard_utils.dart';
+import 'styles/background_style.dart';
 
-class Dashboard extends StatefulWidget {
+class PatientDashboard extends StatefulWidget {
   final User user;
-  const Dashboard({Key? key,required this.user}) : super(key: key);
+  const PatientDashboard({Key? key, required this.user}) : super(key: key);
 
   @override
-  State<Dashboard> createState() => _Dashboard(user);
+  State<PatientDashboard> createState() => _PatientDashboard(user);
 }
-class _Dashboard extends State<Dashboard> {
-  _Dashboard(this.user);
-  final scaffoldKey = GlobalKey<ScaffoldState>();
-  User user;
 
-  // Call for userFound and establish user.dart fields
-  // String url = "http://localhost:8080/LogIn";
-  // response = await http.get(Uri.parse(url));
+class _PatientDashboard extends State<PatientDashboard> {
+  final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  _PatientDashboard(this.user);
+  final User user;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,13 +33,7 @@ class _Dashboard extends State<Dashboard> {
                 constraints: BoxConstraints(
                     maxHeight: MediaQuery.of(context).size.height * 1.2,
                     minHeight: MediaQuery.of(context).size.height * 1),
-                decoration: const BoxDecoration(
-                  color: Color(0xFF14181B),
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: AssetImage('images/background.jpeg'),
-                  ),
-                ),
+                decoration: CustomBackground.setBackground,
                 child: Container(
                     width: 100,
                     height: 100,
@@ -43,14 +41,14 @@ class _Dashboard extends State<Dashboard> {
                       color: Color(0x990F1113),
                     ),
                     child: SingleChildScrollView(
-                        child:
-                            Column(mainAxisSize: MainAxisSize.max, children: [
-                      Padding(
-                          padding:
-                              const EdgeInsetsDirectional.fromSTEB(0, 50, 0, 0),
-                          child: Container(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsetsDirectional.fromSTEB(
+                                10, 50, 10, 0),
+                            child: Container(
                               width: 700,
-                              height: 700,
                               decoration: BoxDecoration(
                                 color: const Color(0x66FFFFFF),
                                 boxShadow: const [
@@ -62,22 +60,180 @@ class _Dashboard extends State<Dashboard> {
                                 ],
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              child: SingleChildScrollView(
-                                  child: Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: const [
-                                    Text(
-                                      'Home',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          fontFamily: 'Poppins',
-                                          color: Colors.white,
-                                          fontSize: 50,
-                                          fontWeight: FontWeight.bold),
-                                    )
-                                  ]))))
-                    ]))))));
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  dashboardNavbar(),
+                                  dashboardUserIcon(),
+                                  welcomeMessage("Test1"),
+                                  menuButtons(const Color.fromRGBO(255, 89, 99,1),
+                                    const Text('Book Appointment'), const Icon( Icons.calendar_today, size: 15)
+                                    ,context, MaterialPageRoute(builder: (context) => BookingByTime(user: user,))),
+                                  menuButtons(const Color.fromRGBO(33, 150, 243,1),
+                                      const Text('Upcoming Appointment'),const Icon( Icons.calendar_today, size: 15,)
+                                      ,context, MaterialPageRoute(builder: (context) => PatientDashboard(user: user,))),
+                                  menuButtons(const Color.fromRGBO(239, 141, 97,1),
+                                      const Text('Contact Doctor'),const Icon( Icons.phone, size: 15,)
+                                      ,context, MaterialPageRoute(builder: (context) => PatientDashboard(user: user,))),
+                                  menuButtons(const Color.fromRGBO(84, 220, 180,1),
+                                      const Text("View Prescriptions"), const Icon(Icons.medical_services, size: 15,)
+                                      ,context, MaterialPageRoute(builder: (context) => PatientDashboard(user: user,))),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )))));
+  }
+}
+class DoctorDashboard extends StatefulWidget {
+  final User user;
+  const DoctorDashboard({Key? key, required this.user}) : super(key: key);
+
+  @override
+  State<DoctorDashboard> createState() => _DoctorDashboard(user);
+}
+
+class _DoctorDashboard extends State<DoctorDashboard> {
+  final scaffoldKey = GlobalKey<ScaffoldState>();
+  _DoctorDashboard(this.user);
+  User user;
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        key: scaffoldKey,
+        backgroundColor: Colors.blue,
+        body: GestureDetector(
+            onTap: () => FocusScope.of(context).unfocus(),
+            child: Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height * 1.1,
+                constraints: BoxConstraints(
+                    maxHeight: MediaQuery.of(context).size.height * 1.2,
+                    minHeight: MediaQuery.of(context).size.height * 1),
+                decoration: CustomBackground.setBackground,
+                child: Container(
+                    width: 100,
+                    height: 100,
+                    decoration: const BoxDecoration(
+                      color: Color(0x990F1113),
+                    ),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsetsDirectional.fromSTEB(
+                                10, 50, 10, 0),
+                            child: Container(
+                              width: 700,
+                              decoration: BoxDecoration(
+                                color: const Color(0x66FFFFFF),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    blurRadius: 4,
+                                    color: Color(0x33000000),
+                                    offset: Offset(0, 2),
+                                  )
+                                ],
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  dashboardNavbar(),
+                                  dashboardUserIcon(),
+                                  welcomeMessage("Test1"),
+                                  menuButtons(const Color.fromRGBO(33, 150, 243,1),const Text('Upcoming Appointment'),const Icon( Icons.calendar_today, size: 15,)
+                                      ,context, MaterialPageRoute(builder: (context) => DoctorDashboard(user: user,))),
+                                  menuButtons(const Color.fromRGBO(239, 141, 97,1),const Text('Contact Patients'),const Icon( Icons.phone, size: 15,)
+                                      ,context, MaterialPageRoute(builder: (context) => DoctorDashboard(user: user,))),
+                                  menuButtons(const Color.fromRGBO(255, 89, 99,1),const Text('Change Availability'),const Icon( Icons.calendar_today, size: 15)
+                                      ,context, MaterialPageRoute(builder: (context) => SetAvailability(user: user))),
+                                  menuButtons(const Color.fromRGBO(84, 220, 180,1),const Text("View Patient Profile"),const Icon(Icons.person, size: 15,)
+                                  ,context, MaterialPageRoute(builder: (context) => DoctorDashboard(user: user,))),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )))));
+  }
+}
+
+class SuperAdminDashboard extends StatefulWidget {
+  final User user;
+  const SuperAdminDashboard({Key? key,required this.user}) : super(key: key);
+
+  @override
+  State<SuperAdminDashboard> createState() => _SuperAdminDashboard(user);
+}
+
+class _SuperAdminDashboard extends State<SuperAdminDashboard> {
+
+  final scaffoldKey = GlobalKey<ScaffoldState>();
+  _SuperAdminDashboard(this.user);
+  User user;
+  TextEditingController controller = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        key: scaffoldKey,
+        backgroundColor: Colors.blue,
+        body: GestureDetector(
+            onTap: () => FocusScope.of(context).unfocus(),
+            child: Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height * 1.1,
+                constraints: BoxConstraints(
+                    maxHeight: MediaQuery.of(context).size.height * 1.2,
+                    minHeight: MediaQuery.of(context).size.height * 1),
+                decoration: CustomBackground.setBackground,
+                child: Container(
+                    width: 100,
+                    height: 100,
+                    decoration: const BoxDecoration(
+                      color: Color(0x990F1113),
+                    ),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsetsDirectional.fromSTEB(
+                                10, 50, 10, 0),
+                            child: Container(
+                              width: 700,
+                              decoration: BoxDecoration(
+                                color: const Color(0x66FFFFFF),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    blurRadius: 4,
+                                    color: Color(0x33000000),
+                                    offset: Offset(0, 2),
+                                  )
+                                ],
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  dashboardNavbar(),
+                                  dashboardUserIcon(),
+                                  welcomeMessage("Test1"),
+                                  menuButtons(const Color.fromRGBO(33, 150, 243,1),const Text('Add Doctor'),const Icon(Icons.person_add, size: 15,)
+                                      ,context, MaterialPageRoute(builder: (context) => AddDoctor(user: user,))),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )))));
   }
 }
