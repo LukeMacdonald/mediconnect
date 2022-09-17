@@ -50,17 +50,10 @@ class _Registration extends State<Registration> {
     if (response.body == "Saved user...") {
       user.setId();
       if (!mounted) return;
-      if (user.role == 'patient') {
-        Navigator.push(
+      Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) => ProfileCreation(user: user)));
-      } else if (user.role == 'doctor') {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => SetAvailability(user: user)));
-      }
     } else {
       alert("Email Already Taken!");
     }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:client/set_availability.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
@@ -45,7 +46,22 @@ class _ProfileCreation extends State<ProfileCreation> {
           'phoneNumber': user.phoneNumber,
           'dob': user.dob
         }));
+
+    if (!mounted) return;
+    if (user.role == 'patient') {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ProfileCreation(user: user)));
+    } else if (user.role == 'doctor') {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => SetAvailability(user: user)));
+    }
+
   }
+
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
   bool isCheckedP = false;
@@ -349,23 +365,7 @@ class _ProfileCreation extends State<ProfileCreation> {
                       user.lastName = lastName,
                       // user.dob = DOB,      // Commented out for now because user.dob is directly updated
                       user.phoneNumber = phoneNumber,
-                      save(), //Need listener if save successful here, otherwise print error
-                      showDialog<String>(
-                          context: context,
-                          builder: (BuildContext context) => AlertDialog(
-                                  content: const Text('Creation Success!!'),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    MedicalHistory(user: user)));
-                                      },
-                                      child: const Text('OK'),
-                                    ),
-                                  ]))
+                      save(),
                     }
                 },
             style: ElevatedButton.styleFrom(
