@@ -58,7 +58,7 @@ class _MedicalHistory extends State<MedicalHistory> {
 
   Future save() async {
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => Dashboard(user: user,)));
+        context, MaterialPageRoute(builder: (context) => PatientDashboard(user:user)));
 
     // await http.post(Uri.parse(url),
     //     headers: {'Content-Type': 'application/json'},

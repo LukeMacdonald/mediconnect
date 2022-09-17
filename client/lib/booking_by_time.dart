@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:client/utilities/user.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -9,14 +10,17 @@ import 'utilities/appointment.dart';
 import 'package:flutter/material.dart';
 
 class BookingByTime extends StatefulWidget {
-  const BookingByTime({Key? key}) : super(key: key);
+  final User user;
+  const BookingByTime({Key? key, required this.user}) : super(key: key);
 
   @override
-  State<BookingByTime> createState() => _BookingByTime();
+  State<BookingByTime> createState() => _BookingByTime(user);
 }
 
 class _BookingByTime extends State<BookingByTime> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  User user;
+  _BookingByTime(this.user);
 
   String url = "http://localhost:8080/booking_by_time";
   String? daySelected;

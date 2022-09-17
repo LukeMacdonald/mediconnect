@@ -6,6 +6,7 @@ import 'register.dart';
 import "dashboard.dart";
 import 'dart:convert';
 import 'utilities/user.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class LogIn extends StatefulWidget {
   const LogIn({Key? key}) : super(key: key);
@@ -16,20 +17,18 @@ class LogIn extends StatefulWidget {
 
 class _LogIn extends State<LogIn> {
   User user = User("", "", "");
-  String url = "http://localhost:8080/LogInAttempt";
+  String url = "http://localhost:8080/";
   String url2 = "http://localhost:8080/LogIn";
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   Future login() async {
-    var response = await http.post(Uri.parse(url),
+    var response = await http.post(Uri.parse("${url}LogInAttempt"),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
           'email': user.email,
           'password': user.password,
         }));
-    user.setId();
     if (!mounted) return;
-
     if (response.body == "false") {
       Navigator.push(
           context,
@@ -37,8 +36,32 @@ class _LogIn extends State<LogIn> {
               builder: (context) => ProfileCreation(
                   user: user))); // Should direct to profile creation page
     } else if (response.body == "true") {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => Dashboard(user: user)));
+          response = await http.get(Uri.parse("${url}LogIn/${user.email}"));
+          var responseData = json.decode(response.body);
+          user.role = responseData['role'];
+          user.firstName = responseData['firstName'];
+          user.firstName = responseData['lastName'];
+        if (user.role == "patient") {
+        if (!mounted) return;
+        Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => PatientDashboard(user:user)));
+      }
+      else if (user.role == "doctor"){
+        if (!mounted) return;
+        Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => DoctorDashboard(user:user)));
+            }
+      else if (user.role == "superuser"){
+        if (!mounted) return;
+        Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => SuperAdminDashboard(user:user)));
+      }
+      else {
+        alert("Error Logging In");
+      }
     } else {
       alert("User does not exist");
     }
@@ -228,7 +251,6 @@ class _LogIn extends State<LogIn> {
                 Padding(
                   padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
                   child: Container(
-                      //height: MediaQuery.of(context).size.height * 1,
                       constraints:
                           const BoxConstraints(minWidth: 700, minHeight: 580),
                       decoration: const BoxDecoration(color: Color(0x00FFFFFF)),

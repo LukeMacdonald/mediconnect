@@ -106,8 +106,8 @@ class _Booking extends State<Booking> {
                                             Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        BookingByTime())); // Add user to the parameters of Booking()
+                                                    builder: (context) =>const Booking()));
+                                                        //BookingByTime())); // Add user to the parameters of Booking()
                                           },
                                           child: Column(
                                             children: const <Widget>[
