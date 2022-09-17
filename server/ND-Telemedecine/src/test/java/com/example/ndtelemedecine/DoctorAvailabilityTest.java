@@ -65,6 +65,13 @@ public class DoctorAvailabilityTest {
         avail.setdoctor_id(mockDoctor.getID());
     }
     @Test
+        // -----------------------------------------------------------------------------------
+        // Test: Availability API Controller should return a message confirming success
+        // -----------------------------------------------------------------------------------
+        // 1. Set Variables of availability
+        // 2. Assert whether the request returns OK
+        // 3. Assert whether the availability is successfully set
+        // -----------------------------------------------------------------------------------
     void setDoctorAvailability_ReturnsTrue() throws Exception{
         
         avail.setstart_time("12:00");
@@ -84,6 +91,14 @@ public class DoctorAvailabilityTest {
     }
 
     @Test
+        // -----------------------------------------------------------------------------------
+        // Test: Availability API Controller should return a message indicating day_of_week
+        //       Value is to High (Tests the value just past the upper boundary value)
+        // -----------------------------------------------------------------------------------
+        // 1. Set Variables of availability
+        // 2. Assert whether the request returns OK
+        // 3. Assert whether the availability is successfully set (returns unsuccessful message)
+        // -----------------------------------------------------------------------------------
     void setDoctorAvailability_BoundryHighFalse() throws Exception{
 
         avail.setstart_time("09:00:00");
@@ -102,6 +117,14 @@ public class DoctorAvailabilityTest {
         .andExpect(MockMvcResultMatchers.content().string("Incorrect Entry: Day of Week Entered was To High"));
     }
     @Test
+        // -----------------------------------------------------------------------------------
+        // Test: Availability API Controller should return a message confirming success
+        //       (Tests the upper boundary value)
+        // -----------------------------------------------------------------------------------
+        // 1. Set Variables of availability
+        // 2. Assert whether the request returns OK
+        // 3. Assert whether the availability is successfully set (returns successful message)
+        // -----------------------------------------------------------------------------------
     void setDoctorAvailability_BoundryHighReturnsTrue() throws Exception{
         
         avail.setstart_time("09:00:00");
@@ -120,6 +143,14 @@ public class DoctorAvailabilityTest {
         .andExpect(MockMvcResultMatchers.content().string("Availability Set!"));
     }
     @Test
+        // -----------------------------------------------------------------------------------
+        // Test: Availability API Controller should return a message indicating day_of_week
+        //       Value is too Low (Tests the value just past the lower boundary value)
+        // -----------------------------------------------------------------------------------
+        // 1. Set Variables of availability
+        // 2. Assert whether the request returns OK
+        // 3. Assert whether the availability is successfully set (returns unsuccessful message)
+        // -----------------------------------------------------------------------------------
     void setDoctorAvailability_BoundryLowFalse() throws Exception{
 
         avail.setstart_time("09:00:00");
@@ -138,6 +169,14 @@ public class DoctorAvailabilityTest {
         .andExpect(MockMvcResultMatchers.content().string("Incorrect Entry: Day of Week Entered was To Low"));
     }
     @Test
+        // -----------------------------------------------------------------------------------
+        // Test: Availability API Controller should return a message confirming success
+        //       (Tests the lower boundary value)
+        // -----------------------------------------------------------------------------------
+        // 1. Set Variables of availability
+        // 2. Assert whether the request returns OK
+        // 3. Assert whether the availability is successfully set (returns successful message)
+        // -----------------------------------------------------------------------------------
     void setDoctorAvailability_BoundryLowReturnsTrue() throws Exception{
         
         avail.setstart_time("09:00:00");
