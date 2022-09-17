@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:client/dashboard.dart';
+import 'package:client/set_availability.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -7,7 +7,6 @@ import 'package:client/create_profile.dart';
 import 'package:http/http.dart' as http;
 import 'utilities/user.dart';
 import 'log_in.dart';
-import 'utilities/authentication.dart';
 
 class Registration extends StatefulWidget {
   const Registration({Key? key}) : super(key: key);
@@ -49,6 +48,7 @@ class _Registration extends State<Registration> {
         }));
     //print(response.body);
     if (response.body == "Saved user...") {
+      user.setId();
       if (!mounted) return;
       if (user.role == 'patient') {
         Navigator.push(
@@ -56,8 +56,10 @@ class _Registration extends State<Registration> {
             MaterialPageRoute(
                 builder: (context) => ProfileCreation(user: user)));
       } else if (user.role == 'doctor') {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const Dashboard()));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => SetAvailability(user: user)));
       }
     } else {
       alert("Email Already Taken!");

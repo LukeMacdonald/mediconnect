@@ -34,7 +34,7 @@ class _ProfileCreation extends State<ProfileCreation> {
   String url = "http://localhost:8080/UpdateUser";
 
   Future save() async {
-    await http.post(Uri.parse(url),
+    await http.put(Uri.parse(url),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
           'email': user.email,
@@ -361,7 +361,7 @@ class _ProfileCreation extends State<ProfileCreation> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    const MedicalHistory()));
+                                                    MedicalHistory(user: user)));
                                       },
                                       child: const Text('OK'),
                                     ),
