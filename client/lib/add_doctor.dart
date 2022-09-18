@@ -12,16 +12,14 @@ class AddDoctor extends StatefulWidget {
   const AddDoctor({Key? key, required this.user}) : super(key: key);
 
   @override
-  State<AddDoctor> createState() => _AddDoctor(user);
+  State<AddDoctor> createState() => _AddDoctor();
 }
 
 class _AddDoctor extends State<AddDoctor> {
-  _AddDoctor(this.user);
-  User user;
-
+  final scaffoldKey = GlobalKey<ScaffoldState>();
   TextEditingController controller = TextEditingController();
   String url = "http://localhost:8080/";
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+  late User user = widget.user;
   late String email;
 
   Future save() async {
@@ -87,7 +85,7 @@ class _AddDoctor extends State<AddDoctor> {
         ]);
   }
 
-  Widget userLogInBtn() {
+  Widget submit() {
     return Container(
         constraints: const BoxConstraints(minWidth: 70, maxWidth: 500),
         child: ElevatedButton(
@@ -112,7 +110,7 @@ class _AddDoctor extends State<AddDoctor> {
                 ))));
   }
 
-  Widget userLogIn() {
+  Widget addDoctor() {
     return SingleChildScrollView(
       physics: const NeverScrollableScrollPhysics(),
       child: Column(children: [
@@ -124,14 +122,15 @@ class _AddDoctor extends State<AddDoctor> {
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                   fontSize: 30)),
-    ),
-          const Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0)),
-          doctorEmail(),
-          const Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0)),
-          userLogInBtn(),
-          const Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 20)),
-    ]
-    ));
+        ),
+        const Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0)),
+        doctorEmail(),
+        const Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0)),
+        submit(),
+        const Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 20)),
+      ]
+      )
+    );
   }
   @override
   Widget build(BuildContext context) {
@@ -181,7 +180,7 @@ class _AddDoctor extends State<AddDoctor> {
                                             padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
                                             child: Container(
                                                 decoration: const BoxDecoration(color: Color(0x00FFFFFF)),
-                                                child: userLogIn()),
+                                                child: addDoctor()),
                                           )],
                                           )
                                   )

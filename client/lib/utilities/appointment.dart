@@ -35,4 +35,8 @@ int getDayIntFromDayString(String day){
     default:
       return -1;
   }
+
+}
+String createTime(String start, String end){
+  return "${start.substring(0, start.length - 3)} - ${end.substring(0, end.length - 3)}";
 }

@@ -11,14 +11,12 @@ class PatientDashboard extends StatefulWidget {
   const PatientDashboard({Key? key, required this.user}) : super(key: key);
 
   @override
-  State<PatientDashboard> createState() => _PatientDashboard(user);
+  State<PatientDashboard> createState() => _PatientDashboard();
 }
 
 class _PatientDashboard extends State<PatientDashboard> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
-
-  _PatientDashboard(this.user);
-  final User user;
+  late User user = widget.user;
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +63,7 @@ class _PatientDashboard extends State<PatientDashboard> {
                                 children: [
                                   dashboardNavbar(),
                                   dashboardUserIcon(),
-                                  welcomeMessage("Test1"),
+                                  welcomeMessage(user.firstName),
                                   menuButtons(const Color.fromRGBO(255, 89, 99,1),
                                     const Text('Book Appointment'), const Icon( Icons.calendar_today, size: 15)
                                     ,context, MaterialPageRoute(builder: (context) => BookingByTime(user: user,))),
@@ -92,13 +90,12 @@ class DoctorDashboard extends StatefulWidget {
   const DoctorDashboard({Key? key, required this.user}) : super(key: key);
 
   @override
-  State<DoctorDashboard> createState() => _DoctorDashboard(user);
+  State<DoctorDashboard> createState() => _DoctorDashboard();
 }
 
 class _DoctorDashboard extends State<DoctorDashboard> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  _DoctorDashboard(this.user);
-  User user;
+  late User user = widget.user;
 
 
   @override
@@ -146,7 +143,7 @@ class _DoctorDashboard extends State<DoctorDashboard> {
                                 children: [
                                   dashboardNavbar(),
                                   dashboardUserIcon(),
-                                  welcomeMessage("Test1"),
+                                  welcomeMessage("Dr ${user.lastName}"),
                                   menuButtons(const Color.fromRGBO(33, 150, 243,1),const Text('Upcoming Appointment'),const Icon( Icons.calendar_today, size: 15,)
                                       ,context, MaterialPageRoute(builder: (context) => DoctorDashboard(user: user,))),
                                   menuButtons(const Color.fromRGBO(239, 141, 97,1),const Text('Contact Patients'),const Icon( Icons.phone, size: 15,)
@@ -170,14 +167,14 @@ class SuperAdminDashboard extends StatefulWidget {
   const SuperAdminDashboard({Key? key,required this.user}) : super(key: key);
 
   @override
-  State<SuperAdminDashboard> createState() => _SuperAdminDashboard(user);
+  State<SuperAdminDashboard> createState() => _SuperAdminDashboard();
 }
 
 class _SuperAdminDashboard extends State<SuperAdminDashboard> {
-
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  _SuperAdminDashboard(this.user);
-  User user;
+
+  late User user = widget.user;
+
   TextEditingController controller = TextEditingController();
 
   @override
@@ -225,7 +222,7 @@ class _SuperAdminDashboard extends State<SuperAdminDashboard> {
                                 children: [
                                   dashboardNavbar(),
                                   dashboardUserIcon(),
-                                  welcomeMessage("Test1"),
+                                  welcomeMessage("Admin ${user.firstName}"),
                                   menuButtons(const Color.fromRGBO(33, 150, 243,1),const Text('Add Doctor'),const Icon(Icons.person_add, size: 15,)
                                       ,context, MaterialPageRoute(builder: (context) => AddDoctor(user: user,))),
                                 ],

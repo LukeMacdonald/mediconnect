@@ -13,14 +13,14 @@ class MedicalHistory extends StatefulWidget {
   const MedicalHistory({Key? key, required this.user}) : super(key: key);
 
   @override
-  State<MedicalHistory> createState() => _MedicalHistory(user);
+  State<MedicalHistory> createState() => _MedicalHistory();
 }
 
 class _MedicalHistory extends State<MedicalHistory> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  User user;
+  late User user = widget.user;
 
-  _MedicalHistory(this.user);
+  _MedicalHistory();
 
   TextEditingController ill = TextEditingController();
   TextEditingController med = TextEditingController();

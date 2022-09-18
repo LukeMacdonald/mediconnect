@@ -9,18 +9,18 @@ import 'medical_history.dart';
 import 'utilities/user.dart';
 
 class ProfileCreation extends StatefulWidget {
-  User user;
-  ProfileCreation({Key? key, required this.user}) : super(key: key);
+  final User user;
+
+  const ProfileCreation({Key? key, required this.user}) : super(key: key);
 
   @override
-  State<ProfileCreation> createState() => _ProfileCreation(user);
+  State<ProfileCreation> createState() => _ProfileCreation();
 }
 
 class _ProfileCreation extends State<ProfileCreation> {
-  User user;
-  _ProfileCreation(this.user);
-
+  late User user = widget.user;
   TextEditingController dateInput = TextEditingController();
+
   String firstName = "";
   String lastName = "";
   String phoneNumber = "";
@@ -46,23 +46,19 @@ class _ProfileCreation extends State<ProfileCreation> {
           'phoneNumber': user.phoneNumber,
           'dob': user.dob
         }));
-
     if (!mounted) return;
     if (user.role == 'patient') {
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => ProfileCreation(user: user)));
+              builder: (context) => MedicalHistory(user: user)));
     } else if (user.role == 'doctor') {
       Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => SetAvailability(user: user)));
     }
-
   }
-
-
   final scaffoldKey = GlobalKey<ScaffoldState>();
   bool isCheckedP = false;
   bool isCheckedD = false;

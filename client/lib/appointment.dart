@@ -6,7 +6,7 @@ class Appointment extends StatefulWidget {
   const Appointment({Key? key}) : super(key: key);
 
   @override
-  _Appointment createState() => _Appointment();
+  State<Appointment> createState() => _Appointment();
 }
 
 class _Appointment extends State<Appointment> {
@@ -102,7 +102,7 @@ class _Appointment extends State<Appointment> {
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>
-                                                        Booking())); // Add user to the parameters of Booking()
+                                                        const Booking())); // Add user to the parameters of Booking()
                                           },
                                           child: Column(
                                             children: const <Widget>[
