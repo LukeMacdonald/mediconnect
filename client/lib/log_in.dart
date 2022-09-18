@@ -6,7 +6,6 @@ import 'register.dart';
 import "dashboard.dart";
 import 'dart:convert';
 import 'utilities/user.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class LogIn extends StatefulWidget {
   const LogIn({Key? key}) : super(key: key);
@@ -40,7 +39,8 @@ class _LogIn extends State<LogIn> {
           var responseData = json.decode(response.body);
           user.role = responseData['role'];
           user.firstName = responseData['firstName'];
-          user.firstName = responseData['lastName'];
+          user.lastName = responseData['lastName'];
+          user.id = responseData['id'];
         if (user.role == "patient") {
         if (!mounted) return;
         Navigator.push(
