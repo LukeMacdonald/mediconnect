@@ -152,7 +152,7 @@ class UserTests {
     // 4. Assert retrieve user by their email
     // NOTE: There are so many comments but don't delete them for now FOR FUTURE REFERENCE
     // -----------------------------------------------------------------------------------
-    void PateintCreatesAccount_True_PatientSuccessfullyEnrolled() throws Exception {
+    void PatientCreatesAccount_True() throws Exception {
 
         User mockPatient = new User();
 
@@ -196,6 +196,38 @@ class UserTests {
         // String resultContent = result.getResponse().getContentAsString();
         // System.out.println(resultContent);
         // // .andExpect(MockMvcResultMatchers.jsonPath("$.role", Matchers.is("doctor")));
+    }
+
+    @Test
+    void PatientRegister_False() throws Exception {
+
+        User mockPatient = new User();
+
+        // "doctor@unittest.com", "password", Role.doctor
+        mockPatient.setEmail("patient@unittest.com");
+        mockPatient.setPassword("password");
+        mockPatient.setRole("patient");
+
+        // Object mapper
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
+        String requestJson = ow.writeValueAsString(mockPatient);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/Register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+
+        Mockito.when(mockUserRepo.findUserByEmail(Mockito.anyString())).thenReturn(mockPatient);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/Register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+
+
     }
 
     @Test
@@ -269,7 +301,7 @@ class UserTests {
     // 4. Assert retrieve user by their email
     // NOTE: There are so many comments but don't delete them for now FOR FUTURE REFERENCE
     // -----------------------------------------------------------------------------------
-    void PateintLogsIn_True_PatientSuccessfullyLoggedIn() throws Exception {
+    void PatientLogsIn_True() throws Exception {
 
         User mockPatient = new User();
 
@@ -317,6 +349,37 @@ class UserTests {
 
         mockMvc.perform(MockMvcRequestBuilders.get("/LogIn/{email}", mockPatient.getEmail()))
         .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    void PatientLogsIn_False() throws Exception {
+
+        User mockPatient = new User();
+
+        // "doctor@unittest.com", "password", Role.doctor
+        mockPatient.setEmail("patient@unittest.com");
+        mockPatient.setPassword("passwordUnitTest");
+        mockPatient.setRole("patient");
+
+        // Object mapper
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
+        String requestJson = ow.writeValueAsString(mockPatient);
+
+        // First register a patient mock object that will be used to log in
+        mockMvc.perform(MockMvcRequestBuilders.post("/Register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        Mockito.when(mockUserRepo.findByEmailAndPassword(Mockito.anyString(),Mockito.anyString())).thenReturn(null);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/LogInAttempt")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+
     }
 
     @Test
