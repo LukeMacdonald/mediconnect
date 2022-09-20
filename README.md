@@ -32,4 +32,13 @@ To run the application locally :
 3) cd into client and run "flutter pub get"
 4) press the start icon on the main.dart file inside client/lib
 
-
+## Example Prexisting Accounts
+### Patient
+Email: Test@gmail.com
+Password: test
+### Doctor
+Email: Jamal@gmail.com
+Password: jamalMan
+### SuperAdmin
+Email: admin@gmail.com
+Password: admin
