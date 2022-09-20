@@ -206,7 +206,7 @@ class UserTests {
     // 4. Assert retrieve user by their email
     // NOTE: There are so many comments but don't delete them for now FOR FUTURE REFERENCE
     // -----------------------------------------------------------------------------------
-    void PatientCreatesProfile_True_PatientSuccessfullyEnrolled() throws Exception {
+    void PatientCreatesProfile_True_PatientSuccessfullyCreatedProfile() throws Exception {
 
         User mockPatient = new User();
 
@@ -267,7 +267,7 @@ class UserTests {
     // 4. Assert retrieve user by their email
     // NOTE: There are so many comments but don't delete them for now FOR FUTURE REFERENCE
     // -----------------------------------------------------------------------------------
-    void PateintLogsIn_True_PatientSuccessfullyEnrolled() throws Exception {
+    void PateintLogsIn_True_PatientSuccessfullyLoggedIn() throws Exception {
 
         User mockPatient = new User();
 
