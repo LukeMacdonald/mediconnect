@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -17,47 +18,55 @@ class SetAvailability extends StatefulWidget {
 }
 class _SetAvailability extends State<SetAvailability> {
   late User user = widget.user;
+
   String url = "http://localhost:8080/";
 
   Future save() async {
     int day = getDayIntFromDayString(dayValue);
-    await http.post(Uri.parse("${url}SetDoctorAvailability"),
-        headers: {'Content-Type': 'application/json'},
+    await http.post(Uri.parse("${url}doctor/SetDoctorAvailability"),
+        headers: {
+          'Content-Type': 'application/json',
+          HttpHeaders.authorizationHeader:user.token
+        },
         body: json.encode({
           'doctor_id': user.id,
           'day_of_week': day,
           'start_time': hourValue.substring(0, 5),
           'end_time': hourValue.substring(8,)
-        }));
+        })
+    );
   }
-
   final List<Map> _availability = [];
   @override
   void initState() {
     super.initState();
-    // getAvailability();
+    getAvailability();
   }
-
   Future getAvailability() async {
-    final response =
-        await http.get(Uri.parse("${url}GetAllDoctorAvailability/${user.id}"));
+    var response = await http.get(Uri.parse("${url}GetAllDoctorAvailability/${user.id}"),
+          headers: {
+            'Content-Type': 'application/json',
+            HttpHeaders.authorizationHeader:user.token
+          },
+        );
+
     var responseData = json.decode(response.body);
+
     String day = "";
 
     for (var availability in responseData) {
+
       day = getDayStringFrontDayInt(availability["day_of_week"]);
       // Provided the doctor has gone through the dashboard, we simply take the doctor_id from their current availabilities
-      String time = availability["_start_time"]
-              .substring(0, availability["_start_time"].length - 3) +
-          " - " +
-          availability["_end_time"]
-              .substring(0, availability["_end_time"].length - 3);
+      String time = createTime(availability["_start_time"], availability["_start_time"]);
+
       _availability.add({'Day': day, 'Hour': time});
     }
   }
 
   String dayValue = 'Day';
   String hourValue = 'Hour';
+
   final _days = [
     'Day',
     'Monday',
@@ -67,6 +76,7 @@ class _SetAvailability extends State<SetAvailability> {
     'Friday',
     'Saturday',
   ];
+
   // Change the type if necessary
   final _hours = [
     'Hour',
@@ -101,13 +111,11 @@ class _SetAvailability extends State<SetAvailability> {
         constraints: const BoxConstraints(minWidth: 70, maxWidth: 500),
         child: ElevatedButton(
             onPressed: () => {
-
               Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => DoctorDashboard(user:user)))
             },
-
             style: ElevatedButton.styleFrom(
                 minimumSize: const Size(230, 50),
                 padding: const EdgeInsets.all(15),
@@ -122,7 +130,6 @@ class _SetAvailability extends State<SetAvailability> {
                   ),
                 ))));
   }
-
   Widget availabilityList() {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -159,7 +166,7 @@ class _SetAvailability extends State<SetAvailability> {
           const Padding(padding: EdgeInsets.fromLTRB(0, 15, 0, 0)),
           availabilityList(),
           Align(
-              alignment: const AlignmentDirectional(-1, 0.05),
+              alignment: const AlignmentDirectional(-0.35, 0.05),
               child: Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
                 child: Text('Specific Dates Not Available',
@@ -170,8 +177,7 @@ class _SetAvailability extends State<SetAvailability> {
                     ))),
               )),
           Container(
-              constraints: const BoxConstraints(
-                  minWidth: 800, maxWidth: 800, minHeight: 200, maxHeight: 200),
+              constraints: const BoxConstraints(minWidth: 800, maxWidth: 800),
               decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10),
@@ -185,12 +191,10 @@ class _SetAvailability extends State<SetAvailability> {
               child: Row(
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  Row(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(80, 5, 0, 0),
+                        padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
                         child: Container(
                           constraints: const BoxConstraints(
                               minWidth: 100, maxWidth: 200),
@@ -235,7 +239,7 @@ class _SetAvailability extends State<SetAvailability> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(80, 10, 0, 0),
+                        padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
                         child: Container(
                           constraints: const BoxConstraints(
                               minWidth: 100, maxWidth: 200),
@@ -247,7 +251,7 @@ class _SetAvailability extends State<SetAvailability> {
                                 BoxShadow(
                                     color: Colors.black26,
                                     blurRadius: 6,
-                                    offset: Offset(0, 1))
+                                    offset: Offset(0, 2))
                               ]),
                           height: 60,
                           child: Padding(
@@ -281,7 +285,7 @@ class _SetAvailability extends State<SetAvailability> {
                       ),
                       Padding(
                           padding:
-                              const EdgeInsetsDirectional.fromSTEB(80, 5, 0, 0),
+                              const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
                           child: ElevatedButton(
                             onPressed: () {
                               if (dayValue == 'Day') {
@@ -313,12 +317,26 @@ class _SetAvailability extends State<SetAvailability> {
                             },
                             style: ElevatedButton.styleFrom(
                               shape: const CircleBorder(),
-                              padding: const EdgeInsets.all(10),
+                              padding: const EdgeInsets.all(20),
                               primary: const Color.fromARGB(255, 129, 125, 125),
                               onPrimary: Colors.black,
                             ),
                             child: const Icon(Icons.add, color: Colors.white),
                           )),
+                      Padding(
+                        padding:
+                            const EdgeInsetsDirectional.fromSTEB(80, 0, 0, 0),
+                        child: Container(
+                          constraints: const BoxConstraints(
+                              minWidth: 200, maxWidth: 200),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: const Icon(Icons.calendar_today_rounded,
+                              color: Colors.black, size: 200),
+                        ),
+                      ),
                     ],
                   )
                 ],

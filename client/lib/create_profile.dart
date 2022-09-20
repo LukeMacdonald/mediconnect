@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:client/set_availability.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +37,8 @@ class _ProfileCreation extends State<ProfileCreation> {
 
   Future save() async {
     await http.put(Uri.parse(url),
-        headers: {'Content-Type': 'application/json'},
+        headers: {'Content-Type': 'application/json',
+          HttpHeaders.authorizationHeader:user.token},
         body: json.encode({
           'email': user.email,
           'password': user.password,
@@ -46,6 +48,7 @@ class _ProfileCreation extends State<ProfileCreation> {
           'phoneNumber': user.phoneNumber,
           'dob': user.dob
         }));
+    user.password = "";
     if (!mounted) return;
     if (user.role == 'patient') {
       Navigator.push(
@@ -53,6 +56,7 @@ class _ProfileCreation extends State<ProfileCreation> {
           MaterialPageRoute(
               builder: (context) => MedicalHistory(user: user)));
     } else if (user.role == 'doctor') {
+
       Navigator.push(
           context,
           MaterialPageRoute(
