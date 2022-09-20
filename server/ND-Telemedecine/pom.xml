@@ -10,8 +10,8 @@
     <groupId>com.example</groupId>
     <artifactId>ND-Telemedecine</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>ND-Telemedecine</name>
-    <description>ND-Telemedecine</description>
+    <name>ND-Telemedicine</name>
+    <description>ND-Telemedicine</description>
     <properties>
         <java.version>11</java.version>
     </properties>
@@ -26,15 +26,13 @@
             <artifactId>persistence-api</artifactId>
             <version>2.2</version>
         </dependency> -->
+        <!-- https://mvnrepository.com/artifact/com.auth0/java-jwt -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-            <!-- <version>8.0.21</version> -->
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>4.0.0</version>
         </dependency>
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-        </dependency>
+
         <!-- <dependency>
             <groupId>org.hibernate.javax.persistence</groupId>
             <artifactId>hibernate-jpa-2.1-api</artifactId>
@@ -50,6 +48,11 @@
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <version>2.1.214</version>
+        </dependency>
+        <!-- Send emails using SMPT using JavaMail -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
 
         <!-- <dependency>
@@ -91,19 +94,13 @@
             <artifactId>hamcrest-all</artifactId>
             <version>1.3</version>
         </dependency>
-
-        <!-- Send emails using SMPT using JavaMail -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-mail</artifactId>
+            <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
-
-        <!-- Lombok Dependacy -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.24</version>
-            <scope>provided</scope>
         </dependency>
 
     </dependencies>
@@ -116,8 +113,9 @@
             </plugin>
 
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.10</version>
+                <version>3.0.0-M7</version>
                 <configuration>
                   <useFile>false</useFile>
                 </configuration>
