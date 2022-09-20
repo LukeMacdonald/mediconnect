@@ -290,8 +290,7 @@ class UserTests {
         .content(requestJson))
         .andExpect(MockMvcResultMatchers.status().isOk());
 
-        Mockito.when(mockUserApiController.getUserObjByEmail(mockPatient)).thenReturn(mockPatient);
-        Mockito.when(mockUserRepo.findByEmail(Mockito.anyString())).thenReturn(Arrays.asList(mockPatient));
+        Mockito.when(mockUserRepo.findByEmailAndPassword(Mockito.anyString(),Mockito.anyString())).thenReturn(mockPatient);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/LogInAttempt")
         .contentType(MediaType.APPLICATION_JSON)
