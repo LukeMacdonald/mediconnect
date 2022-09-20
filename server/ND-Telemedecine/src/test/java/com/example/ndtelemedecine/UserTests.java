@@ -401,8 +401,12 @@ class UserTests {
         // Mockito.when(mockApiController.validateAppointment(Mockito.anyInt(), Mockito.any(Date.class), Mockito.anyString())).thenReturn(true);
         Mockito.doReturn(true).when(mockAppointmentApiController).validateAppointment(Mockito.anyInt(), Mockito.any(Date.class), Mockito.anyString());
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/SearchAppointment/{id}/{date}/{start_time}", mockAppointment.getId(), mockAppointment.getDate(), mockAppointment.getTime()))
-        .andExpect(MockMvcResultMatchers.status().isOk());
+        mockMvc.perform(MockMvcRequestBuilders.get("/SearchAppointment/{id}/{date}/{start_time}", mockAppointment.getId(), mockAppointment.getDate(), mockAppointment.getTime())
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(requestJson))
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.content().string("true"));
     }
 }
 
