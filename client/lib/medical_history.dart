@@ -5,8 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import "dashboard.dart";
 import 'package:client/styles/custom_styles.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class MedicalHistory extends StatefulWidget {
   final User user;

@@ -67,10 +67,9 @@ class _AddDoctor extends State<AddDoctor> {
             body: json.encode({
               'recipient': email,
               'msgBody':
-                  "Hello,\n\nThe following verification code must be provided to register,\n${code}\nBest Wishes,\n\From the ND Telemedicine Management Team",
+                  "Hello,\n\nThe following verification code must be provided to register,\n$code\nBest Wishes,\nFrom the ND Telemedicine Management Team",
               'subject': "ND-Telemedicine Doctor Verification Code"
             }));
-    print(response.body);
     return response.body;
   }
 
