@@ -2,7 +2,6 @@ package com.example.ndtelemedecine;
 
 import com.example.ndtelemedecine.Controllers.AppointmentApiController;
 import com.example.ndtelemedecine.Controllers.AuthenticationApiController;
-import com.example.ndtelemedecine.Controllers.AvailabilityApiController;
 import com.example.ndtelemedecine.Controllers.UserApiController;
 import com.example.ndtelemedecine.Models.Appointment;
 import com.example.ndtelemedecine.Repositories.AppointmentRepo;
@@ -13,29 +12,25 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
-import static org.mockito.ArgumentMatchers.contains;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import org.apache.catalina.connector.Response;
+
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.mockito.internal.matchers.Contains;
-import org.mockito.internal.matchers.Matches;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
+
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -54,9 +49,6 @@ class UserTests {
     private AuthenticationApiController mockAuthenticationApiController;
 
     @SpyBean
-    private AvailabilityApiController mockAvailabilityApiController;
-
-    @SpyBean
     private UserApiController mockUserApiController;
 
     @MockBean
@@ -65,7 +57,6 @@ class UserTests {
     @MockBean
     private AppointmentRepo mockAppointmentRepo;
 
-    List<User> mockUserList = new ArrayList<User>();
 
     @Test
     // -----------------------------------------------------------------------------------
@@ -77,7 +68,7 @@ class UserTests {
     // -----------------------------------------------------------------------------------
     void BackendGetsUsers_True_ReturnsTypeList() throws Exception {
 
-        Mockito.when(mockUserApiController.getUsers()).thenReturn(Arrays.asList());     // Just needs to return list
+        Mockito.when(mockUserApiController.getUsers()).thenReturn(List.of());     // Just needs to return list
 
         mockMvc.perform(MockMvcRequestBuilders.get("/Users"))
         .andExpect(MockMvcResultMatchers.status().is(200))                                  // Check it does not return error code
@@ -172,16 +163,6 @@ class UserTests {
         .content(requestJson))
         .andExpect(MockMvcResultMatchers.status().isCreated());
 
-        // If passed simulate adding user to mock database and return content-type application/json
-        HttpHeaders header = new HttpHeaders();
-        header.setContentType(MediaType.APPLICATION_JSON);
-        
-        // ResponseEntity<List<User>> responseEntity = new ResponseEntity<List<User>>(
-        //     header, 
-        //     HttpStatus.OK
-        // );
-
-        // List<User> response = Arrays.asList(mockDoctor);
 
         Mockito.when(mockUserApiController.getUserObjByEmail(mockPatient)).thenReturn(mockPatient);
 
@@ -190,12 +171,9 @@ class UserTests {
         .content(requestJson))
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-        // .andExpect(MockMvcResultMatchers.content().string(contains(substring)))
         .andExpect(jsonPath("$.role", Matchers.is("patient")));
 
-        // String resultContent = result.getResponse().getContentAsString();
-        // System.out.println(resultContent);
-        // // .andExpect(MockMvcResultMatchers.jsonPath("$.role", Matchers.is("doctor")));
+
     }
 
     @Test
@@ -249,7 +227,7 @@ class UserTests {
         mockPatient.setPassword("password");
         mockPatient.setRole("patient");
         mockPatient.setFirstName("Jamal");
-        mockPatient.setLastName("Jamalson");
+        mockPatient.setLastName("Jamal-son");
         Date dob = new Date(1996/11/11);
         mockPatient.setDob(dob);
         mockPatient.setPhoneNumber("123456789");
@@ -266,16 +244,13 @@ class UserTests {
         .andExpect(MockMvcResultMatchers.status().isCreated());
 
         Mockito.when(mockUserApiController.getUserObjByEmail(mockPatient)).thenReturn(mockPatient);
-        Mockito.when(mockUserRepo.findByEmail(Mockito.anyString())).thenReturn(Arrays.asList(mockPatient));
+        Mockito.when(mockUserRepo.findByEmail(Mockito.anyString())).thenReturn(List.of(mockPatient));
 
         mockMvc.perform(MockMvcRequestBuilders.put("/UpdateUser")
         .contentType(MediaType.APPLICATION_JSON)
         .content(requestJson))
         .andExpect(MockMvcResultMatchers.status().isOk());
 
-        // If passed simulate adding user to mock database and return content-type application/json
-        HttpHeaders header = new HttpHeaders();
-        header.setContentType(MediaType.APPLICATION_JSON);
         
         Mockito.when(mockUserApiController.getUserObjByEmail(mockPatient)).thenReturn(mockPatient);
 
@@ -286,7 +261,7 @@ class UserTests {
         .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.role", Matchers.is("patient")))
         .andExpect(jsonPath("$.firstName", Matchers.is("Jamal")))
-        .andExpect(jsonPath("$.lastName", Matchers.is("Jamalson")))
+        .andExpect(jsonPath("$.lastName", Matchers.is("Jamal-son")))
         .andExpect(jsonPath("$.dob", Matchers.is("1970-01-01")))
         .andExpect(jsonPath("$.phoneNumber", Matchers.is("123456789")));
     }
@@ -328,11 +303,6 @@ class UserTests {
         .contentType(MediaType.APPLICATION_JSON)
         .content(requestJson))
         .andExpect(MockMvcResultMatchers.status().isOk());
-
-        // If passed simulate adding user to mock database and return content-type application/json
-        HttpHeaders header = new HttpHeaders();
-        header.setContentType(MediaType.APPLICATION_JSON);
-
 
 
         Mockito.when(mockUserRepo.findUserByEmail(mockPatient.getEmail())).thenReturn(mockPatient);
@@ -401,7 +371,7 @@ class UserTests {
         mockPatient.setPassword("password");
         mockPatient.setRole("patient");
         mockPatient.setFirstName("Jamal");
-        mockPatient.setLastName("Jamalson");
+        mockPatient.setLastName("Jamal-son");
         Date dob = new Date(1996/11/11);
         mockPatient.setDob(dob);
         mockPatient.setPhoneNumber("123456789");
@@ -411,8 +381,8 @@ class UserTests {
         mockDoctor.setEmail("doctor@unittest.com");
         mockDoctor.setPassword("password");
         mockDoctor.setRole("doctor");
-        mockDoctor.setFirstName("Mikeal");
-        mockDoctor.setLastName("Jaxon");
+        mockDoctor.setFirstName("Mikel");
+        mockDoctor.setLastName("Jason");
         Date dctrdob = new Date(1980/01/01);
         mockDoctor.setDob(dctrdob);
         mockDoctor.setPhoneNumber("123456789");
@@ -460,9 +430,6 @@ class UserTests {
         .content(AppointrequestJson))
         .andExpect(MockMvcResultMatchers.status().isOk());
 
-        // If passed simulate adding user to mock database and return content-type application/json
-        HttpHeaders header = new HttpHeaders();
-        header.setContentType(MediaType.APPLICATION_JSON);
 
         Mockito.when(mockAppointmentRepo.findAppointmentByDoctorAndDateAndTime(Mockito.anyInt(), Mockito.any(Date.class), Mockito.anyString())).thenReturn(mockAppointment);
         Mockito.doReturn(true).when(mockAppointmentApiController).validateAppointment(Mockito.anyInt(), Mockito.any(Date.class), Mockito.anyString());

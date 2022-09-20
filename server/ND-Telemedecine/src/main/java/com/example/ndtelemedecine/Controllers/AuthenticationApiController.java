@@ -7,7 +7,6 @@ import com.example.ndtelemedecine.Models.User;
 import com.example.ndtelemedecine.Repositories.UserRepo;
 import com.example.ndtelemedecine.Service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -59,10 +58,10 @@ public class AuthenticationApiController {
     }
     // Check Verification Table for email existing
     @PostMapping(value ="/EmailVerificationInTable")
-    public String verifyDoctorInVerifTable(@RequestBody Verification submited){
-        Verification stored = verRepo.findByEmail(submited.getEmail());
+    public String verifyDoctorInVerifTable(@RequestBody Verification submitted){
+        Verification stored = verRepo.findByEmail(submitted.getEmail());
         if (stored == null){
-            verRepo.save(submited);
+            verRepo.save(submitted);
             return "Valid email to store";
         }
         else{

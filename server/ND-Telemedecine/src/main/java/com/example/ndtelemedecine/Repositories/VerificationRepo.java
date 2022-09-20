@@ -7,5 +7,4 @@ public interface VerificationRepo extends JpaRepository<Verification, Long>{
 
     Verification            findByEmail(String email);
 
-    
 }

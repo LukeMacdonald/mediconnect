@@ -33,10 +33,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(STATELESS);
         http.authorizeRequests().antMatchers(POST,"/login").permitAll();
-//        :TODO: Implement Proper Authorsations for users
-//        http.authorizeRequests().antMatchers(POST,"/doctor/**").hasAnyAuthority("doctor");
-//        http.authorizeRequests().antMatchers(POST,"/superuser/**").hasAnyAuthority("superuser");
-//        http.authorizeRequests().antMatchers(POST,"/patient/**").hasAnyAuthority("patient");
+/*        :TODO: Implement Proper Authorizations for users
+/       http.authorizeRequests().antMatchers(POST,"/doctor/**").hasAnyAuthority("doctor");
+        http.authorizeRequests().antMatchers(POST,"/superuser/**").hasAnyAuthority("superuser");
+        http.authorizeRequests().antMatchers(POST,"/patient/**").hasAnyAuthority("patient");*/
         http.addFilter(authenticationFilter);
         http.addFilterBefore(new com.example.ndtelemedecine.Security.AuthorisationFilter(), UsernamePasswordAuthenticationFilter.class);
     }

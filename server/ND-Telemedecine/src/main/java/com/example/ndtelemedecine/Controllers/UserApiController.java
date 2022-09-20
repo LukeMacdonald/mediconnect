@@ -5,7 +5,6 @@ import com.example.ndtelemedecine.Models.User;
 import com.example.ndtelemedecine.Repositories.UserRepo;
 import com.example.ndtelemedecine.Service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +27,7 @@ public class UserApiController {
 
     @GetMapping(value="/GetUser/Email")
     public ResponseEntity<List<User>> getUserByEmail(@RequestBody User user) {
-        return new ResponseEntity<List<User>>(userRepo.findByEmail(user.getEmail()), HttpStatus.OK);
+        return new ResponseEntity<>(userRepo.findByEmail(user.getEmail()), HttpStatus.OK);
     }
     @GetMapping(value="/GetUserBy/Email")
     public User getUserObjByEmail(@RequestBody User user) {
@@ -61,7 +60,7 @@ public class UserApiController {
     // Get users by role
     @GetMapping(value="/GetUser/Role")
     public ResponseEntity<List<User>> getUserByRole(@RequestBody User user) {
-        return new ResponseEntity<List<User>>(userRepo.findByRole(user.getRole()), HttpStatus.OK);
+        return new ResponseEntity<>(userRepo.findByRole(user.getRole()), HttpStatus.OK);
     }
 
     @GetMapping(value = "/GetUserFullName/{id}")

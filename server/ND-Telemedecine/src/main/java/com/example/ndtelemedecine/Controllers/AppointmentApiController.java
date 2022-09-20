@@ -17,10 +17,7 @@ public class AppointmentApiController {
     @GetMapping(value="/SearchAppointment/{id}/{date}/{start_time}")
     public Boolean validateAppointment(@PathVariable("id") int id, @PathVariable("date") Date date, @PathVariable("start_time") String time){
         Appointment validAppoint = appointRepo.findAppointmentByDoctorAndDateAndTime(id, date, time);
-        boolean validate = true;
-        if (validAppoint == null){
-            validate = false;
-        }return validate;
+        return validAppoint != null;
     }
     // Save appointment
     @PostMapping(value="/SetAppointment")
