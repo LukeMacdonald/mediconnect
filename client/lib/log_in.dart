@@ -17,7 +17,6 @@ class LogIn extends StatefulWidget {
 class _LogIn extends State<LogIn> {
   User user = User("", "", "");
   String url = "http://localhost:8080/";
-  String url2 = "http://localhost:8080/LogIn";
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   Future login() async {

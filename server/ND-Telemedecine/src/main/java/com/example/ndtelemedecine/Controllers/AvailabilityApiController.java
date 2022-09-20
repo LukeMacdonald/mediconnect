@@ -19,12 +19,14 @@ public class AvailabilityApiController {
 
     @Autowired
     private UserRepo userRepo;
+
     // Sets a Availability For Doctor
     @PostMapping(value = "/SetMultipleDoctorAvailability")
     public String availability(@RequestBody List<Availability> avail){
         availRepo.saveAll(avail);
         return "Set Doctor Availability";
     }
+
     // Sets a Availability For Doctor
     @PostMapping(value = "/SetDoctorAvailability")
     public String availability(@RequestBody Availability avail){
@@ -47,11 +49,13 @@ public class AvailabilityApiController {
             return "Availability Set!";
         }
     }
+
     // Sets an Availability For Doctor
     @GetMapping(value = "/GetAllDoctorAvailability/{id}")
     public List<Availability> doctorsAvailability(@PathVariable("id") int id){
         return availRepo.findByDoctorId(id);
     }
+    
     @GetMapping(value = "/GetAllDoctorsAvailabilities")
     public List<Availability> getDoctorsAvailabilities(){
         return availRepo.findAll();

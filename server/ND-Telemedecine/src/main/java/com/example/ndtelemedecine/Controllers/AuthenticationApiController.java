@@ -20,14 +20,14 @@ public class AuthenticationApiController {
     private User userFound;
 
     @PostMapping(value="/Register")
-    public String register(@RequestBody User user) {
+    public ResponseEntity<String> register(@RequestBody User user) {
         System.out.println("Saving user with the following details:");
         System.out.println("Email: " + user.getEmail());
         System.out.println("Password: " + user.getPassword());
         User check = userRepo.findUserByEmail(user.getEmail());
         if (check==null){
             userRepo.save(user);
-            return "Saved user...";
+            return new ResponseEntity<>("Saved user...", HttpStatus.OK);
         }
         else {
             throw new ApiRequestException("User already exists in system!");
@@ -50,9 +50,9 @@ public class AuthenticationApiController {
     // Returns current user
 
     @GetMapping(value="/LogIn/{email}")
-    public ResponseEntity<User> LogIn(@PathVariable("email") String email) {
-        User user = userRepo.findUserByEmail(email);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+    public User LogIn(@PathVariable("email") String email) {
+        return userRepo.findUserByEmail(email);
+        //return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     // Checks Verification For Doctor with the associated code created by the super admin

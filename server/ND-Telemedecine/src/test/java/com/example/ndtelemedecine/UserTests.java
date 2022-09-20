@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 import static org.mockito.ArgumentMatchers.contains;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -138,7 +139,7 @@ class UserTests {
         .content(requestJson))
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(MockMvcResultMatchers.jsonPath("$.role", Matchers.is("doctor")));
+        .andExpect(jsonPath("$.role", Matchers.is("doctor")));
     }
 
     @Test
@@ -190,7 +191,7 @@ class UserTests {
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
         // .andExpect(MockMvcResultMatchers.content().string(contains(substring)))
-        .andExpect(MockMvcResultMatchers.jsonPath("$.role", Matchers.is("patient")));
+        .andExpect(jsonPath("$.role", Matchers.is("patient")));
 
         // String resultContent = result.getResponse().getContentAsString();
         // System.out.println(resultContent);
@@ -251,11 +252,11 @@ class UserTests {
         .content(requestJson))
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(MockMvcResultMatchers.jsonPath("$.role", Matchers.is("patient")))
-        .andExpect(MockMvcResultMatchers.jsonPath("$.firstName", Matchers.is("Jamal")))
-        .andExpect(MockMvcResultMatchers.jsonPath("$.lastName", Matchers.is("Jamalson")))
-        .andExpect(MockMvcResultMatchers.jsonPath("$.dob", Matchers.is("1970-01-01")))
-        .andExpect(MockMvcResultMatchers.jsonPath("$.phoneNumber", Matchers.is("123456789")));
+        .andExpect(jsonPath("$.role", Matchers.is("patient")))
+        .andExpect(jsonPath("$.firstName", Matchers.is("Jamal")))
+        .andExpect(jsonPath("$.lastName", Matchers.is("Jamalson")))
+        .andExpect(jsonPath("$.dob", Matchers.is("1970-01-01")))
+        .andExpect(jsonPath("$.phoneNumber", Matchers.is("123456789")));
     }
 
     @Test
@@ -283,7 +284,7 @@ class UserTests {
         ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
         String requestJson = ow.writeValueAsString(mockPatient);
 
-        // First register a patient mock object that will be used to login
+        // First register a patient mock object that will be used to log in
         mockMvc.perform(MockMvcRequestBuilders.post("/Register")
         .contentType(MediaType.APPLICATION_JSON)
         .content(requestJson))
@@ -301,16 +302,19 @@ class UserTests {
         HttpHeaders header = new HttpHeaders();
         header.setContentType(MediaType.APPLICATION_JSON);
 
-        Mockito.when(mockUserApiController.getUserObjByEmail(mockPatient)).thenReturn(mockPatient);
 
-        // mockMvc.perform(MockMvcRequestBuilders.get("/LogIn/{email}", mockPatient.getEmail())
-        // .contentType(MediaType.APPLICATION_JSON)
-        // .content(requestJson))
-        // .andExpect(MockMvcResultMatchers.status().isOk())
-        // .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-        // .andExpect(MockMvcResultMatchers.jsonPath("$.email", Matchers.is("patient@unittest.com")))
-        // .andExpect(MockMvcResultMatchers.jsonPath("$.password", Matchers.is("passwordUnitTest")))
-        // .andExpect(MockMvcResultMatchers.jsonPath("$.role", Matchers.is("patient")));
+
+        Mockito.when(mockUserRepo.findUserByEmail(mockPatient.getEmail())).thenReturn(mockPatient);
+
+         mockMvc.perform(MockMvcRequestBuilders.get("/LogIn/{email}", mockPatient.getEmail())
+         .contentType(MediaType.APPLICATION_JSON)
+         .content(requestJson))
+         .andExpect(MockMvcResultMatchers.status().isOk())
+         .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+         .andExpect(jsonPath("$.email").value("patient@unittest.com"))
+         .andExpect(jsonPath("$.password").value("passwordUnitTest"))
+         .andExpect(jsonPath("$.role").value("patient"));
+
 
         mockMvc.perform(MockMvcRequestBuilders.get("/LogIn/{email}", mockPatient.getEmail()))
         .andExpect(MockMvcResultMatchers.status().isOk());
@@ -399,7 +403,6 @@ class UserTests {
         header.setContentType(MediaType.APPLICATION_JSON);
 
         Mockito.when(mockAppointmentRepo.findAppointmentByDoctorAndDateAndTime(Mockito.anyInt(), Mockito.any(Date.class), Mockito.anyString())).thenReturn(mockAppointment);
-        // Mockito.when(mockApiController.validateAppointment(Mockito.anyInt(), Mockito.any(Date.class), Mockito.anyString())).thenReturn(true);
         Mockito.doReturn(true).when(mockAppointmentApiController).validateAppointment(Mockito.anyInt(), Mockito.any(Date.class), Mockito.anyString());
 
         mockMvc.perform(MockMvcRequestBuilders.get("/SearchAppointment/{id}/{date}/{start_time}", mockAppointment.getId(), mockAppointment.getDate(), mockAppointment.getTime())
