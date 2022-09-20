@@ -1,38 +1,52 @@
 import 'package:client/dashboard.dart';
+import 'package:client/utilities/user.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import "dashboard.dart";
 import 'package:client/styles/custom_styles.dart';
-import 'package:client/user_medical.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-
 class MedicalHistory extends StatefulWidget {
-  const MedicalHistory({Key? key}) : super(key: key);
+  final User user;
+  const MedicalHistory({Key? key, required this.user}) : super(key: key);
 
   @override
-  State<MedicalHistory> createState() => _MedicalHistory();
+  State<MedicalHistory> createState() => _MedicalHistory(user);
 }
 
 class _MedicalHistory extends State<MedicalHistory> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  User user;
+
+  _MedicalHistory(this.user);
 
   TextEditingController ill = TextEditingController();
   TextEditingController med = TextEditingController();
   TextEditingController dis = TextEditingController();
-  UserMedicalHistory userHistory = UserMedicalHistory();
 
+  UserMedicalHistory userHistory = UserMedicalHistory();
 
   bool? _disabled = true;
 
-  List<String> presetIllnesses = ['Cancer', 'Diabetes', 'Cardiac Disease',
-    'Asthma', 'Alzheimer\'s', 'Depression',];
+  List<String> presetIllnesses = [
+    'Cancer',
+    'Diabetes',
+    'Cardiac Disease',
+    'Asthma',
+    'Alzheimer\'s',
+    'Depression',
+  ];
 
   List<String> medications = [];
-  List<String> presetDisabilities = ['Hearing Impairment', 'Vision Impairment',
-    'Autism', 'Mobility Disability ','Cerebral Palsy'];
+  List<String> presetDisabilities = [
+    'Hearing Impairment',
+    'Vision Impairment',
+    'Autism',
+    'Mobility Disability ',
+    'Cerebral Palsy'
+  ];
 
   List<Object?> selectedMeds = [];
 
@@ -43,213 +57,221 @@ class _MedicalHistory extends State<MedicalHistory> {
   String url5 = "URL to get user id";
 
   Future save() async {
-    await http.post(Uri.parse(url),
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode({
-          'id': 1,
-          'smokes': userHistory.smokes,
-          'drinks': userHistory.drinks,
-          'medication': userHistory.medications,
-        }));
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => Dashboard(user: user,)));
+
+    // await http.post(Uri.parse(url),
+    //     headers: {'Content-Type': 'application/json'},
+    //     body: json.encode({
+    //       'id': user.id,
+    //       'smokes': userHistory.smoke,
+    //       'drinks': userHistory.drink,
+    //       'medication': userHistory.medications,
+    //     }));
     // ADD MORE LATER
   }
 
   Widget checks() {
-    return Wrap(
-      children: [
-        const Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(20, 0, 0, 15),
-          child: Text(
-            'Are you currently taking any medication?',
-            style: CustomTextStyle.nameOfTextStyle,
-          ),
+    return Wrap(children: [
+      const Padding(
+        padding: EdgeInsetsDirectional.fromSTEB(20, 0, 0, 15),
+        child: Text(
+          'Are you currently taking any medication?',
+          style: CustomTextStyle.nameOfTextStyle,
         ),
-        CustomRadioButton(
-          spacing: 50,
-          buttonLables: const ['Yes', 'No'],
-          buttonValues: const ['Yes', 'No'],
-          radioButtonValue: (value) {
-            if (value == 'Yes') {userHistory.medications = true;
+      ),
+      CustomRadioButton(
+        spacing: 50,
+        buttonLables: const ['Yes', 'No'],
+        buttonValues: const ['Yes', 'No'],
+        radioButtonValue: (value) {
+          if (value == 'Yes') {
+            userHistory.medication = true;
             setState(() {
               _disabled = false;
-            });}
-            else {
-              userHistory.medications = false;
-              setState(() {
-                _disabled = true;
-              });}},
-          enableButtonWrap: true,
-          elevation: 5,
-          autoWidth: true,
-          enableShape: true,
-          unSelectedBorderColor: const Color.fromARGB(255, 245, 245, 245),
-          selectedBorderColor: const Color.fromRGBO(57, 210, 192, 1),
-          unSelectedColor: const Color.fromARGB(255, 245, 245, 245),
-          selectedColor: const Color.fromRGBO(57, 210, 192, 1),
-          padding: 5,
-        ),
-        Wrap(
-            spacing: 30,
-            children: [
-              CustomCheckBoxGroup(
-                buttonLables: medications,
-                buttonValuesList: medications,
-                checkBoxButtonValues: (values){
-                  selectedMeds = values;},
-                enableButtonWrap: true,
-                elevation: 5,
-                width: 150,
-                enableShape: true,
-                unSelectedBorderColor: const Color.fromARGB(255, 245, 245, 245),
-                selectedBorderColor: const Color.fromRGBO(57, 210, 192, 1),
-                unSelectedColor: const Color.fromARGB(255, 245, 245, 245),
-                selectedColor: const Color.fromRGBO(57, 210, 192, 1),
-                padding: 5,
+            });
+          } else {
+            userHistory.medication = false;
+            setState(() {
+              _disabled = true;
+            });
+          }
+        },
+        enableButtonWrap: true,
+        elevation: 5,
+        autoWidth: true,
+        enableShape: true,
+        unSelectedBorderColor: const Color.fromARGB(255, 245, 245, 245),
+        selectedBorderColor: const Color.fromRGBO(57, 210, 192, 1),
+        unSelectedColor: const Color.fromARGB(255, 245, 245, 245),
+        selectedColor: const Color.fromRGBO(57, 210, 192, 1),
+        padding: 5,
+      ),
+      Wrap(
+        spacing: 30,
+        children: [
+          CustomCheckBoxGroup(
+            buttonLables: medications,
+            buttonValuesList: medications,
+            checkBoxButtonValues: (values) {
+              userHistory.medications = values;
+            },
+            enableButtonWrap: true,
+            elevation: 5,
+            width: 150,
+            enableShape: true,
+            unSelectedBorderColor: const Color.fromARGB(255, 245, 245, 245),
+            selectedBorderColor: const Color.fromRGBO(57, 210, 192, 1),
+            unSelectedColor: const Color.fromARGB(255, 245, 245, 245),
+            selectedColor: const Color.fromRGBO(57, 210, 192, 1),
+            padding: 5,
+          ),
+          Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(60, 10, 10, 0),
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              height: 50,
+              constraints: const BoxConstraints(
+                maxWidth: 400,
               ),
-              Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(60, 10, 10, 0),
-                  child:
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: 50,
-                      constraints: const BoxConstraints(
-                        maxWidth: 400,
+              decoration: BoxDecoration(
+                color: const Color(0xFFECECEC),
+                boxShadow: const [
+                  BoxShadow(
+                    blurRadius: 4,
+                    color: Color(0x33000000),
+                    offset: Offset(0, 2),
+                  )
+                ],
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Padding(
+                padding: const EdgeInsetsDirectional.fromSTEB(5, 0, 0, 0),
+                child: TextFormField(
+                  enabled: !_disabled!,
+                  controller: med,
+                  decoration: const InputDecoration(
+                    hintText: 'What Medications Do You Take?',
+                    hintStyle: CustomTextStyle.nameOfTextStyle,
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0x00000000),
+                        width: 1,
                       ),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFECECEC),
-                        boxShadow: const [
-                          BoxShadow(
-                            blurRadius: 4,
-                            color: Color(0x33000000),
-                            offset: Offset(0, 2),
-                          )
-                        ],
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child:
-                      Padding(
-                        padding: const EdgeInsetsDirectional.fromSTEB(5, 0, 0, 0),
-                        child: TextFormField(
-                          enabled: !_disabled!,
-                          controller: med,
-                          decoration: const InputDecoration(
-                            hintText: 'What Medications Do You Take?',
-                            hintStyle: CustomTextStyle.nameOfTextStyle,
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Color(0x00000000),
-                                width: 1,
-                              ),
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(4.0),
-                                topRight: Radius.circular(4.0),
-                              ),
-                            ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Color(0x00000000),
-                              ),
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(4.0),
-                                topRight: Radius.circular(4.0),
-                              ),
-                            ),
-                          ),
-                          style: CustomTextStyle.nameOfTextStyle,
-                        ),
-                      ),
-                    ),),
-                    Padding(
-                      padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
-                      child: FloatingActionButton(
-                        onPressed: (){
-                          if(med.text !="What Medications Do You Take?" && med.text !="" && !selectedMeds.contains(ill.text)){
-                            setState(() {
-                              medications.add(med.text);
-                              selectedMeds.add(med.text);
-                              med.clear();
-                            });
-                          }
-                          },
-                        backgroundColor: const Color.fromRGBO(57, 210, 192, 1),
-                        elevation: 8,
-                        child: const Icon(
-                          Icons.add_rounded,
-                          color: Colors.white,
-                          size: 28,
-                        ),
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(4.0),
+                        topRight: Radius.circular(4.0),
                       ),
                     ),
-        const Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(20, 15, 0, 15),
-          child: Text(
-            'Do you smoke?',
-            style: CustomTextStyle.nameOfTextStyle,
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0x00000000),
+                      ),
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(4.0),
+                        topRight: Radius.circular(4.0),
+                      ),
+                    ),
+                  ),
+                  style: CustomTextStyle.nameOfTextStyle,
+                ),
+              ),
+            ),
           ),
-        ),
-        CustomRadioButton(
-          buttonLables: const ['Yes', 'No'],
-          buttonValues: const ['Yes', 'No'],
-          radioButtonValue: (value) => {
-            if (value == 'Yes') {userHistory.smokes = true} else {userHistory.smokes = false},
-          },
-          enableButtonWrap: true,
-          elevation: 5,
-          autoWidth: true,
-          enableShape: true,
-          spacing: 50,
-          unSelectedBorderColor: const Color.fromARGB(255, 245, 245, 245),
-          selectedBorderColor: const Color.fromRGBO(57, 210, 192, 1),
-          unSelectedColor: const Color.fromARGB(255, 245, 245, 245),
-          selectedColor: const Color.fromRGBO(57, 210, 192, 1),
-          padding: 5,
-        ),
-        const Padding(
-
-          padding: EdgeInsetsDirectional.fromSTEB(20, 15, 0, 15),
-          child: Text(
-            'Do you drink alcohol?',
-            style: CustomTextStyle.nameOfTextStyle,
+          Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
+            child: FloatingActionButton(
+              onPressed: () {
+                if (med.text != "What Medications Do You Take?" &&
+                    med.text != "" &&
+                    !userHistory.medications.contains(ill.text)) {
+                  setState(() {
+                    medications.add(med.text);
+                    med.clear();
+                  });
+                }
+              },
+              backgroundColor: const Color.fromRGBO(57, 210, 192, 1),
+              elevation: 8,
+              child: const Icon(
+                Icons.add_rounded,
+                color: Colors.white,
+                size: 28,
+              ),
+            ),
           ),
-        ),
-        CustomRadioButton(
-          buttonLables: const ['Yes', 'No'],
-          buttonValues: const ['Yes', 'No'],
-          radioButtonValue: (value) => {
-            if (value == 'Yes') {userHistory.drinks = true} else {userHistory.drinks = false},
-          },
-          enableButtonWrap: true,
-          elevation: 5,
-          spacing: 50,
-
-          autoWidth: true,
-          enableShape: true,
-          unSelectedBorderColor: const Color.fromARGB(255, 245, 245, 245),
-          selectedBorderColor: const Color.fromRGBO(57, 210, 192, 1),
-          unSelectedColor: const Color.fromARGB(255, 245, 245, 245),
-          selectedColor: const Color.fromRGBO(57, 210, 192, 1),
-          padding: 5,
-        ),
-        const Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(15, 20, 0, 0),
-          child: Text(
-            'Do you have any illnesses?',
-            style: CustomTextStyle.nameOfTextStyle,
+          const Padding(
+            padding: EdgeInsetsDirectional.fromSTEB(20, 15, 0, 15),
+            child: Text(
+              'Do you smoke?',
+              style: CustomTextStyle.nameOfTextStyle,
+            ),
           ),
-        ),
-      ],
-    )]);
+          CustomRadioButton(
+            buttonLables: const ['Yes', 'No'],
+            buttonValues: const ['Yes', 'No'],
+            radioButtonValue: (value) => {
+              if (value == 'Yes')
+                {userHistory.smoke = true}
+              else
+                {userHistory.smoke = false},
+            },
+            enableButtonWrap: true,
+            elevation: 5,
+            autoWidth: true,
+            enableShape: true,
+            spacing: 50,
+            unSelectedBorderColor: const Color.fromARGB(255, 245, 245, 245),
+            selectedBorderColor: const Color.fromRGBO(57, 210, 192, 1),
+            unSelectedColor: const Color.fromARGB(255, 245, 245, 245),
+            selectedColor: const Color.fromRGBO(57, 210, 192, 1),
+            padding: 5,
+          ),
+          const Padding(
+            padding: EdgeInsetsDirectional.fromSTEB(20, 15, 0, 15),
+            child: Text(
+              'Do you drink alcohol?',
+              style: CustomTextStyle.nameOfTextStyle,
+            ),
+          ),
+          CustomRadioButton(
+            buttonLables: const ['Yes', 'No'],
+            buttonValues: const ['Yes', 'No'],
+            radioButtonValue: (value) => {
+              if (value == 'Yes')
+                {userHistory.drink = true}
+              else
+                {userHistory.drink = false},
+            },
+            enableButtonWrap: true,
+            elevation: 5,
+            spacing: 50,
+            autoWidth: true,
+            enableShape: true,
+            unSelectedBorderColor: const Color.fromARGB(255, 245, 245, 245),
+            selectedBorderColor: const Color.fromRGBO(57, 210, 192, 1),
+            unSelectedColor: const Color.fromARGB(255, 245, 245, 245),
+            selectedColor: const Color.fromRGBO(57, 210, 192, 1),
+            padding: 5,
+          ),
+          const Padding(
+            padding: EdgeInsetsDirectional.fromSTEB(15, 20, 0, 0),
+            child: Text(
+              'Do you have any illnesses?',
+              style: CustomTextStyle.nameOfTextStyle,
+            ),
+          ),
+        ],
+      )
+    ]);
   }
+
   Widget submit() {
     return Container(
         constraints: const BoxConstraints(minWidth: 70, maxWidth: 500),
         child: ElevatedButton(
             onPressed: () => {
-              userHistory.meds = selectedMeds,
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const Dashboard()))
+              save(),
             },
             style: ElevatedButton.styleFrom(
                 minimumSize: const Size(230, 50),
@@ -265,122 +287,17 @@ class _MedicalHistory extends State<MedicalHistory> {
                   ),
                 ))));
   }
+
   Widget illnesses() {
     return Wrap(
-      spacing: 30,
-      crossAxisAlignment: WrapCrossAlignment.center,
-      children: [
-        CustomCheckBoxGroup(
-          buttonLables: presetIllnesses,
-          buttonValuesList: presetIllnesses,
-          checkBoxButtonValues: (values){
-            userHistory.illnesses = values;
-            },
-          enableButtonWrap: true,
-          elevation: 5,
-          width: 150,
-          enableShape: true,
-          unSelectedBorderColor: const Color.fromARGB(255, 245, 245, 245),
-          selectedBorderColor: const Color.fromRGBO(57, 210, 192, 1),
-          unSelectedColor: const Color.fromARGB(255, 245, 245, 245),
-          selectedColor: const Color.fromRGBO(57, 210, 192, 1),
-          padding: 5,
-        ),
-        Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(60, 10, 10, 0),
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            height: 50,
-            constraints: const BoxConstraints(
-              maxWidth: 400,
-            ),
-            decoration: BoxDecoration(
-              color: const Color(0xFFECECEC),
-              boxShadow: const [
-                BoxShadow(
-                  blurRadius: 4,
-                  color: Color(0x33000000),
-                  offset: Offset(0, 2),
-                )
-              ],
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child:Padding(
-
-              padding: const EdgeInsetsDirectional.fromSTEB(15, 0, 0, 0),
-              child: TextFormField(
-                autofocus: true,
-                obscureText: false,
-                controller: ill,
-                decoration: const InputDecoration(
-                  hintText: 'Any Other not on list?',
-                  hintStyle: CustomTextStyle.nameOfTextStyle,
-
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Color(0x00000000),
-                      width: 1,
-                    ),
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(4.0),
-                      topRight: Radius.circular(4.0),
-                    ),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Color(0x00000000),
-                      width: 1,
-                    ),
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(4.0),
-                      topRight: Radius.circular(4.0),
-                    ),
-                  ),
-                ),
-                style: CustomTextStyle.nameOfTextStyle
-              ),
-            ),
-          ),),
-          Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
-            child: FloatingActionButton(
-              onPressed: (){
-                if(ill.text !="Any Other not on list?" && !presetIllnesses.contains(ill.text)){
-                  setState(() {
-                    presetIllnesses.add(ill.text);
-                    ill.clear();
-                  });
-                }
-                },
-              backgroundColor: const Color.fromRGBO(57, 210, 192, 1),
-              elevation: 8,
-              child: const Icon(
-                Icons.add_rounded,
-                color: Colors.white,
-                size: 28,
-              ),
-            ),
-          ),
-
-        const Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(20, 20, 0, 20),
-          child: Text(
-            'Do you have any Disabilities?',
-            style: CustomTextStyle.nameOfTextStyle,
-          ),
-        ),
-      ]);
-  }
-  Widget disabilities() {
-    return Wrap(
         spacing: 30,
-        alignment: WrapAlignment.center,
+        crossAxisAlignment: WrapCrossAlignment.center,
         children: [
           CustomCheckBoxGroup(
-            buttonLables: presetDisabilities,
-            buttonValuesList: presetDisabilities,
-            checkBoxButtonValues: (values){
-              userHistory.disabilities = values;
+            buttonLables: presetIllnesses,
+            buttonValuesList: presetIllnesses,
+            checkBoxButtonValues: (values) {
+              userHistory.userIllnesses = values;
             },
             enableButtonWrap: true,
             elevation: 5,
@@ -393,78 +310,181 @@ class _MedicalHistory extends State<MedicalHistory> {
             padding: 5,
           ),
           Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 10, 20),
-              child:Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: 50,
-                  constraints: const BoxConstraints(
-                    maxWidth: 400,
-                  ),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFECECEC),
-                    boxShadow: const [
-                      BoxShadow(
-                        blurRadius: 4,
-                        color: Color(0x33000000),
-                        offset: Offset(0, 2),
-                      )
-                    ],
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child:
-                  Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(15, 0, 0, 0),
-                    child: TextFormField(
-                      autofocus: true,
-                      controller: dis,
-                      decoration: const InputDecoration(
-                        hintText: 'Any Other not on list?',
-                        hintStyle: CustomTextStyle.nameOfTextStyle,
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0x00000000),
-                            width: 1,
-                          ),
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(4.0),
-                            topRight: Radius.circular(4.0),
-                          ),
+            padding: const EdgeInsetsDirectional.fromSTEB(60, 10, 10, 0),
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              height: 50,
+              constraints: const BoxConstraints(
+                maxWidth: 400,
+              ),
+              decoration: BoxDecoration(
+                color: const Color(0xFFECECEC),
+                boxShadow: const [
+                  BoxShadow(
+                    blurRadius: 4,
+                    color: Color(0x33000000),
+                    offset: Offset(0, 2),
+                  )
+                ],
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Padding(
+                padding: const EdgeInsetsDirectional.fromSTEB(15, 0, 0, 0),
+                child: TextFormField(
+                    autofocus: true,
+                    obscureText: false,
+                    controller: ill,
+                    decoration: const InputDecoration(
+                      hintText: 'Any Other not on list?',
+                      hintStyle: CustomTextStyle.nameOfTextStyle,
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color(0x00000000),
+                          width: 1,
                         ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0x00000000),
-                            width: 1,
-                          ),
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(4.0),
-                            topRight: Radius.circular(4.0),
-                          ),
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(4.0),
+                          topRight: Radius.circular(4.0),
                         ),
                       ),
-                      style: CustomTextStyle.nameOfTextStyle,
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color(0x00000000),
+                          width: 1,
+                        ),
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(4.0),
+                          topRight: Radius.circular(4.0),
+                        ),
+                      ),
                     ),
+                    style: CustomTextStyle.nameOfTextStyle),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
+            child: FloatingActionButton(
+              onPressed: () {
+                if (ill.text != "Any Other not on list?" &&
+                    !presetIllnesses.contains(ill.text)) {
+                  setState(() {
+                    presetIllnesses.add(ill.text);
+                    ill.clear();
+                  });
+                }
+              },
+              backgroundColor: const Color.fromRGBO(57, 210, 192, 1),
+              elevation: 8,
+              child: const Icon(
+                Icons.add_rounded,
+                color: Colors.white,
+                size: 28,
+              ),
+            ),
+          ),
+          const Padding(
+            padding: EdgeInsetsDirectional.fromSTEB(20, 20, 0, 20),
+            child: Text(
+              'Do you have any Disabilities?',
+              style: CustomTextStyle.nameOfTextStyle,
+            ),
+          ),
+        ]);
+  }
+
+  Widget disabilities() {
+    return Wrap(spacing: 30, alignment: WrapAlignment.center, children: [
+      CustomCheckBoxGroup(
+        buttonLables: presetDisabilities,
+        buttonValuesList: presetDisabilities,
+        checkBoxButtonValues: (values) {
+          userHistory.userDisabilities = values;
+        },
+        enableButtonWrap: true,
+        elevation: 5,
+        width: 150,
+        enableShape: true,
+        unSelectedBorderColor: const Color.fromARGB(255, 245, 245, 245),
+        selectedBorderColor: const Color.fromRGBO(57, 210, 192, 1),
+        unSelectedColor: const Color.fromARGB(255, 245, 245, 245),
+        selectedColor: const Color.fromRGBO(57, 210, 192, 1),
+        padding: 5,
+      ),
+      Padding(
+        padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 10, 20),
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: 50,
+          constraints: const BoxConstraints(
+            maxWidth: 400,
+          ),
+          decoration: BoxDecoration(
+            color: const Color(0xFFECECEC),
+            boxShadow: const [
+              BoxShadow(
+                blurRadius: 4,
+                color: Color(0x33000000),
+                offset: Offset(0, 2),
+              )
+            ],
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(15, 0, 0, 0),
+            child: TextFormField(
+              autofocus: true,
+              controller: dis,
+              decoration: const InputDecoration(
+                hintText: 'Any Other not on list?',
+                hintStyle: CustomTextStyle.nameOfTextStyle,
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Color(0x00000000),
+                    width: 1,
                   ),
-                ),),
-                Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
-                  child: FloatingActionButton(
-                    onPressed: (){
-                      if(dis.text !="Any Other not on list?" && !presetDisabilities.contains(dis.text)){
-                        setState(() {
-                          presetDisabilities.add(dis.text);
-                          dis.clear();
-                        });
-                      }
-                    },
-                    backgroundColor: const Color.fromRGBO(57, 210, 192, 1),
-                    elevation: 8,
-                    child: const Icon(
-                      Icons.add_rounded,
-                      color: Colors.white,
-                      size: 28,
-                    ),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(4.0),
+                    topRight: Radius.circular(4.0),
                   ),
                 ),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Color(0x00000000),
+                    width: 1,
+                  ),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(4.0),
+                    topRight: Radius.circular(4.0),
+                  ),
+                ),
+              ),
+              style: CustomTextStyle.nameOfTextStyle,
+            ),
+          ),
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
+        child: FloatingActionButton(
+          onPressed: () {
+            if (dis.text != "Any Other not on list?" &&
+                !presetDisabilities.contains(dis.text)) {
+              setState(() {
+                presetDisabilities.add(dis.text);
+                dis.clear();
+              });
+            }
+          },
+          backgroundColor: const Color.fromRGBO(57, 210, 192, 1),
+          elevation: 8,
+          child: const Icon(
+            Icons.add_rounded,
+            color: Colors.white,
+            size: 28,
+          ),
+        ),
+      ),
     ]);
   }
 
@@ -500,7 +520,6 @@ class _MedicalHistory extends State<MedicalHistory> {
                     Padding(
                       padding:
                       const EdgeInsetsDirectional.fromSTEB(0, 50, 0, 0),
-
                       child: Container(
                         width: 700,
                         decoration: BoxDecoration(
@@ -540,7 +559,6 @@ class _MedicalHistory extends State<MedicalHistory> {
                                     CrossAxisAlignment.start,
                                     children: [
                                       Wrap(
-
                                         children: [
                                           Padding(
                                             padding: const EdgeInsetsDirectional
@@ -606,4 +624,5 @@ class _MedicalHistory extends State<MedicalHistory> {
         ));
   }
 }
+
 

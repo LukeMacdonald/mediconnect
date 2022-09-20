@@ -4,29 +4,29 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
+import 'dashboard.dart';
 import 'utilities/appointment.dart';
 import 'utilities/user.dart';
 
 class SetAvailability extends StatefulWidget {
-  const SetAvailability({Key? key}) : super(key: key);
+  final User user;
+  const SetAvailability({Key? key, required this.user}) : super(key: key);
 
   @override
-  State<SetAvailability> createState() => _SetAvailability();
+  State<SetAvailability> createState() => _SetAvailability(user);
 }
 
 class _SetAvailability extends State<SetAvailability> {
-  User user = User("", "", "");
-  // TextEditingController dateInput = TextEditingController();
-  String url = "http://localhost:8080/SetDoctorAvailability";
-  String url2 = "http://localhost:8080/GetAllDoctorAvailability";
-  int? doctorId;
+  _SetAvailability(this.user);
+  User user;
+  String url = "http://localhost:8080/";
 
   Future save() async {
     int day = getDayIntFromDayString(dayValue);
-    await http.post(Uri.parse(url),
+    await http.post(Uri.parse("${url}SetDoctorAvailability"),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
-          'doctor_id': doctorId,
+          'doctor_id': user.id,
           'day_of_week': day,
           'start_time': hourValue.substring(0, 5),
           'end_time': hourValue.substring(
@@ -43,14 +43,14 @@ class _SetAvailability extends State<SetAvailability> {
   }
 
   Future getAvailability() async {
-    final response = await http.get(Uri.parse(url2));
+    final response =
+        await http.get(Uri.parse("${url}GetAllDoctorAvailability/${user.id}"));
     var responseData = json.decode(response.body);
     String day = "";
 
     for (var availability in responseData) {
       day = getDayStringFrontDayInt(availability["day_of_week"]);
       // Provided the doctor has gone through the dashboard, we simply take the doctor_id from their current availabilities
-      doctorId = availability["_doctor_id"];
       String time = availability["_start_time"]
               .substring(0, availability["_start_time"].length - 3) +
           " - " +
@@ -100,6 +100,31 @@ class _SetAvailability extends State<SetAvailability> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+
+  Widget submit() {
+    return Container(
+        constraints: const BoxConstraints(minWidth: 70, maxWidth: 500),
+        child: ElevatedButton(
+            onPressed: () => {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => Dashboard(user:user)))
+            },
+            style: ElevatedButton.styleFrom(
+                minimumSize: const Size(230, 50),
+                padding: const EdgeInsets.all(15),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                primary: const Color.fromRGBO(57, 210, 192, 1)),
+            child: Text('Submit',
+                style: GoogleFonts.lexendDeca(
+                  textStyle: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),
+                ))));
+  }
   Widget availabilityList() {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -275,9 +300,8 @@ class _SetAvailability extends State<SetAvailability> {
                                   if (_availability.any((element) => mapEquals(
                                       element,
                                       {'Day': dayValue, 'Hour': hourValue}))) {
-                                    alert('Invalid Availability');
+                                    alert('Availability Already Set');
                                   } else {
-                                    alert('Valid Availability');
                                     setState(() {
                                       _availability.add(
                                           {'Day': dayValue, 'Hour': hourValue});
@@ -340,6 +364,7 @@ class _SetAvailability extends State<SetAvailability> {
                       decoration: const BoxDecoration(color: Color(0x00FFFFFF)),
                       child: availability()),
                 ),
+                submit()
               ],
             ))));
   }

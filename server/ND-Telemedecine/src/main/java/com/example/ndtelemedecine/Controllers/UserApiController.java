@@ -34,7 +34,7 @@ public class UserApiController {
     }
 
     // Assumed that user has filled in all details
-    @PostMapping(value="/UpdateUser")
+    @PutMapping(value="/UpdateUser")
     public String UpdateUser(@RequestBody User user) {
         System.out.println("Saving user with the following details:");
         System.out.println("Updating user with the following details:");
@@ -65,5 +65,15 @@ public class UserApiController {
     @GetMapping(value = "/GetUserFullName/{id}")
     public String getUserFullName(@PathVariable("id") int id){
         return (userRepo.findById(id).getFirstName() + " " + userRepo.findById(id).getLastName()) ;
+    }
+    @GetMapping(value = "/GetUserID/{email}")
+    public int getUserIdFromEmail(@PathVariable("email") String email){
+        User user = userRepo.findUserByEmail(email);
+        if (user != null){
+            return user.getID();
+        }
+        else {
+            return -1;
+        }
     }
 }
