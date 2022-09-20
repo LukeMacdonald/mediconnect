@@ -100,17 +100,16 @@ class _SetAvailability extends State<SetAvailability> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-
   Widget submit() {
     return Container(
         constraints: const BoxConstraints(minWidth: 70, maxWidth: 500),
         child: ElevatedButton(
             onPressed: () => {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => Dashboard(user:user)))
-            },
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Dashboard(user: user)))
+                },
             style: ElevatedButton.styleFrom(
                 minimumSize: const Size(230, 50),
                 padding: const EdgeInsets.all(15),
@@ -125,6 +124,7 @@ class _SetAvailability extends State<SetAvailability> {
                   ),
                 ))));
   }
+
   Widget availabilityList() {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
