@@ -8,7 +8,7 @@ class Appointment extends StatefulWidget {
   const Appointment({Key? key}) : super(key: key);
 
   @override
-  _Appointment createState() => _Appointment();
+  State<Appointment> createState() => _Appointment();
 }
 
 class _Appointment extends State<Appointment> {
@@ -88,6 +88,7 @@ class _Appointment extends State<Appointment> {
                               fontWeight: FontWeight.bold),
                         ),
                       ),
+
                       SingleChildScrollView(
                           child: Column(
                               mainAxisSize: MainAxisSize.max,
@@ -115,6 +116,7 @@ class _Appointment extends State<Appointment> {
                                   builder: (context) => Appointment(),
                                 ))
                           ]))
+
                     ]))))));
   }
 }

@@ -16,16 +16,9 @@ public class UserApiController {
     @Autowired
     private UserRepo userRepo;
 
-    private User userFound;
-
     @GetMapping(value="/Users")
     public List<User> getUsers() {
         return userRepo.findAll();
-    }
-
-    @GetMapping(value="/GetUser/Email")
-    public ResponseEntity<List<User>> getUserByEmail(@RequestBody User user) {
-        return new ResponseEntity<List<User>>(userRepo.findByEmail(user.getEmail()), HttpStatus.OK);
     }
 
     @GetMapping(value="/GetUserBy/Email")
@@ -41,7 +34,7 @@ public class UserApiController {
         System.out.println("Name: " + user.getFirstName() + user.getFirstName());
         System.out.println("Phone Number: " + user.getPhoneNumber());
         System.out.println("DoB: " + user.getDob());
-        if (getUserByEmail(user).getBody() != null) {
+        if (getUserObjByEmail(user) != null) {
             // Get that user's role and add to the user to update
             // (Case where logging in does not pass user's role to front-end, but registering can)
             user.setRole(userRepo.findByEmail(user.getEmail()).get(0).getRole().toString());
@@ -52,14 +45,8 @@ public class UserApiController {
             return "Saved user...";
         }
         else {
-            throw new ApiRequestException("User already exists in system!");
+            throw new ApiRequestException("User Does Not Exist In Database!");
         }
-    }
-
-    // Get users by role
-    @GetMapping(value="/GetUser/Role")
-    public ResponseEntity<List<User>> getUserByRole(@RequestBody User user) {
-        return new ResponseEntity<List<User>>(userRepo.findByRole(user.getRole()), HttpStatus.OK);
     }
 
     @GetMapping(value = "/GetUserFullName/{id}")

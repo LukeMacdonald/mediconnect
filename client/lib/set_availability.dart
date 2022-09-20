@@ -13,12 +13,10 @@ class SetAvailability extends StatefulWidget {
   const SetAvailability({Key? key, required this.user}) : super(key: key);
 
   @override
-  State<SetAvailability> createState() => _SetAvailability(user);
+  State<SetAvailability> createState() => _SetAvailability();
 }
-
 class _SetAvailability extends State<SetAvailability> {
-  _SetAvailability(this.user);
-  User user;
+  late User user = widget.user;
   String url = "http://localhost:8080/";
 
   Future save() async {
@@ -29,9 +27,7 @@ class _SetAvailability extends State<SetAvailability> {
           'doctor_id': user.id,
           'day_of_week': day,
           'start_time': hourValue.substring(0, 5),
-          'end_time': hourValue.substring(
-            8,
-          )
+          'end_time': hourValue.substring(8,)
         }));
   }
 
@@ -105,11 +101,13 @@ class _SetAvailability extends State<SetAvailability> {
         constraints: const BoxConstraints(minWidth: 70, maxWidth: 500),
         child: ElevatedButton(
             onPressed: () => {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => Dashboard(user: user)))
-                },
+
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => DoctorDashboard(user:user)))
+            },
+
             style: ElevatedButton.styleFrom(
                 minimumSize: const Size(230, 50),
                 padding: const EdgeInsets.all(15),

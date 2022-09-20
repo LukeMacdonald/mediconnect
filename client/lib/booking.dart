@@ -1,17 +1,10 @@
-import 'dart:convert';
-
-import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart' as http;
-import 'utilities/user.dart';
-
-import 'booking_by_time.dart';
 import 'package:flutter/material.dart';
 
 class Booking extends StatefulWidget {
   const Booking({Key? key}) : super(key: key);
 
   @override
-  _Booking createState() => _Booking();
+  State<Booking> createState() => _Booking();
 }
 
 class _Booking extends State<Booking> {
@@ -91,6 +84,7 @@ class _Booking extends State<Booking> {
                               fontWeight: FontWeight.bold),
                         ),
                       ),
+
                       SingleChildScrollView(
                           child: Column(
                               mainAxisSize: MainAxisSize.max,
@@ -117,6 +111,7 @@ class _Booking extends State<Booking> {
                                   builder: (context) => Booking(),
                                 ))
                           ]))
+
                     ]))))));
   }
 }

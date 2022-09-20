@@ -1,4 +1,5 @@
 import 'package:http/http.dart' as http;
+
 class User {
   String email;
   String password;
@@ -15,9 +16,10 @@ class User {
     return RegExp(r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$')
         .hasMatch(email);
   }
+
   Future<void> setId() async {
-    var response2 = await http
-        .get(Uri.parse("http://localhost:8080/GetUserID/$email"));
+    var response2 =
+        await http.get(Uri.parse("http://localhost:8080/GetUserID/$email"));
     id = int.parse(response2.body);
   }
 }

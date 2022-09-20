@@ -1,15 +1,18 @@
 import 'dart:convert';
 
+import 'package:client/utilities/user.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:flutter/foundation.dart';
+import 'dashboard.dart';
 import 'utilities/appointment.dart';
 
 import 'package:flutter/material.dart';
 
 class BookingByTime extends StatefulWidget {
-  const BookingByTime({Key? key}) : super(key: key);
+  final User user;
+  const BookingByTime({Key? key, required this.user}) : super(key: key);
 
   @override
   State<BookingByTime> createState() => _BookingByTime();
@@ -17,6 +20,7 @@ class BookingByTime extends StatefulWidget {
 
 class _BookingByTime extends State<BookingByTime> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  late User user = widget.user;
 
   String url = "http://localhost:8080/booking_by_time";
   String? daySelected;
@@ -38,10 +42,6 @@ class _BookingByTime extends State<BookingByTime> {
   String doctorValue = 'Doctor';
   int? doctorId;
 
-  // TODO: Assign the user ID when traversed into this dart page
-  // Currently set to a temporary ID to simulate
-  int patientId = 1;
-
   Future getAvailability() async {
     final response = await http
         .get(Uri.parse("http://localhost:8080/GetAllDoctorsAvailabilities"));
@@ -52,11 +52,8 @@ class _BookingByTime extends State<BookingByTime> {
       day = getDayStringFrontDayInt(availability["day_of_week"]);
       // Provided the doctor has gone through the dashboard, we simply take the doctor_id from their current availabilities
       doctorId = availability["_doctor_id"];
-      String time = availability["_start_time"]
-              .substring(0, availability["_start_time"].length - 3) +
-          " - " +
-          availability["_end_time"]
-              .substring(0, availability["_end_time"].length - 3);
+
+      String time = createTime(availability["_start_time"],availability["_end_time"]);
 
       final responseName = await http
           .get(Uri.parse("http://localhost:8080/GetUserFullName/$doctorId"));
@@ -78,12 +75,15 @@ class _BookingByTime extends State<BookingByTime> {
     await http.post(Uri.parse("http://localhost:8080/SetAppointment"),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
-          'patient': patientId,
+          'patient': user.id,
           'doctor': doctorId,
           'date': date,
           'time': startTime,
           'today': DateFormat("HH:mm:ss").format(DateTime.now()).toString()
         }));
+    if(!mounted) return;
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => PatientDashboard(user:user)));
   }
 
   Future checkAppointment(int id, String date, String startTime) async {
@@ -232,6 +232,7 @@ class _BookingByTime extends State<BookingByTime> {
                         ),
                       ),
                       Padding(
+
                           padding: const EdgeInsets.fromLTRB(80, 10, 0, 0),
                           child: Container(
                               constraints: const BoxConstraints(
@@ -291,6 +292,7 @@ class _BookingByTime extends State<BookingByTime> {
                                             // Will be converted in backend
                                           });
                                           // user.dob = dateInput.text;
+
                                         }
                                       })))),
                       Padding(
