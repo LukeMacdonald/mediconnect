@@ -1,7 +1,11 @@
 package com.example.ndtelemedecine;
+
+import com.example.ndtelemedecine.Controllers.UserApiController;
+import com.example.ndtelemedecine.Controllers.AvailabilityApiController;
 import com.example.ndtelemedecine.Models.User;
 import com.example.ndtelemedecine.Models.Availability;
 
+import com.example.ndtelemedecine.Repositories.AvailabilityRepo;
 import com.example.ndtelemedecine.Repositories.UserRepo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -15,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -27,8 +32,17 @@ public class DoctorAvailabilityTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @SpyBean
+    private UserApiController mockUserApiController;
+
+    @SpyBean
+    private AvailabilityApiController mockApiController;
+
     @MockBean
     private static UserRepo mockUserRepo;
+
+    @MockBean
+    private AvailabilityRepo mostAvailabilityRepo;
 
     @Autowired
     ObjectMapper mapper;
@@ -79,13 +93,13 @@ public class DoctorAvailabilityTest {
     @Test
         // -----------------------------------------------------------------------------------
         // Test: Availability API Controller should return a message indicating day_of_week
-        //       Value is too High (Tests the value just past the upper boundary value)
+        //       Value is to High (Tests the value just past the upper boundary value)
         // -----------------------------------------------------------------------------------
         // 1. Set Variables of availability
         // 2. Assert whether the request returns OK
         // 3. Assert whether the availability is successfully set (returns unsuccessful message)
         // -----------------------------------------------------------------------------------
-    void setDoctorAvailability_BoundaryHighFalse() throws Exception{
+    void setDoctorAvailability_BoundryHighFalse() throws Exception{
 
         avail.setstart_time("09:00:00");
         avail.setend_time("10:00:00");
@@ -111,7 +125,7 @@ public class DoctorAvailabilityTest {
         // 2. Assert whether the request returns OK
         // 3. Assert whether the availability is successfully set (returns successful message)
         // -----------------------------------------------------------------------------------
-    void setDoctorAvailability_BoundaryHighReturnsTrue() throws Exception{
+    void setDoctorAvailability_BoundryHighReturnsTrue() throws Exception{
         
         avail.setstart_time("09:00:00");
         avail.setend_time("10:00:00");
@@ -137,7 +151,7 @@ public class DoctorAvailabilityTest {
         // 2. Assert whether the request returns OK
         // 3. Assert whether the availability is successfully set (returns unsuccessful message)
         // -----------------------------------------------------------------------------------
-    void setDoctorAvailability_BoundaryLowFalse() throws Exception{
+    void setDoctorAvailability_BoundryLowFalse() throws Exception{
 
         avail.setstart_time("09:00:00");
         avail.setend_time("10:00:00");
@@ -163,7 +177,7 @@ public class DoctorAvailabilityTest {
         // 2. Assert whether the request returns OK
         // 3. Assert whether the availability is successfully set (returns successful message)
         // -----------------------------------------------------------------------------------
-    void setDoctorAvailability_BoundaryLowReturnsTrue() throws Exception{
+    void setDoctorAvailability_BoundryLowReturnsTrue() throws Exception{
         
         avail.setstart_time("09:00:00");
         avail.setend_time("10:00:00");
