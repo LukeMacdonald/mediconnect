@@ -50,9 +50,9 @@ public class AuthenticationApiController {
     // Returns current user
 
     @GetMapping(value="/LogIn/{email}")
-    public User LogIn(@PathVariable("email") String email) {
-        return userRepo.findUserByEmail(email);
-        //return new ResponseEntity<>(user, HttpStatus.OK);
+    public ResponseEntity<User> LogIn(@PathVariable("email") String email) {
+        User user = userRepo.findUserByEmail(email);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     // Checks Verification For Doctor with the associated code created by the super admin

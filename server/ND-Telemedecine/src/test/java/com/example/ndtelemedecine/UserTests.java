@@ -13,7 +13,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
-import static org.mockito.ArgumentMatchers.contains;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import java.sql.Date;
@@ -21,21 +20,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.catalina.connector.Response;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.mockito.internal.matchers.Contains;
-import org.mockito.internal.matchers.Matches;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -67,6 +62,25 @@ class UserTests {
 
     List<User> mockUserList = new ArrayList<User>();
 
+    User mockPatient;
+    User mockDoctor;
+    @BeforeEach
+    void setUser(){
+
+        mockPatient = new User();
+
+        mockPatient.setEmail("patient@unittest.com");
+        mockPatient.setPassword("password");
+        mockPatient.setRole("patient");
+
+        mockDoctor = new User();
+
+        mockDoctor.setEmail("doctor@unittest.com");
+        mockDoctor.setPassword("password");
+        mockDoctor.setRole("doctor");
+
+    }
+
     @Test
     // -----------------------------------------------------------------------------------
     // Test: UserRepo should return a list of users (not an error)
@@ -94,15 +108,12 @@ class UserTests {
     // 3. If (2) Passed, mock user will be sent back
     // 4. Assert retrieve user by their email
     // -----------------------------------------------------------------------------------
-    void DoctorCreatesAccount_True_DoctorSuccessfullyEnrolled() throws Exception {
+    void DoctorCreatesAccount_True() throws Exception {
 
-        User mockDoctor = new User();
         Verification mockVerify = new Verification();
 
         // "doctor@unittest.com", "password", Role.doctor
-        mockDoctor.setEmail("doctor@unittest.com");
-        mockDoctor.setPassword("password");
-        mockDoctor.setRole("doctor");
+
 
         mockVerify.setEmail(mockDoctor.getEmail());
         mockVerify.setCode(12345);
@@ -152,14 +163,7 @@ class UserTests {
     // 4. Assert retrieve user by their email
     // NOTE: There are so many comments but don't delete them for now FOR FUTURE REFERENCE
     // -----------------------------------------------------------------------------------
-    void PateintCreatesAccount_True_PatientSuccessfullyEnrolled() throws Exception {
-
-        User mockPatient = new User();
-
-        // "doctor@unittest.com", "password", Role.doctor
-        mockPatient.setEmail("patient@unittest.com");
-        mockPatient.setPassword("password");
-        mockPatient.setRole("patient");
+    void PatientCreatesAccount_True() throws Exception {
 
         // Object mapper
         ObjectMapper mapper = new ObjectMapper();
@@ -199,6 +203,32 @@ class UserTests {
     }
 
     @Test
+    void CreatesAccount_False() throws Exception {
+
+        // Object mapper
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
+        String requestJson = ow.writeValueAsString(mockPatient);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/Register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        Mockito.when(mockUserRepo.findUserByEmail(Mockito.anyString())).thenReturn(mockPatient);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/Register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+
+
+
+
+    }
+
+    @Test
     // -----------------------------------------------------------------------------------
     // Test: Update patients profile 
     // -----------------------------------------------------------------------------------
@@ -208,14 +238,9 @@ class UserTests {
     // 4. Assert retrieve user by their email
     // NOTE: There are so many comments but don't delete them for now FOR FUTURE REFERENCE
     // -----------------------------------------------------------------------------------
-    void PatientCreatesProfile_True_PatientSuccessfullyCreatedProfile() throws Exception {
+    void PatientCreatesProfile_True() throws Exception {
 
-        User mockPatient = new User();
 
-        // "patient@unittest.com", "password", Role.patient
-        mockPatient.setEmail("patient@unittest.com");
-        mockPatient.setPassword("password");
-        mockPatient.setRole("patient");
         mockPatient.setFirstName("Jamal");
         mockPatient.setLastName("Jamalson");
         Date dob = new Date(1996/11/11);
@@ -258,7 +283,6 @@ class UserTests {
         .andExpect(jsonPath("$.dob", Matchers.is("1970-01-01")))
         .andExpect(jsonPath("$.phoneNumber", Matchers.is("123456789")));
     }
-
     @Test
     // -----------------------------------------------------------------------------------
     // Test: Log into patient account 
@@ -269,14 +293,7 @@ class UserTests {
     // 4. Assert retrieve user by their email
     // NOTE: There are so many comments but don't delete them for now FOR FUTURE REFERENCE
     // -----------------------------------------------------------------------------------
-    void PateintLogsIn_True_PatientSuccessfullyLoggedIn() throws Exception {
-
-        User mockPatient = new User();
-
-        // "doctor@unittest.com", "password", Role.doctor
-        mockPatient.setEmail("patient@unittest.com");
-        mockPatient.setPassword("passwordUnitTest");
-        mockPatient.setRole("patient");
+    void PatentLogsIn_True() throws Exception {
 
         // Object mapper
         ObjectMapper mapper = new ObjectMapper();
@@ -311,14 +328,33 @@ class UserTests {
          .andExpect(MockMvcResultMatchers.status().isOk())
          .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
          .andExpect(jsonPath("$.email").value("patient@unittest.com"))
-         .andExpect(jsonPath("$.password").value("passwordUnitTest"))
+         .andExpect(jsonPath("$.password").value("password"))
          .andExpect(jsonPath("$.role").value("patient"));
 
 
         mockMvc.perform(MockMvcRequestBuilders.get("/LogIn/{email}", mockPatient.getEmail()))
         .andExpect(MockMvcResultMatchers.status().isOk());
     }
+    @Test
+    void LogIn_False() throws Exception {
+        // Object mapper
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
+        String requestJson = ow.writeValueAsString(mockPatient);
 
+        // First register a patient mock object that will be used to log in
+        mockMvc.perform(MockMvcRequestBuilders.post("/Register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        Mockito.when(mockUserRepo.findByEmailAndPassword(mockPatient.getEmail(), mockPatient.getPassword())).thenReturn(null);
+        mockMvc.perform(MockMvcRequestBuilders.post("/LogInAttempt")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
     @Test
     // -----------------------------------------------------------------------------------
     // Test: Patient books an appointment
@@ -331,23 +367,13 @@ class UserTests {
     // -----------------------------------------------------------------------------------
     void PatientBooksAppointment_True_PatientSuccessfullyBooked() throws Exception {
 
-        User mockPatient = new User();
 
-        // "patient@unittest.com", "password", Role.patient
-        mockPatient.setEmail("patient@unittest.com");
-        mockPatient.setPassword("password");
-        mockPatient.setRole("patient");
         mockPatient.setFirstName("Jamal");
         mockPatient.setLastName("Jamalson");
         Date dob = new Date(1996/11/11);
         mockPatient.setDob(dob);
         mockPatient.setPhoneNumber("123456789");
 
-        User mockDoctor = new User();
-
-        mockDoctor.setEmail("doctor@unittest.com");
-        mockDoctor.setPassword("password");
-        mockDoctor.setRole("doctor");
         mockDoctor.setFirstName("Mikeal");
         mockDoctor.setLastName("Jaxon");
         Date dctrdob = new Date(1980/01/01);
