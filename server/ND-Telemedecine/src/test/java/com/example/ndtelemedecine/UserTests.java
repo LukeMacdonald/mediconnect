@@ -7,6 +7,7 @@ import com.example.ndtelemedecine.Controllers.UserApiController;
 import com.example.ndtelemedecine.Models.Appointment;
 import com.example.ndtelemedecine.Repositories.AppointmentRepo;
 import com.example.ndtelemedecine.Models.User;
+import com.example.ndtelemedecine.Models.Verification;
 import com.example.ndtelemedecine.Repositories.UserRepo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -57,7 +58,6 @@ class UserTests {
     @SpyBean
     private UserApiController mockUserApiController;
 
-
     @MockBean
     private UserRepo mockUserRepo;
 
@@ -83,61 +83,62 @@ class UserTests {
         .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));       // Check it returns a JSON
     }
 
-    // TODO: DON'T DELETE ANY OF BELOW FOR FUTURE REFERENCE
     @Test
     // -----------------------------------------------------------------------------------
     // Test: Add user as doctor
     // -----------------------------------------------------------------------------------
     // 1. Create doctor object
+    // 1.5. Assert verify user doctor's code matches
     // 2. Assert add user to database
     // 3. If (2) Passed, mock user will be sent back
     // 4. Assert retrieve user by their email
-    // NOTE: There are so many comments but don't delete them for now FOR FUTURE REFERENCE
     // -----------------------------------------------------------------------------------
     void DoctorCreatesAccount_True_DoctorSuccessfullyEnrolled() throws Exception {
 
         User mockDoctor = new User();
+        Verification mockVerify = new Verification();
 
         // "doctor@unittest.com", "password", Role.doctor
         mockDoctor.setEmail("doctor@unittest.com");
         mockDoctor.setPassword("password");
         mockDoctor.setRole("doctor");
 
+        mockVerify.setEmail(mockDoctor.getEmail());
+        mockVerify.setCode(12345);
+
         // Object mapper
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
         ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-        String requestJson = ow.writeValueAsString(mockDoctor );
 
+        String requestJson = ow.writeValueAsString(mockDoctor);
+        String verifyJson = ow.writeValueAsString(mockVerify);
+
+        // Assume database verification works
+        Mockito.when(mockAuthenticationApiController.verification(mockVerify)).thenReturn("Codes Matched!");
+
+        // Perform above mock and assert that it returns OK
+        mockMvc.perform(MockMvcRequestBuilders.post("/EmailVerificationInTable")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(verifyJson))
+        .andExpect(MockMvcResultMatchers.status().isOk());
+
+        // Mock Register
         mockMvc.perform(MockMvcRequestBuilders.post("/Register")
         .contentType(MediaType.APPLICATION_JSON)
         .content(requestJson))
         .andExpect(MockMvcResultMatchers.status().isOk());
-
-        // If passed simulate adding user to mock database and return content-type application/json
-        HttpHeaders header = new HttpHeaders();
-        header.setContentType(MediaType.APPLICATION_JSON);
         
-        // ResponseEntity<List<User>> responseEntity = new ResponseEntity<List<User>>(
-        //     header, 
-        //     HttpStatus.OK
-        // );
-
-        // List<User> response = Arrays.asList(mockDoctor);
-
+        // Assume getting user by object will return the doctor
         Mockito.when(mockUserApiController.getUserObjByEmail(mockDoctor)).thenReturn(mockDoctor);
 
+        // Perform above mock and assert that values match
         mockMvc.perform(MockMvcRequestBuilders.get("/GetUserBy/Email")
         .contentType(MediaType.APPLICATION_JSON)
         .content(requestJson))
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-        // .andExpect(MockMvcResultMatchers.content().string(contains(substring)))
         .andExpect(MockMvcResultMatchers.jsonPath("$.role", Matchers.is("doctor")));
-
-        // String resultContent = result.getResponse().getContentAsString();
-        // System.out.println(resultContent);
-        // // .andExpect(MockMvcResultMatchers.jsonPath("$.role", Matchers.is("doctor")));
     }
 
     @Test
