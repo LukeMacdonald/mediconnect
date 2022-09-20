@@ -34,11 +34,15 @@ To run the application locally :
 
 ## Example Prexisting Accounts
 ### Patient
-Email: Test@gmail.com
-Password: test
+Email: patient@gmail.com
+Password: patient
 ### Doctor
-Email: Jamal@gmail.com
-Password: jamalMan
+Email: doctor@gmail.com
+Password: doctor
 ### SuperAdmin
 Email: admin@gmail.com
 Password: admin
+
+## Extra Notes
+The Cloud service used to access the database only allows a very minimum number of users to be running the server
+at once which can cause the appliation to somees fail.
