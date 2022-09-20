@@ -5,17 +5,21 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:flutter/foundation.dart';
 import 'utilities/appointment.dart';
+import 'utilities/user.dart';
 
 import 'package:flutter/material.dart';
 
 class BookingByTime extends StatefulWidget {
-  const BookingByTime({Key? key}) : super(key: key);
+  final User user;
+  const BookingByTime({Key? key, required this.user}) : super(key: key);
 
   @override
-  State<BookingByTime> createState() => _BookingByTime();
+  State<BookingByTime> createState() => _BookingByTime(user);
 }
 
 class _BookingByTime extends State<BookingByTime> {
+  _BookingByTime(this.user);
+  User user;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   String url = "http://localhost:8080/booking_by_time";

@@ -105,7 +105,7 @@ class _Booking extends State<Booking> {
                                     size: 15),
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => BookingByTime())),
+                                    builder: (context) => Booking())),
                             menuButtons(
                                 Color.fromARGB(255, 82, 80, 80),
                                 const Text(
