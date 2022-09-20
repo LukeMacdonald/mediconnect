@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:client/create_profile.dart';
@@ -15,54 +17,79 @@ class LogIn extends StatefulWidget {
 }
 
 class _LogIn extends State<LogIn> {
-  User user = User("", "", "");
-  String url = "http://localhost:8080/";
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+  User user = User("", "", "");
+  String url = "http://localhost:8080/";
+
   Future login() async {
-    var response = await http.post(Uri.parse("${url}LogInAttempt"),
+    var response = await http.post(Uri.parse("${url}login"),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
           'email': user.email,
           'password': user.password,
         }));
-    if (!mounted) return;
-    if (response.body == "false") {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => ProfileCreation(
-                  user: user))); // Should direct to profile creation page
-    } else if (response.body == "true") {
-          response = await http.get(Uri.parse("${url}LogIn/${user.email}"));
-          var responseData = json.decode(response.body);
-          user.role = responseData['role'];
-          user.firstName = responseData['firstName'];
-          user.lastName = responseData['lastName'];
-          user.id = responseData['id'];
-        if (user.role == "patient") {
-        if (!mounted) return;
-        Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => PatientDashboard(user:user)));
-      }
-      else if (user.role == "doctor"){
-        if (!mounted) return;
-        Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => DoctorDashboard(user:user)));
-            }
-      else if (user.role == "superuser"){
-        if (!mounted) return;
-        Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => SuperAdminDashboard(user:user)));
-      }
-      else {
-        alert("Error Logging In");
-      }
-    } else {
+    var responseData = json.decode(response.body);
+
+    if(responseData['status']==401){
       alert("User does not exist");
+    }
+    else{
+
+      user.token = responseData['access_token'];
+
+      if(user.token != ""){
+
+        response = await http.get(Uri.parse("${url}GetUserByEmail/${user.email}"),
+            headers: {
+              'Content-Type': 'application/json',
+              HttpHeaders.authorizationHeader:user.token
+            }
+        );
+
+        user.setNeededDetails(json.decode(response.body));
+
+        if(user.firstName == ""){
+          if (!mounted) return;
+
+
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => ProfileCreation(user: user))); // Should direct to profile creation page
+        }
+
+        else if (user.role == "patient"){
+          user.password = "";
+          if (!mounted) return;
+
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => PatientDashboard(user:user)));
+        }
+        else if (user.role == "doctor"){
+          user.password = "";
+          if (!mounted) return;
+
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => DoctorDashboard(user:user)));
+        }
+        else if (user.role == "superuser"){
+          user.password = "";
+          if (!mounted) return;
+
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => SuperAdminDashboard(user:user)));
+        }
+        else {
+          alert("Error Logging In");
+        }
+      }
     }
   }
 

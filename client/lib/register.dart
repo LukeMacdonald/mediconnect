@@ -46,16 +46,17 @@ class _Registration extends State<Registration> {
           'password': user.password,
           'role': user.role
         }));
-    //print(response.body);
-    if (response.body == "Saved user...") {
-      user.setId();
+    var responseData = json.decode(response.body);
+    if(responseData['message'] != null){
+      alert(responseData['message']);
+    }
+    else{
+      user.setNeededDetails(responseData);
       if (!mounted) return;
       Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => ProfileCreation(user: user)));
-    } else {
-      alert("Email Already Taken!");
+          context,
+          MaterialPageRoute(
+              builder: (context) => ProfileCreation(user: user)));
     }
   }
 
@@ -232,30 +233,6 @@ class _Registration extends State<Registration> {
                 ))));
   }
 
-  Widget patientCheckBox() {
-    return Container(
-        constraints: const BoxConstraints(minWidth: 70, maxWidth: 300),
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        child: CheckboxListTile(
-          checkColor: Colors.white,
-          value: isCheckedP,
-          title: const Text("Skip Profile Creation",
-              style: TextStyle(
-                color: Colors.white,
-              )),
-          side: const BorderSide(
-            color: Colors.white,
-            width: 1.5,
-          ),
-          controlAffinity: ListTileControlAffinity.leading,
-          onChanged: (bool? value) {
-            setState(() {
-              isCheckedP = value!;
-            });
-          },
-        ));
-  }
-
   Widget patientRegistration() {
     return SingleChildScrollView(
         physics: const NeverScrollableScrollPhysics(),
@@ -266,7 +243,7 @@ class _Registration extends State<Registration> {
           patientPassword(),
           const Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0)),
           patientPassword2(),
-          patientCheckBox(),
+          const Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0)),
           patientCreateBtn(),
           const Padding(padding: EdgeInsets.fromLTRB(0, 15, 0, 0)),
           const Text("Already Have an Account?",
@@ -431,28 +408,6 @@ class _Registration extends State<Registration> {
                 ))));
   }
 
-  Widget doctorCheckBox() {
-    return Container(
-        constraints: const BoxConstraints(minWidth: 70, maxWidth: 300),
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        child: CheckboxListTile(
-          checkColor: Colors.white,
-          value: isCheckedD,
-          title: const Text("Skip Profile Creation",
-              style: TextStyle(color: Colors.white)),
-          side: const BorderSide(
-            color: Colors.white,
-            width: 1.5,
-          ),
-          controlAffinity: ListTileControlAffinity.leading,
-          onChanged: (bool? value) {
-            setState(() {
-              isCheckedD = value!;
-            });
-          },
-        ));
-  }
-
   Widget doctorVerification() {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -501,7 +456,7 @@ class _Registration extends State<Registration> {
           doctorPassword(),
           const Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0)),
           doctorPassword2(),
-          doctorCheckBox(),
+          const Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0)),
           doctorCreateBtn(),
           const Padding(padding: EdgeInsets.fromLTRB(0, 15, 0, 0)),
           const Text("Already Have an Account?",

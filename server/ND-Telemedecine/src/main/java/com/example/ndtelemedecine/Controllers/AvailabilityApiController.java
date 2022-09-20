@@ -5,30 +5,19 @@ import com.example.ndtelemedecine.Models.Role;
 import com.example.ndtelemedecine.Repositories.AvailabilityRepo;
 import com.example.ndtelemedecine.Models.User;
 import com.example.ndtelemedecine.Repositories.UserRepo;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
 
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 public class AvailabilityApiController {
+    private final AvailabilityRepo availRepo;
+    private final UserRepo userRepo;
 
-    @Autowired
-    private AvailabilityRepo availRepo;
-
-    @Autowired
-    private UserRepo userRepo;
-
-    // Sets a Availability For Doctor
-    @PostMapping(value = "/SetMultipleDoctorAvailability")
-    public String availability(@RequestBody List<Availability> avail){
-        availRepo.saveAll(avail);
-        return "Set Doctor Availability";
-    }
-
-    // Sets a Availability For Doctor
-    @PostMapping(value = "/SetDoctorAvailability")
+    // Sets Availability For Doctor
+    @PostMapping(value = "doctor/SetDoctorAvailability")
     public String availability(@RequestBody Availability avail){
 
         User user = userRepo.findById(avail.get_doctor_id());
@@ -49,13 +38,11 @@ public class AvailabilityApiController {
             return "Availability Set!";
         }
     }
-
     // Sets an Availability For Doctor
     @GetMapping(value = "/GetAllDoctorAvailability/{id}")
     public List<Availability> doctorsAvailability(@PathVariable("id") int id){
         return availRepo.findByDoctorId(id);
     }
-    
     @GetMapping(value = "/GetAllDoctorsAvailabilities")
     public List<Availability> getDoctorsAvailabilities(){
         return availRepo.findAll();
