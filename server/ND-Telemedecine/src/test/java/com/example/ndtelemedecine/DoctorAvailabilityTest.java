@@ -83,7 +83,7 @@ public class DoctorAvailabilityTest {
         ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
         String requestJson = ow.writeValueAsString(avail);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/SetDoctorAvailability")
+        mockMvc.perform(MockMvcRequestBuilders.post("/doctor/SetDoctorAvailability")
         .contentType(MediaType.APPLICATION_JSON)
         .content(requestJson))
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -110,7 +110,7 @@ public class DoctorAvailabilityTest {
         ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
         String requestJson = ow.writeValueAsString(avail);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/SetDoctorAvailability")
+        mockMvc.perform(MockMvcRequestBuilders.post("/doctor/SetDoctorAvailability")
         .contentType(MediaType.APPLICATION_JSON)
         .content(requestJson))
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -136,7 +136,7 @@ public class DoctorAvailabilityTest {
         ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
         String requestJson = ow.writeValueAsString(avail);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/SetDoctorAvailability")
+        mockMvc.perform(MockMvcRequestBuilders.post("/doctor/SetDoctorAvailability")
         .contentType(MediaType.APPLICATION_JSON)
         .content(requestJson))
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -162,7 +162,7 @@ public class DoctorAvailabilityTest {
         ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
         String requestJson = ow.writeValueAsString(avail);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/SetDoctorAvailability")
+        mockMvc.perform(MockMvcRequestBuilders.post("/doctor/SetDoctorAvailability")
         .contentType(MediaType.APPLICATION_JSON)
         .content(requestJson))
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -188,7 +188,7 @@ public class DoctorAvailabilityTest {
         ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
         String requestJson = ow.writeValueAsString(avail);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/SetDoctorAvailability")
+        mockMvc.perform(MockMvcRequestBuilders.post("/doctor/SetDoctorAvailability")
         .contentType(MediaType.APPLICATION_JSON)
         .content(requestJson))
         .andExpect(MockMvcResultMatchers.status().isOk())

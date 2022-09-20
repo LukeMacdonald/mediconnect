@@ -128,7 +128,7 @@ class UserTests {
         mockMvc.perform(MockMvcRequestBuilders.post("/Register")
         .contentType(MediaType.APPLICATION_JSON)
         .content(requestJson))
-        .andExpect(MockMvcResultMatchers.status().isOk());
+        .andExpect(MockMvcResultMatchers.status().isCreated());
         
         // Assume getting user by object will return the doctor
         Mockito.when(mockUserApiController.getUserObjByEmail(mockDoctor)).thenReturn(mockDoctor);
@@ -170,7 +170,7 @@ class UserTests {
         mockMvc.perform(MockMvcRequestBuilders.post("/Register")
         .contentType(MediaType.APPLICATION_JSON)
         .content(requestJson))
-        .andExpect(MockMvcResultMatchers.status().isOk());
+        .andExpect(MockMvcResultMatchers.status().isCreated());
 
         // If passed simulate adding user to mock database and return content-type application/json
         HttpHeaders header = new HttpHeaders();
@@ -217,7 +217,7 @@ class UserTests {
         mockMvc.perform(MockMvcRequestBuilders.post("/Register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(MockMvcResultMatchers.status().isCreated());
 
 
         Mockito.when(mockUserRepo.findUserByEmail(Mockito.anyString())).thenReturn(mockPatient);
@@ -263,7 +263,7 @@ class UserTests {
         mockMvc.perform(MockMvcRequestBuilders.post("/Register")
         .contentType(MediaType.APPLICATION_JSON)
         .content(requestJson))
-        .andExpect(MockMvcResultMatchers.status().isOk());
+        .andExpect(MockMvcResultMatchers.status().isCreated());
 
         Mockito.when(mockUserApiController.getUserObjByEmail(mockPatient)).thenReturn(mockPatient);
         Mockito.when(mockUserRepo.findByEmail(Mockito.anyString())).thenReturn(Arrays.asList(mockPatient));
@@ -320,7 +320,7 @@ class UserTests {
         mockMvc.perform(MockMvcRequestBuilders.post("/Register")
         .contentType(MediaType.APPLICATION_JSON)
         .content(requestJson))
-        .andExpect(MockMvcResultMatchers.status().isOk());
+        .andExpect(MockMvcResultMatchers.status().isCreated());
 
         Mockito.when(mockUserRepo.findByEmailAndPassword(Mockito.anyString(),Mockito.anyString())).thenReturn(mockPatient);
 
@@ -371,7 +371,7 @@ class UserTests {
         mockMvc.perform(MockMvcRequestBuilders.post("/Register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(MockMvcResultMatchers.status().isCreated());
 
         Mockito.when(mockUserRepo.findByEmailAndPassword(Mockito.anyString(),Mockito.anyString())).thenReturn(null);
 
@@ -426,7 +426,7 @@ class UserTests {
         mockMvc.perform(MockMvcRequestBuilders.post("/Register")
         .contentType(MediaType.APPLICATION_JSON)
         .content(requestJson))
-        .andExpect(MockMvcResultMatchers.status().isOk());
+        .andExpect(MockMvcResultMatchers.status().isCreated());
 
         // Object mapper 2 for registering the doctor
         ObjectMapper mapper2 = new ObjectMapper();
@@ -437,7 +437,7 @@ class UserTests {
         mockMvc.perform(MockMvcRequestBuilders.post("/Register")
         .contentType(MediaType.APPLICATION_JSON)
         .content(requestJson2))
-        .andExpect(MockMvcResultMatchers.status().isOk());
+        .andExpect(MockMvcResultMatchers.status().isCreated());
 
         Appointment mockAppointment = new Appointment();
         mockAppointment.setPatient(mockPatient.getID());
