@@ -13,6 +13,36 @@ class _Booking extends State<Booking> {
   String url = "http://localhost:8080/booking";
   //Not sure if url needed
 
+  //TODO: Remove this widget later and import it from the utilities folder
+  Widget menuButtons(Color color, Text message, Icon icons,
+      BuildContext context, MaterialPageRoute page) {
+    return Padding(
+        padding: const EdgeInsetsDirectional.fromSTEB(0, 20, 0, 20),
+        child: ElevatedButton.icon(
+          onPressed: () {
+            Navigator.push(context, page);
+          },
+          label: message,
+          icon: icons,
+          style: ElevatedButton.styleFrom(
+            primary: color,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            fixedSize: const Size(260, 70),
+            side: const BorderSide(
+              color: Colors.transparent,
+              width: 1,
+            ),
+            textStyle: GoogleFonts.lexendDeca(
+              textStyle: const TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+              ),
+            ),
+          ),
+        ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,111 +84,34 @@ class _Booking extends State<Booking> {
                               fontWeight: FontWeight.bold),
                         ),
                       ),
-                      Padding(
-                          padding:
-                              const EdgeInsetsDirectional.fromSTEB(0, 30, 0, 0),
-                          child: Container(
-                              width: 700,
-                              height: 700,
-                              decoration: BoxDecoration(
-                                color: const Color(0x66FFFFFF),
-                                boxShadow: const [
-                                  BoxShadow(
-                                    blurRadius: 4,
-                                    color: Color(0x33000000),
-                                    offset: Offset(0, 2),
-                                  )
-                                ],
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: SingleChildScrollView(
-                                  child: Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                    Padding(
-                                      padding:
-                                          const EdgeInsetsDirectional.fromSTEB(
-                                              0, 50, 0, 0),
-                                      child: Container(
-                                        width: 200,
-                                        height: 200,
-                                        decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            boxShadow: const [
-                                              BoxShadow(
-                                                  color: Colors.black26,
-                                                  blurRadius: 6,
-                                                  offset: Offset(0, 2))
-                                            ]),
-                                        child: TextButton(
-                                          onPressed: () {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>const Booking()));
-                                                        //BookingByTime())); // Add user to the parameters of Booking()
-                                          },
-                                          child: Column(
-                                            children: const <Widget>[
-                                              Icon(Icons.calendar_today_rounded,
-                                                  size: 170,
-                                                  color: Colors.black),
-                                              Text(
-                                                "By Time",
-                                                style: TextStyle(
-                                                    fontFamily: 'Poppins',
-                                                    color: Colors.black,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsetsDirectional.fromSTEB(
-                                              0, 200, 0, 0),
-                                      child: Container(
-                                        width: 200,
-                                        height: 200,
-                                        decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            boxShadow: const [
-                                              BoxShadow(
-                                                  color: Colors.black26,
-                                                  blurRadius: 6,
-                                                  offset: Offset(0, 2))
-                                            ]),
-                                        child: TextButton(
-                                          onPressed: null,
-                                          // Navigate to upcoming appointment page (TO DO LATER)
-                                          child: Column(
-                                            children: const <Widget>[
-                                              Icon(Icons.person_rounded,
-                                                  size: 170,
-                                                  color: Colors.black),
-                                              Text(
-                                                "By Doctor",
-                                                style: TextStyle(
-                                                    fontFamily: 'Poppins',
-                                                    color: Colors.black,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  ]))))
+
+                      SingleChildScrollView(
+                          child: Column(
+                              mainAxisSize: MainAxisSize.max,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                            menuButtons(
+                                Color.fromARGB(255, 82, 80, 80),
+                                const Text(
+                                  'By Time',
+                                ),
+                                const Icon(Icons.calendar_today_rounded,
+                                    size: 15),
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => BookingByTime())),
+                            menuButtons(
+                                Color.fromARGB(255, 82, 80, 80),
+                                const Text(
+                                  'By Doctor',
+                                ),
+                                const Icon(Icons.person, size: 15),
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Booking(),
+                                ))
+                          ]))
+
                     ]))))));
   }
 }

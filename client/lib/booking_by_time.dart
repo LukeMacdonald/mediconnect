@@ -32,7 +32,7 @@ class _BookingByTime extends State<BookingByTime> {
   void initState() {
     dateInput.text = ""; //set the initial value of text field
     super.initState();
-    getAvailability();
+    // getAvailability();
     //print(_booking);
   }
 
@@ -169,7 +169,8 @@ class _BookingByTime extends State<BookingByTime> {
                 padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
               )),
           Container(
-              constraints: const BoxConstraints(minWidth: 800, maxWidth: 800),
+              constraints: const BoxConstraints(
+                  minWidth: 800, maxWidth: 800, minHeight: 300, maxHeight: 300),
               decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10),
@@ -183,10 +184,10 @@ class _BookingByTime extends State<BookingByTime> {
               child: Row(
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  Row(
+                  Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(80, 0, 0, 0),
+                        padding: const EdgeInsets.fromLTRB(80, 15, 0, 0),
                         child: Container(
                           constraints: const BoxConstraints(
                               minWidth: 100, maxWidth: 200),
@@ -231,141 +232,71 @@ class _BookingByTime extends State<BookingByTime> {
                         ),
                       ),
                       Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                          child: Column(
-                            children: [
-                              Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(0, 70, 0, 0),
-                                  child: Container(
-                                      constraints: const BoxConstraints(
-                                          minWidth: 100, maxWidth: 200),
-                                      alignment: Alignment.centerLeft,
-                                      decoration: BoxDecoration(
-                                          color: const Color(0x86C6F7FD),
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          boxShadow: const [
-                                            BoxShadow(
-                                                color: Colors.black26,
-                                                blurRadius: 6,
-                                                offset: Offset(0, 2))
-                                          ]),
-                                      height: 60,
-                                      child: Center(
-                                          child: TextField(
-                                              controller: dateInput,
-                                              decoration: const InputDecoration(
-                                                  border: InputBorder.none,
-                                                  contentPadding:
-                                                      EdgeInsets.only(top: 15),
-                                                  prefixIcon: Icon(
-                                                      Icons.calendar_today),
-                                                  hintText:
-                                                      'Date of Appointment',
-                                                  hintStyle: TextStyle(
-                                                      color: Colors.black)),
-                                              readOnly: true,
-                                              // set it true, user cannot edit text
-                                              onTap: () async {
-                                                DateTime? pickedDate =
-                                                    await showDatePicker(
-                                                  context: context,
-                                                  initialDate: DateTime.now(),
-                                                  firstDate: DateTime.now(),
-                                                  lastDate: DateTime(2030),
-                                                  // selectableDayPredicate:
-                                                  //     (DateTime datetime) {
-                                                  //   if (datetime.weekday ==
-                                                  //       DateTime.sunday) {
-                                                  //     return false;
-                                                  //   }
-                                                  //   return true;
-                                                  // },
-                                                  initialEntryMode:
-                                                      DatePickerEntryMode
-                                                          .calendarOnly,
-                                                );
 
-                                                if (pickedDate != null) {
-                                                  String formattedDate =
-                                                      DateFormat('yyyy-MM-dd')
-                                                          .format(
-                                                              pickedDate); // Note that backend needs this format for string to be converted!!
-                                                  setState(() {
-                                                    dateInput.text =
-                                                        formattedDate;
-                                                    daySelected =
-                                                        DateFormat('EEEE')
-                                                            .format(pickedDate);
-                                                    // Will be converted in backend
-                                                  });
-                                                  // user.dob = dateInput.text;
-                                                }
-                                              })))),
-                              Padding(
-                                  padding: const EdgeInsetsDirectional.fromSTEB(
-                                      0, 10, 0, 0),
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      //TODO: functions on backend
-                                      if (doctorValue == 'Doctor') {
-                                        alert("Select a doctor");
-                                      } else if (dateInput.text == "") {
-                                        alert("Provide a date");
-                                      } else if (hourValue == 'Hour') {
-                                        alert("Select a hour range");
-                                      } else {
-                                        if ((_booking.any((element) =>
-                                                mapEquals(element, {
-                                                  'Doctor': doctorValue,
-                                                  'Day': daySelected,
-                                                  'Hour': hourValue
-                                                }))) &&
-                                            (DateTime.now().isBefore(DateTime.parse(
-                                                "${dateInput.text} ${hourValue.substring(0, 5)}")))) {
-                                          // Boolean Function to check whether it exists
-                                          // If true then valid and proceed with save() call
-                                          // Else, place an alert about appointment is already filled by the doctor
-                                          int id = -1;
-                                          for (var element in doctorIdToNames) {
-                                            if (element['Doctor_Name'] ==
-                                                doctorValue) {
-                                              id = element['doctor_id'];
+                          padding: const EdgeInsets.fromLTRB(80, 10, 0, 0),
+                          child: Container(
+                              constraints: const BoxConstraints(
+                                  minWidth: 100, maxWidth: 200),
+                              alignment: Alignment.centerLeft,
+                              decoration: BoxDecoration(
+                                  color: const Color(0x86C6F7FD),
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                        color: Colors.black26,
+                                        blurRadius: 6,
+                                        offset: Offset(0, 2))
+                                  ]),
+                              height: 60,
+                              child: Center(
+                                  child: TextField(
+                                      controller: dateInput,
+                                      decoration: const InputDecoration(
+                                          border: InputBorder.none,
+                                          contentPadding:
+                                              EdgeInsets.only(top: 15),
+                                          prefixIcon:
+                                              Icon(Icons.calendar_today),
+                                          hintText: 'Date of Appointment',
+                                          hintStyle:
+                                              TextStyle(color: Colors.black)),
+                                      readOnly: true,
+                                      // set it true, user cannot edit text
+                                      onTap: () async {
+                                        DateTime? pickedDate =
+                                            await showDatePicker(
+                                          context: context,
+                                          initialDate: DateTime.now(),
+                                          firstDate: DateTime.now(),
+                                          lastDate: DateTime(2030),
+                                          selectableDayPredicate:
+                                              (DateTime datetime) {
+                                            if (datetime.weekday ==
+                                                DateTime.sunday) {
+                                              return false;
                                             }
-                                          }
-                                          if (id == -1) {
-                                            alert('Invalid Doctor ID');
-                                          } else {
-                                            checkAppointment(id, dateInput.text,
-                                                hourValue.substring(0, 5));
-                                          }
-                                        } else {
-                                          alert('Invalid Booking Appointment');
+                                            return true;
+                                          },
+                                          initialEntryMode:
+                                              DatePickerEntryMode.calendarOnly,
+                                        );
+
+                                        if (pickedDate != null) {
+                                          String formattedDate =
+                                              DateFormat('yyyy-MM-dd').format(
+                                                  pickedDate); // Note that backend needs this format for string to be converted!!
+                                          setState(() {
+                                            dateInput.text = formattedDate;
+                                            daySelected = DateFormat('EEEE')
+                                                .format(pickedDate);
+                                            // Will be converted in backend
+                                          });
+                                          // user.dob = dateInput.text;
+
                                         }
-                                      }
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      padding: const EdgeInsets.all(20),
-                                      primary: const Color.fromARGB(
-                                          255, 129, 125, 125),
-                                      onPrimary: Colors.black,
-                                    ),
-                                    child: Text('Confirm',
-                                        style: GoogleFonts.lexendDeca(
-                                          textStyle: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 16,
-                                          ),
-                                        )),
-                                  )),
-                            ],
-                          )),
+                                      })))),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                        padding: const EdgeInsets.fromLTRB(80, 10, 0, 0),
                         child: Container(
                           constraints: const BoxConstraints(
                               minWidth: 100, maxWidth: 200),
@@ -381,7 +312,7 @@ class _BookingByTime extends State<BookingByTime> {
                               ]),
                           height: 60,
                           child: Padding(
-                            padding: const EdgeInsets.fromLTRB(20, 0, 0, 20),
+                            padding: const EdgeInsets.fromLTRB(20, 5, 0, 20),
                             child: DropdownButtonFormField(
                               decoration: const InputDecoration(
                                 border: InputBorder.none,
@@ -409,21 +340,62 @@ class _BookingByTime extends State<BookingByTime> {
                           ),
                         ),
                       ),
-                      //Button
-                      // Padding(
-                      //     padding:
-                      //         const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-                      //     child: Container(
-                      //         child: ElevatedButton(
-                      //       onPressed: () {},
-                      //       child: Icon(Icons.add, color: Colors.white),
-                      //       style: ElevatedButton.styleFrom(
-                      //         shape: const CircleBorder(),
-                      //         padding: const EdgeInsets.all(20),
-                      //         primary: const Color.fromARGB(255, 129, 125, 125),
-                      //         onPrimary: Colors.black,
-                      //       ),
-                      //     ))),
+                      Padding(
+                          padding: const EdgeInsetsDirectional.fromSTEB(
+                              80, 15, 0, 0),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              //TODO: functions on backend
+                              if (doctorValue == 'Doctor') {
+                                alert("Select a doctor");
+                              } else if (dateInput.text == "") {
+                                alert("Provide a date");
+                              } else if (hourValue == 'Hour') {
+                                alert("Select a hour range");
+                              } else {
+                                if ((_booking.any((element) => mapEquals(
+                                            element, {
+                                          'Doctor': doctorValue,
+                                          'Day': daySelected,
+                                          'Hour': hourValue
+                                        }))) &&
+                                    (DateTime.now().isBefore(DateTime.parse(
+                                        "${dateInput.text} ${hourValue.substring(0, 5)}")))) {
+                                  // Boolean Function to check whether it exists
+                                  // If true then valid and proceed with save() call
+                                  // Else, place an alert about appointment is already filled by the doctor
+                                  int id = 0;
+                                  for (var element in doctorIdToNames) {
+                                    if (element['Doctor_Name'] == doctorValue) {
+                                      id = element['doctor_id'];
+                                    }
+                                  }
+                                  if (id == 0) {
+                                    alert('Invalid Doctor ID');
+                                  } else {
+                                    checkAppointment(id, dateInput.text,
+                                        hourValue.substring(0, 5));
+                                  }
+                                } else {
+                                  alert('Invalid Booking Appointment');
+                                }
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                              padding: const EdgeInsets.all(20),
+                              primary: const Color.fromARGB(255, 129, 125, 125),
+                              onPrimary: Colors.black,
+                            ),
+                            child: Text('Confirm',
+                                style: GoogleFonts.lexendDeca(
+                                  textStyle: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                  ),
+                                )),
+                          )),
                     ],
                   )
                 ],
@@ -456,7 +428,7 @@ class _BookingByTime extends State<BookingByTime> {
                 Text('Book Appointment By Time',
                     style: GoogleFonts.roboto(
                       textStyle:
-                          const TextStyle(color: Colors.white, fontSize: 60),
+                          const TextStyle(color: Colors.white, fontSize: 40),
                     )),
                 Padding(
                   padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
