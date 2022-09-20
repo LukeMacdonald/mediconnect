@@ -54,8 +54,8 @@ public class AuthenticationApiController {
         User user = userRepo.findUserByEmail(email);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
-    // Checks Verification For Doctor
 
+    // Checks Verification For Doctor with the associated code created by the super admin
     @PostMapping(value = "/DoctorVerification")
     public String verification(@RequestBody Verification submitted){
         Verification stored = verRepo.findByEmail(submitted.getEmail());
@@ -70,6 +70,19 @@ public class AuthenticationApiController {
         }
         else{
             return "Unknown Issue!";
+        }
+    }
+
+    // Check Verification Table for email existing
+    @PostMapping(value ="/EmailVerificationInTable")
+    public String verifyDoctorInVerifTable(@RequestBody Verification submited){
+        Verification stored = verRepo.findByEmail(submited.getEmail());
+        if (stored == null){
+            verRepo.save(submited);
+            return "Valid email to store";
+        }
+        else{
+            return "Email exists!";
         }
     }
 }
