@@ -21,7 +21,6 @@ class BookingByTime extends StatefulWidget {
 
 class _BookingByTime extends State<BookingByTime> {
   _BookingByTime(this.user);
-  User user;
   final scaffoldKey = GlobalKey<ScaffoldState>();
   late User user = widget.user;
 
@@ -56,7 +55,8 @@ class _BookingByTime extends State<BookingByTime> {
       // Provided the doctor has gone through the dashboard, we simply take the doctor_id from their current availabilities
       doctorId = availability["_doctor_id"];
 
-      String time = createTime(availability["_start_time"],availability["_end_time"]);
+      String time =
+          createTime(availability["_start_time"], availability["_end_time"]);
 
       final responseName = await http
           .get(Uri.parse("http://localhost:8080/GetUserFullName/$doctorId"));
@@ -84,9 +84,9 @@ class _BookingByTime extends State<BookingByTime> {
           'time': startTime,
           'today': DateFormat("HH:mm:ss").format(DateTime.now()).toString()
         }));
-    if(!mounted) return;
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => PatientDashboard(user:user)));
+    if (!mounted) return;
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => PatientDashboard(user: user)));
   }
 
   Future checkAppointment(int id, String date, String startTime) async {
@@ -235,7 +235,6 @@ class _BookingByTime extends State<BookingByTime> {
                         ),
                       ),
                       Padding(
-
                           padding: const EdgeInsets.fromLTRB(80, 10, 0, 0),
                           child: Container(
                               constraints: const BoxConstraints(
