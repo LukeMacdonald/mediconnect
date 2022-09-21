@@ -1,3 +1,4 @@
+
 name: Java CI with Maven
 
 on: [push, pull_request]
@@ -20,3 +21,4 @@ jobs:
       run: mvn -f server/ND-Telemedecine -B package --f pom.xml
     - name: Test
       run: mvn -f server/ND-Telemedecine --batch-mode -Dmaven.test.failure.ignore=true test
+

@@ -8,10 +8,7 @@ import com.example.ndtelemedecine.Repositories.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class AuthenticationApiController {
@@ -23,14 +20,14 @@ public class AuthenticationApiController {
     private User userFound;
 
     @PostMapping(value="/Register")
-    public String register(@RequestBody User user) {
+    public ResponseEntity<String> register(@RequestBody User user) {
         System.out.println("Saving user with the following details:");
         System.out.println("Email: " + user.getEmail());
         System.out.println("Password: " + user.getPassword());
         User check = userRepo.findUserByEmail(user.getEmail());
         if (check==null){
             userRepo.save(user);
-            return "Saved user...";
+            return new ResponseEntity<>("Saved user...", HttpStatus.OK);
         }
         else {
             throw new ApiRequestException("User already exists in system!");
@@ -52,13 +49,13 @@ public class AuthenticationApiController {
     }
     // Returns current user
 
-    @GetMapping(value="/LogIn")
-    public ResponseEntity<User> LogIn() {
-
-        return new ResponseEntity<User>(userFound, HttpStatus.OK);
+    @GetMapping(value="/LogIn/{email}")
+    public User LogIn(@PathVariable("email") String email) {
+        return userRepo.findUserByEmail(email);
+        //return new ResponseEntity<>(user, HttpStatus.OK);
     }
-    // Checks Verification For Doctor
 
+    // Checks Verification For Doctor with the associated code created by the super admin
     @PostMapping(value = "/DoctorVerification")
     public String verification(@RequestBody Verification submitted){
         Verification stored = verRepo.findByEmail(submitted.getEmail());
@@ -73,6 +70,19 @@ public class AuthenticationApiController {
         }
         else{
             return "Unknown Issue!";
+        }
+    }
+
+    // Check Verification Table for email existing
+    @PostMapping(value ="/EmailVerificationInTable")
+    public String verifyDoctorInVerifTable(@RequestBody Verification submited){
+        Verification stored = verRepo.findByEmail(submited.getEmail());
+        if (stored == null){
+            verRepo.save(submited);
+            return "Valid email to store";
+        }
+        else{
+            return "Email exists!";
         }
     }
 }
