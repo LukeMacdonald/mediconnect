@@ -11,12 +11,12 @@ class Appointment extends StatefulWidget {
   const Appointment({Key? key, required this.user}) : super(key: key);
 
   @override
-  _Appointment createState() => _Appointment(user);
+  State<Appointment> createState() => _Appointment();
 }
 
 class _Appointment extends State<Appointment> {
-  _Appointment(this.user);
-  User user;
+  late User user = widget.user;
+
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   String url = "http://localhost:8080/appointment";

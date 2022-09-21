@@ -16,11 +16,10 @@ class BookingByTime extends StatefulWidget {
   const BookingByTime({Key? key, required this.user}) : super(key: key);
 
   @override
-  State<BookingByTime> createState() => _BookingByTime(user);
+  State<BookingByTime> createState() => _BookingByTime();
 }
 
 class _BookingByTime extends State<BookingByTime> {
-  _BookingByTime(this.user);
   final scaffoldKey = GlobalKey<ScaffoldState>();
   late User user = widget.user;
 
