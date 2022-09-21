@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'medical_history.dart';
 import 'utilities/user.dart';
+import 'package:flutter/services.dart';
 
 class ProfileCreation extends StatefulWidget {
   final User user;
@@ -48,17 +49,14 @@ class _ProfileCreation extends State<ProfileCreation> {
         }));
     if (!mounted) return;
     if (user.role == 'patient') {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => MedicalHistory(user: user)));
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => MedicalHistory(user: user)));
     } else if (user.role == 'doctor') {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => SetAvailability(user: user)));
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => SetAvailability(user: user)));
     }
   }
+
   final scaffoldKey = GlobalKey<ScaffoldState>();
   bool isCheckedP = false;
   bool isCheckedD = false;
@@ -99,6 +97,9 @@ class _ProfileCreation extends State<ProfileCreation> {
                 ]),
             height: 60,
             child: TextFormField(
+              inputFormatters: [
+                FilteringTextInputFormatter(RegExp(r'[a-zA-Z]'), allow: true)
+              ],
               controller: TextEditingController(text: firstName),
               onChanged: (val) {
                 firstName = val;
@@ -135,6 +136,9 @@ class _ProfileCreation extends State<ProfileCreation> {
                   ]),
               height: 60,
               child: TextFormField(
+                inputFormatters: [
+                  FilteringTextInputFormatter(RegExp(r'[a-zA-Z]'), allow: true)
+                ],
                 controller: TextEditingController(text: lastName),
                 onChanged: (val) {
                   lastName = val;
@@ -312,6 +316,10 @@ class _ProfileCreation extends State<ProfileCreation> {
                 ]),
             height: 60,
             child: TextFormField(
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.digitsOnly,
+                LengthLimitingTextInputFormatter(10)
+              ],
               controller: TextEditingController(text: phoneNumber),
               onChanged: (val) {
                 phoneNumber = val;
@@ -352,6 +360,8 @@ class _ProfileCreation extends State<ProfileCreation> {
                     {alert('A password input is empty')}
                   else if (passwordConfirm != user.password)
                     {alert('Passwords Don\'t Match')}
+                  else if (phoneNumber.length < 10)
+                    {alert('Not a valid phone number')}
                   else
                     {
                       // I'll change it to the actual user variables later i swear
