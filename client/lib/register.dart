@@ -1,44 +1,224 @@
 import 'dart:convert';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:client/create_profile.dart';
-import 'package:http/http.dart' as http;
-import 'utilities/user.dart';
-import 'log_in.dart';
 
-class Registration extends StatefulWidget {
-  const Registration({Key? key}) : super(key: key);
+import 'package:client/create_profile.dart';
+import 'package:client/dashboard.dart';
+import 'package:client/styles/background_style.dart';
+import 'package:client/styles/custom_styles.dart';
+import 'package:client/utilities/custom_functions.dart';
+import 'package:client/utilities/custom_widgets.dart';
+import 'package:client/utilities/user.dart';
+import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:page_transition/page_transition.dart';
+
+class Register extends StatefulWidget {
+  const Register({Key? key}) : super(key: key);
 
   @override
-  State<Registration> createState() => _Registration();
+  State<Register> createState() => _Register();
 }
 
-class _Registration extends State<Registration> {
-  User user = User("", "", "");
-  String passwordConfirm = "";
-  String verificationCode = "";
+class _Register extends State<Register> {
+  late TextEditingController emailController;
 
-  String url = "http://localhost:8080/Register";
-  String url2 = "http://localhost:8080/DoctorVerification";
+  late TextEditingController passwordController;
 
-  Future checkVerification() async {
-    final response = await http.post(Uri.parse(url2),
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode({
-          'email': user.email,
-          'code': verificationCode,
-        }));
-    String responseMessage = response.body;
-    if (responseMessage == "Codes Matched!") {
-      save();
-    } else {
-      alert(responseMessage);
-    }
+  late bool passwordVisibility;
+
+  late TextEditingController passwordConfirmController;
+
+  late bool passwordConfirmVisibility;
+
+  final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  late String role;
+
+  late User user;
+
+  @override
+  void initState() {
+    super.initState();
+    emailController = TextEditingController();
+
+    user = User("", "", "");
+
+    passwordController = TextEditingController();
+    passwordVisibility = false;
+
+    passwordConfirmController = TextEditingController();
+    passwordConfirmVisibility = false;
+
+    role = "";
+  }
+
+  Widget buttonRegister(
+      Color color, String message, Widget page, BuildContext context) {
+    return Container(
+        width: double.infinity,
+        height: 100,
+        decoration: const BoxDecoration(color: Colors.white),
+        child: Column(mainAxisSize: MainAxisSize.max, children: [
+          Container(
+              constraints: const BoxConstraints(minWidth: 70, maxWidth: 500),
+              child: ElevatedButton(
+                  onPressed: () async {
+                    if (role == "Patient") {
+                      user = User(
+                          emailController.text, passwordController.text, role);
+                      save();
+                    } else if (role == "Doctor") {
+                      user = User(
+                          emailController.text, passwordController.text, role);
+                      Navigator.push(
+                          context,
+                          PageTransition(
+                              type: PageTransitionType.fade,
+                              child: Verification(
+                                user: user,
+                              )));
+                    } else {
+                      alert("Role Not Selected!", context);
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(230, 50),
+                      padding: const EdgeInsets.all(15),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      primary: color),
+                  child: Text(message,
+                      style: CustomText.setCustom(FontWeight.w900, 16, Colors.white),
+                      )))
+        ]));
+  }
+
+  Widget password() {
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Expanded(
+            child: Padding(
+                padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 8),
+                child: TextFormField(
+                  controller: passwordController,
+                  obscureText: !passwordVisibility,
+                  decoration: InputDecoration(
+                      labelText: 'Password',
+                      labelStyle: CustomText.setCustom(FontWeight.w500, 14.0),
+                      hintText: 'Enter Password',
+                      hintStyle: CustomText.setCustom(FontWeight.w500, 14.0),
+                      enabledBorder: CustomOutlineInputBorder.custom,
+                      focusedBorder: CustomOutlineInputBorder.custom,
+                      errorBorder: CustomOutlineInputBorder.custom,
+                      focusedErrorBorder: CustomOutlineInputBorder.custom,
+                      suffixIcon: InkWell(
+                        onTap: () => setState(
+                          () => passwordVisibility = !passwordVisibility,
+                        ),
+                        focusNode: FocusNode(skipTraversal: true),
+                        child: Icon(
+                          passwordVisibility
+                              ? Icons.visibility_outlined
+                              : Icons.visibility_off_outlined,
+                          color: Colors.black,
+                          size: 20,
+                        ),
+                      )),
+                  style: CustomText.setCustom(FontWeight.w500, 14.0),
+                )))
+      ],
+    );
+  }
+
+  Widget confirmPassword() {
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Expanded(
+            child: Padding(
+                padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 8),
+                child: TextFormField(
+                  controller: passwordConfirmController,
+                  obscureText: !passwordConfirmVisibility,
+                  decoration: InputDecoration(
+                      labelText: 'Confirm Password',
+                      labelStyle: CustomText.setCustom(FontWeight.w500, 14.0),
+                      hintText: 'Enter Password',
+                      hintStyle: CustomText.setCustom(FontWeight.w500, 14.0),
+                      enabledBorder: CustomOutlineInputBorder.custom,
+                      focusedBorder: CustomOutlineInputBorder.custom,
+                      errorBorder: CustomOutlineInputBorder.custom,
+                      focusedErrorBorder: CustomOutlineInputBorder.custom,
+                      suffixIcon: InkWell(
+                        onTap: () => setState(
+                          () => passwordConfirmVisibility =
+                              !passwordConfirmVisibility,
+                        ),
+                        focusNode: FocusNode(skipTraversal: true),
+                        child: Icon(
+                          passwordConfirmVisibility
+                              ? Icons.visibility_outlined
+                              : Icons.visibility_off_outlined,
+                          color: Colors.black,
+                          size: 20,
+                        ),
+                      )),
+                  style: CustomText.setCustom(FontWeight.w500, 14.0),
+                )))
+      ],
+    );
+  }
+
+  Widget email() {
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Expanded(
+            child: Padding(
+                padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
+                child: TextFormField(
+                  controller: emailController,
+                  obscureText: false,
+                  decoration: InputDecoration(
+                    labelText: 'Email Address',
+                    labelStyle: CustomText.setCustom(FontWeight.w500, 14.0),
+                    hintText: 'Enter your email address...',
+                    hintStyle: CustomText.setCustom(FontWeight.w500, 14.0),
+                    enabledBorder: CustomOutlineInputBorder.custom,
+                    focusedBorder: CustomOutlineInputBorder.custom,
+                    errorBorder: CustomOutlineInputBorder.custom,
+                    focusedErrorBorder: CustomOutlineInputBorder.custom,
+                  ),
+                  style: CustomText.setCustom(FontWeight.w500, 14.0),
+                  keyboardType: TextInputType.emailAddress,
+                )))
+      ],
+    );
+  }
+
+  Widget userRole() {
+    return CustomRadioButton(
+      spacing: 50,
+      buttonLables: const ['Doctor', 'Patient'],
+      buttonValues: const ['Doctor', 'Patient'],
+      radioButtonValue: (value) {
+        role = value as String;
+      },
+      enableButtonWrap: true,
+      elevation: 5,
+      autoWidth: true,
+      enableShape: true,
+      unSelectedBorderColor: const Color.fromARGB(255, 245, 245, 245),
+      selectedBorderColor: const Color(0xFF2190E5),
+      unSelectedColor: const Color.fromARGB(255, 245, 245, 245),
+      selectedColor: const Color(0xFF2190E5),
+      padding: 5,
+    );
   }
 
   Future save() async {
-    final response = await http.post(Uri.parse(url),
+    final response = await http.post(Uri.parse("${url()}register"),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
           'email': user.email,
@@ -46,500 +226,303 @@ class _Registration extends State<Registration> {
           'role': user.role
         }));
     var responseData = json.decode(response.body);
-    if(responseData['message'] != null){
-      alert(responseData['message']);
+
+    if (responseData['message'] != null) {
+      if (!mounted) return;
+      alert(responseData['message'], context);
     }
-    else{
+    else {
       user.setNeededDetails(responseData);
       if (!mounted) return;
       Navigator.push(
           context,
-          MaterialPageRoute(
-              builder: (context) => ProfileCreation(user: user)));
+          PageTransition(
+              type: PageTransitionType.fade,
+              child: ProfileCreation(user: user)
+          )
+      );
     }
-  }
-
-  final scaffoldKey = GlobalKey<ScaffoldState>();
-  bool isCheckedP = false;
-  bool isCheckedD = false;
-
-  Future<String?> alert(String message) {
-    return showDialog<String>(
-        context: context,
-        builder: (BuildContext context) =>
-            AlertDialog(content: Text(message), actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context, 'OK');
-                },
-                child: const Text('OK'),
-              ),
-            ]));
-  }
-
-  // Patient Registration Widgets
-  Widget patientEmail() {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          const SizedBox(height: 10),
-          Container(
-            constraints: const BoxConstraints(minWidth: 100, maxWidth: 500),
-            alignment: Alignment.centerLeft,
-            decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: const [
-                  BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 6,
-                      offset: Offset(0, 2))
-                ]),
-            height: 60,
-            child: TextFormField(
-              controller: TextEditingController(text: user.email),
-              onChanged: (val) {
-                user.email = val;
-              },
-              validator: (val) {
-                if (val == "") {
-                  return 'Email is Empty';
-                }
-                return null;
-              },
-              keyboardType: TextInputType.emailAddress,
-              style: const TextStyle(color: Colors.black87),
-              decoration: const InputDecoration(
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.only(top: 15),
-                  prefixIcon: Icon(Icons.email),
-                  hintText: 'Email',
-                  hintStyle: TextStyle(color: Colors.black38)),
-            ),
-          )
-        ]);
-  }
-
-  Widget patientPassword() {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            constraints: const BoxConstraints(minWidth: 100, maxWidth: 500),
-            alignment: Alignment.centerLeft,
-            decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: const [
-                  BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 6,
-                      offset: Offset(0, 2))
-                ]),
-            height: 60,
-            child: TextFormField(
-              obscureText: true,
-              controller: TextEditingController(text: user.password),
-              onChanged: (val) {
-                user.password = val;
-              },
-              style: const TextStyle(color: Colors.black87),
-              decoration: const InputDecoration(
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.only(top: 15),
-                  prefixIcon: Icon(
-                    Icons.lock,
-                  ),
-                  hintText: 'Password',
-                  hintStyle: TextStyle(color: Colors.black38)),
-            ),
-          )
-        ]);
-  }
-
-  Widget patientPassword2() {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            constraints: const BoxConstraints(minWidth: 100, maxWidth: 500),
-            alignment: Alignment.centerLeft,
-            decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: const [
-                  BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 6,
-                      offset: Offset(0, 2))
-                ]),
-            height: 60,
-            child: TextFormField(
-              obscureText: true,
-              controller: TextEditingController(text: passwordConfirm),
-              onChanged: (val) {
-                passwordConfirm = val;
-              },
-              style: const TextStyle(color: Colors.black87),
-              decoration: const InputDecoration(
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.only(top: 15),
-                  prefixIcon: Icon(
-                    Icons.lock,
-                  ),
-                  hintText: 'Confirm Password',
-                  hintStyle: TextStyle(color: Colors.black38)),
-            ),
-          )
-        ]);
-  }
-
-  Widget patientCreateBtn() {
-    return Container(
-        constraints: const BoxConstraints(minWidth: 70, maxWidth: 500),
-        child: ElevatedButton(
-            onPressed: () => {
-                  if (user.email == "")
-                    {alert('Email is empty')}
-                  else if (user.password == "" || passwordConfirm == "")
-                    {alert('A password input is empty')}
-                  else if (passwordConfirm == user.password &&
-                      user.password != "")
-                    {
-                      if (user.emailValid(user.email) == true)
-                        {
-                          user.role = 'patient',
-                          save(),
-                        }
-                      else
-                        {alert('Email is in invalid format')}
-                    }
-                  else
-                    {alert('Passwords Don\'t Match')}
-                },
-            style: ElevatedButton.styleFrom(
-                minimumSize: const Size(230, 50),
-                padding: const EdgeInsets.all(15),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-                primary: const Color.fromRGBO(57, 210, 192, 1)),
-            child: Text('Create Account',
-                style: GoogleFonts.lexendDeca(
-                  textStyle: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                  ),
-                ))));
-  }
-
-  Widget patientRegistration() {
-    return SingleChildScrollView(
-        physics: const NeverScrollableScrollPhysics(),
-        child: Column(children: [
-          const Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0)),
-          patientEmail(),
-          const Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0)),
-          patientPassword(),
-          const Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0)),
-          patientPassword2(),
-          const Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0)),
-          patientCreateBtn(),
-          const Padding(padding: EdgeInsets.fromLTRB(0, 15, 0, 0)),
-          const Text("Already Have an Account?",
-              style: TextStyle(color: Colors.white)),
-          TextButton(
-            onPressed: () => {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const LogIn()))
-            },
-            child: const Text("Log In",
-                style: TextStyle(
-                  color: Colors.white,
-                  decoration: TextDecoration.underline,
-                )),
-          )
-        ]));
-  }
-
-  // Doctor Registration Widgets
-  Widget doctorEmail() {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          const SizedBox(height: 10),
-          Container(
-            constraints: const BoxConstraints(minWidth: 100, maxWidth: 500),
-            alignment: Alignment.centerLeft,
-            decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: const [
-                  BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 6,
-                      offset: Offset(0, 2))
-                ]),
-            height: 60,
-            child: TextFormField(
-              controller: TextEditingController(text: user.email),
-              onChanged: (val) {
-                user.email = val;
-              },
-              keyboardType: TextInputType.emailAddress,
-              style: const TextStyle(color: Colors.black87),
-              decoration: const InputDecoration(
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.only(top: 15),
-                  prefixIcon: Icon(Icons.email),
-                  hintText: 'Email',
-                  hintStyle: TextStyle(color: Colors.black38)),
-            ),
-          )
-        ]);
-  }
-
-  Widget doctorPassword() {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            constraints: const BoxConstraints(minWidth: 100, maxWidth: 500),
-            alignment: Alignment.centerLeft,
-            decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: const [
-                  BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 6,
-                      offset: Offset(0, 2))
-                ]),
-            height: 60,
-            child: TextFormField(
-              obscureText: true,
-              controller: TextEditingController(text: user.password),
-              onChanged: (val) {
-                user.password = val;
-              },
-              style: const TextStyle(color: Colors.black87),
-              decoration: const InputDecoration(
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.only(top: 15),
-                  prefixIcon: Icon(
-                    Icons.lock,
-                  ),
-                  hintText: 'Password',
-                  hintStyle: TextStyle(color: Colors.black38)),
-            ),
-          )
-        ]);
-  }
-
-  Widget doctorPassword2() {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            constraints: const BoxConstraints(minWidth: 100, maxWidth: 500),
-            alignment: Alignment.centerLeft,
-            decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: const [
-                  BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 6,
-                      offset: Offset(0, 2))
-                ]),
-            height: 60,
-            child: TextFormField(
-              obscureText: true,
-              controller: TextEditingController(text: passwordConfirm),
-              onChanged: (val) {
-                passwordConfirm = val;
-              },
-              style: const TextStyle(color: Colors.black87),
-              decoration: const InputDecoration(
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.only(top: 15),
-                  prefixIcon: Icon(
-                    Icons.lock,
-                  ),
-                  hintText: 'Confirm Password',
-                  hintStyle: TextStyle(color: Colors.black38)),
-            ),
-          )
-        ]);
-  }
-
-  Widget doctorCreateBtn() {
-    return Container(
-        constraints: const BoxConstraints(minWidth: 70, maxWidth: 500),
-        child: ElevatedButton(
-            onPressed: () => {
-                  if (user.email == "")
-                    {alert('Email is empty!')}
-                  else if (user.password == "" || passwordConfirm == "")
-                    {alert('A password input is empty')}
-                  else if (passwordConfirm == user.password &&
-                      user.password != "")
-                    {
-                      if (user.emailValid(user.email) == true)
-                        {user.role = 'doctor', checkVerification()}
-                      else
-                        {alert('Email is in invalid format!')}
-                    }
-                  else
-                    {alert('Passwords Don\'t Match')}
-                },
-            style: ElevatedButton.styleFrom(
-                minimumSize: const Size(230, 50),
-                padding: const EdgeInsets.all(15),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-                primary: const Color.fromRGBO(57, 210, 192, 1)),
-            child: Text('Create Account',
-                style: GoogleFonts.lexendDeca(
-                  textStyle: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                  ),
-                ))));
-  }
-
-  Widget doctorVerification() {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          const SizedBox(height: 10),
-          Container(
-            constraints: const BoxConstraints(minWidth: 100, maxWidth: 500),
-            alignment: Alignment.centerLeft,
-            decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: const [
-                  BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 6,
-                      offset: Offset(0, 2))
-                ]),
-            height: 60,
-            child: TextField(
-              keyboardType: TextInputType.number,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              style: const TextStyle(color: Colors.black87),
-              decoration: const InputDecoration(
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.only(top: 15),
-                  prefixIcon: Icon(Icons.verified),
-                  hintText: 'Verification Code',
-                  hintStyle: TextStyle(color: Colors.black38)),
-              onChanged: (val) {
-                verificationCode = val;
-              },
-            ),
-          )
-        ]);
-  }
-
-  Widget doctorRegistration() {
-    return SingleChildScrollView(
-        physics: const NeverScrollableScrollPhysics(),
-        child: Column(children: [
-          const Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0)),
-          doctorEmail(),
-          const Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0)),
-          doctorVerification(),
-          const Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0)),
-          doctorPassword(),
-          const Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0)),
-          doctorPassword2(),
-          const Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0)),
-          doctorCreateBtn(),
-          const Padding(padding: EdgeInsets.fromLTRB(0, 15, 0, 0)),
-          const Text("Already Have an Account?",
-              style: TextStyle(color: Colors.white)),
-          TextButton(
-            onPressed: () => {},
-            child: const Text("Log In",
-                style: TextStyle(
-                  color: Colors.white,
-                  decoration: TextDecoration.underline,
-                )),
-          )
-        ]));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         key: scaffoldKey,
-        body: Container(
-            height: MediaQuery.of(context).size.height * 1,
-            decoration: BoxDecoration(
-                color: const Color(0xFF14181B),
-                image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: const AssetImage('images/background.jpeg'),
-                    colorFilter: ColorFilter.mode(
-                        Colors.black.withOpacity(0.5), BlendMode.darken))),
-            child: SingleChildScrollView(
-                child: Column(
+        backgroundColor: Colors.white,
+        body: Column(mainAxisSize: MainAxisSize.max, children: [
+          Padding(
+              padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 10),
+              child: Container(
+                width: double.infinity,
+                height: 120,
+                decoration: const BoxDecoration(
+                  color: Color(0xFF2190E5),
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(0),
+                    bottomRight: Radius.circular(1000),
+                    topLeft: Radius.circular(0),
+                    topRight: Radius.circular(0),
+                  ),
+                ),
+                child: Row(mainAxisSize: MainAxisSize.max, children: [
+                  IconButton(
+                      onPressed: () async {
+                        Navigator.pop(context);
+                      },
+                      icon: const Icon(
+                        Icons.arrow_back_ios,
+                        size: 30,
+                        color: Colors.black,
+                      )),
+                ]),
+              )),
+          Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
+            child: Row(
               mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Container(
-                    width: double.infinity,
-                    height: 20,
-                    decoration: const BoxDecoration(color: Colors.transparent)),
-                Image.asset('images/Logo.png', height: 150),
-                Text('Sign Up',
-                    style: GoogleFonts.roboto(
-                      textStyle:
-                          const TextStyle(color: Colors.white, fontSize: 60),
-                    )),
-                Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
-                  child: Container(
-                    //height: MediaQuery.of(context).size.height * 1,
-                    constraints:
-                        const BoxConstraints(maxWidth: 700, maxHeight: 580),
-                    decoration: const BoxDecoration(color: Color(0x00FFFFFF)),
-                    child: DefaultTabController(
-                      length: 2,
-                      initialIndex: 0,
-                      child: Column(
-                        children: [
-                          const TabBar(
-                            isScrollable: true,
-                            labelColor: Colors.white,
-                            labelStyle: TextStyle(fontSize: 14.0),
-                            indicatorColor: Colors.cyan,
-                            tabs: [
-                              Tab(
-                                text: 'Patient',
-                              ),
-                              Tab(
-                                text: 'Doctor',
-                              ),
-                            ],
-                          ),
-                          Expanded(
-                            child: TabBarView(
-                              physics: const NeverScrollableScrollPhysics(),
-                              children: [
-                                patientRegistration(),
-                                doctorRegistration(),
-                              ],
-                            ),
-                          ),
-                        ],
+                Text(
+                  'Register',
+                  style: CustomText.setCustom(FontWeight.w800, 30,const Color(0xFF2190E5)),
+                )
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(20, 5, 0, 5),
+            child: Text(
+              'Create an account below, by entering your information.',
+              style: CustomText.setCustom(FontWeight.w500, 14),
+            ),
+          ),
+          email(),
+          password(),
+          confirmPassword(),
+          Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
+            child: Container(
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                color: Colors.white,
+              ),
+              child: Padding(
+                padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
+                child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'What Are You Registering as:',
+                        style: CustomText.setCustom(FontWeight.w500, 14),
                       ),
+                    ]),
+              ),
+            ),
+          ),
+          pad(20, 0, 0, 15),
+          userRole(),
+          pad(20, 0, 0, 35),
+          buttonRegister(const Color(0xFF2190E5), "Create Account",
+              DoctorDashboard(user: user), context),
+        ]));
+  }
+}
+
+class Verification extends StatefulWidget {
+  final User user;
+
+  const Verification({Key? key, required this.user}) : super(key: key);
+
+  @override
+  State<Verification > createState() => _Verification ();
+}
+
+class _Verification extends State<Verification> {
+  late User user = widget.user;
+  late TextEditingController smsCodeTextFieldController;
+  final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+    super.initState();
+    smsCodeTextFieldController = TextEditingController();
+  }
+
+  Future checkVerification() async {
+    final response = await http.post(Uri.parse("${url()}verification"),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'email': user.email,
+          'code': smsCodeTextFieldController.text,
+        }));
+    String responseMessage = response.body;
+    if (responseMessage == "Codes Matched!") {
+      save();
+    } else {
+      if (!mounted) return;
+      alert(responseMessage, context);
+    }
+  }
+
+  Future save() async {
+    final response = await http.post(Uri.parse("${url}register"),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'email': user.email,
+          'password': user.password,
+          'role': user.role
+        }));
+    var responseData = json.decode(response.body);
+    if (responseData['message'] != null) {
+      if (!mounted) return;
+      alert(responseData['message'], context);
+    } else {
+      user.setNeededDetails(responseData);
+      if (!mounted) return;
+      Navigator.push(
+          context,
+          PageTransition(
+              type: PageTransitionType.fade,
+              child: DoctorDashboard(user: user)));
+    }
+  }
+
+  Widget buttonVerify(
+      Color color, String message, Widget page, BuildContext context) {
+    return Container(
+        width: double.infinity,
+        height: 100,
+        decoration: const BoxDecoration(color: Colors.white),
+        child: Column(mainAxisSize: MainAxisSize.max, children: [
+          Container(
+              constraints: const BoxConstraints(minWidth: 70, maxWidth: 500),
+              child: ElevatedButton(
+                  onPressed: () async {
+                    if (smsCodeTextFieldController.text != "") {
+                      checkVerification();
+                    } else {
+                      alert("Code Not Entered!", context);
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(230, 50),
+                      padding: const EdgeInsets.all(15),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      primary: color),
+                  child: Text(message,
+                      style: CustomText.setCustom(FontWeight.w900, 16, Colors.white),
+                      )
+              )
+          )
+        ]));
+  }
+
+  Widget code() {
+    return Padding(
+        padding: const EdgeInsetsDirectional.fromSTEB(0, 8, 0, 0),
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Expanded(
+                child: Padding(
+                    padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
+                    child: TextFormField(
+                      controller: smsCodeTextFieldController,
+                      obscureText: false,
+                      decoration: InputDecoration(
+                        labelText: 'Enter Code ',
+                        labelStyle: CustomText.setCustom(FontWeight.w500, 14),
+                        hintText: '0000000',
+                        hintStyle: CustomText.setCustom(FontWeight.w500, 14),
+                        enabledBorder: CustomOutlineInputBorder.custom,
+                        focusedBorder: CustomOutlineInputBorder.custom,
+                        errorBorder: CustomOutlineInputBorder.custom,
+                        focusedErrorBorder: CustomOutlineInputBorder.custom,
+                      ),
+                      style: CustomText.setCustom(FontWeight.w500, 14),
+                      keyboardType: TextInputType.number,
+                    )))
+          ],
+        ));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        key: scaffoldKey,
+        backgroundColor: Colors.white,
+        body: Column(mainAxisSize: MainAxisSize.max, children: [
+          Padding(
+              padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 10),
+              child: Container(
+                width: double.infinity,
+                height: 120,
+                decoration: const BoxDecoration(
+                  color: Color(0xFF2190E5),
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(0),
+                    bottomRight: Radius.circular(1000),
+                    topLeft: Radius.circular(0),
+                    topRight: Radius.circular(0),
+                  ),
+                ),
+                child: Row(mainAxisSize: MainAxisSize.max, children: [
+                  IconButton(
+                      onPressed: () async {
+                        Navigator.pop(context);
+                      },
+                      icon: const Icon(
+                        Icons.arrow_back_ios,
+                        size: 30,
+                        color: Colors.black,
+                      )),
+                ]),
+              )),
+          Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: const [
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
+                  child: Text(
+                    'Doctor Verification',
+                    style: TextStyle(
+                      fontFamily: 'Overpass',
+                      fontWeight: FontWeight.w800,
+                      fontSize: 30,
+                      color: Color(0xFF2190E5),
                     ),
                   ),
                 ),
               ],
-            ))));
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: const [
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(0, 4, 70, 0),
+                    child: Text(
+                        'Please enter the code that you received via email',
+                        style: TextStyle(
+                          fontFamily: 'Overpass',
+                          fontWeight: FontWeight.w500,
+                          fontSize: 14,
+                        )),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          code(),
+          pad(20, 0, 0, 35),
+          buttonVerify(const Color(0xFF2190E5), "Create Account",
+              ProfileCreation(user: user), context),
+        ]));
   }
 }

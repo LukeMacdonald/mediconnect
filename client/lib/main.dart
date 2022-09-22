@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'log_in.dart';
+import 'landing.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -14,7 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       title: 'ND Telemedicine',
-      home: LogIn(),
+      home: Landing(),
     );
   }
 }

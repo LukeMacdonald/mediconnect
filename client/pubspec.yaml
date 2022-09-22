@@ -39,6 +39,8 @@ dependencies:
   http: ^0.13.5
   custom_radio_grouped_button: any
   intl: ^0.17.0
+  flutter_spinkit: ^5.1.0
+  page_transition: "^2.0.9"
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -67,6 +69,8 @@ flutter:
     - images/background.jpeg
     - images/Logo.png
     - images/user_icon.png
+    - images/doctor.jpeg
+    - images/user.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:flutter/foundation.dart';
 import 'dashboard.dart';
-import 'utilities/appointment.dart';
+import 'utilities/custom_functions.dart';
 
 import 'package:flutter/material.dart';
 
@@ -23,10 +23,7 @@ class _BookingByTime extends State<BookingByTime> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   late User user = widget.user;
 
-  String url = "http://localhost:8080/";
   String? daySelected;
-  //Not sure if url needed
-
   TextEditingController dateInput = TextEditingController();
 
   @override
@@ -43,7 +40,7 @@ class _BookingByTime extends State<BookingByTime> {
   int? doctorId;
 
   Future getAvailability() async {
-    final response = await http.get(Uri.parse("${url}GetAllDoctorsAvailabilities"),
+    final response = await http.get(Uri.parse("${url}get/all/availabilities"),
         headers: {
           'Content-Type': 'application/json',
           HttpHeaders.authorizationHeader:user.token
@@ -58,7 +55,7 @@ class _BookingByTime extends State<BookingByTime> {
 
       String time = createTime(availability["_start_time"],availability["_end_time"]);
 
-      final responseName = await http.get(Uri.parse("${url}GetUserFullName/$doctorId"),
+      final responseName = await http.get(Uri.parse("${url}user/get/name/$doctorId"),
           headers: {
             'Content-Type': 'application/json',
             HttpHeaders.authorizationHeader:user.token
@@ -82,7 +79,7 @@ class _BookingByTime extends State<BookingByTime> {
   }
 
   Future save(int doctorId, String date, String startTime) async {
-    await http.post(Uri.parse("${url}SetAppointment"),
+    await http.post(Uri.parse("${url}set/appointment"),
         headers: {
           'Content-Type': 'application/json',
           HttpHeaders.authorizationHeader:user.token
@@ -101,7 +98,7 @@ class _BookingByTime extends State<BookingByTime> {
   }
 
   Future checkAppointment(int id, String date, String startTime) async {
-    final response = await http.get(Uri.parse("${url}SearchAppointment/$id/$date/$startTime"),
+    final response = await http.get(Uri.parse("${url}search/appointment/$id/$date/$startTime"),
         headers: {
           'Content-Type': 'application/json',
            HttpHeaders.authorizationHeader:user.token

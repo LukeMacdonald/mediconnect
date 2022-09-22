@@ -6,7 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'dashboard.dart';
-import 'utilities/appointment.dart';
+import 'utilities/custom_functions.dart';
 import 'utilities/user.dart';
 
 class SetAvailability extends StatefulWidget {
@@ -19,11 +19,10 @@ class SetAvailability extends StatefulWidget {
 class _SetAvailability extends State<SetAvailability> {
   late User user = widget.user;
 
-  String url = "http://localhost:8080/";
 
   Future save() async {
     int day = getDayIntFromDayString(dayValue);
-    await http.post(Uri.parse("${url}doctor/SetDoctorAvailability"),
+    await http.post(Uri.parse("${url}doctor/set/availability"),
         headers: {
           'Content-Type': 'application/json',
           HttpHeaders.authorizationHeader:user.token
@@ -43,7 +42,7 @@ class _SetAvailability extends State<SetAvailability> {
     getAvailability();
   }
   Future getAvailability() async {
-    var response = await http.get(Uri.parse("${url}GetAllDoctorAvailability/${user.id}"),
+    var response = await http.get(Uri.parse("${url}get/availabilities/${user.id}"),
           headers: {
             'Content-Type': 'application/json',
             HttpHeaders.authorizationHeader:user.token

@@ -40,3 +40,6 @@ int getDayIntFromDayString(String day){
 String createTime(String start, String end){
   return "${start.substring(0, start.length - 3)} - ${end.substring(0, end.length - 3)}";
 }
+String url(){
+  return "http://localhost:8080/";
+}

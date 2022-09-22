@@ -1,5 +1,6 @@
 import 'package:client/styles/background_style.dart';
-import 'package:client/utilities/dashboard_utils.dart';
+import 'package:client/utilities/custom_functions.dart';
+import 'package:client/utilities/custom_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
@@ -31,7 +32,7 @@ class _AddDoctor extends State<AddDoctor> {
     }
 
     final response = await http.post(
-        Uri.parse("http://localhost:8080/EmailVerificationInTable"),
+        Uri.parse("${url()}EmailVerificationInTable"),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({'email': email, 'code': generatedCode}));
     if (response.body == "Valid email to store") {
@@ -42,27 +43,14 @@ class _AddDoctor extends State<AddDoctor> {
           MaterialPageRoute(
               builder: (context) => SuperAdminDashboard(user: user)));
     } else {
-      alert("Email exists!");
+      if (!mounted) return;
+      alert("Email exists!", context);
     }
-  }
-
-  Future<String?> alert(String message) {
-    return showDialog<String>(
-        context: context,
-        builder: (BuildContext context) =>
-            AlertDialog(content: Text(message), actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context, 'OK');
-                },
-                child: const Text('OK'),
-              ),
-            ]));
   }
 
   Future sendEmail(String email, String code) async {
     final response =
-        await http.post(Uri.parse("http://localhost:8080/sendMail"),
+        await http.post(Uri.parse("${url()}sendMail"),
             headers: {'Content-Type': 'application/json'},
             body: json.encode({
               'recipient': email,
@@ -120,7 +108,7 @@ class _AddDoctor extends State<AddDoctor> {
         constraints: const BoxConstraints(minWidth: 70, maxWidth: 500),
         child: ElevatedButton(
             onPressed: () => {
-                  if (email == "") {alert("Email wasn't Entered")} else {save()}
+                  if (email == "") {alert("Email wasn't Entered",context)} else {save()}
                 },
             style: ElevatedButton.styleFrom(
                 minimumSize: const Size(230, 50),

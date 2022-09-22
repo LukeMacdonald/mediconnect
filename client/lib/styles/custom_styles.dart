@@ -6,3 +6,12 @@ class CustomTextStyle {
       fontWeight: FontWeight.normal,
       fontSize: 16);
 }
+class CustomOutlineInputBorder{
+  static const OutlineInputBorder custom =
+  OutlineInputBorder(
+      borderSide: BorderSide(
+        color: Color(0xFFDBE2E7),
+        width: 2,
+      ));
+}
+

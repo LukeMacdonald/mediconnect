@@ -1,8 +1,11 @@
 import 'package:client/dashboard.dart';
+import 'package:client/styles/background_style.dart';
+import 'package:client/utilities/custom_widgets.dart';
 import 'package:client/utilities/user.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
+import 'package:page_transition/page_transition.dart';
 import "dashboard.dart";
 import 'package:client/styles/custom_styles.dart';
 
@@ -48,38 +51,63 @@ class _MedicalHistory extends State<MedicalHistory> {
 
   List<Object?> selectedMeds = [];
 
-  String url = "URL to save medical profile";
-  String url2 = "URL to medications";
-  String url3 = "URL to illnesses";
-  String ur4 = "URL to disabilities";
-  String url5 = "URL to get user id";
-
   Future save() async {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => PatientDashboard(user:user)));
-
-    // await http.post(Uri.parse(url),
-    //     headers: {'Content-Type': 'application/json'},
-    //     body: json.encode({
-    //       'id': user.id,
-    //       'smokes': userHistory.smoke,
-    //       'drinks': userHistory.drink,
-    //       'medication': userHistory.medications,
-    //     }));
-    // ADD MORE LATER
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => PatientDashboard(user: user)));
   }
 
-  Widget checks() {
+  Widget smokes() {
     return Wrap(children: [
-      const Padding(
-        padding: EdgeInsetsDirectional.fromSTEB(20, 0, 0, 15),
-        child: Text(
-          'Are you currently taking any medication?',
-          style: CustomTextStyle.nameOfTextStyle,
-        ),
-      ),
       CustomRadioButton(
-        spacing: 50,
+        buttonLables: const ['Yes', 'No'],
+        buttonValues: const ['Yes', 'No'],
+        radioButtonValue: (value) => {
+          if (value == 'Yes')
+            {userHistory.smoke = true}
+          else
+            {userHistory.smoke = false},
+        },
+        enableButtonWrap: true,
+        elevation: 5,
+        autoWidth: true,
+        enableShape: true,
+        unSelectedBorderColor: const Color.fromARGB(255, 245, 245, 245),
+        selectedBorderColor: const Color(0xFF2190E5),
+        unSelectedColor: const Color.fromARGB(255, 245, 245, 245),
+        selectedColor: const Color(0xFF2190E5),
+        padding: 5,
+      )
+    ]);
+  }
+
+  Widget drinks() {
+    return Wrap(children: [
+      CustomRadioButton(
+        buttonLables: const ['Yes', 'No'],
+        buttonValues: const ['Yes', 'No'],
+        radioButtonValue: (value) => {
+          if (value == 'Yes')
+            {userHistory.drink = true}
+          else
+            {userHistory.drink = false},
+        },
+        enableButtonWrap: true,
+        elevation: 5,
+
+        autoWidth: true,
+        enableShape: true,
+        unSelectedBorderColor: const Color.fromARGB(255, 245, 245, 245),
+        selectedBorderColor: const Color(0xFF2190E5),
+        unSelectedColor: const Color.fromARGB(255, 245, 245, 245),
+        selectedColor: const Color(0xFF2190E5),
+        padding: 5,
+      )
+    ]);
+  }
+
+  Widget meds() {
+    return Wrap(children: [
+      CustomRadioButton(
         buttonLables: const ['Yes', 'No'],
         buttonValues: const ['Yes', 'No'],
         radioButtonValue: (value) {
@@ -89,6 +117,8 @@ class _MedicalHistory extends State<MedicalHistory> {
               _disabled = false;
             });
           } else {
+            userHistory.medications.clear();
+            medications.clear();
             userHistory.medication = false;
             setState(() {
               _disabled = true;
@@ -100,190 +130,76 @@ class _MedicalHistory extends State<MedicalHistory> {
         autoWidth: true,
         enableShape: true,
         unSelectedBorderColor: const Color.fromARGB(255, 245, 245, 245),
-        selectedBorderColor: const Color.fromRGBO(57, 210, 192, 1),
+        selectedBorderColor: const Color(0xFF2190E5),
         unSelectedColor: const Color.fromARGB(255, 245, 245, 245),
-        selectedColor: const Color.fromRGBO(57, 210, 192, 1),
+        selectedColor: const Color(0xFF2190E5),
         padding: 5,
       ),
-      Wrap(
-        spacing: 30,
-        children: [
-          CustomCheckBoxGroup(
-            buttonLables: medications,
-            buttonValuesList: medications,
-            checkBoxButtonValues: (values) {
-              userHistory.medications = values;
-            },
-            enableButtonWrap: true,
-            elevation: 5,
-            width: 150,
-            enableShape: true,
-            unSelectedBorderColor: const Color.fromARGB(255, 245, 245, 245),
-            selectedBorderColor: const Color.fromRGBO(57, 210, 192, 1),
-            unSelectedColor: const Color.fromARGB(255, 245, 245, 245),
-            selectedColor: const Color.fromRGBO(57, 210, 192, 1),
-            padding: 5,
-          ),
-          Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(60, 10, 10, 0),
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              height: 50,
-              constraints: const BoxConstraints(
-                maxWidth: 400,
-              ),
-              decoration: BoxDecoration(
-                color: const Color(0xFFECECEC),
-                boxShadow: const [
-                  BoxShadow(
-                    blurRadius: 4,
-                    color: Color(0x33000000),
-                    offset: Offset(0, 2),
-                  )
-                ],
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(5, 0, 0, 0),
-                child: TextFormField(
-                  enabled: !_disabled!,
-                  controller: med,
-                  decoration: const InputDecoration(
-                    hintText: 'What Medications Do You Take?',
-                    hintStyle: CustomTextStyle.nameOfTextStyle,
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(0x00000000),
-                        width: 1,
-                      ),
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(4.0),
-                        topRight: Radius.circular(4.0),
-                      ),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(0x00000000),
-                      ),
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(4.0),
-                        topRight: Radius.circular(4.0),
-                      ),
-                    ),
-                  ),
-                  style: CustomTextStyle.nameOfTextStyle,
+      Wrap(spacing: 30, children: [
+        pad(0, 20, 0, 0),
+        Row(mainAxisSize: MainAxisSize.max, children: [
+          SizedBox(
+            width: 300,
+            child: Padding(
+              padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 10, 0),
+              child: TextFormField(
+                enabled: !_disabled!,
+                controller: med,
+                decoration: InputDecoration(
+                  labelText: 'Enter Medication',
+                  labelStyle: CustomText.setCustom(FontWeight.w500, 14.0),
+                  hintText: 'Enter Name of Medication...',
+                  hintStyle:
+                      CustomText.setCustom(FontWeight.w500, 14.0, Colors.grey),
+                  enabledBorder: CustomOutlineInputBorder.custom,
+                  focusedBorder: CustomOutlineInputBorder.custom,
+                  errorBorder: CustomOutlineInputBorder.custom,
+                  focusedErrorBorder: CustomOutlineInputBorder.custom,
                 ),
+                style: CustomText.setCustom(FontWeight.w500, 14),
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
-            child: FloatingActionButton(
-              onPressed: () {
-                if (med.text != "What Medications Do You Take?" &&
-                    med.text != "" &&
-                    !userHistory.medications.contains(ill.text)) {
-                  setState(() {
-                    medications.add(med.text);
-                    med.clear();
-                  });
-                }
-              },
-              backgroundColor: const Color.fromRGBO(57, 210, 192, 1),
-              elevation: 8,
-              child: const Icon(
-                Icons.add_rounded,
-                color: Colors.white,
-                size: 28,
-              ),
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(20, 15, 0, 15),
-            child: Text(
-              'Do you smoke?',
-              style: CustomTextStyle.nameOfTextStyle,
-            ),
-          ),
-          CustomRadioButton(
-            buttonLables: const ['Yes', 'No'],
-            buttonValues: const ['Yes', 'No'],
-            radioButtonValue: (value) => {
-              if (value == 'Yes')
-                {userHistory.smoke = true}
-              else
-                {userHistory.smoke = false},
+          FloatingActionButton(
+            onPressed: () {
+              if (med.text != "What Medications Do You Take?" &&
+                  med.text != "" &&
+                  !userHistory.medications.contains(ill.text)) {
+                setState(() {
+                  medications.add(med.text);
+                  med.clear();
+                });
+              }
             },
-            enableButtonWrap: true,
-            elevation: 5,
-            autoWidth: true,
-            enableShape: true,
-            spacing: 50,
-            unSelectedBorderColor: const Color.fromARGB(255, 245, 245, 245),
-            selectedBorderColor: const Color.fromRGBO(57, 210, 192, 1),
-            unSelectedColor: const Color.fromARGB(255, 245, 245, 245),
-            selectedColor: const Color.fromRGBO(57, 210, 192, 1),
-            padding: 5,
-          ),
-          const Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(20, 15, 0, 15),
-            child: Text(
-              'Do you drink alcohol?',
-              style: CustomTextStyle.nameOfTextStyle,
+            backgroundColor: const Color(0xFF2190E5),
+            elevation: 8,
+            child: const Icon(
+              Icons.add_rounded,
+              color: Colors.white,
+              size: 28,
             ),
           ),
-          CustomRadioButton(
-            buttonLables: const ['Yes', 'No'],
-            buttonValues: const ['Yes', 'No'],
-            radioButtonValue: (value) => {
-              if (value == 'Yes')
-                {userHistory.drink = true}
-              else
-                {userHistory.drink = false},
-            },
-            enableButtonWrap: true,
-            elevation: 5,
-            spacing: 50,
-            autoWidth: true,
-            enableShape: true,
-            unSelectedBorderColor: const Color.fromARGB(255, 245, 245, 245),
-            selectedBorderColor: const Color.fromRGBO(57, 210, 192, 1),
-            unSelectedColor: const Color.fromARGB(255, 245, 245, 245),
-            selectedColor: const Color.fromRGBO(57, 210, 192, 1),
-            padding: 5,
-          ),
-          const Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(15, 20, 0, 0),
-            child: Text(
-              'Do you have any illnesses?',
-              style: CustomTextStyle.nameOfTextStyle,
-            ),
-          ),
-        ],
-      )
-    ]);
-  }
 
-  Widget submit() {
-    return Container(
-        constraints: const BoxConstraints(minWidth: 70, maxWidth: 500),
-        child: ElevatedButton(
-            onPressed: () => {
-              save(),
-            },
-            style: ElevatedButton.styleFrom(
-                minimumSize: const Size(230, 50),
-                padding: const EdgeInsets.all(15),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-                primary: const Color.fromRGBO(57, 210, 192, 1)),
-            child: Text('Submit',
-                style: GoogleFonts.lexendDeca(
-                  textStyle: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                  ),
-                ))));
+        ]),
+        const Padding(padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 20)),
+        CustomCheckBoxGroup(
+          buttonLables: medications,
+          buttonValuesList: medications,
+          checkBoxButtonValues: (values) {
+            userHistory.medications = values;
+          },
+          enableButtonWrap: true,
+          elevation: 5,
+          width: 150,
+          enableShape: true,
+          unSelectedBorderColor: const Color.fromARGB(255, 245, 245, 245),
+          selectedBorderColor: const Color(0xFF2190E5),
+          unSelectedColor: const Color.fromARGB(255, 245, 245, 245),
+          selectedColor: const Color(0xFF2190E5),
+          padding: 5,
+        ),
+      ])
+    ]);
   }
 
   Widget illnesses() {
@@ -299,70 +215,38 @@ class _MedicalHistory extends State<MedicalHistory> {
             },
             enableButtonWrap: true,
             elevation: 5,
-            width: 150,
+            autoWidth: true,
             enableShape: true,
             unSelectedBorderColor: const Color.fromARGB(255, 245, 245, 245),
-            selectedBorderColor: const Color.fromRGBO(57, 210, 192, 1),
+            selectedBorderColor: const Color(0xFF2190E5),
             unSelectedColor: const Color.fromARGB(255, 245, 245, 245),
-            selectedColor: const Color.fromRGBO(57, 210, 192, 1),
+            selectedColor: const Color(0xFF2190E5),
             padding: 5,
           ),
-          Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(60, 10, 10, 0),
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              height: 50,
-              constraints: const BoxConstraints(
-                maxWidth: 400,
-              ),
-              decoration: BoxDecoration(
-                color: const Color(0xFFECECEC),
-                boxShadow: const [
-                  BoxShadow(
-                    blurRadius: 4,
-                    color: Color(0x33000000),
-                    offset: Offset(0, 2),
-                  )
-                ],
-                borderRadius: BorderRadius.circular(10),
-              ),
+          pad(0, 20, 0, 0),
+          Row(mainAxisSize: MainAxisSize.max, children: [
+            SizedBox(
+              width: 300,
               child: Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(15, 0, 0, 0),
+                padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 10, 0),
                 child: TextFormField(
-                    autofocus: true,
-                    obscureText: false,
-                    controller: ill,
-                    decoration: const InputDecoration(
-                      hintText: 'Any Other not on list?',
-                      hintStyle: CustomTextStyle.nameOfTextStyle,
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Color(0x00000000),
-                          width: 1,
-                        ),
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(4.0),
-                          topRight: Radius.circular(4.0),
-                        ),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Color(0x00000000),
-                          width: 1,
-                        ),
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(4.0),
-                          topRight: Radius.circular(4.0),
-                        ),
-                      ),
-                    ),
-                    style: CustomTextStyle.nameOfTextStyle),
+                  controller: ill,
+                  decoration: InputDecoration(
+                    labelText: 'Any Other not on list?',
+                    labelStyle: CustomText.setCustom(FontWeight.w500, 14.0),
+                    hintText: 'Enter Name of Medication...',
+                    hintStyle: CustomText.setCustom(
+                        FontWeight.w500, 14.0, Colors.grey),
+                    enabledBorder: CustomOutlineInputBorder.custom,
+                    focusedBorder: CustomOutlineInputBorder.custom,
+                    errorBorder: CustomOutlineInputBorder.custom,
+                    focusedErrorBorder: CustomOutlineInputBorder.custom,
+                  ),
+                  style: CustomText.setCustom(FontWeight.w500, 14),
+                ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
-            child: FloatingActionButton(
+            FloatingActionButton(
               onPressed: () {
                 if (ill.text != "Any Other not on list?" &&
                     !presetIllnesses.contains(ill.text)) {
@@ -372,7 +256,7 @@ class _MedicalHistory extends State<MedicalHistory> {
                   });
                 }
               },
-              backgroundColor: const Color.fromRGBO(57, 210, 192, 1),
+              backgroundColor: const Color(0xFF2190E5),
               elevation: 8,
               child: const Icon(
                 Icons.add_rounded,
@@ -380,14 +264,7 @@ class _MedicalHistory extends State<MedicalHistory> {
                 size: 28,
               ),
             ),
-          ),
-          const Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(20, 20, 0, 20),
-            child: Text(
-              'Do you have any Disabilities?',
-              style: CustomTextStyle.nameOfTextStyle,
-            ),
-          ),
+          ]),
         ]);
   }
 
@@ -401,70 +278,38 @@ class _MedicalHistory extends State<MedicalHistory> {
         },
         enableButtonWrap: true,
         elevation: 5,
-        width: 150,
+        autoWidth: true,
         enableShape: true,
         unSelectedBorderColor: const Color.fromARGB(255, 245, 245, 245),
-        selectedBorderColor: const Color.fromRGBO(57, 210, 192, 1),
+        selectedBorderColor: const Color(0xFF2190E5),
         unSelectedColor: const Color.fromARGB(255, 245, 245, 245),
-        selectedColor: const Color.fromRGBO(57, 210, 192, 1),
+        selectedColor: const Color(0xFF2190E5),
         padding: 5,
       ),
-      Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 10, 20),
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: 50,
-          constraints: const BoxConstraints(
-            maxWidth: 400,
-          ),
-          decoration: BoxDecoration(
-            color: const Color(0xFFECECEC),
-            boxShadow: const [
-              BoxShadow(
-                blurRadius: 4,
-                color: Color(0x33000000),
-                offset: Offset(0, 2),
-              )
-            ],
-            borderRadius: BorderRadius.circular(10),
-          ),
+      pad(0, 20, 0, 0),
+      Row(mainAxisSize: MainAxisSize.max, children: [
+        SizedBox(
+          width: 300,
           child: Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(15, 0, 0, 0),
+            padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 10, 0),
             child: TextFormField(
-              autofocus: true,
               controller: dis,
-              decoration: const InputDecoration(
-                hintText: 'Any Other not on list?',
-                hintStyle: CustomTextStyle.nameOfTextStyle,
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Color(0x00000000),
-                    width: 1,
-                  ),
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(4.0),
-                    topRight: Radius.circular(4.0),
-                  ),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Color(0x00000000),
-                    width: 1,
-                  ),
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(4.0),
-                    topRight: Radius.circular(4.0),
-                  ),
-                ),
+              decoration: InputDecoration(
+                labelText: 'Any Other not on list?',
+                labelStyle: CustomText.setCustom(FontWeight.w500, 14.0),
+                hintText: 'Enter Name of Disability...',
+                hintStyle:
+                    CustomText.setCustom(FontWeight.w500, 14.0, Colors.grey),
+                enabledBorder: CustomOutlineInputBorder.custom,
+                focusedBorder: CustomOutlineInputBorder.custom,
+                errorBorder: CustomOutlineInputBorder.custom,
+                focusedErrorBorder: CustomOutlineInputBorder.custom,
               ),
-              style: CustomTextStyle.nameOfTextStyle,
+              style: CustomText.setCustom(FontWeight.w500, 14),
             ),
           ),
         ),
-      ),
-      Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
-        child: FloatingActionButton(
+        FloatingActionButton(
           onPressed: () {
             if (dis.text != "Any Other not on list?" &&
                 !presetDisabilities.contains(dis.text)) {
@@ -474,7 +319,7 @@ class _MedicalHistory extends State<MedicalHistory> {
               });
             }
           },
-          backgroundColor: const Color.fromRGBO(57, 210, 192, 1),
+          backgroundColor: const Color(0xFF2190E5),
           elevation: 8,
           child: const Icon(
             Icons.add_rounded,
@@ -482,145 +327,172 @@ class _MedicalHistory extends State<MedicalHistory> {
             size: 28,
           ),
         ),
-      ),
+      ]),
     ]);
+  }
+
+  Widget button(Color color, String message) {
+    return Container(
+        width: double.infinity,
+        height: 100,
+        decoration: const BoxDecoration(color: Colors.white),
+        child: Column(mainAxisSize: MainAxisSize.max, children: [
+          Container(
+              constraints: const BoxConstraints(minWidth: 70, maxWidth: 500),
+              child: ElevatedButton(
+                  onPressed: () async {
+                    Navigator.push(
+                        context,
+                        PageTransition(
+                            type: PageTransitionType.fade,
+                            child: PatientDashboard(user: user)));
+                  },
+                  style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(230, 50),
+                      padding: const EdgeInsets.all(15),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      primary: color),
+                  child: Text(
+                    message,
+                    style:
+                        CustomText.setCustom(FontWeight.w900, 16, Colors.white),
+                  )))
+        ]));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         key: scaffoldKey,
-        backgroundColor: Colors.blue,
-        body: GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height * 1.1,
-            constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height * 1.2,
-                minHeight: MediaQuery.of(context).size.height * 1),
+        body: Container(
+            width: double.infinity,
+            height: MediaQuery.of(context).size.height * 1,
             decoration: const BoxDecoration(
-              color: Color(0xFF14181B),
-              image: DecorationImage(
-                fit: BoxFit.cover,
-                image: AssetImage('images/background.jpeg'),
-              ),
+              color: Colors.white,
             ),
-            child: Container(
-              width: 100,
-              height: 100,
-              decoration: const BoxDecoration(
-                color: Color(0x990F1113),
-              ),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Padding(
-                      padding:
-                      const EdgeInsetsDirectional.fromSTEB(0, 50, 0, 0),
-                      child: Container(
-                        width: 700,
-                        decoration: BoxDecoration(
-                          color: const Color(0x66FFFFFF),
-                          boxShadow: const [
-                            BoxShadow(
-                              blurRadius: 4,
-                              color: Color(0x33000000),
-                              offset: Offset(0, 2),
-                            )
-                          ],
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: SingleChildScrollView(
-                          child: Column(
-                            children: [
-                              const Text(
-                                'Medical History',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    color: Colors.white,
-                                    fontSize: 50,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              Padding(
-                                padding: const EdgeInsetsDirectional.fromSTEB(
-                                    30, 0, 30, 0),
-                                child: Container(
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                    CrossAxisAlignment.start,
-                                    children: [
-                                      Wrap(
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsetsDirectional
-                                                .fromSTEB(0, 10, 0, 10),
-                                            child: Container(
-                                              width: double.infinity,
-                                              decoration: const BoxDecoration(
-                                                color: Colors.white,
-                                                borderRadius: BorderRadius.only(
-                                                  bottomLeft:
-                                                  Radius.circular(0),
-                                                  bottomRight:
-                                                  Radius.circular(0),
-                                                  topLeft: Radius.circular(10),
-                                                  topRight: Radius.circular(10),
-                                                ),
-                                              ),
-                                              child: checks(),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsetsDirectional
-                                            .fromSTEB(5, 0, 5, 0),
-                                        child: illnesses(),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsetsDirectional
-                                            .fromSTEB(5, 0, 5, 0),
-                                        child: disabilities(),
-                                      ),
-                                    ],
-                                  ),
+            child: Padding(
+                padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 10),
+                child: ListView(
+                    padding: EdgeInsets.zero,
+                    scrollDirection: Axis.vertical,
+                    children: [
+                      Column(mainAxisSize: MainAxisSize.max, children: [
+                        Padding(
+                            padding: const EdgeInsetsDirectional.fromSTEB(
+                                0, 0, 0, 10),
+                            child: Container(
+                              width: double.infinity,
+                              height: 120,
+                              decoration: const BoxDecoration(
+                                color: Color(0xFF2190E5),
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(0),
+                                  bottomRight: Radius.circular(1000),
+                                  topLeft: Radius.circular(0),
+                                  topRight: Radius.circular(0),
                                 ),
                               ),
+                              child: Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    IconButton(
+                                        onPressed: () async {
+                                          Navigator.pop(context);
+                                        },
+                                        icon: const Icon(
+                                          Icons.arrow_back_ios,
+                                          size: 30,
+                                          color: Colors.black,
+                                        )),
+                                  ]),
+                            )),
+                        Padding(
+                          padding:
+                              const EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
                               Padding(
                                 padding: const EdgeInsetsDirectional.fromSTEB(
-                                    5, 70, 5, 30),
-                                child: Container(
-                                    width: double.infinity,
-                                    height: 60,
-                                    constraints: const BoxConstraints(
-                                      maxWidth: 250,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: const Color.fromARGB(
-                                          255, 223, 223, 223),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: submit()),
+                                    0, 20, 0, 0),
+                                child: Text('Medical History',
+                                    style: CustomText.setCustom(FontWeight.w800,
+                                        40, const Color(0xFF2190E5))),
                               ),
                             ],
                           ),
                         ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ));
+                        Padding(
+                          padding:
+                              const EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Expanded(
+                                child: Padding(
+                                    padding:
+                                        const EdgeInsetsDirectional.fromSTEB(
+                                            0, 4, 70, 0),
+                                    child: Text(
+                                      'Please enter your Medical History details below:',
+                                      style: CustomText.setCustom(
+                                          FontWeight.w900, 17.0),
+                                    )),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsetsDirectional.fromSTEB(
+                              0, 20, 0, 10),
+                          child: Text(
+                            'Do you smoke?',
+                            style: CustomText.setCustom(FontWeight.w600, 16.0),
+                          ),
+                        ),
+                        smokes(),
+                        Padding(
+                          padding: const EdgeInsetsDirectional.fromSTEB(
+                              0, 20, 0, 10),
+                          child: Text(
+                            'Do you drink?',
+                            style: CustomText.setCustom(FontWeight.w600, 16.0),
+                          ),
+                        ),
+                        drinks(),
+                        Padding(
+                          padding: const EdgeInsetsDirectional.fromSTEB(
+                              0, 20, 0, 10),
+                          child: Text(
+                            'Do you take any medication?',
+                            style: CustomText.setCustom(FontWeight.w600, 16.0),
+                          ),
+                        ),
+                        meds(),
+                        Padding(
+                          padding: const EdgeInsetsDirectional.fromSTEB(
+                              0, 20, 0, 10),
+                          child: Text(
+                            'Do you have any Illnesses?',
+                            style: CustomText.setCustom(FontWeight.w600, 16.0),
+                          ),
+                        ),
+                        illnesses(),
+                        Padding(
+                          padding: const EdgeInsetsDirectional.fromSTEB(
+                              0, 20, 0, 10),
+                          child: Text(
+                            'Do you have any Disabilities?',
+                            style: CustomText.setCustom(FontWeight.w600, 16.0),
+                          ),
+                        ),
+                        disabilities(),
+                        const Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 10),
+                        ),
+                        button(const Color(0xFF2190E5), "Submit"),
+                      ])
+                    ]))));
   }
 }
-
-
