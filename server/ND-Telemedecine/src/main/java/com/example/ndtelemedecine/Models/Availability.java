@@ -20,30 +20,35 @@ public class Availability implements Serializable {
     @Id
     private int dayOfWeek;
 
-    public void setdoctor_id(int doctor_id) {
-        this.doctorId= doctor_id;
-    }
-    public void setstart_time(String start_time){
-        this.startTime = start_time;
-    }
-    public void setend_time(String end_time){
-        this.endTime = end_time;
-    }
-    public void setday_of_week(int day_of_week){
-        this.dayOfWeek = day_of_week;
+    public int getDoctorId() {
+        return doctorId;
     }
 
-    public int get_doctor_id() {
-        return this.doctorId;
+    public void setDoctorId(int doctorId) {
+        this.doctorId = doctorId;
     }
-    public String get_start_time(){
-        return this.startTime;
+
+    public String getStartTime() {
+        return startTime;
     }
-    public String get_end_time(){
-        return this.endTime;
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
     }
-    public int getday_of_week(){
-        return this.dayOfWeek;
+
+    public String getEndTime() {
+        return endTime;
     }
-    
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    public int getDayOfWeek() {
+        return dayOfWeek;
+    }
+
+    public void setDayOfWeek(int dayOfWeek) {
+        this.dayOfWeek = dayOfWeek;
+    }
 }

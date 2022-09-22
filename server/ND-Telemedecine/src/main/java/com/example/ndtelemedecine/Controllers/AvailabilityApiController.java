@@ -1,9 +1,8 @@
 package com.example.ndtelemedecine.Controllers;
 
 import com.example.ndtelemedecine.Models.Availability;
-import com.example.ndtelemedecine.Models.Role;
-import com.example.ndtelemedecine.Repositories.AvailabilityRepo;
 import com.example.ndtelemedecine.Models.User;
+import com.example.ndtelemedecine.Repositories.AvailabilityRepo;
 import com.example.ndtelemedecine.Repositories.UserRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -17,14 +16,15 @@ public class AvailabilityApiController {
     private final UserRepo userRepo;
 
     // Sets Availability For Doctor
-    @PostMapping(value = "doctor/SetDoctorAvailability")
+    @PostMapping(value = "doctor/set/availability")
     public String availability(@RequestBody Availability avail){
 
-        User user = userRepo.findById(avail.get_doctor_id());
 
-        int day = avail.getday_of_week();
+        User user = userRepo.findById(avail.getDoctorId());
 
-        if (user.getRole() != Role.doctor){
+        int day = avail.getDayOfWeek();
+        String role = user.getRole();
+        if (!role.equals( "ROLE_DOCTOR")){
             return "User Is Not A Doctor!";
         }
         if(day >= 7 ){
@@ -39,11 +39,11 @@ public class AvailabilityApiController {
         }
     }
     // Sets an Availability For Doctor
-    @GetMapping(value = "/GetAllDoctorAvailability/{id}")
+    @GetMapping(value = "/get/availabilities/{id}")
     public List<Availability> doctorsAvailability(@PathVariable("id") int id){
         return availRepo.findByDoctorId(id);
     }
-    @GetMapping(value = "/GetAllDoctorsAvailabilities")
+    @GetMapping(value = "/get/all/availabilities")
     public List<Availability> getDoctorsAvailabilities(){
         return availRepo.findAll();
     }

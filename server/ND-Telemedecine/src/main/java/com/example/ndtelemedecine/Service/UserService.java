@@ -10,5 +10,9 @@ public interface UserService {
 
     User getUser(String email);
 
+    User getUser(int id);
+
     List<User> getUsers();
+
+
 }

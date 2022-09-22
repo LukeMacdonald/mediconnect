@@ -6,5 +6,7 @@ import java.util.*;
 
 public interface AppointmentRepo extends JpaRepository<Appointment, Long>{
     Appointment findAppointmentByDoctorAndDateAndTime(int doctor,Date date,String time);
+    List<Appointment> findAppointmentByPatient(int patient);
+    List<Appointment> findAppointmentByDoctor(int patient);
 
 }

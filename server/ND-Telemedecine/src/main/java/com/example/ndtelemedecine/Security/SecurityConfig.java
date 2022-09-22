@@ -12,7 +12,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static org.springframework.http.HttpMethod.*;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
@@ -21,7 +20,6 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
@@ -32,13 +30,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         //authenticationFilter.setFilterProcessesUrl("/login");
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(STATELESS);
-        http.authorizeRequests().antMatchers(POST,"/login").permitAll();
-/*        :TODO: Implement Proper Authorizations for users
-/       http.authorizeRequests().antMatchers(POST,"/doctor/**").hasAnyAuthority("doctor");
-        http.authorizeRequests().antMatchers(POST,"/superuser/**").hasAnyAuthority("superuser");
-        http.authorizeRequests().antMatchers(POST,"/patient/**").hasAnyAuthority("patient");*/
+        http.authorizeRequests().antMatchers("/login*").permitAll();
+        http.authorizeRequests().antMatchers("/register*").permitAll();
         http.addFilter(authenticationFilter);
-        http.addFilterBefore(new com.example.ndtelemedecine.Security.AuthorisationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new AuthorisationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.formLogin()
+                .loginProcessingUrl("/perform_login")
+                .defaultSuccessUrl("/homepage", true)
+                .failureUrl("/login.html?error=true");
+                //.failureHandler(authenticationFailureHandler())
+        http.logout()
+                .logoutUrl("/perform_logout")
+                .deleteCookies("JSESSIONID");
+                //.logoutSuccessHandler(logoutSuccessHandler());
     }
     @Bean
     @Override

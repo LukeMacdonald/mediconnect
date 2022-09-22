@@ -62,7 +62,7 @@ public class DoctorAvailabilityTest {
     void mockData(){
         Mockito.when(mockUserRepo.findById(0)).thenReturn(mockDoctor);
         avail = new Availability();
-        avail.setdoctor_id(mockDoctor.getID());
+        avail.setDoctorId(mockDoctor.getID());
     }
     @Test
         // -----------------------------------------------------------------------------------
@@ -74,9 +74,9 @@ public class DoctorAvailabilityTest {
         // -----------------------------------------------------------------------------------
     void setDoctorAvailability_ReturnsTrue() throws Exception{
         
-        avail.setstart_time("12:00");
-        avail.setend_time(":13:00");
-        avail.setday_of_week(1);
+        avail.setStartTime("12:00");
+        avail.setEndTime(":13:00");
+        avail.setDayOfWeek(1);
     
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
@@ -101,9 +101,9 @@ public class DoctorAvailabilityTest {
         // -----------------------------------------------------------------------------------
     void setDoctorAvailability_BoundryHighFalse() throws Exception{
 
-        avail.setstart_time("09:00:00");
-        avail.setend_time("10:00:00");
-        avail.setday_of_week(7);
+        avail.setStartTime("09:00:00");
+        avail.setEndTime("10:00:00");
+        avail.setDayOfWeek(7);
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
@@ -127,9 +127,9 @@ public class DoctorAvailabilityTest {
         // -----------------------------------------------------------------------------------
     void setDoctorAvailability_BoundryHighReturnsTrue() throws Exception{
         
-        avail.setstart_time("09:00:00");
-        avail.setend_time("10:00:00");
-        avail.setday_of_week(6);
+        avail.setStartTime("09:00:00");
+        avail.setEndTime("10:00:00");
+        avail.setDayOfWeek(6);
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
@@ -153,9 +153,9 @@ public class DoctorAvailabilityTest {
         // -----------------------------------------------------------------------------------
     void setDoctorAvailability_BoundryLowFalse() throws Exception{
 
-        avail.setstart_time("09:00:00");
-        avail.setend_time("10:00:00");
-        avail.setday_of_week(0);
+        avail.setStartTime("09:00:00");
+        avail.setEndTime("10:00:00");
+        avail.setDayOfWeek(0);
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
@@ -178,10 +178,10 @@ public class DoctorAvailabilityTest {
         // 3. Assert whether the availability is successfully set (returns successful message)
         // -----------------------------------------------------------------------------------
     void setDoctorAvailability_BoundryLowReturnsTrue() throws Exception{
-        
-        avail.setstart_time("09:00:00");
-        avail.setend_time("10:00:00");
-        avail.setday_of_week(1);
+
+        avail.setStartTime("09:00:00");
+        avail.setEndTime("10:00:00");
+        avail.setDayOfWeek(1);
     
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
