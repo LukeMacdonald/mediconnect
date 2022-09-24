@@ -17,8 +17,26 @@ jobs:
         distribution: 'temurin'
         cache: maven
         
-    - name: Build with Maven
-      run: mvn -f server/ND-Telemedecine -B package --f pom.xml
+    - name: Build Availability Module
+      run: mvn -f Server/availability_service -B package --f pom.xml
     - name: Test
-      run: mvn -f server/ND-Telemedecine --batch-mode -Dmaven.test.failure.ignore=true test
+      run: mvn -f Server/availability_service --batch-mode -D maven.test.failure.ignore=true test
+
+    - name: Build Booking Module
+      run: mvn -f Server/booking_service -B package --f pom.xml
+    - name: Test
+      run: mvn -f Server/booking_service --batch-mode -D maven.test.failure.ignore=true test
+
+    - name: Build Communication Module
+      run: mvn -f Server/communication_service -B package --f pom.xml
+    - name: Test
+      run: mvn -f Server/communication_service --batch-mode -D maven.test.failure.ignore=true test
+
+    - name: Build Profile Module
+      run: mvn -f Server/profile_service -B package --f pom.xml
+    - name: Test
+      run: mvn -f Server/profile_service --batch-mode -D maven.test.failure.ignore=true test
+
+
+
 

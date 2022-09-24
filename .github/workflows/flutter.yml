@@ -12,8 +12,8 @@ jobs:
       with:
         channel: 'stable'
     - run: flutter pub get
-      working-directory: client
+      working-directory: Client
     - run: flutter test
-      working-directory: client
+      working-directory: Client
     - run: flutter build web
-      working-directory: client
+      working-directory: Client
