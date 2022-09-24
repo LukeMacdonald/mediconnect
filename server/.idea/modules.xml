@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/Server.iml" filepath="$PROJECT_DIR$/.idea/Server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/availability_service/availability_service.iml" filepath="$PROJECT_DIR$/availability_service/availability_service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/booking_service/booking_service.iml" filepath="$PROJECT_DIR$/booking_service/booking_service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/communication_service/communication_service.iml" filepath="$PROJECT_DIR$/communication_service/communication_service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/profile_service/profile_service.iml" filepath="$PROJECT_DIR$/profile_service/profile_service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/authentication_service/user_service.iml" filepath="$PROJECT_DIR$/authentication_service/user_service.iml" />
+    </modules>
+  </component>
+</project>

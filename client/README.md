@@ -1,4 +1,4 @@
-# client
+# nd_telemedicine
 
 A new Flutter project.
 

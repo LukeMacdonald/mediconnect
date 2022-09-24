@@ -1,3 +1,6 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
 String getDayStringFrontDayInt(int day){
   switch (day) {
     case 1:
@@ -43,3 +46,4 @@ String createTime(String start, String end){
 String url(){
   return "http://localhost:8080/";
 }
+
