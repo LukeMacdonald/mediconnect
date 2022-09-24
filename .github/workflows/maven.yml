@@ -18,24 +18,24 @@ jobs:
         cache: maven
         
     - name: Build Availability Module
-      run: mvn -f Server/availability_service -B package --f pom.xml
+      run: mvn -f server/availability_service -B package --f pom.xml
     - name: Test
-      run: mvn -f Server/availability_service --batch-mode -D maven.test.failure.ignore=true test
+      run: mvn -f server/availability_service --batch-mode -D maven.test.failure.ignore=true test
 
     - name: Build Booking Module
-      run: mvn -f Server/booking_service -B package --f pom.xml
+      run: mvn -f server/booking_service -B package --f pom.xml
     - name: Test
-      run: mvn -f Server/booking_service --batch-mode -D maven.test.failure.ignore=true test
+      run: mvn -f server/booking_service --batch-mode -D maven.test.failure.ignore=true test
 
     - name: Build Communication Module
-      run: mvn -f Server/communication_service -B package --f pom.xml
+      run: mvn -f server/communication_service -B package --f pom.xml
     - name: Test
-      run: mvn -f Server/communication_service --batch-mode -D maven.test.failure.ignore=true test
+      run: mvn -f server/communication_service --batch-mode -D maven.test.failure.ignore=true test
 
     - name: Build Profile Module
-      run: mvn -f Server/profile_service -B package --f pom.xml
+      run: mvn -f server/profile_service -B package --f pom.xml
     - name: Test
-      run: mvn -f Server/profile_service --batch-mode -D maven.test.failure.ignore=true test
+      run: mvn -f server/profile_service --batch-mode -D maven.test.failure.ignore=true test
 
 
 
