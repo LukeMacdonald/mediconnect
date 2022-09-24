@@ -12,10 +12,10 @@ jobs:
       with:
         channel: 'stable'
     - run: flutter pub get
-      working-directory: Client
+      working-directory: client
     - run: flutter test
-      working-directory: Client
+      working-directory: client
     - run: flutter build ios
-      working-directory: Client
+      working-directory: client
     - run: flutter build android
-      working-directory: Client
+      working-directory: client
