@@ -17,3 +17,13 @@ ALTER TABLE user
 ;
 
 desc user;
+
+
+CREATE TABLE `communication` (
+  `senderID` INT NOT NULL,
+  `receiverID` INT NOT NULL,
+  `message` VARCHAR(255) NOT NULL,
+  `messageID` INT NOT NULL,
+  `timestamp` DATETIME NOT NULL,
+  PRIMARY KEY (`messageID`)
+  );
