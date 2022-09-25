@@ -17,26 +17,27 @@ jobs:
         distribution: 'temurin'
         cache: maven
         
-    - name: Build Availability Module
-      run: mvn -f server/availability_service -B package --f pom.xml
-    - name: Test
-      run: mvn -f server/availability_service --batch-mode -D maven.test.failure.ignore=true test
-
-    - name: Build Booking Module
-      run: mvn -f server/booking_service -B package --f pom.xml
-    - name: Test
-      run: mvn -f server/booking_service --batch-mode -D maven.test.failure.ignore=true test
-
-    - name: Build Communication Module
-      run: mvn -f server/communication_service -B package --f pom.xml
-    - name: Test
-      run: mvn -f server/communication_service --batch-mode -D maven.test.failure.ignore=true test
-
-    - name: Build Profile Module
+    - name: Build Profile Service
       run: mvn -f server/profile_service -B package --f pom.xml
-    - name: Test
-      run: mvn -f server/profile_service --batch-mode -D maven.test.failure.ignore=true test
-
-
-
-
+      
+    - name: Test Profile Service
+      run: mvn -f server/profile_service --batch-mode -Dmaven.test.failure.ignore=true test
+      
+    - name: Build Availability Service
+      run: mvn -f server/availability_service -B package --f pom.xml
+      
+    - name: Test Availability Service
+      run: mvn -f server/availability_service --batch-mode -Dmaven.test.failure.ignore=true test
+    
+    - name: Build Booking Service
+      run: mvn -f server/booking_service -B package --f pom.xml
+      
+    - name: Test Booking Service
+      run: mvn -f server/booking_service --batch-mode -Dmaven.test.failure.ignore=true test
+    
+    - name: Build Communication Service
+      run: mvn -f server/communication_service -B package --f pom.xml    
+      
+    - name: Test Communication Service
+      run: mvn -f server/communication_service --batch-mode -Dmaven.test.failure.ignore=true test
+      
