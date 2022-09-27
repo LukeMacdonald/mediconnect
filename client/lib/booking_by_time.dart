@@ -33,7 +33,7 @@ class _BookingByTime extends State<BookingByTime> {
   void initState() {
     dateInput.text = ""; //set the initial value of text field
     super.initState();
-    // getAvailability();
+    getAvailability();
     //print(_booking);
   }
 
@@ -93,6 +93,7 @@ class _BookingByTime extends State<BookingByTime> {
         "http://localhost:8080/SearchAppointment/$id/$date/$startTime"));
     var responseData = response.body;
     if (responseData == 'false') {
+      alert("Succesfully Booked the Appointment!!");
       save(id, date, startTime);
     } else {
       alert(

@@ -5,6 +5,7 @@ import 'package:client/utilities/user.dart';
 import 'package:flutter/material.dart';
 import 'utilities/dashboard_utils.dart';
 import 'styles/background_style.dart';
+import 'package:client/upcoimng_appointment.dart';
 
 class PatientDashboard extends StatefulWidget {
   final User user;
@@ -64,18 +65,55 @@ class _PatientDashboard extends State<PatientDashboard> {
                                   dashboardNavbar(),
                                   dashboardUserIcon(),
                                   welcomeMessage(user.firstName),
-                                  menuButtons(const Color.fromRGBO(255, 89, 99,1),
-                                    const Text('Book Appointment'), const Icon( Icons.calendar_today, size: 15)
-                                    ,context, MaterialPageRoute(builder: (context) => BookingByTime(user: user,))),
-                                  menuButtons(const Color.fromRGBO(33, 150, 243,1),
-                                      const Text('Upcoming Appointment'),const Icon( Icons.calendar_today, size: 15,)
-                                      ,context, MaterialPageRoute(builder: (context) => PatientDashboard(user: user,))),
-                                  menuButtons(const Color.fromRGBO(239, 141, 97,1),
-                                      const Text('Contact Doctor'),const Icon( Icons.phone, size: 15,)
-                                      ,context, MaterialPageRoute(builder: (context) => PatientDashboard(user: user,))),
-                                  menuButtons(const Color.fromRGBO(84, 220, 180,1),
-                                      const Text("View Prescriptions"), const Icon(Icons.medical_services, size: 15,)
-                                      ,context, MaterialPageRoute(builder: (context) => PatientDashboard(user: user,))),
+                                  menuButtons(
+                                      const Color.fromRGBO(255, 89, 99, 1),
+                                      const Text('Book Appointment'),
+                                      const Icon(Icons.calendar_today,
+                                          size: 15),
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => BookingByTime(
+                                                user: user,
+                                              ))),
+                                  menuButtons(
+                                      const Color.fromRGBO(33, 150, 243, 1),
+                                      const Text('Upcoming Appointment'),
+                                      const Icon(
+                                        Icons.calendar_today,
+                                        size: 15,
+                                      ),
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              UpcomingAppointment(
+                                                user: user,
+                                              ))),
+                                  menuButtons(
+                                      const Color.fromRGBO(239, 141, 97, 1),
+                                      const Text('Contact Doctor'),
+                                      const Icon(
+                                        Icons.phone,
+                                        size: 15,
+                                      ),
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              PatientDashboard(
+                                                user: user,
+                                              ))),
+                                  menuButtons(
+                                      const Color.fromRGBO(84, 220, 180, 1),
+                                      const Text("View Prescriptions"),
+                                      const Icon(
+                                        Icons.medical_services,
+                                        size: 15,
+                                      ),
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              PatientDashboard(
+                                                user: user,
+                                              ))),
                                 ],
                               ),
                             ),
@@ -85,6 +123,7 @@ class _PatientDashboard extends State<PatientDashboard> {
                     )))));
   }
 }
+
 class DoctorDashboard extends StatefulWidget {
   final User user;
   const DoctorDashboard({Key? key, required this.user}) : super(key: key);
@@ -96,7 +135,6 @@ class DoctorDashboard extends StatefulWidget {
 class _DoctorDashboard extends State<DoctorDashboard> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   late User user = widget.user;
-
 
   @override
   Widget build(BuildContext context) {
@@ -144,14 +182,51 @@ class _DoctorDashboard extends State<DoctorDashboard> {
                                   dashboardNavbar(),
                                   dashboardUserIcon(),
                                   welcomeMessage("Dr ${user.lastName}"),
-                                  menuButtons(const Color.fromRGBO(33, 150, 243,1),const Text('Upcoming Appointment'),const Icon( Icons.calendar_today, size: 15,)
-                                      ,context, MaterialPageRoute(builder: (context) => DoctorDashboard(user: user,))),
-                                  menuButtons(const Color.fromRGBO(239, 141, 97,1),const Text('Contact Patients'),const Icon( Icons.phone, size: 15,)
-                                      ,context, MaterialPageRoute(builder: (context) => DoctorDashboard(user: user,))),
-                                  menuButtons(const Color.fromRGBO(255, 89, 99,1),const Text('Change Availability'),const Icon( Icons.calendar_today, size: 15)
-                                      ,context, MaterialPageRoute(builder: (context) => SetAvailability(user: user))),
-                                  menuButtons(const Color.fromRGBO(84, 220, 180,1),const Text("View Patient Profile"),const Icon(Icons.person, size: 15,)
-                                  ,context, MaterialPageRoute(builder: (context) => DoctorDashboard(user: user,))),
+                                  menuButtons(
+                                      const Color.fromRGBO(33, 150, 243, 1),
+                                      const Text('Upcoming Appointment'),
+                                      const Icon(
+                                        Icons.calendar_today,
+                                        size: 15,
+                                      ),
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => DoctorDashboard(
+                                                user: user,
+                                              ))),
+                                  menuButtons(
+                                      const Color.fromRGBO(239, 141, 97, 1),
+                                      const Text('Contact Patients'),
+                                      const Icon(
+                                        Icons.phone,
+                                        size: 15,
+                                      ),
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => DoctorDashboard(
+                                                user: user,
+                                              ))),
+                                  menuButtons(
+                                      const Color.fromRGBO(255, 89, 99, 1),
+                                      const Text('Change Availability'),
+                                      const Icon(Icons.calendar_today,
+                                          size: 15),
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              SetAvailability(user: user))),
+                                  menuButtons(
+                                      const Color.fromRGBO(84, 220, 180, 1),
+                                      const Text("View Patient Profile"),
+                                      const Icon(
+                                        Icons.person,
+                                        size: 15,
+                                      ),
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => DoctorDashboard(
+                                                user: user,
+                                              ))),
                                 ],
                               ),
                             ),
@@ -164,7 +239,7 @@ class _DoctorDashboard extends State<DoctorDashboard> {
 
 class SuperAdminDashboard extends StatefulWidget {
   final User user;
-  const SuperAdminDashboard({Key? key,required this.user}) : super(key: key);
+  const SuperAdminDashboard({Key? key, required this.user}) : super(key: key);
 
   @override
   State<SuperAdminDashboard> createState() => _SuperAdminDashboard();
@@ -223,8 +298,18 @@ class _SuperAdminDashboard extends State<SuperAdminDashboard> {
                                   dashboardNavbar(),
                                   dashboardUserIcon(),
                                   welcomeMessage("Admin ${user.firstName}"),
-                                  menuButtons(const Color.fromRGBO(33, 150, 243,1),const Text('Add Doctor'),const Icon(Icons.person_add, size: 15,)
-                                      ,context, MaterialPageRoute(builder: (context) => AddDoctor(user: user,))),
+                                  menuButtons(
+                                      const Color.fromRGBO(33, 150, 243, 1),
+                                      const Text('Add Doctor'),
+                                      const Icon(
+                                        Icons.person_add,
+                                        size: 15,
+                                      ),
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => AddDoctor(
+                                                user: user,
+                                              ))),
                                 ],
                               ),
                             ),
