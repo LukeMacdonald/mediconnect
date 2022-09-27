@@ -8,6 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class Message {
@@ -20,14 +22,46 @@ public class Message {
     private String message;
     
     @Column
-    @NotBlank(message = "sender ID is required")
+    @NotNull
     private int senderID;
 
     @Column
-    @NotBlank(message = "receiver ID is required")
+    @NotNull
     private int receiverID;
 
     @Column
-    @NotBlank(message = "timestamp is required")
+    @NotNull
     private Date timestamp;
+
+    public int getMessageID() {
+        return messageID;
+    }
+    public int getSenderID() {
+        return senderID;
+    }
+    public int getReceiverID() {
+        return receiverID;
+    }
+    public String getMessage() {
+        return message;
+    }
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
+    public void setMessageID(int messageID) {
+        this.messageID = messageID;
+    }
+    public void setSenderID(int senderID) {
+        this.senderID = senderID;
+    }
+    public void setReceiverID(int receiverID) {
+        this.receiverID = receiverID;
+    }
+    public void setMessage(String message) {
+        this.message = message;
+    }
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
+    }
 }

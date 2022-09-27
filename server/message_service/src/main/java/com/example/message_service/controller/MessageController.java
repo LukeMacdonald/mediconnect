@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.message_service.model.Message;
@@ -25,5 +27,10 @@ public class MessageController {
     @GetMapping(value="/get/messages/{messageID}")
     public ResponseEntity<Message> getMessage(@PathVariable("messageID") int messageID) {
         return ResponseEntity.ok().body(messageService.findByMessageID(messageID));
+    }
+
+    @PostMapping(value="/post/message")
+    public Message sendMessage(@RequestBody Message message) {
+        return messageService.save(message);
     }
 }
