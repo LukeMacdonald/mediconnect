@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch MessageServiceApplication",
+            "request": "launch",
+            "mainClass": "com.example.message_service.MessageServiceApplication",
+            "projectName": "message_service"
+        },
+        {
+            "type": "java",
             "name": "Launch ProfileServiceApplication",
             "request": "launch",
             "mainClass": "com.example.profile_service.ProfileServiceApplication",
