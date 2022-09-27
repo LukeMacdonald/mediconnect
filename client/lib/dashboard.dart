@@ -5,7 +5,7 @@ import 'package:client/utilities/user.dart';
 import 'package:flutter/material.dart';
 import 'utilities/dashboard_utils.dart';
 import 'styles/background_style.dart';
-import 'package:client/upcoimng_appointment.dart';
+import 'package:client/upcoming_appointment.dart';
 
 class PatientDashboard extends StatefulWidget {
   final User user;
