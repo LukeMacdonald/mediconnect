@@ -15,6 +15,7 @@ class SetAvailability extends StatefulWidget {
   @override
   State<SetAvailability> createState() => _SetAvailability();
 }
+
 class _SetAvailability extends State<SetAvailability> {
   late User user = widget.user;
   String url = "http://localhost:8080/";
@@ -27,15 +28,17 @@ class _SetAvailability extends State<SetAvailability> {
           'doctor_id': user.id,
           'day_of_week': day,
           'start_time': hourValue.substring(0, 5),
-          'end_time': hourValue.substring(8,)
+          'end_time': hourValue.substring(
+            8,
+          )
         }));
   }
 
-  final List<Map> _availability = [];
+  final List<String> _availability = [];
   @override
   void initState() {
     super.initState();
-    // getAvailability();
+    getAvailability();
   }
 
   Future getAvailability() async {
@@ -52,7 +55,8 @@ class _SetAvailability extends State<SetAvailability> {
           " - " +
           availability["_end_time"]
               .substring(0, availability["_end_time"].length - 3);
-      _availability.add({'Day': day, 'Hour': time});
+      // _availability.add({'Day': day, 'Hour': time});
+      _availability.add("$day  -  $time");
     }
   }
 
@@ -101,13 +105,11 @@ class _SetAvailability extends State<SetAvailability> {
         constraints: const BoxConstraints(minWidth: 70, maxWidth: 500),
         child: ElevatedButton(
             onPressed: () => {
-
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => DoctorDashboard(user:user)))
-            },
-
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => DoctorDashboard(user: user)))
+                },
             style: ElevatedButton.styleFrom(
                 minimumSize: const Size(230, 50),
                 padding: const EdgeInsets.all(15),
@@ -142,7 +144,7 @@ class _SetAvailability extends State<SetAvailability> {
                   ]),
               height: 60,
               // LISTVIEW
-              child: SizedBox(height: 200, child: _createTable()))
+              child: SizedBox(height: 200, child: _createListView()))
         ]);
   }
 
@@ -156,12 +158,23 @@ class _SetAvailability extends State<SetAvailability> {
     return SingleChildScrollView(
         physics: const NeverScrollableScrollPhysics(),
         child: Column(children: [
-          const Padding(padding: EdgeInsets.fromLTRB(0, 15, 0, 0)),
+          const Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 0)),
+          Align(
+              alignment: const AlignmentDirectional(-1, 0.05),
+              child: Padding(
+                padding: const EdgeInsetsDirectional.fromSTEB(40, 0, 0, 0),
+                child: Text('Availability List',
+                    style: GoogleFonts.lexendDeca(
+                        textStyle: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 14,
+                    ))),
+              )),
           availabilityList(),
           Align(
               alignment: const AlignmentDirectional(-1, 0.05),
               child: Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
+                padding: const EdgeInsetsDirectional.fromSTEB(40, 20, 0, 0),
                 child: Text('Specific Dates Not Available',
                     style: GoogleFonts.lexendDeca(
                         textStyle: const TextStyle(
@@ -295,18 +308,28 @@ class _SetAvailability extends State<SetAvailability> {
                               } else {
                                 {
                                   // Map Equality comparison to dynamically compare the keys and its current values to compare to what exists
-                                  if (_availability.any((element) => mapEquals(
-                                      element,
-                                      {'Day': dayValue, 'Hour': hourValue}))) {
+                                  // if (_availability.any((element) => mapEquals(
+                                  //     element,
+                                  //     {'Day': dayValue, 'Hour': hourValue}))) {
+                                  //   alert('Availability Already Set');
+                                  // } else {
+                                  //   setState(() {
+                                  //     _availability.add(
+                                  //         {'Day': dayValue, 'Hour': hourValue});
+                                  //   });
+
+                                  //   // Save the availability
+                                  //   save();
+                                  // }
+                                  if (_availability
+                                      .contains('$dayValue  -  $hourValue')) {
                                     alert('Availability Already Set');
                                   } else {
                                     setState(() {
-                                      _availability.add(
-                                          {'Day': dayValue, 'Hour': hourValue});
+                                      _availability
+                                          .add('$dayValue  -  $hourValue');
+                                      save();
                                     });
-
-                                    // Save the availability
-                                    save();
                                   }
                                 }
                               }
@@ -367,22 +390,64 @@ class _SetAvailability extends State<SetAvailability> {
             ))));
   }
 
-  Widget _createTable() {
-    return SingleChildScrollView(
-        child: DataTable(columns: _createColumns(), rows: _createRows()));
-  }
-
-  List<DataColumn> _createColumns() {
-    return [
-      const DataColumn(label: Text('Day')),
-      const DataColumn(label: Text('Time Range'))
-    ];
-  }
-
-  List<DataRow> _createRows() {
-    return _availability
-        .map((map) => DataRow(
-            cells: [DataCell(Text(map['Day'])), DataCell(Text(map['Hour']))]))
-        .toList();
+  Widget _createListView() {
+    return ListView.builder(
+        itemCount: _availability.length,
+        itemBuilder: (context, index) {
+          return Card(
+            color: const Color(0x86C6F7FD),
+            child: ListTile(
+              contentPadding: const EdgeInsets.all(10),
+              title: Text(_availability[index]),
+              trailing: IconButton(
+                icon: const Icon(
+                  Icons.delete,
+                  color: Colors.red,
+                ),
+                onPressed: () {
+                  SnackBar snackBar = SnackBar(
+                    content: Text("Color Removed :  ${_availability[index]}"),
+                    backgroundColor: Colors.blueGrey,
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  setState(() {
+                    _availability.removeAt(index);
+                  });
+                },
+              ),
+            ),
+          );
+        });
   }
 }
+  // Widget _createTable() {
+  //   return SingleChildScrollView(
+  //       child: DataTable(columns: _createColumns(), rows: _createRows()));
+  // }
+
+  // List<DataColumn> _createColumns() {
+  //   return [
+  //     const DataColumn(label: Text('Day')),
+  //     const DataColumn(label: Text('Time Range')),
+  //     const DataColumn(label: Text(''))
+  //   ];
+  // }
+
+  // int i = 0;
+  // List<DataRow> _createRows() {
+  //   return _availability
+  //       .map((map) => DataRow(cells: [
+  //             DataCell(Text(map['Day'])),
+  //             DataCell(Text(map['Hour'])),
+  //             DataCell(ElevatedButton(
+  //               onPressed: () {
+  //                 setState(() {
+  //                   _availability.removeAt(i);
+  //                 });
+  //               },
+  //               child: const Icon(Icons.remove, color: Colors.white),
+  //             ))
+  //           ]))
+  //       .toList();
+  // }
+
