@@ -64,7 +64,7 @@ class _UpcomingAppointment extends State<UpcomingAppointment> {
           availability["_end_time"]
               .substring(0, availability["_end_time"].length - 3);
       // _availability.add({'Day': day, 'Hour': time});
-      _appointment.add("$day  -  $time");
+      _appointment.add("$day  |  $time");
     }
   }
 

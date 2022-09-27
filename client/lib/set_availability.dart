@@ -56,7 +56,7 @@ class _SetAvailability extends State<SetAvailability> {
           availability["_end_time"]
               .substring(0, availability["_end_time"].length - 3);
       // _availability.add({'Day': day, 'Hour': time});
-      _availability.add("$day  -  $time");
+      _availability.add("$day  |  $time");
     }
   }
 
