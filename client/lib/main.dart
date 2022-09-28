@@ -6,6 +6,7 @@ const authenticationIP = "http://localhost:8080/";
 const availabilityIP = "http://localhost:8081/";
 const appointmentIP = "http://localhost:8083/";
 const communicationIP = "http://localhost:8082/";
+const messageIP = "http://localhost:8085/";
 
 void main() {
   runApp(const MyApp());

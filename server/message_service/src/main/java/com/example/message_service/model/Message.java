@@ -1,6 +1,7 @@
 package com.example.message_service.model;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -31,7 +32,13 @@ public class Message {
 
     @Column
     @NotNull
-    private Date timestamp;
+    private LocalDate timestamp;
+
+
+
+    @Column
+    private boolean viewed;
+
 
     public int getMessageID() {
         return messageID;
@@ -45,9 +52,11 @@ public class Message {
     public String getMessage() {
         return message;
     }
-    public Date getTimestamp() {
+    public LocalDate getTimestamp() {
         return timestamp;
     }
+    public boolean isViewed() { return viewed; }
+
 
     public void setMessageID(int messageID) {
         this.messageID = messageID;
@@ -61,7 +70,8 @@ public class Message {
     public void setMessage(String message) {
         this.message = message;
     }
-    public void setTimestamp(Date timestamp) {
+    public void setTimestamp(LocalDate timestamp) {
         this.timestamp = timestamp;
     }
+    public void setViewed(boolean viewed) {this.viewed = viewed;}
 }

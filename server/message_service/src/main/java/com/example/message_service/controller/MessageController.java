@@ -21,7 +21,9 @@ public class MessageController {
 
     @GetMapping(value="/get/messages/{senderID}/{receiverID}")
     public List<Message> getMessages(@PathVariable("senderID") int senderID,  @PathVariable("receiverID") int receiverID) {
-        return messageService.findBySenderIDAndReceiverID(senderID, receiverID);
+        List<Message> messages = messageService.findBySenderIDAndReceiverID(senderID, receiverID);
+        messages.addAll(messageService.findBySenderIDAndReceiverID(receiverID, senderID));
+        return messages;
     }
 
     @GetMapping(value="/get/messages/{messageID}")

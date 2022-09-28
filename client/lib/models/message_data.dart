@@ -1,4 +1,5 @@
 class MessageData{
+  final int messageID;
   final int senderID;
   final int receiverID;
   final DateTime timestamp;
@@ -7,6 +8,7 @@ class MessageData{
 
 
   const MessageData(
+      this.messageID,
       this.senderID,
       this.receiverID,
       this.timestamp,
@@ -15,8 +17,9 @@ class MessageData{
 
   factory MessageData.fromJson(dynamic json) {
     return MessageData(
-        json['sender'] as int,
-        json['receiver'] as int,
+        json['messageID'] as int,
+        json['senderID'] as int,
+        json['receiverID'] as int,
         json['timestamp'] as DateTime,
         json['message'] as String,
         json['viewed'] as bool);

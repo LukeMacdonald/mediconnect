@@ -66,7 +66,7 @@ class ChatsPage extends StatelessWidget {
 
     return _MessageTile(
         messageData:
-            MessageData(10, 12, DateTime.now(), faker.lorem.sentence(), true),user:user);
+            MessageData(1,10, 12, DateTime.now(), faker.lorem.sentence(), true),user:user);
   }
 }
 

@@ -9,6 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="communication_service" />
         <module name="availability_service" />
+        <module name="message_service" />
         <module name="profile_service" />
         <module name="user_service" />
         <module name="booking_service" />
@@ -19,6 +20,7 @@
       <module name="availability_service" target="11" />
       <module name="booking_service" target="11" />
       <module name="communication_service" target="11" />
+      <module name="message_service" target="11" />
       <module name="profile_service" target="11" />
       <module name="user_service" target="11" />
     </bytecodeTargetLevel>
@@ -29,6 +31,7 @@
       <module name="availability_service" options="-parameters" />
       <module name="booking_service" options="-parameters" />
       <module name="communication_service" options="-parameters" />
+      <module name="message_service" options="-parameters" />
       <module name="profile_service" options="-parameters" />
       <module name="user_service" options="-parameters" />
     </option>

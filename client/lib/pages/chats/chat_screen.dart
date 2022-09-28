@@ -42,38 +42,60 @@ class _ChatScreen extends State<ChatScreen> {
 
   @override
   void initState() {
-    allMessages = getMessages() as List<MessageData>;
+    allMessages = [];
     _messages = StreamController<MessageData>();
+    getMessages();
 
-    for (var element in allMessages) {
-      _messages.add(element);
-    }
+    // for (var element in allMessages) {
+    //   _messages.add(element);
+    // }
     super.initState();
   }
-
-  Future<List<MessageData>> getMessages() async{
-    List<MessageData> messages;
+  Future<void> getMessages() async{
 
     var response = await http.get(
-        Uri.parse("$communicationIP/get/messages${messageData.senderID}/"
-                  "${messageData.receiverID}"),
+        Uri.parse("${messageIP}get/messages/${1}/${2}"),
         headers: {'Content-Type': 'application/json'});
+    var responses = json.decode(response.body) as List;
+    print(responses);
+    MessageData message;
+    for (var element in responses) {
+      print(element['messageID']);
+      message = MessageData(element['messageID'],
+          element['senderID'],element['receiverID'],
+          DateTime.parse(element['timestamp']),
+          element['message'],
+          element['viewed'] as bool);
+      _messages.add(message);
+      if(message.senderID==1) {
+        items.add(_MessageOwnTile(
+            message: message.message,
+            messageDate: ""));
+      }
+      else {
+        items.add(_MessageTile(
+            message: message.message,
+            messageDate: ""));
+      }
 
-    messages = (json.decode(response.body) as List).map((i) =>
-        MessageData.fromJson(i)).toList();
-    return messages;
+    }
+    // allMessages = (json.decode(response.body) as List).map((i) =>
+    //     MessageData.fromJson(i)).toList();
   }
+  List<Widget> items = [];
 
-  Stream<List<MessageData>> getUnreadMessages() async*{
-    List<MessageData>messages;
+  Stream<MessageData> getUnreadMessages() async*{
     var response = await http.get(
-        Uri.parse("$communicationIP/get/unread/messages${messageData.senderID}/"
-            "${messageData.receiverID}"),
+        Uri.parse("${messageIP}get/messages/${1}/${2}"),
         headers: {'Content-Type': 'application/json'});
-    var responseData = json.decode(response.body);
-    messages = (json.decode(response.body) as List).map((i) =>
-        MessageData.fromJson(i)).toList();
-    yield messages;
+    var responseData = json.decode(response.body) as List;
+      for(var element in responseData) {
+        yield MessageData(
+            element['messageID'], element['senderID'],
+            element['receiverID'], DateTime.parse(element['timestamp']),
+            element['message'], element['viewed'] as bool);
+        await Future<void>.delayed(const Duration(seconds: 1));
+      }
   }
 
   @override
@@ -108,22 +130,34 @@ class _ChatScreen extends State<ChatScreen> {
       body: Column(
         children: [
           Expanded(
-              child: StreamBuilder(
-                stream: _messages.stream,
-                builder: (BuildContext context, snapshot) {
-                  if(messageData.senderID == widget.user.id){
-                    return _MessageOwnTile(
-                        message: messageData.message,
-                        messageDate: messageData.timestamp.toString());
-                  }
-                  else{
-                    return _MessageTile(
-                        message: messageData.message,
-                        messageDate: messageData.timestamp.toString());
-                  }
-                }
-                )
-          ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child:
+                      StreamBuilder(
+                        stream: getUnreadMessages(),
+                        builder: (BuildContext context, AsyncSnapshot<MessageData> snapshot,){
+                          if (snapshot.connectionState == ConnectionState.waiting)
+                         {
+                           return const CircularProgressIndicator();
+                         }
+                           else if (snapshot.hasError) {
+                            return Text('Error!');
+                          }
+                          if(snapshot.data?.senderID == 1){
+                            items.add(_MessageOwnTile(
+                                message: snapshot.data?.message,
+                                messageDate: ""));
+                          }
+                          else{
+                         items.add(_MessageTile(
+                         message: snapshot.data?.message,
+                         messageDate: ""));
+                         }
+                            return ListView.builder(
+                                itemBuilder: (context, index) {
+                                  return items[index];},itemCount: items.length,);}
+                        )
+              )),
           const _ActionBar(),
         ],
       ),
@@ -169,7 +203,6 @@ class __DateLableState extends State<_DateLable> {
     } else {
       dayInfo = createdAt.MMMd;
     }
-
     super.initState();
   }
 
@@ -235,75 +268,12 @@ class _AppBarTitle extends StatelessWidget {
   }
 }
 
-class _DemoMessageList extends StatelessWidget {
-  const _DemoMessageList({Key? key}) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: ListView(
-        children: [
-          _DateLable(dateTime: DateTime.now()),
-          _MessageTile(
-              message: faker.lorem.sentence(),
-              messageDate:
-                  faker.date.dateTime(minYear: 2022, maxYear: 2022).toString()),
-          _MessageOwnTile(
-              message: faker.lorem.sentence(),
-              messageDate:
-                  faker.date.dateTime(minYear: 2022, maxYear: 2022).toString()),
-          _MessageTile(
-              message: faker.lorem.sentence(),
-              messageDate:
-                  faker.date.dateTime(minYear: 2022, maxYear: 2022).toString()),
-          _MessageTile(
-              message: faker.lorem.sentence(),
-              messageDate:
-                  faker.date.dateTime(minYear: 2022, maxYear: 2022).toString()),
-          _MessageOwnTile(
-              message: faker.lorem.sentence(),
-              messageDate:
-                  faker.date.dateTime(minYear: 2022, maxYear: 2022).toString()),
-          _MessageOwnTile(
-              message: faker.lorem.sentence(),
-              messageDate:
-                  faker.date.dateTime(minYear: 2022, maxYear: 2022).toString()),
-          _MessageTile(
-              message: faker.lorem.sentence(),
-              messageDate:
-                  faker.date.dateTime(minYear: 2022, maxYear: 2022).toString()),
-          _MessageOwnTile(
-              message: faker.lorem.sentence(),
-              messageDate:
-                  faker.date.dateTime(minYear: 2022, maxYear: 2022).toString()),
-          _MessageOwnTile(
-              message: faker.lorem.sentence(),
-              messageDate:
-                  faker.date.dateTime(minYear: 2022, maxYear: 2022).toString()),
-          _MessageOwnTile(
-              message: faker.lorem.sentence(),
-              messageDate:
-                  faker.date.dateTime(minYear: 2022, maxYear: 2022).toString()),
-          _MessageTile(
-              message: faker.lorem.sentence(),
-              messageDate:
-                  faker.date.dateTime(minYear: 2022, maxYear: 2022).toString()),
-          _MessageTile(
-              message: faker.lorem.sentence(),
-              messageDate:
-                  faker.date.dateTime(minYear: 2022, maxYear: 2022).toString()),
-        ],
-      ),
-    );
-  }
-}
-
 class _MessageOwnTile extends StatelessWidget {
   const _MessageOwnTile(
       {Key? key, required this.message, required this.messageDate})
       : super(key: key);
-  final String message;
-  final String messageDate;
+  final String? message;
+  final String? messageDate;
 
   static const _borderRadius = 20.0;
   @override
@@ -328,12 +298,12 @@ class _MessageOwnTile extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
                       horizontal: 10.0, vertical: 15),
-                  child: Text(message),
+                  child: Text(message!),
                 )),
             Padding(
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Text(
-                  messageDate,
+                  messageDate!,
                   style: const TextStyle(
                     color: AppColors.textFaded,
                     fontSize: 10,
@@ -352,8 +322,8 @@ class _MessageTile extends StatelessWidget {
       {Key? key, required this.message, required this.messageDate})
       : super(key: key);
 
-  final String message;
-  final String messageDate;
+  final String? message;
+  final String? messageDate;
 
   static const _borderRadius = 15.0;
   @override
@@ -377,12 +347,12 @@ class _MessageTile extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
                       horizontal: 12.0, vertical: 20),
-                  child: Text(message),
+                  child: Text(message!),
                 )),
             Padding(
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Text(
-                  messageDate,
+                  messageDate!,
                   style: const TextStyle(
                     color: AppColors.textFaded,
                     fontSize: 10,
