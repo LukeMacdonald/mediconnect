@@ -4,14 +4,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:nd_telemedicine/main.dart';
-import 'package:nd_telemedicine/pages/homepage/admin_home.dart';
-import '../../utilities/custom_functions.dart';
 import '../../widgets/alerts.dart';
 import 'dart:convert';
-import 'dart:math';
 import '../../models/user.dart';
 import '../../widgets/buttons.dart';
 import '../../widgets/form_widgets.dart';
+import '../../widgets/icon_buttons.dart';
 import '../../widgets/navbar.dart';
 
 class AddDoctor extends StatefulWidget {
@@ -43,80 +41,62 @@ class _AddDoctor extends State<AddDoctor> {
   }
 
   Future save() async {
-    // Randomly generate a code of length 5, with values between [0-9]
-    var rng = Random();
 
-    String generatedCode = "";
-
-    for (var i = 0; i < 5; ++i) {
-      generatedCode = generatedCode + rng.nextInt(10).toString();
+    try {
+      final response = await http.get(
+          Uri.parse("${authenticationIP}admin/add/doctor/verification/$email"),
+          headers: {'Content-Type': 'application/json',
+            HttpHeaders.authorizationHeader: "Bearer ${user.accessToken}"},);
+      switch (response.statusCode) {
+        case 201:
+          dynamic responseData = json.decode(response.body);
+          sendEmail(responseData['email'], responseData['code']);
+          break;
+        default:
+          var list = json.decode(response.body).values.toList();
+          throw Exception(list.join("\n\n"));
+      }
+    } catch (e) {
+      alert(e.toString().substring(11), context);
     }
-    var response = await http.post(
-        Uri.parse("${url()}admin/EmailVerificationInTable"),
-        headers: {'Content-Type': 'application/json',
-          HttpHeaders.authorizationHeader: "Bearer ${user.accessToken}"},
-        body: json.encode({'email': email, 'code': generatedCode}));
-
-    dynamic responseData = json.decode(response.body);
-
-    if(response.statusCode == 403 && responseData['error_message'].contains('Token has expired')){
-        response = await http.get(
-            Uri.parse("${url()}token/refresh"),
-            headers: {'Content-Type': 'application/json',
-              HttpHeaders.authorizationHeader: "Bearer ${user.refreshToken}"});
-        responseData = json.decode(response.body);
-        user.accessToken = responseData['access_token'];
-        user.refreshToken = responseData['refresh_token'];
-        save();
-      }
-      else if (response.statusCode == 403) {
-        if (!mounted) return;
-        alert("Unauthorised Access!", context);
-      }
-      else if(response.statusCode == 401){
-        if (!mounted) return;
-        alert("Email exists!", context);
-      }
-      else if (response.body == "Valid email to store") {
-        sendEmail(email!, generatedCode);
-        if (!mounted) return;
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => AdminHomePage(user: user)));
-      } else {
-        if (!mounted) return;
-        alert("Email exists!", context);
-      }
   }
-  Future sendEmail(String email, String code) async {
-    final response =
-    await http.post(Uri.parse("${communicationIP}sendMail"),
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode({
-          'recipient': email,
-          'msgBody':
-          "Hello,\n\nThe following verification code must be provided to register,\n$code\nBest Wishes,\nFrom the ND Telemedicine Management Team",
-          'subject': "ND-Telemedicine Doctor Verification Code"
-        }));
-    return response.body;
+  Future sendEmail(String email, int code) async {
+    try {
+      final response =
+      await http.post(Uri.parse("${communicationIP}send/html/mail"),
+          headers: {'Content-Type': 'application/json'},
+          body: json.encode({'email': email, 'code': code}));
+      switch (response.statusCode) {
+        case 202:
+          dynamic responseData = json.decode(response.body);
+          if(!mounted)return;
+          alert(responseData['message'],context);
+          break;
+        default:
+          var list = json.decode(response.body).values.toList();
+          throw Exception(list.join("\n\n"));
+      }
+    } catch (e) {
+      alert(e.toString().substring(11), context);
+    }
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          iconTheme: Theme.of(context).iconTheme,
           backgroundColor: Colors.transparent,
           elevation: 0,
-          leading: AppBarItem(
-            icon: CupertinoIcons.home,
-            index: 2, user: user,
+          leadingWidth: 54,
+          leading: Align(
+            alignment: Alignment.centerRight,
+            child: IconBackground(
+              icon: CupertinoIcons.back,
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+            ),
           ),
-          title: const Text("Home",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              )),
           actions: <Widget>[
             AppBarItem(
               icon: CupertinoIcons.bell_fill,

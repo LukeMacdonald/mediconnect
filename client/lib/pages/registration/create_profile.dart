@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:nd_telemedicine/pages/homepage/doctor_home.dart';
 import 'package:nd_telemedicine/pages/homepage/home_page.dart';
 import 'package:nd_telemedicine/widgets/form_widgets.dart';
+import 'package:page_transition/page_transition.dart';
 import '../../main.dart';
 import '../../widgets/alerts.dart';
 import '../../widgets/buttons.dart';
@@ -45,11 +46,17 @@ class _ProfileCreation extends State<ProfileCreation> {
     user.password = "";
     if (!mounted) return;
     if (user.role == 'patient') {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => HomePage(user: user)));
+      Navigator.push(
+          context,
+          PageTransition(
+              type: PageTransitionType.fade,
+              child: HomePage(user: user)));
     } else if (user.role == 'doctor') {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => DoctorHomePage(user: user)));
+      Navigator.push(
+          context,
+          PageTransition(
+              type: PageTransitionType.fade,
+              child: DoctorHomePage(user: user)));
     }
   }
 

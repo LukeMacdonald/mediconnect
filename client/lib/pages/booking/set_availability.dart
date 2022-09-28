@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:nd_telemedicine/main.dart';
 import 'package:nd_telemedicine/pages/homepage/doctor_home.dart';
@@ -21,7 +20,6 @@ class SetAvailability extends StatefulWidget {
 
 class _SetAvailability extends State<SetAvailability> {
   late User user = widget.user;
-  String url = "http://localhost:8080/";
 
   Future save() async {
     int day = getDayIntFromDayString(dayValue);
@@ -35,11 +33,12 @@ class _SetAvailability extends State<SetAvailability> {
         }));
   }
 
-  final List<String> _availability = [];
+  late List<String> _availability;
   @override
   void initState() {
-    super.initState();
+    _availability = [];
     getAvailability();
+    super.initState();
   }
 
   Future getAvailability() async {
@@ -52,12 +51,12 @@ class _SetAvailability extends State<SetAvailability> {
       day = getDayStringFrontDayInt(availability["day_of_week"]);
 // Provided the doctor has gone through the dashboard, we simply take the doctor_id from their current availabilities
       String time = availability["_start_time"]
-          .substring(0, availability["_start_time"].length - 3) +
+          .substring(0, availability["_start_time"].length) +
           " - " +
           availability["_end_time"]
-              .substring(0, availability["_end_time"].length - 3);
-// _availability.add({'Day': day, 'Hour': time});
+              .substring(0, availability["_end_time"].length);
       _availability.add("$day  |  $time");
+      setState(() {});
     }
     }
   }
@@ -103,31 +102,6 @@ class _SetAvailability extends State<SetAvailability> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   final int pageIndex = 8;
-
-  Widget submit() {
-    return Container(
-        constraints: const BoxConstraints(minWidth: 70, maxWidth: 500),
-        child: ElevatedButton(
-            onPressed: () => {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => DoctorHomePage(user: user)))
-                },
-            style: ElevatedButton.styleFrom(
-                minimumSize: const Size(230, 50),
-                padding: const EdgeInsets.all(15),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-                primary: const Color.fromRGBO(57, 210, 192, 1)),
-            child: Text('Submit',
-                style: GoogleFonts.lexendDeca(
-                  textStyle: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                  ),
-                ))));
-  }
 
   Widget availabilityList() {
     return Column(
@@ -378,10 +352,12 @@ class _SetAvailability extends State<SetAvailability> {
               padding: const EdgeInsets.only(top: 20),
               child: SubmitButton(
                 color: Colors.teal,
-                message: "Submit",
+                message: "Done",
                 width: 225,
                 height: 50,
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pop(context);
+                },
               ),
             ),
           ],

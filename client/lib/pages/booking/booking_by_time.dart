@@ -8,6 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:nd_telemedicine/main.dart';
 import 'package:nd_telemedicine/pages/homepage/home_page.dart';
+import 'package:page_transition/page_transition.dart';
 
 import '../../models/user.dart';
 import '../../styles/theme.dart';
@@ -27,7 +28,6 @@ class _BookingByTime extends State<BookingByTime> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   late User user = widget.user;
 
-  String url = "http://localhost:8080/booking_by_time";
   String? daySelected;
   //Not sure if url needed
 
@@ -36,9 +36,9 @@ class _BookingByTime extends State<BookingByTime> {
   @override
   void initState() {
     dateInput.text = ""; //set the initial value of text field
-    super.initState();
     getAvailability();
-    //print(_booking);
+    super.initState();
+
   }
 
   final List<Map> _booking = [];
@@ -58,8 +58,7 @@ class _BookingByTime extends State<BookingByTime> {
       // Provided the doctor has gone through the dashboard, we simply take the doctor_id from their current availabilities
       doctorId = availability["_doctor_id"];
 
-      String time =
-          createTime(availability["_start_time"], availability["_end_time"]);
+      String time = availability["_start_time"] + " - " + availability["_end_time"];
 
       final responseName = await http
           .get(Uri.parse("${authenticationIP}get/name/$doctorId"));
@@ -89,7 +88,10 @@ class _BookingByTime extends State<BookingByTime> {
         }));
     if (!mounted) return;
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => HomePage(user: user)));
+        context,
+        PageTransition(
+            type: PageTransitionType.fade,
+            child: HomePage(user: user)));
   }
 
   Future checkAppointment(int id, String date, String startTime) async {
@@ -334,6 +336,7 @@ class _BookingByTime extends State<BookingByTime> {
                           // change button value to selected value
                           onChanged: (value) {
                             hourValue = value.toString();
+
                           },
                         ),
                       ),
@@ -348,7 +351,6 @@ class _BookingByTime extends State<BookingByTime> {
                         width: 225,
                         height: 50,
                         onPressed: () {
-                          //TODO: functions on backend
                           if (doctorValue == 'Doctor') {
                             alert("Select a doctor");
                           } else if (dateInput.text == "") {
@@ -452,7 +454,7 @@ class _BookingByTime extends State<BookingByTime> {
 
   Widget _createTable() {
     return SingleChildScrollView(
-        child: DataTable(columns: _createColumns(), rows: _createRows()));
+        child: DataTable(columns: _createColumns(), rows: _createRows(),columnSpacing: 20,));
   }
 
   List<DataColumn> _createColumns() {

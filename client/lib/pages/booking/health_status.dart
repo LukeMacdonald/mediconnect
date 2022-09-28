@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:nd_telemedicine/pages/booking/booking_by_time.dart';
 import 'package:nd_telemedicine/styles/theme.dart';
 
 import '../../models/user.dart';
@@ -192,6 +193,8 @@ class HeathStatusPage extends StatefulWidget {
                         width: 225,
                         height: 50,
                         onPressed: (){
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => BookingByTime(user: user)));
                         }
                         ,
                       ),

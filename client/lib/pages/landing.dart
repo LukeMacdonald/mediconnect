@@ -104,7 +104,7 @@ class _Landing extends State<Landing> {
                                     context,
                                     PageTransition(
                                         type: PageTransitionType.fade,
-                                        child: LogIn()));
+                                        child: const LogIn()));
                               },
                             ),
                             const Padding(
@@ -127,7 +127,7 @@ class _Landing extends State<Landing> {
                                       context,
                                       PageTransition(
                                           type: PageTransitionType.fade,
-                                          child: Register()));
+                                          child: const Register()));
                                 }),
                           ],
                         ),

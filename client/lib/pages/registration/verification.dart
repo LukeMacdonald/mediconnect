@@ -4,10 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:nd_telemedicine/main.dart';
 import 'package:nd_telemedicine/widgets/form_widgets.dart';
+import 'package:page_transition/page_transition.dart';
 
 import '../../models/user.dart';
 import 'create_profile.dart';
-import '../../styles/custom_styles.dart';
 import '../../styles/theme.dart';
 import '../../widgets/alerts.dart';
 import '../../widgets/buttons.dart';
@@ -38,12 +38,12 @@ class _Verification extends State<Verification> {
   }
 
   Future<void> validateSave() async {
-    if (code == "" || code != null) {
+    if (code == "" || code == null) {
       alert("No Code Entered!", context);
     } else {
       try {
         final response = await http.post(
-            Uri.parse("${authenticationIP}register"),
+            Uri.parse("${authenticationIP}register/doctor"),
             headers: {'Content-Type': 'application/json'},
             body:
                 jsonEncode(user.doctorToJson(int.parse(code!))));
@@ -51,7 +51,12 @@ class _Verification extends State<Verification> {
           case 201:
             var responseData = json.decode(response.body);
             user.setNeededDetails(responseData);
-            ProfileCreation(user: user);
+            if(!mounted)return;
+            Navigator.push(
+                context,
+                PageTransition(
+                    type: PageTransitionType.fade,
+                    child: ProfileCreation(user: user)));
             break;
           default:
             var list = json.decode(response.body).values.toList();

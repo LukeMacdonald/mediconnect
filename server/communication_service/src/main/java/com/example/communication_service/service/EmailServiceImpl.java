@@ -4,6 +4,9 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import com.example.communication_service.model.EmailDetails;
+import java.io.File;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
@@ -34,17 +37,34 @@ public class EmailServiceImpl implements EmailService {
 
             // Sending the mail
             javaMailSender.send(mailMessage);
+            System.out.println("Out");
             return "Mail Sent Successfully...";
         }
 
         // Catch block to handle the exceptions
         catch (Exception e) {
-            return "Error while Sending Mail";
+            return e.getMessage();
         }
     }
 
-    public String
-    sendMailWithAttachment(EmailDetails details)
+    public void sendHTMLMail(EmailDetails details) throws MessagingException {
+
+            MimeMessage msg = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(msg, true);
+            helper.setSubject(details.getSubject());
+
+            // Setting up necessary details
+            helper.setFrom(sender);
+            helper.setTo(details.getRecipient());
+            helper.setText(details.getMsgBody(),true);
+
+            // Sending the mail
+            javaMailSender.send(msg);
+            System.out.println("Out");
+
+    }
+
+    public String sendMailWithAttachment(EmailDetails details)
     {
         // Creating a mime message
         MimeMessage mimeMessage
@@ -60,18 +80,14 @@ public class EmailServiceImpl implements EmailService {
             mimeMessageHelper.setText(details.getMsgBody(), "text/html");
             mimeMessageHelper.setSubject(
                     details.getSubject());
-
             // Adding the attachment
             FileSystemResource file
                     = new FileSystemResource(
                     new File(details.getAttachment()));
-
             mimeMessageHelper.addAttachment(
                     file.getFilename(), file);
-
             // Sending the mail
             javaMailSender.send(mimeMessage);
-            return "Mail sent Successfully";
         }
 
         // Catch block to handle MessagingException
@@ -80,5 +96,6 @@ public class EmailServiceImpl implements EmailService {
             // Display message when exception occurred
             return "Error while sending mail!";
         }
+        return "Mail Sent Successfully...";
     }
 }

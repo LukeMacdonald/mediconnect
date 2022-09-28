@@ -3,6 +3,7 @@ package com.example.profile_service.controller;
 import com.example.profile_service.model.Verification;
 import com.example.profile_service.payload.JSTLLoginSuccessResponse;
 import com.example.profile_service.payload.LoginRequest;
+import com.example.profile_service.repository.VerificationRepo;
 import com.example.profile_service.security.JwtTokenProvider;
 import com.example.profile_service.service.MapValidationErrorService;
 import com.example.profile_service.service.UserService;
@@ -18,14 +19,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 import java.util.HashMap;
+import java.util.Map;
+
 import static com.example.profile_service.security.SecurityConstant.TOKEN_PREFIX;
 
 @RestController
@@ -35,10 +35,11 @@ public class AuthenticationController {
 
     final private MapValidationErrorService mapValidationErrorService;
 
+    final private VerificationRepo verificationRepo;
+
     final private UserService userService;
 
     final private UserValidator userValidator;
-
 
 
     @PostMapping("/register")
@@ -52,13 +53,12 @@ public class AuthenticationController {
 
         User newUser = userService.saveUser(user);
 
-        return new ResponseEntity<User>(newUser, HttpStatus.CREATED);
+        return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
 
     @PostMapping("/register/doctor")
     public ResponseEntity<?> registerDoctor(@Valid @RequestBody Doctor doctor, BindingResult result) {
 
-        System.out.println(doctor.getRole().getRoleName());
         // Validate passwords match
         User newUser = new User(doctor.getEmail(),doctor.getPassword(),doctor.getRole().getRoleName(),
                 doctor.getConfirmPassword());
@@ -71,7 +71,7 @@ public class AuthenticationController {
 
         userService.saveUser(newUser);
 
-        return new ResponseEntity<User>(newUser, HttpStatus.CREATED);
+        return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
 
     final private JwtTokenProvider tokenProvider;
@@ -96,17 +96,22 @@ public class AuthenticationController {
         return ResponseEntity.ok(new JSTLLoginSuccessResponse(true, jwt));
     }
     // Check Verification Table for email existing
-    @PostMapping(value ="admin/email/verification")
-    public ResponseEntity<?>  verifyDoctor(@RequestBody String email, BindingResult result){
-        userValidator.validateVerification(email,result);
-        ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
-        if (errorMap != null) return errorMap;
+    @GetMapping(value ="admin/add/doctor/verification/{email}")
+    public ResponseEntity<?>  verifyDoctor(@PathVariable("email") String email){
+
+        Map<String, Object> response = new HashMap<>();
+
+        if(verificationRepo.existsByEmail(email)){
+            response.put("error","Code Already Sent");
+            return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+        }
+
         Verification verification = new Verification(email);
         userService.saveCode(verification);
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("email", verification.getEmail());
-        map.put("code", verification.getCode());
-        return new ResponseEntity<>(map, HttpStatus.CREATED);
+        response.put("email", verification.getEmail());
+        response.put("code", verification.getCode());
+
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
 
     }
 }

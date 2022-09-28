@@ -233,7 +233,7 @@ class DoctorBottomNavigationBar extends StatefulWidget {
   final User user;
 
   @override
-  State<CustomBBottomNavigationBar> createState() => _CustomBBottomNavigationBar();
+  State<DoctorBottomNavigationBar> createState() => _DoctorBottomNavigationBar();
 }
 
 class _DoctorBottomNavigationBar extends State<DoctorBottomNavigationBar> {
