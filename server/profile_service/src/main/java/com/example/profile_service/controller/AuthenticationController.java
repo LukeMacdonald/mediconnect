@@ -1,5 +1,6 @@
 package com.example.profile_service.controller;
 
+import com.example.profile_service.model.Verification;
 import com.example.profile_service.payload.JSTLLoginSuccessResponse;
 import com.example.profile_service.payload.LoginRequest;
 import com.example.profile_service.security.JwtTokenProvider;
@@ -18,11 +19,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
+import java.util.HashMap;
 import static com.example.profile_service.security.SecurityConstant.TOKEN_PREFIX;
 
 @RestController
@@ -35,6 +38,7 @@ public class AuthenticationController {
     final private UserService userService;
 
     final private UserValidator userValidator;
+
 
 
     @PostMapping("/register")
@@ -90,5 +94,19 @@ public class AuthenticationController {
         String jwt = TOKEN_PREFIX + tokenProvider.generateToken(authentication);
 
         return ResponseEntity.ok(new JSTLLoginSuccessResponse(true, jwt));
+    }
+    // Check Verification Table for email existing
+    @PostMapping(value ="admin/email/verification")
+    public ResponseEntity<?>  verifyDoctor(@RequestBody String email, BindingResult result){
+        userValidator.validateVerification(email,result);
+        ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
+        if (errorMap != null) return errorMap;
+        Verification verification = new Verification(email);
+        userService.saveCode(verification);
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("email", verification.getEmail());
+        map.put("code", verification.getCode());
+        return new ResponseEntity<>(map, HttpStatus.CREATED);
+
     }
 }

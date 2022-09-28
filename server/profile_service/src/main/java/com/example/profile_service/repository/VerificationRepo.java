@@ -8,4 +8,6 @@ public interface VerificationRepo extends JpaRepository<Verification, Long>{
     Verification findByEmail(String email);
     void deleteByEmail(String email);
 
+    boolean existsByEmail(String email);
+
 }

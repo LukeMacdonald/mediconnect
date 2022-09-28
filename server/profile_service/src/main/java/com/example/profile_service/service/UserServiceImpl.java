@@ -1,6 +1,8 @@
 package com.example.profile_service.service;
+import com.example.profile_service.model.Verification;
 import com.example.profile_service.repository.UserRepo;
 import com.example.profile_service.model.User;
+import com.example.profile_service.repository.VerificationRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -23,6 +25,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepo userRepo;
     private final PasswordEncoder passwordEncoder;
+
+    private final VerificationRepo verificationRepo;
 
 
     @Override
@@ -64,6 +68,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public List<User> getUsers() {
         log.info("Getting All users from database: ");
         return userRepo.findAll();
+    }
+    @Override
+    public Verification saveCode(Verification verification){
+        log.info("Saving verification code for doctor {} in database",verification.getEmail());
+        return verificationRepo.save(verification);
     }
 
 

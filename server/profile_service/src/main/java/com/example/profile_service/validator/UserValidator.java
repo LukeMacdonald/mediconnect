@@ -27,13 +27,13 @@ public class UserValidator implements Validator {
 
         User user = (User) object;
         if(userRepo.existsByEmail(user.getEmail())){
-            errors.rejectValue("email","Exists", "Email must be unique");
+            errors.rejectValue("email","Exists", "Email Already Exists!");
         }
         if(user.getPassword().length() < 6){
-            errors.rejectValue("password","Length", "Password must be at least 6 characters");
+            errors.rejectValue("password","Length", "Password must be at least 6 characters!");
         }
         if(!user.getPassword().equals(user.getConfirmPassword())){
-            errors.rejectValue("confirmPassword","Match", "Passwords must match");
+            errors.rejectValue("confirmPassword","Match", "Passwords must match!");
         }
     }
     public void validateDoctor(Object object, Errors errors){
@@ -47,6 +47,11 @@ public class UserValidator implements Validator {
             if (doctor.getCode() != verification.getCode()){
                 errors.rejectValue("code","Match", "Codes must match");
             }
+        }
+    }
+    public void validateVerification(String email,Errors errors){
+        if (verificationRepo.existsByEmail(email)){
+            errors.rejectValue("email","Match","Verification already sent");
         }
     }
 }
