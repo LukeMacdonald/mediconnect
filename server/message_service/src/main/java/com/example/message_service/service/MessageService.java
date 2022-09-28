@@ -8,5 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MessageService extends JpaRepository<Message, Long> {
     List<Message>   findBySenderIDAndReceiverID(int senderID, int receiverID);
+    List<Message>   findBySenderIDOrderByReceiverID(int senderID);
     Message         findByMessageID(int messageID);
 }

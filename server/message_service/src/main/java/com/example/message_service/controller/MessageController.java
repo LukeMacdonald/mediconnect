@@ -29,6 +29,11 @@ public class MessageController {
         return ResponseEntity.ok().body(messageService.findByMessageID(messageID));
     }
 
+    @GetMapping(value="/get/message_menu/{senderID}")
+    public List<Message> getMessageMenu(@PathVariable("senderID") int senderID) {
+        return messageService.findBySenderIDOrderByReceiverID(senderID);
+    }
+
     @PostMapping(value="/post/message")
     public Message sendMessage(@RequestBody Message message) {
         return messageService.save(message);
