@@ -16,7 +16,7 @@ public class AvailabilityController {
     @PostMapping(value = "doctor/set/availability")
     public String availability(@RequestBody Availability avail){
 
-        int day = avail.getDayOfWeek();
+        int day = avail.getday_of_week();
         if(day >= 7 ){
             return "Incorrect Entry: Day of Week Entered was To High";
         }
