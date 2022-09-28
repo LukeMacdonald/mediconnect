@@ -41,6 +41,14 @@ dependencies:
   intl: ^0.17.0
   flutter_spinkit: ^5.1.0
   page_transition: "^2.0.9"
+  time_range: ^1.0.3
+  cached_network_image: ^3.2.1
+  faker: ^2.0.0
+  helpers: ^1.1.4
+  stream_chat_flutter_core: ^4.6.0
+  jiffy: ^5.0.0
+  logger: ^1.1.0
+  rethink_db_ns: ^0.0.4
 dev_dependencies:
   flutter_test:
     sdk: flutter
