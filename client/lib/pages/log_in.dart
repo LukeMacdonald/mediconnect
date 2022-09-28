@@ -1,18 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'dart:io';
 import 'package:http/http.dart' as http;
-import 'package:nd_telemedicine/pages/homepage/home_page.dart';
-import 'package:nd_telemedicine/widgets/form_widgets.dart';
+import 'package:nd_telemedicine/security/storage_service.dart';
 import 'package:page_transition/page_transition.dart';
-import '../main.dart';
-import '../models/user.dart';
-import '../widgets/alerts.dart';
-import '../widgets/buttons.dart';
-import 'homepage/admin_home.dart';
-import 'homepage/doctor_home.dart';
-import 'registration/create_profile.dart';
+import '../../pages/imports.dart';
 import 'dart:convert';
+import 'dart:io';
 
 class LogIn extends StatefulWidget {
   const LogIn({Key? key}) : super(key: key);
@@ -24,82 +17,9 @@ class LogIn extends StatefulWidget {
 class _LogIn extends State<LogIn> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  User user = User("", "", "","");
-
-  Future login() async {
-    var response = await http.post(Uri.parse("${authenticationIP}login"),
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode({
-          'email': user.email,
-          'password': user.password,
-        }));
-    var responseData = json.decode(response.body);
-    print(responseData);
-
-    if (responseData['status'] == 401) {
-      if (!mounted) return;
-      alert("User does not exist", context);
-    } else {
-      user.accessToken = responseData['access_token'];
-
-      if (user.accessToken != "") {
-        response = await http.get(Uri.parse("${authenticationIP}get/${user.email}"),
-            headers: {
-              'Content-Type': 'application/json',
-              HttpHeaders.authorizationHeader: user.accessToken
-            });
-
-        user.setNeededDetails(json.decode(response.body));
-
-        if (user.firstName == "") {
-          if (!mounted) return;
-
-          Navigator.push(
-              context,
-              PageTransition(
-                  type: PageTransitionType.fade,
-                  child: ProfileCreation(
-                      user: user))); // Should direct to profile creation page
-        } else if (user.role == "patient") {
-          user.password = "";
-          if (!mounted) return;
-
-          Navigator.push(
-              context,
-              PageTransition(
-                  type: PageTransitionType.fade,
-                  child: HomePage(user:user)));
-        } else if (user.role == "doctor") {
-          user.password = "";
-          if (!mounted) return;
-
-          Navigator.push(
-              context,
-              PageTransition(
-                  type: PageTransitionType.fade,
-                  child: DoctorHomePage(user:user)));
-        } else if (user.role == "superuser") {
-          user.password = "";
-          if (!mounted) return;
-          Navigator.push(
-              context,
-              PageTransition(
-                  type: PageTransitionType.fade,
-                  child: AdminHomePage(user:user)));
-        } else {
-          if (!mounted) return;
-          alert("Error Logging In", context);
-        }
-      }
-    }
-  }
-
 
   bool _changeEmail = false;
-  bool _changePassword = false;
-
   String? email;
-  String? password;
 
   changeEmailValue(String? newText) {
     setState(() {
@@ -107,12 +27,79 @@ class _LogIn extends State<LogIn> {
       email = newText;
     });
   }
-  changePasswordValue(String? newText) {
-    setState(() {
-      _changePassword = !_changePassword;
-      password = newText;
-    });
+
+  Future login() async {
+    var response = await http.post(Uri.parse("${authenticationIP}login"),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'email': await UserSecureStorage.getEmail(),
+          'password': await UserSecureStorage.getPassword()
+        }));
+
+    var responseData = json.decode(response.body);
+    print(responseData);
+
+    if (responseData['status'] == 401) {
+      if (!mounted) return;
+      alert("User does not exist", context);
+    } else {
+      UserSecureStorage.setJWTToken(responseData['access_token']);
+
+
+      String token = "";
+      await UserSecureStorage.getJWTToken().then((value) => token = value!);
+
+      response = await http
+          .get(Uri.parse("${authenticationIP}get/${await UserSecureStorage.getEmail()}"), headers: {
+        'Content-Type': 'application/json',
+        HttpHeaders.authorizationHeader: token,
+      });
+      responseData = json.decode(response.body);
+
+      print(responseData);
+
+      await UserSecureStorage.setID(responseData['id'].toString());
+      await UserSecureStorage.setRole(responseData['role']);
+
+      if (await UserSecureStorage.getFirstName() == "") {
+        if (!mounted) return;
+
+        Navigator.push(
+            context,
+            PageTransition(
+                type: PageTransitionType.fade,
+                child: const ProfileCreation())); // Should direct to profile creation page
+      } else if (responseData['role'] == "patient") {
+        if (!mounted) return;
+
+        Navigator.push(
+            context,
+            PageTransition(
+                type: PageTransitionType.fade, child: const HomePage()));
+      } else if (responseData['role'] == "doctor") {
+        if (!mounted) return;
+        Navigator.push(
+            context,
+            PageTransition(
+                type: PageTransitionType.fade,
+                child: const DoctorHomePage()));
+      } else if (responseData['role'] == "superuser") {
+
+        if (!mounted) return;
+        Navigator.push(
+            context,
+            PageTransition(
+                type: PageTransitionType.fade,
+                child: const AdminHomePage()));
+      } else {
+        if (!mounted) return;
+        alert("Error Logging In", context);
+      }
+    }
   }
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -145,7 +132,7 @@ class _LogIn extends State<LogIn> {
                 children: [
                   Container(
                     width: double.infinity,
-                    decoration:  BoxDecoration(
+                    decoration: BoxDecoration(
                       color: Theme.of(context).cardColor,
                       borderRadius: const BorderRadius.only(
                         bottomLeft: Radius.circular(0),
@@ -160,7 +147,11 @@ class _LogIn extends State<LogIn> {
                         children: [
                           IconButton(
                               onPressed: () async {
-                                Navigator.pop(context);
+                                Navigator.push(
+                                    context,
+                                    PageTransition(
+                                        type: PageTransitionType.fade,
+                                        child: const Landing()));
                               },
                               icon: const Icon(
                                 CupertinoIcons.back,
@@ -188,7 +179,7 @@ class _LogIn extends State<LogIn> {
                                 )),
                           ),
                           UserEmail(changeClassValue: changeEmailValue),
-                          UserGivenPassword(changeClassValue: changePasswordValue),
+                          const UserGivenPassword(),
                           Padding(
                             padding: const EdgeInsets.all(20.0),
                             child: SizedBox(
@@ -201,12 +192,10 @@ class _LogIn extends State<LogIn> {
                                         message: "Sign in",
                                         width: 225,
                                         height: 50,
-                                        onPressed: (){
-                                          user.email = email!;
-                                          user.password = password!;
+                                        onPressed: () {
+                                          UserSecureStorage.setFirstName("Luke");
                                           login();
-                                          }
-                                        ,
+                                        },
                                       ),
                                     ])),
                           )

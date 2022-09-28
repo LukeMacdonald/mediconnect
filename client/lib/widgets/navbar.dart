@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:nd_telemedicine/pages/booking/set_availability.dart';
 import 'package:nd_telemedicine/pages/chats/chats_page.dart';
 import 'package:nd_telemedicine/pages/booking/booking_by_time.dart';
+import 'package:nd_telemedicine/security/storage_service.dart';
 import 'package:page_transition/page_transition.dart';
 
 import '../models/user.dart';
@@ -10,37 +11,52 @@ import '../pages/homepage/admin_home.dart';
 import '../pages/homepage/doctor_home.dart';
 import '../pages/homepage/home_page.dart';
 import '../pages/landing.dart';
+import '../pages/log_in.dart';
 import '../styles/theme.dart';
 //
 
-Widget getHomePage(User user){
-  if (user.role == "patient"){
-    return HomePage(user: user);
-  }
-  else if(user.role == "doctor"){
-    return DoctorHomePage(user: user);
-  }
-  else if(user.role == "superuser"){
-    return AdminHomePage(user: user);
-  }
-  else {
-    return const Landing();
-  }
 
-}
-
-class AppBarItem extends StatelessWidget {
+class AppBarItem extends StatefulWidget {
   const AppBarItem( {
     Key? key,
     required this.icon,
     required this.index,
-    required this.user,
-
   }) : super(key: key);
   final IconData icon;
   final int index;
-  final User user;
 
+
+  @override
+  State<AppBarItem> createState() => _AppBarItem();
+}
+class _AppBarItem extends State<AppBarItem> {
+  String role = "";
+
+  Future setRole() async {
+    await UserSecureStorage.getRole().then((value) => role = value!);
+  }
+  @override
+  void initState(){
+    setRole();
+    super.initState();
+  }
+
+  Widget getHomePage(String role){
+    print(role);
+    if (role == "patient"){
+      return const HomePage();
+    }
+    else if(role == "doctor"){
+      return const DoctorHomePage();
+    }
+    else if(role == "superuser"){
+      return const AdminHomePage();
+    }
+    else {
+      return const Landing();
+    }
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +67,7 @@ class AppBarItem extends StatelessWidget {
                 context,
                 PageTransition(
                     type: PageTransitionType.fade,
-                    child: getHomePage(user)));
+                    child: getHomePage(role)));
           },
         child: SizedBox(
             height: 70,
@@ -59,9 +75,9 @@ class AppBarItem extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Icon(
-                    icon,
+                    widget.icon,
                     size:20,
-                    color: index==0 ?AppColors.secondary : null,
+                    color: widget.index==0 ?AppColors.secondary : null,
                   )])
         )
     );
@@ -73,12 +89,10 @@ class CustomBBottomNavigationBar extends StatefulWidget {
   const CustomBBottomNavigationBar({
     Key? key,
     required this.pageIndex,
-    required this.user
   }) : super(key: key);
 
 
   final int pageIndex ;
-  final User user;
 
   @override
   State<CustomBBottomNavigationBar> createState() => _CustomBBottomNavigationBar();
@@ -102,21 +116,21 @@ class _CustomBBottomNavigationBar extends State<CustomBBottomNavigationBar> {
                 icon: CupertinoIcons.bubble_left_bubble_right_fill,
                 index: 1,
                 isSelected: (widget.pageIndex==1),
-                page:ChatsPage(user:widget.user),
+                page:const ChatPage(),
               ),
               NavigationBarItem(
                 index:2,
                 label: "prescriptions",
                 icon: Icons.medication,
                 isSelected: (widget.pageIndex==3),
-                page:HomePage(user:widget.user),
+                page:const HomePage(),
               ),
               NavigationBarItem(
                   label: "appointments",
                   icon: CupertinoIcons.calendar,
                   index: 3,
                   isSelected: (widget.pageIndex==4),
-                  page:BookingByTime(user:widget.user),
+                  page:const BookingByTime(),
               )
               //_NavigationBarItem(),
               //_NavigationBarItem(),
@@ -185,36 +199,35 @@ class NavigationBarItem extends StatelessWidget {
 class CustomAppBar extends StatelessWidget {
   const CustomAppBar({
     Key? key,
-    required this.user,
   }) : super(key: key);
 
-  final User user;
+
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: Colors.transparent,
       elevation: 0,
-      leading: AppBarItem(
+      leading: const AppBarItem(
         icon: CupertinoIcons.home,
-        index: 0, user: user,
+        index: 0,
       ),
       title: const Text("Home",
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 16,
           )),
-      actions: <Widget>[
+      actions: const <Widget>[
         AppBarItem(
           icon: CupertinoIcons.bell_fill,
-          index: 5, user: user,
+          index: 5,
         ),
-        const SizedBox(width: 20),
+        SizedBox(width: 20),
         AppBarItem(
           icon: CupertinoIcons.settings_solid,
-          index: 5, user: user,
+          index: 5,
         ),
-        const SizedBox(width: 20),
+        SizedBox(width: 20),
 
       ],
     );
@@ -225,12 +238,10 @@ class DoctorBottomNavigationBar extends StatefulWidget {
   const DoctorBottomNavigationBar({
     Key? key,
     required this.pageIndex,
-    required this.user
   }) : super(key: key);
 
 
   final int pageIndex ;
-  final User user;
 
   @override
   State<DoctorBottomNavigationBar> createState() => _DoctorBottomNavigationBar();
@@ -254,21 +265,21 @@ class _DoctorBottomNavigationBar extends State<DoctorBottomNavigationBar> {
                 icon: CupertinoIcons.bubble_left_bubble_right_fill,
                 index: 1,
                 isSelected: (widget.pageIndex==1),
-                page:ChatsPage(user:widget.user),
+                page:const ChatPage(),
               ),
               NavigationBarItem(
                 index:2,
                 label: "patients",
                 icon: Icons.medication,
                 isSelected: (widget.pageIndex==7),
-                page:HomePage(user:widget.user),
+                page:const HomePage(),
               ),
               NavigationBarItem(
                 label: "appointments",
                 icon: CupertinoIcons.calendar,
                 index: 3,
                 isSelected: (widget.pageIndex==8),
-                page:SetAvailability(user:widget.user),
+                page:const SetAvailability(),
               )
               //_NavigationBarItem(),
               //_NavigationBarItem(),
@@ -277,5 +288,123 @@ class _DoctorBottomNavigationBar extends State<DoctorBottomNavigationBar> {
         )
     );
 
+  }
+}
+class AppDropDown extends StatelessWidget {
+  const AppDropDown({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return PopupMenuButton(
+      elevation: 10,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(20.0),
+          ),
+        ),
+
+      // add icon, by default "3 dot" icon
+      // icon: Icon(Icons.book)
+        itemBuilder: (context){
+          return [
+            PopupMenuItem<int>(
+              value: 0,
+              child: Row(
+                  children:const [
+                    Padding(
+                      padding: EdgeInsets.only(right:10.0),
+                      child: Icon(CupertinoIcons.person),
+                    ),
+                    Text("My Account"),
+                  ]
+              ),
+            ),
+            PopupMenuItem<int>(
+              value: 1,
+              child: Row(
+                  children:const [
+                    Padding(
+                      padding: EdgeInsets.only(right:10.0),
+                      child: Icon(CupertinoIcons.settings_solid),
+                    ),
+                    Text("Settings"),
+                  ]
+              ),
+            ),
+
+            PopupMenuItem<int>(
+              value: 2,
+              child: Row(
+                  children:const [
+                    Padding(
+                      padding: EdgeInsets.only(right:10.0),
+                      child: Icon(Icons.logout),
+                    ),
+                    Text("Logout"),
+                  ]
+              ),
+            ),
+          ];
+        },
+        onSelected:(value){
+          if(value == 0){
+            print("My account menu is selected.");
+          }else if(value == 1){
+            print("Settings menu is selected.");
+          }else if(value == 2){
+            Navigator.push(
+                context,
+                PageTransition(
+                    type: PageTransitionType.leftToRight,
+                    child: const LogIn()));
+          }
+        }
+    );
+  }
+}
+
+
+class ChatAppBar extends StatelessWidget {
+  const ChatAppBar({
+    Key? key,
+    required this.user,
+  }) : super(key: key);
+
+  final User user;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      leading: const AppBarItem(
+        icon: CupertinoIcons.home,
+        index: 0,
+      ),
+      title: const Text("Messages",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          )),
+      actions: const <Widget>[
+        AppBarItem(
+          icon: CupertinoIcons.plus,
+          index: 5,
+        ),
+        AppBarItem(
+          icon: CupertinoIcons.bell_fill,
+          index: 5,
+        ),
+        SizedBox(width: 20),
+        AppBarItem(
+          icon: CupertinoIcons.settings_solid,
+          index: 5,
+        ),
+        SizedBox(width: 20),
+
+      ],
+    );
   }
 }

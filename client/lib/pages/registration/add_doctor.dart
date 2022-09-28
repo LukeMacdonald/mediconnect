@@ -1,20 +1,15 @@
-import 'dart:io';
-
+import '../../pages/imports.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:nd_telemedicine/main.dart';
-import '../../widgets/alerts.dart';
 import 'dart:convert';
-import '../../models/user.dart';
-import '../../widgets/buttons.dart';
-import '../../widgets/form_widgets.dart';
-import '../../widgets/icon_buttons.dart';
-import '../../widgets/navbar.dart';
+import 'dart:io';
+
+import '../../security/storage_service.dart';
 
 class AddDoctor extends StatefulWidget {
-  final User user;
-  const AddDoctor({Key? key, required this.user}) : super(key: key);
+
+  const AddDoctor({Key? key}) : super(key: key);
 
   @override
   State<AddDoctor> createState() => _AddDoctor();
@@ -22,7 +17,6 @@ class AddDoctor extends StatefulWidget {
 
 class _AddDoctor extends State<AddDoctor> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  late User user;
 
   bool _changeEmail = false;
   String? email;
@@ -37,16 +31,17 @@ class _AddDoctor extends State<AddDoctor> {
   @override
   void initState() {
     super.initState();
-    user = widget.user;
   }
 
   Future save() async {
+    String token = "";
+    await UserSecureStorage.getJWTToken().then((value) => token = value!);
 
     try {
       final response = await http.get(
           Uri.parse("${authenticationIP}admin/add/doctor/verification/$email"),
           headers: {'Content-Type': 'application/json',
-            HttpHeaders.authorizationHeader: "Bearer ${user.accessToken}"},);
+            HttpHeaders.authorizationHeader: "Bearer $token"},);
       switch (response.statusCode) {
         case 201:
           dynamic responseData = json.decode(response.body);
@@ -97,17 +92,17 @@ class _AddDoctor extends State<AddDoctor> {
               },
             ),
           ),
-          actions: <Widget>[
+          actions: const <Widget>[
             AppBarItem(
               icon: CupertinoIcons.bell_fill,
-              index: 5, user: user,
+              index: 5,
             ),
-            const SizedBox(width: 20),
+            SizedBox(width: 20),
             AppBarItem(
               icon: CupertinoIcons.settings_solid,
-              index: 5, user: user,
+              index: 5,
             ),
-            const SizedBox(width: 20),
+            SizedBox(width: 20),
 
           ],
         ),

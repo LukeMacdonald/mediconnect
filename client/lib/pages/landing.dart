@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'imports.dart';
 
-import 'registration/register.dart';
-import '../widgets/buttons.dart';
-import 'log_in.dart';
 
 class Landing extends StatefulWidget {
   const Landing({Key? key}) : super(key: key);
@@ -14,6 +12,8 @@ class Landing extends StatefulWidget {
 
 class _Landing extends State<Landing> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
+
 
   @override
   Widget build(BuildContext context) {

@@ -3,118 +3,50 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:nd_telemedicine/pages/homepage/doctor_home.dart';
-import 'package:nd_telemedicine/pages/homepage/home_page.dart';
-import 'package:nd_telemedicine/widgets/form_widgets.dart';
+import 'package:nd_telemedicine/security/storage_service.dart';
 import 'package:page_transition/page_transition.dart';
-import '../../main.dart';
-import '../../widgets/alerts.dart';
-import '../../widgets/buttons.dart';
-import '../../widgets/icon_buttons.dart';
-import '../../models/user.dart';
+import '../../pages/imports.dart';
 
 class ProfileCreation extends StatefulWidget {
-  final User user;
 
-  const ProfileCreation({Key? key, required this.user}) : super(key: key);
+  const ProfileCreation({Key? key}) : super(key: key);
 
   @override
   State<ProfileCreation> createState() => _ProfileCreation();
 }
 class _ProfileCreation extends State<ProfileCreation> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  late User user = widget.user;
   @override
   void initState() {
     super.initState();
   }
   Future save() async {
+    String token = "";
+    await UserSecureStorage.getJWTToken().then((value) => token = value!);
+
     await http.put(Uri.parse("${authenticationIP}update"),
         headers: {
           'Content-Type': 'application/json',
-          HttpHeaders.authorizationHeader: user.accessToken
+          HttpHeaders.authorizationHeader: token
         },
-        body: json.encode({
-          'email': user.email,
-          'password': user.password,
-          'role': user.role,
-          'firstName': user.firstName,
-          'lastName': user.lastName,
-          'phoneNumber': user.phoneNumber,
-          'dob': user.dob
-        }));
-    user.password = "";
+        body: json.encode(await UserSecureStorage().toFullJson()));
+
     if (!mounted) return;
-    if (user.role == 'patient') {
+    if (await UserSecureStorage.getRole() == 'patient') {
       Navigator.push(
           context,
           PageTransition(
               type: PageTransitionType.fade,
-              child: HomePage(user: user)));
-    } else if (user.role == 'doctor') {
+              child: const HomePage()));
+    } else if (await UserSecureStorage.getRole() == 'doctor') {
       Navigator.push(
           context,
           PageTransition(
               type: PageTransitionType.fade,
-              child: DoctorHomePage(user: user)));
+              child: const DoctorHomePage()));
     }
   }
 
-  bool _changeFirstName = false;
-  bool _changeLastName = false;
-  bool _changeDOB = false;
-  bool _changePhoneNumber = false;
-  bool _changePassword = false;
-  bool _changeConfirmPassword = false;
-
-  String? firstName;
-  String? lastName;
-  String? dob;
-  String? phone;
-  String? password;
-  String? confirmPassword;
-
-  changeFirstNameValue(String? newText) {
-    setState(() {
-      _changeFirstName = !_changeFirstName;
-      firstName = newText;
-    });
-  }
-
-  changeLastNameValue(String? newText) {
-    setState(() {
-      _changeLastName = !_changeLastName;
-      lastName = newText;
-    });
-  }
-
-  changePhoneNumberValue(String? newText) {
-    setState(() {
-      _changePhoneNumber = !_changePhoneNumber;
-      phone = newText;
-    });
-  }
-
-  changePasswordValue(String? newText) {
-    setState(() {
-      _changePassword = !_changePassword;
-      password = newText;
-    });
-  }
-
-  changeConfirmPasswordValue(String? newText) {
-    setState(() {
-      _changeConfirmPassword = !_changeConfirmPassword;
-      confirmPassword = newText;
-    });
-  }
-
-  changeDOBValue(String? newText) {
-    setState(() {
-      _changeDOB = !_changeDOB;
-      dob = newText;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -179,14 +111,12 @@ class _ProfileCreation extends State<ProfileCreation> {
                         ],
                       ),
                     ),
-                    UserGivenFirstName(changeClassValue: changeFirstNameValue),
-                    UserGivenLastName(changeClassValue: changeLastNameValue),
-                    UserDOB(changeClassValue: changeDOBValue),
-                    UserGivenPhoneNumber(
-                        changeClassValue: changePhoneNumberValue),
-                    UserGivenPassword(changeClassValue: changePasswordValue),
-                    UserGivenConfirmPassword(
-                        changeClassValue: changeConfirmPasswordValue),
+                    const UserGivenFirstName(),
+                    const UserGivenLastName(),
+                    const UserDOB(),
+                    const UserGivenPhoneNumber(),
+                    const UserGivenPassword(),
+                    const UserGivenConfirmPassword(),
                     ]),
                   ),
                   Padding(
@@ -197,26 +127,22 @@ class _ProfileCreation extends State<ProfileCreation> {
                       width: 220,
                       height: 50,
                       onPressed: () async {
-                        if (firstName == "") {
+                        if (await UserSecureStorage.getFirstName() == "" || await UserSecureStorage.getFirstName() == null) {
                           alert("Please Enter Your First Name!", context);
-                        } else if (lastName == "") {
+                        } else if (await UserSecureStorage.getLastName() == "" || await UserSecureStorage.getLastName() == null) {
                           alert("Please Enter Your Last Name!", context);
-                        } else if (dob == "") {
+                        } else if (await UserSecureStorage.getDOB() == "" || await UserSecureStorage.getDOB() == null) {
                           alert("Please Enter Your Date of Birth!", context);
-                        } else if (phone == "") {
+                        } else if (await UserSecureStorage.getFirstName() == "" || await UserSecureStorage.getPhoneNumber() == null) {
                           alert("Please Enter Your Phone Number!", context);
-                        } else if (password == "") {
+                        } else if (await UserSecureStorage.getPassword() == "" || await UserSecureStorage.getPassword()== null) {
                           alert("Please Enter Your Password!", context);
-                        } else if (confirmPassword == "") {
+                        } else if (await UserSecureStorage.getConfirmPassword() == "" || await UserSecureStorage.getConfirmPassword() == null) {
                           alert("Please Confirm Your Password!", context);
-                        } else if (confirmPassword?.compareTo(password!) != 0) {
+                        } else if (await UserSecureStorage.getConfirmPassword()!= await UserSecureStorage.getPassword()) {
                           alert("Passwords Did Not Match!", context);
                         } else {
-                          user.firstName = firstName!;
-                          user.lastName = lastName!;
-                          user.dob = dob!;
-                          user.phoneNumber = phone!;
-                          user.password = password!;
+
                           save();
                         }
                       },

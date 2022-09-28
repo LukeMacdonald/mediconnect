@@ -2,29 +2,20 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:nd_telemedicine/main.dart';
-import 'package:nd_telemedicine/widgets/form_widgets.dart';
+import 'package:nd_telemedicine/security/storage_service.dart';
 import 'package:page_transition/page_transition.dart';
-
-import '../../models/user.dart';
-import 'create_profile.dart';
-import '../../styles/theme.dart';
-import '../../widgets/alerts.dart';
-import '../../widgets/buttons.dart';
+import '../../pages/imports.dart';
 import 'package:http/http.dart' as http;
 
-import '../../widgets/icon_buttons.dart';
 
 class Verification extends StatefulWidget {
-  final User user;
-  const Verification({Key? key, required this.user}) : super(key: key);
+  const Verification({Key? key}) : super(key: key);
 
   @override
   State<Verification> createState() => _Verification();
 }
 
 class _Verification extends State<Verification> {
-  late User user = widget.user;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   bool _changeCode = false;
@@ -46,17 +37,18 @@ class _Verification extends State<Verification> {
             Uri.parse("${authenticationIP}register/doctor"),
             headers: {'Content-Type': 'application/json'},
             body:
-                jsonEncode(user.doctorToJson(int.parse(code!))));
+
+                jsonEncode(await UserSecureStorage().doctorToJson(int.parse(code!))));
         switch (response.statusCode) {
           case 201:
             var responseData = json.decode(response.body);
-            user.setNeededDetails(responseData);
+            UserSecureStorage.setID(responseData['id']);
             if(!mounted)return;
             Navigator.push(
                 context,
                 PageTransition(
                     type: PageTransitionType.fade,
-                    child: ProfileCreation(user: user)));
+                    child: const ProfileCreation()));
             break;
           default:
             var list = json.decode(response.body).values.toList();

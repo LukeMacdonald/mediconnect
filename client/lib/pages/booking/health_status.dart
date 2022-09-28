@@ -9,8 +9,7 @@ import '../../widgets/buttons.dart';
 import '../../widgets/navbar.dart';
 
 class HeathStatusPage extends StatefulWidget {
-  final User user;
-  const HeathStatusPage({Key? key, required this.user}) : super(key: key);
+  const HeathStatusPage({Key? key}) : super(key: key);
 
   @override
   State<HeathStatusPage> createState() => _HeathStatusPage();
@@ -19,7 +18,7 @@ class HeathStatusPage extends StatefulWidget {
   class _HeathStatusPage extends State<HeathStatusPage> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  late User user = widget.user;
+
   bool fever = false;
   bool cough= false;
   bool headache = false;
@@ -34,7 +33,6 @@ class HeathStatusPage extends StatefulWidget {
           leading: AppBarItem(
             icon: CupertinoIcons.home,
             index: 6,
-            user: user,
           ),
           title: const Text("Book an Appointment",
               style: TextStyle(
@@ -45,13 +43,11 @@ class HeathStatusPage extends StatefulWidget {
             AppBarItem(
               icon: CupertinoIcons.bell_fill,
               index: 5,
-              user: user,
             ),
             const SizedBox(width: 20),
             AppBarItem(
               icon: CupertinoIcons.settings_solid,
               index: 5,
-              user: user,
             ),
             const SizedBox(width: 20),
           ],
@@ -194,7 +190,7 @@ class HeathStatusPage extends StatefulWidget {
                         height: 50,
                         onPressed: (){
                           Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => BookingByTime(user: user)));
+                              MaterialPageRoute(builder: (context) => const BookingByTime()));
                         }
                         ,
                       ),

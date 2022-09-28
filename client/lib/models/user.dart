@@ -1,18 +1,21 @@
+import '../security/storage_service.dart';
+
 class User {
-  String email;
-  String password;
-  String role;
-  String firstName = "";
-  String lastName = "";
-  String phoneNumber = "";
-  String dob = "";
-  String? confirmPassword;
-  int? id;
-  String accessToken = "";
-  String refreshToken = "";
+  late String email;
+  late String password;
+  late String role;
+  late String firstName;
+  late String lastName;
+  late String phoneNumber;
+  late String dob;
+  late String? confirmPassword;
+  late int? id;
+  late String accessToken;
+  late  String refreshToken;
 
   //User(this.email, this.password, this.role);
-  User(this.email, this.password, this.role, this.confirmPassword);
+  User();
+  //User(this.email, this.password, this.role, this.confirmPassword);
 
   void setNeededDetails(Map<String, dynamic> responseData) {
     email = responseData['email'];
@@ -33,17 +36,5 @@ class User {
     }
   }
 
-  Map<String, dynamic> toJson() => {
-        'email': email,
-        'password': password,
-        'role': role,
-        'confirmPassword': confirmPassword,
-      };
-  Map<String, dynamic> doctorToJson(int code) => {
-        'email': email,
-        'password': password,
-        'role': role,
-        'confirmPassword': confirmPassword,
-        'code': code,
-      };
+
 }

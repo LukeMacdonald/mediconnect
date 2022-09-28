@@ -3,30 +3,29 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:nd_telemedicine/main.dart';
-import 'package:nd_telemedicine/pages/homepage/doctor_home.dart';
-import '../../models/user.dart';
+import 'package:nd_telemedicine/security/storage_service.dart';
 import '../../styles/theme.dart';
 import '../../utilities/custom_functions.dart';
 import '../../widgets/buttons.dart';
 import '../../widgets/navbar.dart';
 
 class SetAvailability extends StatefulWidget {
-  final User user;
-  const SetAvailability({Key? key, required this.user}) : super(key: key);
+  const SetAvailability({Key? key,}) : super(key: key);
 
   @override
   State<SetAvailability> createState() => _SetAvailability();
 }
 
 class _SetAvailability extends State<SetAvailability> {
-  late User user = widget.user;
 
   Future save() async {
     int day = getDayIntFromDayString(dayValue);
+    String id = "";
+    await UserSecureStorage.getID().then((value) => id = value!);
     await http.post(Uri.parse("${availabilityIP}doctor/set/availability"),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
-          'doctor_id': user.id,
+          'doctor_id': int.parse(id),
           'day_of_week': day,
           'start_time': hourValue.substring(0, 5),
           'end_time': hourValue.substring(8,)
@@ -42,8 +41,10 @@ class _SetAvailability extends State<SetAvailability> {
   }
 
   Future getAvailability() async {
+    String id = "";
+    await UserSecureStorage.getID().then((value) => id = value!);
     final response =
-        await http.get(Uri.parse("${availabilityIP}get/availabilities/${user.id}"));
+        await http.get(Uri.parse("${availabilityIP}get/availabilities/${int.parse(id)}"));
     var responseData = json.decode(response.body);
     String day = "";
     if(responseData!=""|| responseData!=null){
@@ -310,29 +311,27 @@ class _SetAvailability extends State<SetAvailability> {
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
-          leading: AppBarItem(
+          leading: const AppBarItem(
             icon: CupertinoIcons.home,
             index: 0,
-            user: user,
           ),
           title: const Text("Set Availability",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
               )),
-          actions: <Widget>[
+          actions: const <Widget>[
             AppBarItem(
               icon: CupertinoIcons.bell_fill,
               index: 5,
-              user: user,
             ),
-            const SizedBox(width: 20),
+            SizedBox(width: 20),
             AppBarItem(
               icon: CupertinoIcons.settings_solid,
               index: 5,
-              user: user,
+
             ),
-            const SizedBox(width: 20),
+            SizedBox(width: 20),
           ],
         ),
         body: SingleChildScrollView(

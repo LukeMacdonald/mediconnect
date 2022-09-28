@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:nd_telemedicine/security/storage_service.dart';
+import '../main.dart';
 import '../styles/custom_styles.dart';
 
 
 class UserEmail extends StatefulWidget {
   const UserEmail ({
     Key? key,
-    required this.changeClassValue
-  }) : super(key: key);
+    required this.changeClassValue,
 
+  }) : super(key: key);
   final ValueChanged<String> changeClassValue;
+
+
+
   @override
   State<UserEmail> createState() => _UserEmail();
 
@@ -30,6 +35,7 @@ class _UserEmail extends State<UserEmail> {
                   obscureText: false,
                   autofocus: true,
                   onChanged: (val) {
+                    UserSecureStorage.setEmail(textController.text);
                     widget.changeClassValue(textController.text);
                   },
                   decoration: const InputDecoration(
@@ -62,10 +68,10 @@ class _UserEmail extends State<UserEmail> {
 class UserGivenFirstName extends StatefulWidget {
    const UserGivenFirstName ({
     Key? key,
-    required this.changeClassValue
+
   }) : super(key: key);
 
-  final ValueChanged<String> changeClassValue;
+
   @override
   State<UserGivenFirstName> createState() => _UserGivenFirstName();
 
@@ -85,7 +91,7 @@ class _UserGivenFirstName extends State<UserGivenFirstName> {
                   controller: textController,
                   obscureText: false,
                   onChanged: (val) {
-                    widget.changeClassValue(textController.text);
+                    UserSecureStorage.setFirstName(textController.text);
                   },
                   decoration: const InputDecoration(
                     labelText: 'First Name',
@@ -110,10 +116,9 @@ class _UserGivenFirstName extends State<UserGivenFirstName> {
 class UserGivenLastName extends StatefulWidget {
   const UserGivenLastName ({
     Key? key,
-    required this.changeClassValue
+
   }) : super(key: key);
 
-  final ValueChanged<String> changeClassValue;
   @override
   State<UserGivenLastName> createState() => _UserGivenLastName();
 
@@ -133,7 +138,8 @@ class _UserGivenLastName extends State<UserGivenLastName> {
                   controller: textController,
                   obscureText: false,
                   onChanged: (val) {
-                    widget.changeClassValue(textController.text);
+                    UserSecureStorage.setLastName(textController.text);
+
                   },
                   decoration: const InputDecoration(
                     labelText: 'Last Name',
@@ -159,17 +165,16 @@ class UserGivenPassword extends StatefulWidget {
 
   const UserGivenPassword ({
     Key? key,
-    required this.changeClassValue
   }) : super(key: key);
 
-  final ValueChanged<String> changeClassValue;
+
   @override
   State<UserGivenPassword> createState() => _UserGivenPassword();
 
 }
 class _UserGivenPassword extends State<UserGivenPassword> {
   final textController = TextEditingController();
-  bool passwordVisibility = true;
+  bool passwordVisibility = false;
 
   @override
   Widget build(BuildContext context) {
@@ -182,7 +187,8 @@ class _UserGivenPassword extends State<UserGivenPassword> {
                 child: TextFormField(
                   controller: textController,
                   onChanged: (val) {
-                    widget.changeClassValue(textController.text);
+                    UserSecureStorage.setPassword(textController.text);
+
                   },
                   validator: (val) {
                     if (val == "") {
@@ -222,17 +228,17 @@ class _UserGivenPassword extends State<UserGivenPassword> {
 class UserGivenConfirmPassword extends StatefulWidget {
   const UserGivenConfirmPassword ({
     Key? key,
-    required this.changeClassValue
+
   }) : super(key: key);
 
-  final ValueChanged<String> changeClassValue;
+
   @override
   State<UserGivenConfirmPassword> createState() => _UserGivenConfirmPassword();
 
 }
 class _UserGivenConfirmPassword extends State<UserGivenConfirmPassword> {
   final textController = TextEditingController();
-  bool passwordVisibility = true;
+  bool passwordVisibility = false;
 
   @override
   Widget build(BuildContext context) {
@@ -245,7 +251,7 @@ class _UserGivenConfirmPassword extends State<UserGivenConfirmPassword> {
                 child: TextFormField(
                   controller: textController,
                   onChanged: (val) {
-                    widget.changeClassValue(textController.text);
+                    UserSecureStorage.setConfirmPassword(textController.text);
                   },
                   validator: (val) {
                     if (val == "") {
@@ -285,10 +291,9 @@ class _UserGivenConfirmPassword extends State<UserGivenConfirmPassword> {
 class UserGivenPhoneNumber extends StatefulWidget {
   const UserGivenPhoneNumber ({
     Key? key,
-    required this.changeClassValue
+
   }) : super(key: key);
 
-  final ValueChanged<String> changeClassValue;
   @override
   State<UserGivenPhoneNumber> createState() => _UserGivenPhoneNumber();
 
@@ -310,7 +315,7 @@ class _UserGivenPhoneNumber extends State<UserGivenPhoneNumber> {
                       controller: textController,
                       obscureText: false,
                       onChanged: (val) {
-                        widget.changeClassValue(textController.text);
+                        UserSecureStorage.setPhoneNumber(textController.text);
                       },
                       decoration: const InputDecoration(
                         labelText: 'Phone Number ',
@@ -333,10 +338,10 @@ class _UserGivenPhoneNumber extends State<UserGivenPhoneNumber> {
 class UserDOB extends StatefulWidget {
   const UserDOB ({
     Key? key,
-    required this.changeClassValue
+
   }) : super(key: key);
 
-  final ValueChanged<String> changeClassValue;
+
   @override
   State<UserDOB> createState() => _UserDOB();
 
@@ -382,7 +387,7 @@ class _UserDOB extends State<UserDOB> {
                         textController.text = formattedDate;
                         // Will be converted in backend
                       });
-                      widget.changeClassValue(textController.text);
+                      UserSecureStorage.setDOB(textController.text);
                     }
                   },
                   style: const TextStyle(fontSize: 16,fontWeight: FontWeight.w500,),

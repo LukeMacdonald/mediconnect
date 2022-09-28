@@ -1,18 +1,11 @@
-import 'dart:convert';
 import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:nd_telemedicine/pages/registration/verification.dart';
-import 'package:nd_telemedicine/pages/registration/create_profile.dart';
-import 'package:nd_telemedicine/styles/theme.dart';
-import 'package:nd_telemedicine/widgets/buttons.dart';
+import '../../pages/imports.dart';
+import 'dart:convert';
 
-import '../../main.dart';
-import '../../models/user.dart';
-import '../../widgets/alerts.dart';
-import '../../widgets/form_widgets.dart';
-import '../../widgets/icon_buttons.dart';
+import '../../security/storage_service.dart';
 
 class Register extends StatefulWidget {
   const Register({Key? key}) : super(key: key);
@@ -22,16 +15,11 @@ class Register extends StatefulWidget {
 }
 
 class _Register extends State<Register> {
+
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   bool _changeEmail = false;
-  bool _changePassword = false;
-  bool _changeConfirmPassword = false;
-
-  String? role;
   String? email;
-  String? password;
-  String? confirmPassword;
 
   changeEmailValue(String? newText) {
     setState(() {
@@ -40,26 +28,9 @@ class _Register extends State<Register> {
     });
   }
 
-  changePasswordValue(String? newText) {
-    setState(() {
-      _changePassword = !_changePassword;
-      password = newText;
-    });
-  }
-
-  changeConfirmPasswordValue(String? newText) {
-    setState(() {
-      _changeConfirmPassword = !_changeConfirmPassword;
-      confirmPassword = newText;
-    });
-  }
-
-  late User user;
-
   @override
   void initState() {
     super.initState();
-    user = User("", "", "", "");
   }
 
   Widget userRole() {
@@ -68,7 +39,7 @@ class _Register extends State<Register> {
       buttonLables: const ['Doctor', 'Patient'],
       buttonValues: const ['Doctor', 'Patient'],
       radioButtonValue: (value) {
-        role = value as String;
+        UserSecureStorage.setRole(value as String);
       },
       enableButtonWrap: true,
       elevation: 5,
@@ -83,35 +54,36 @@ class _Register extends State<Register> {
   }
 
   Future<void> validateSave() async {
-    if (email == "" || email == null) {
+    if (await UserSecureStorage.getEmail() == ""
+        || await UserSecureStorage.getEmail() != null ) {
       alert("Invalid Input!\nEmail Required!", context);
-      //alert("Invalid Input!\nEmail Required!", context);
-    } else if (password == "" || password == null) {
+    } else if (await UserSecureStorage.getPassword() == ""
+        || await UserSecureStorage.getPassword() != null) {
       alert("Invalid Input!\nPassword Required!", context);
-    } else if (confirmPassword == "" || confirmPassword == null) {
+    } else if (await UserSecureStorage.getConfirmPassword() == ""
+        || await UserSecureStorage.getConfirmPassword() != null ) {
       alert("Invalid Input!\nConfirm Password Required!", context);
-    } else if (confirmPassword != password) {
+    } else if (await UserSecureStorage.getPassword() != await UserSecureStorage.getConfirmPassword()) {
       alert("Invalid Input!\nPassword Dont Match!", context);
-    } else if (role != "Doctor" && role != "Patient") {
+    } else if (await UserSecureStorage.getRole() != "Doctor" && await UserSecureStorage.getRole() != "Patient") {
       alert("Invalid Input!\nRole Not Selected!", context);
     } else {
-      user = User(email!, password!, role!, confirmPassword);
-      if (role == "Doctor") {
+      if (await UserSecureStorage.getRole() == "Doctor") {
         Navigator.push(context,
-            MaterialPageRoute(builder: (context) => Verification(user: user)));
+            MaterialPageRoute(builder: (context) => const Verification()));
       } else {
         try {
           final response = await http.post(
               Uri.parse("${authenticationIP}register"),
               headers: {'Content-Type': 'application/json'},
-              body: jsonEncode(user.toJson()));
+              body: jsonEncode(UserSecureStorage().toJson()));
           switch (response.statusCode) {
             case 201:
               var responseData = json.decode(response.body);
-              user.setNeededDetails(responseData);
+              UserSecureStorage.setID(responseData['id']);
               if (!mounted) return;
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => ProfileCreation(user: user)));
+                  MaterialPageRoute(builder: (context) => const ProfileCreation()));
               break;
             default:
               var list = json.decode(response.body).values.toList();
@@ -174,10 +146,9 @@ class _Register extends State<Register> {
                 ),
               ),
             ),
-            UserEmail(changeClassValue: changeEmailValue),
-            UserGivenPassword(changeClassValue: changePasswordValue),
-            UserGivenConfirmPassword(
-                changeClassValue: changeConfirmPasswordValue),
+          UserEmail(changeClassValue: changeEmailValue),
+            const UserGivenPassword(),
+            const UserGivenConfirmPassword(),
             Padding(
               padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
               child: Container(

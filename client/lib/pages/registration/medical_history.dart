@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
-import 'package:nd_telemedicine/pages/homepage/home_page.dart';
 import 'package:page_transition/page_transition.dart';
-import '../../models/medical_history.dart';
-import '../../models/user.dart';
-import '../../styles/custom_styles.dart';
-import '../../styles/textformfield_style.dart';
-import '../../styles/theme.dart';
+import '../../pages/imports.dart';
+
+
 
 class MedicalHistory extends StatefulWidget {
-  final User user;
-  const MedicalHistory({Key? key, required this.user}) : super(key: key);
+  const MedicalHistory({Key? key}) : super(key: key);
 
   @override
   State<MedicalHistory> createState() => _MedicalHistory();
@@ -18,7 +14,7 @@ class MedicalHistory extends StatefulWidget {
 
 class _MedicalHistory extends State<MedicalHistory> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  late User user = widget.user;
+
 
   TextEditingController ill = TextEditingController();
   TextEditingController med = TextEditingController();
@@ -106,7 +102,7 @@ class _MedicalHistory extends State<MedicalHistory> {
 
   Future save() async {
     Navigator.push(context,
-        MaterialPageRoute(builder: (context) => HomePage(user: user)));
+        MaterialPageRoute(builder: (context) => const HomePage()));
   }
 
   Widget smokes() {
@@ -290,9 +286,9 @@ class _MedicalHistory extends State<MedicalHistory> {
                     controller: ill,
                     decoration: const InputDecoration(
                       labelText: 'Any Other not on list?',
-                      labelStyle: const TextStyle(fontSize: 16),
+                      labelStyle: TextStyle(fontSize: 16),
                       hintText: 'Enter Name of Medication...',
-                      hintStyle: const TextStyle(fontSize: 16),
+                      hintStyle: TextStyle(fontSize: 16),
                       enabledBorder: CustomOutlineInputBorder.custom,
                       focusedBorder: CustomOutlineInputBorder.custom,
                       errorBorder: CustomOutlineInputBorder.custom,
@@ -407,7 +403,7 @@ class _MedicalHistory extends State<MedicalHistory> {
                         context,
                         PageTransition(
                             type: PageTransitionType.fade,
-                            child: HomePage(user: user)));
+                            child: const HomePage()));
                   },
                   style: ElevatedButton.styleFrom(
                       minimumSize: const Size(230, 50),
@@ -543,7 +539,7 @@ class _MedicalHistory extends State<MedicalHistory> {
                               0, 20, 0, 10),
                           child: Text(
                             'Do you have any Disabilities?',
-                            style: const TextStyle(fontSize: 16),
+                            style: TextStyle(fontSize: 16),
                           ),
                         ),
                         disabilities(),

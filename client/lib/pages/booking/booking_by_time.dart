@@ -10,15 +10,14 @@ import 'package:nd_telemedicine/main.dart';
 import 'package:nd_telemedicine/pages/homepage/home_page.dart';
 import 'package:page_transition/page_transition.dart';
 
-import '../../models/user.dart';
+import '../../security/storage_service.dart';
 import '../../styles/theme.dart';
 import '../../utilities/custom_functions.dart';
 import '../../widgets/buttons.dart';
 import '../../widgets/navbar.dart';
-
 class BookingByTime extends StatefulWidget {
-  final User user;
-  const BookingByTime({Key? key, required this.user}) : super(key: key);
+
+  const BookingByTime({Key? key}) : super(key: key);
 
   @override
   State<BookingByTime> createState() => _BookingByTime();
@@ -26,7 +25,6 @@ class BookingByTime extends StatefulWidget {
 
 class _BookingByTime extends State<BookingByTime> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  late User user = widget.user;
 
   String? daySelected;
   //Not sure if url needed
@@ -80,7 +78,7 @@ class _BookingByTime extends State<BookingByTime> {
     await http.post(Uri.parse("${appointmentIP}set/appointment"),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
-          'patient': user.id,
+          'patient': await UserSecureStorage.getID(),
           'doctor': doctorId,
           'date': date,
           'time': startTime,
@@ -91,7 +89,7 @@ class _BookingByTime extends State<BookingByTime> {
         context,
         PageTransition(
             type: PageTransitionType.fade,
-            child: HomePage(user: user)));
+            child: const HomePage()));
   }
 
   Future checkAppointment(int id, String date, String startTime) async {
@@ -397,29 +395,27 @@ class _BookingByTime extends State<BookingByTime> {
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
-          leading: AppBarItem(
+          leading: const AppBarItem(
             icon: CupertinoIcons.home,
             index: 0,
-            user: user,
           ),
           title: const Text("Book Appointment",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
               )),
-          actions: <Widget>[
+          actions: const <Widget>[
             AppBarItem(
               icon: CupertinoIcons.bell_fill,
               index: 5,
-              user: user,
+
             ),
-            const SizedBox(width: 20),
+            SizedBox(width: 20),
             AppBarItem(
               icon: CupertinoIcons.settings_solid,
               index: 5,
-              user: user,
             ),
-            const SizedBox(width: 20),
+            SizedBox(width: 20),
           ],
         ),
         body: SingleChildScrollView(
