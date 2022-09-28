@@ -1,30 +1,79 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:faker/faker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:nd_telemedicine/pages/chats/chat_screen.dart';
-import 'package:nd_telemedicine/widgets/avatar.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:http/http.dart' as http;
+import '../../pages/imports.dart';
+import '../../security/storage_service.dart';
 
-import '../../models/message_data.dart';
-import '../../models/user.dart';
-import '../../styles/theme.dart';
-import '../../widgets/helpers.dart';
-import '../../widgets/navbar.dart';
+
 
 Faker faker = Faker();
 
-class ChatsPage extends StatelessWidget {
+class ChatPage extends StatefulWidget {
 
-  static Route route(User user) => MaterialPageRoute(
-      builder: (context) => ChatsPage(
-            user: user,
-          ));
-  const ChatsPage({Key? key, required this.user}) : super(key: key);
-  final User user;
+  const ChatPage({Key? key}) : super(key: key);
+
+  @override
+  State<ChatPage> createState() => _ChatPage();
+}
+
+class _ChatPage  extends State<ChatPage > {
+
+  late List<MessageData> _messages;
+
+  late List<String> _names;
 
   final int pageIndex = 1;
 
+  Future <String> getName(int id) async{
 
+    String jwt = "";
+    await UserSecureStorage.getJWTToken().then((value) => jwt = value!);
+
+    var response = await http.get(
+        Uri.parse("${authenticationIP}get/name/$id"),
+        headers: {
+          'Content-Type': 'application/json',
+          HttpHeaders.authorizationHeader: jwt
+        });
+    return response.body;
+
+  }
+  @override
+  void initState() {
+    _messages = [];
+    _names =[];
+    getMessages();
+    super.initState();
+  }
+
+  Future<void> getMessages() async{
+    String id = "";
+    await UserSecureStorage.getID().then((value) => id = value!);
+    var response = await http.get(
+        Uri.parse("${messageIP}get/message_menu/${int.parse(id)}"),
+        headers: {'Content-Type': 'application/json'});
+    var responses = json.decode(response.body) as List;
+    print(responses);
+    MessageData message;
+    for (var element in responses) {
+      message = MessageData(element['messageID'],
+          element['senderID'],element['receiverID'],
+          DateTime.parse(element['timestamp']),
+          element['message'],
+          element['viewed'] as bool);
+      String name = await getName(message.receiverID);
+      setState(() {
+        _messages.add(message);
+        _names.add(name);
+
+      });
+    }
+
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +83,6 @@ class ChatsPage extends StatelessWidget {
           leading: AppBarItem(
             icon: CupertinoIcons.home,
             index: pageIndex,
-            user: user,
           ),
           title: const Text("Messages",
               style: TextStyle(
@@ -42,38 +90,47 @@ class ChatsPage extends StatelessWidget {
                 fontSize: 16,
               )),
           actions: <Widget>[
-            AppBarItem(
-              icon: CupertinoIcons.settings_solid,
+              Padding(
+                padding: const EdgeInsets.only(right: 5),
+                child: IconButton(
+                    onPressed: (){},
+                    icon: const Icon(CupertinoIcons.plus)
+                ),
+              ),
+            const AppBarItem(
+              icon: CupertinoIcons.bell_fill,
               index: 5,
-              user: user,
             ),
-            const SizedBox(width: 10),
+            const AppDropDown(),
           ],
         ),
-        body: CustomScrollView(
-          slivers: [
-            SliverList(
-              delegate: SliverChildBuilderDelegate(_delegete),
-            )
-          ],
-        ),
-        bottomNavigationBar: CustomBBottomNavigationBar(
-            pageIndex: pageIndex, user: user));
-  }
+        body: Column(
+            children: [
+        Expanded(
+        child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child:
+        ListView.builder(
+          itemCount: _messages.length,
+          itemBuilder: (context, index) {
+            return _MessageTile(
+              messageData: _messages[index],name: _names[index],);
+          },
 
-  Widget _delegete(BuildContext context, int index) {
-    final Faker faker = Faker();
-
-    return _MessageTile(
-        messageData:
-            MessageData(1,10, 12, DateTime.now(), faker.lorem.sentence(), true),user:user);
+        )
+    )
+    ),]
+    ),
+        bottomNavigationBar: CustomBBottomNavigationBar(pageIndex: pageIndex));
   }
 }
 
 class _MessageTile extends StatelessWidget {
-  const _MessageTile({Key? key, required this.messageData,required this.user}) : super(key: key);
+
+
+  const _MessageTile({Key? key, required this.messageData,required this.name}) : super(key: key);
   final MessageData messageData;
-  final User user;
+  final String name;
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -84,7 +141,7 @@ class _MessageTile extends StatelessWidget {
                 type: PageTransitionType.fade,
                 child: ChatScreen(
                   messageData: messageData,
-                    user: user)));
+                name: name,)));
       },
       child: Container(
           height: 100,
@@ -96,7 +153,7 @@ class _MessageTile extends StatelessWidget {
             padding: const EdgeInsets.all(4.0),
             child: Row(children: [
               Padding(
-                padding: EdgeInsets.all(10.0),
+                padding: const EdgeInsets.all(10.0),
                 child: Avatar.medium(url: Helpers.randomPictureUrl()),
               ),
               Expanded(
@@ -106,7 +163,7 @@ class _MessageTile extends StatelessWidget {
                       children: [
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: Text(faker.person.name(),
+                      child: Text(name,
                           style: const TextStyle(
                             letterSpacing: 0.2,
                             wordSpacing: 1.5,

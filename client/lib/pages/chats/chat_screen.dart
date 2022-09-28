@@ -1,101 +1,119 @@
+import 'package:http/http.dart' as http;
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:nd_telemedicine/security/storage_service.dart';
+import '../../pages/imports.dart';
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:faker/faker.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:jiffy/jiffy.dart';
-import 'package:nd_telemedicine/main.dart';
-import 'package:nd_telemedicine/models/message_data.dart';
-import 'package:nd_telemedicine/widgets/icon_buttons.dart';
-import 'package:http/http.dart' as http;
-
-import '../../models/user.dart';
-import '../../styles/theme.dart';
-import '../../widgets/avatar.dart';
-import '../../widgets/buttons.dart';
-import '../../widgets/helpers.dart';
-
-Faker faker = Faker();
 class ChatScreen extends StatefulWidget {
   final MessageData messageData;
-  final User user;
+  final String name;
 
-  const ChatScreen({Key? key, required this.messageData,required this.user}) : super(key: key);
-
-  // static Route route (MessageData data) => MaterialPageRoute(
-  //     builder: (context) => ChatScreen(
-  //       messageData: data,
-  //       user: user,
-  //     ));
+  const ChatScreen(
+      {Key? key,
+      required this.messageData,
+      required this.name})
+      : super(key: key);
 
   @override
   State<ChatScreen> createState() => _ChatScreen();
 }
-
 class _ChatScreen extends State<ChatScreen> {
-  late List<MessageData>allMessages;
-  late User user = widget.user;
 
   late MessageData messageData = widget.messageData;
-  late StreamController<MessageData> _messages;
+  late String name = widget.name;
+  late TextEditingController textEditingController;
+  late List<MessageData> allMessages;
+  late List<Widget> items;
 
   @override
   void initState() {
     allMessages = [];
-    _messages = StreamController<MessageData>();
+    items = [];
+    textEditingController = TextEditingController();
     getMessages();
-
-    // for (var element in allMessages) {
-    //   _messages.add(element);
-    // }
+    getUnreadMessages();
     super.initState();
   }
-  Future<void> getMessages() async{
 
+  Future<void> getMessages() async {
     var response = await http.get(
-        Uri.parse("${messageIP}get/messages/${1}/${2}"),
+        Uri.parse(
+            "${messageIP}get/messages/"
+                "${messageData.senderID}/"
+                "${messageData.receiverID}"),
         headers: {'Content-Type': 'application/json'});
     var responses = json.decode(response.body) as List;
-    print(responses);
     MessageData message;
     for (var element in responses) {
-      print(element['messageID']);
-      message = MessageData(element['messageID'],
-          element['senderID'],element['receiverID'],
-          DateTime.parse(element['timestamp']),
-          element['message'],
-          element['viewed'] as bool);
-      _messages.add(message);
-      if(message.senderID==1) {
-        items.add(_MessageOwnTile(
-            message: message.message,
-            messageDate: ""));
+      message = MessageData(
+          element['messageID'], element['senderID'],
+          element['receiverID'], DateTime.parse(element['timestamp']),
+          element['message'], element['viewed'] as bool);
+
+      String id = "";
+      await UserSecureStorage.getID().then((value) => id = value!);
+
+      if (message.senderID == int.parse(id)) {
+        items.add(_MessageOwnTile(message: message.message, messageDate: ""));
       }
       else {
-        items.add(_MessageTile(
-            message: message.message,
-            messageDate: ""));
+        items.add(_MessageTile(message: message.message, messageDate: ""));
       }
-
+      setState(() {});
     }
-    // allMessages = (json.decode(response.body) as List).map((i) =>
-    //     MessageData.fromJson(i)).toList();
   }
-  List<Widget> items = [];
+  Future<void> sendMessage(String message) async {
+    var now = DateTime.now();
+    var formatter = DateFormat('yyyy-MM-dd');
+    String formattedDate = formatter.format(now);
+    await http.post(Uri.parse("${messageIP}post/message"),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'senderID': messageData.senderID,
+          'receiverID': messageData.receiverID,
+          'timestamp': formattedDate,
+          'message': message,
+          'viewed': false,
+        })
+    );
+  }
 
-  Stream<MessageData> getUnreadMessages() async*{
-    var response = await http.get(
-        Uri.parse("${messageIP}get/messages/${1}/${2}"),
-        headers: {'Content-Type': 'application/json'});
-    var responseData = json.decode(response.body) as List;
-      for(var element in responseData) {
-        yield MessageData(
-            element['messageID'], element['senderID'],
-            element['receiverID'], DateTime.parse(element['timestamp']),
-            element['message'], element['viewed'] as bool);
-        await Future<void>.delayed(const Duration(seconds: 1));
+
+  Future<MessageData> getUnreadMessages() async {
+    MessageData message;
+    while (true) {
+      var response = await http.get(
+          Uri.parse(
+              "${messageIP}get/unread/message/"
+                  "${messageData.senderID}/"
+                  "${messageData.receiverID}"),
+          headers: {'Content-Type': 'application/json'});
+      if (response.statusCode == 200) {
+        var element = json.decode(response.body);
+        message = MessageData(
+            element['messageID'],
+            element['senderID'],
+            element['receiverID'],
+            DateTime.parse(element['timestamp']),
+            element['message'],
+            element['viewed'] as bool);
+
+        setState(() async {
+          name = name;
+          String id = "";
+          await UserSecureStorage.getID().then((value) => id = value!);
+          if (message.senderID == int.parse(id)) {
+            items.add(
+                _MessageOwnTile(message: message.message, messageDate: ""));
+          } else {
+            items.add(_MessageTile(message: message.message, messageDate: ""));
+          }
+        });
       }
+    }
   }
 
   @override
@@ -116,7 +134,7 @@ class _ChatScreen extends State<ChatScreen> {
               },
             ),
           ),
-          title: _AppBarTitle(messageData: messageData),
+          title: _AppBarTitle(name: name),
           actions: [
             Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -126,118 +144,73 @@ class _ChatScreen extends State<ChatScreen> {
                   onTap: () {},
                 )))
           ]),
-        //_
+      //_
       body: Column(
         children: [
           Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child:
-                      StreamBuilder(
-                        stream: getUnreadMessages(),
-                        builder: (BuildContext context, AsyncSnapshot<MessageData> snapshot,){
-                          if (snapshot.connectionState == ConnectionState.waiting)
-                         {
-                           return const CircularProgressIndicator();
-                         }
-                           else if (snapshot.hasError) {
-                            return Text('Error!');
-                          }
-                          if(snapshot.data?.senderID == 1){
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: ListView.builder(
+                    itemCount: items.length,
+                    itemBuilder: (context, index) {
+                      return items[index];
+                    },
+                  ))),
+          SafeArea(
+              bottom: true,
+              top: false,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Card(
+                        color: Theme.of(context).cardColor,
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              left: 16, bottom: 10, top: 10),
+                          child: TextFormField(
+                            controller: textEditingController,
+                            style: const TextStyle(fontSize: 14.0),
+                            decoration: const InputDecoration(
+                              hintText: "Enter Message Here",
+                              border: InputBorder.none,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                      padding: const EdgeInsets.only(
+                          left: 12, right: 24, bottom: 10, top: 10),
+                      child: GlowingActionButton(
+                        color: AppColors.accent,
+                        icon: Icons.send_rounded,
+                        onPressed: () {
+                          setState(() {
+                            sendMessage(textEditingController.text);
                             items.add(_MessageOwnTile(
-                                message: snapshot.data?.message,
+                                message: textEditingController.text,
                                 messageDate: ""));
-                          }
-                          else{
-                         items.add(_MessageTile(
-                         message: snapshot.data?.message,
-                         messageDate: ""));
-                         }
-                            return ListView.builder(
-                                itemBuilder: (context, index) {
-                                  return items[index];},itemCount: items.length,);}
-                        )
+                            textEditingController.clear();
+                            name = name;
+                          });
+                        },
+                      ))
+                ],
               )),
-          const _ActionBar(),
         ],
       ),
     );
   }
 }
-
-class _DateLable extends StatefulWidget {
-  const _DateLable({
-    Key? key,
-    required this.dateTime,
-  }) : super(key: key);
-
-  final DateTime dateTime;
-
-  @override
-  __DateLableState createState() => __DateLableState();
-}
-
-class __DateLableState extends State<_DateLable> {
-  late String dayInfo;
-
-  @override
-  void initState() {
-    final createdAt = Jiffy(widget.dateTime);
-    final now = DateTime.now();
-
-    if (Jiffy(createdAt).isSame(now, Units.DAY)) {
-      dayInfo = 'TODAY';
-    } else if (Jiffy(createdAt)
-        .isSame(now.subtract(const Duration(days: 1)), Units.DAY)) {
-      dayInfo = 'YESTERDAY';
-    } else if (Jiffy(createdAt).isAfter(
-      now.subtract(const Duration(days: 7)),
-      Units.DAY,
-    )) {
-      dayInfo = createdAt.EEEE;
-    } else if (Jiffy(createdAt).isAfter(
-      Jiffy(now).subtract(years: 1),
-      Units.DAY,
-    )) {
-      dayInfo = createdAt.MMMd;
-    } else {
-      dayInfo = createdAt.MMMd;
-    }
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 32.0),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).cardColor,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 12),
-            child: Text(
-              dayInfo,
-              style: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-                color: AppColors.textFaded,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class _AppBarTitle extends StatelessWidget {
   const _AppBarTitle({
     Key? key,
-    required MessageData messageData,
+    required this.name,
   }) : super(key: key);
+  final String name;
 
   @override
   Widget build(BuildContext context) {
@@ -255,7 +228,7 @@ class _AppBarTitle extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Dr ${faker.person.lastName()}",
+                name,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(fontSize: 14),
               ),
@@ -267,7 +240,6 @@ class _AppBarTitle extends StatelessWidget {
     );
   }
 }
-
 class _MessageOwnTile extends StatelessWidget {
   const _MessageOwnTile(
       {Key? key, required this.message, required this.messageDate})
@@ -316,7 +288,6 @@ class _MessageOwnTile extends StatelessWidget {
     );
   }
 }
-
 class _MessageTile extends StatelessWidget {
   const _MessageTile(
       {Key? key, required this.message, required this.messageDate})
@@ -363,49 +334,5 @@ class _MessageTile extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-class _ActionBar extends StatelessWidget {
-  const _ActionBar({Key? key}) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-
-    return SafeArea(
-
-        bottom:true,
-        top: false,
-        child: Row(
-
-          children: [
-             Expanded(
-               child:Padding(
-                 padding: const EdgeInsets.all(4.0),
-                 child: Card(
-                   color: Theme.of(context).cardColor,
-                   child: const Padding(
-                     padding: EdgeInsets.only(left:16,bottom: 10,top: 10),
-                     child: TextField(
-                       style:TextStyle(fontSize: 14.0),
-                       decoration: InputDecoration(
-                         hintText:"Enter Message Here",
-                         border: InputBorder.none,
-                       ),
-                  ),
-              ),
-              ),
-               ),
-            ),
-            Padding(
-                padding: const EdgeInsets.only(left:12,right:24,bottom: 10,top: 10),
-              child: GlowingActionButton(
-                color: AppColors.accent,
-                icon: Icons.send_rounded,
-                onPressed: (){},
-              )
-            )
-
-          ],
-        ));
   }
 }

@@ -1,5 +1,6 @@
 package com.example.message_service.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -33,11 +34,37 @@ public class MessageController {
 
     @GetMapping(value="/get/message_menu/{senderID}")
     public List<Message> getMessageMenu(@PathVariable("senderID") int senderID) {
-        return messageService.findBySenderIDOrderByReceiverID(senderID);
+
+        List<Message> all = messageService.findBySenderIDOrderByTimestampAsc(senderID);
+        List<Message> individual = new ArrayList<>();
+        List<Integer> ids = new ArrayList<>();
+
+        for (Message message : all) {
+            if (!ids.contains(message.getReceiverID())) {
+                individual.add(message);
+                ids.add(message.getReceiverID());
+            }
+        }
+        return individual;
+
     }
 
     @PostMapping(value="/post/message")
     public Message sendMessage(@RequestBody Message message) {
         return messageService.save(message);
+    }
+
+    @GetMapping(value = "/get/unread/message/{senderID}/{receiverID}")
+    public ResponseEntity getUnread(@PathVariable("senderID") int senderID, @PathVariable("receiverID") int receiverID){
+        List<Message> unread = messageService.findBySenderIDAndReceiverIDAndViewedOrderByTimestampAsc(receiverID,senderID,false);
+        if(!unread.isEmpty()){
+            unread.get(0).setViewed(true);
+            messageService.save(unread.get(0));
+            return ResponseEntity.ok().body(unread.get(0));
+        }
+        else{
+            return ResponseEntity.badRequest().body("Error");
+        }
+
     }
 }
