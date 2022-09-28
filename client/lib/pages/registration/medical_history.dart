@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
+import 'package:nd_telemedicine/pages/homepage/home_page.dart';
 import 'package:page_transition/page_transition.dart';
-import '../models/medical_history.dart';
-import '../models/user.dart';
-import '../styles/background_style.dart';
-import '../styles/custom_styles.dart';
-import '../styles/textformfield_style.dart';
-import '../widgets/format.dart';
-import 'dashboard.dart';
-
+import '../../models/medical_history.dart';
+import '../../models/user.dart';
+import '../../styles/custom_styles.dart';
+import '../../styles/textformfield_style.dart';
+import '../../styles/theme.dart';
 
 class MedicalHistory extends StatefulWidget {
   final User user;
@@ -58,7 +56,7 @@ class _MedicalHistory extends State<MedicalHistory> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text('Add Medication',style:CustomText.setCustom(FontWeight.w600, 30)),
+            title: const Text('Add Medication',style:TextStyle(fontSize: 30),),
             content: SizedBox(
               height:300,
             child:Column(
@@ -68,30 +66,36 @@ class _MedicalHistory extends State<MedicalHistory> {
                     controller: textFieldController,
                     decoration: CustomTextFormDecoration.setDecoration("Name"),
                   ),
-                  padding(0, 20, 0, 0),
-                  TextField(
-                    onChanged: (value) {},
-                    controller: textFieldController2,
-                    decoration: CustomTextFormDecoration.setDecoration("Dosage"),
-                    keyboardType: TextInputType.number,
+                  Padding(
+                    padding: const EdgeInsets.only(top:20.0),
+                    child: TextField(
+                      onChanged: (value) {},
+                      controller: textFieldController2,
+                      decoration: CustomTextFormDecoration.setDecoration("Dosage"),
+                      keyboardType: TextInputType.number,
+                    ),
                   ),
-                  padding(0, 20, 0, 0),
-                  TextField(
-                    onChanged: (value) {},
-                    controller: textFieldController3,
-                    decoration: CustomTextFormDecoration.setDecoration("# Repeats"),
-                    keyboardType: TextInputType.number,
-                    style: CustomText.setCustom(FontWeight.w500, 14.0),
+                  Padding(
+                    padding: const EdgeInsets.only(top:20.0),
+                    child: TextField(
+                      onChanged: (value) {},
+                      controller: textFieldController3,
+                      decoration: CustomTextFormDecoration.setDecoration("# Repeats"),
+                      keyboardType: TextInputType.number,
+                      style: const TextStyle(fontSize: 16),
+                    ),
                   ),
-                  padding(0, 20, 0, 0),
-                  TextButton(
-                    onPressed: () {
-                      textFieldController.clear();
-                      textFieldController2.clear();
-                      textFieldController3.clear();
-                      Navigator.pop(context, 'OK');
-                    },
-                    child: Text('OK',style:CustomText.setCustom(FontWeight.w600, 20,Colors.blue)),
+                  Padding(
+                    padding: const EdgeInsets.only(top:20.0),
+                    child: TextButton(
+                      onPressed: () {
+                        textFieldController.clear();
+                        textFieldController2.clear();
+                        textFieldController3.clear();
+                        Navigator.pop(context, 'OK');
+                      },
+                      child: const Text('OK',style:TextStyle(fontSize: 16,color:AppColors.secondary)),
+                    ),
                   ),
                 ]
             )
@@ -102,7 +106,7 @@ class _MedicalHistory extends State<MedicalHistory> {
 
   Future save() async {
     Navigator.push(context,
-        MaterialPageRoute(builder: (context) => PatientDashboard(user: user)));
+        MaterialPageRoute(builder: (context) => HomePage(user: user)));
   }
 
   Widget smokes() {
@@ -185,53 +189,54 @@ class _MedicalHistory extends State<MedicalHistory> {
         padding: 5,
       ),
       Wrap(spacing: 30, children: [
-        padding(0, 20, 0, 0),
-        Row(mainAxisSize: MainAxisSize.max, children: [
-          SizedBox(
-            width: 300,
-            child: Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 10, 0),
-              child: TextFormField(
-                enabled: !_disabled!,
-                controller: med,
-                decoration: InputDecoration(
-                  labelText: 'Enter Medication',
-                  labelStyle: CustomText.setCustom(FontWeight.w500, 14.0),
-                  hintText: 'Enter Name of Medication...',
-                  hintStyle:
-                      CustomText.setCustom(FontWeight.w500, 14.0, Colors.grey),
-                  enabledBorder: CustomOutlineInputBorder.custom,
-                  focusedBorder: CustomOutlineInputBorder.custom,
-                  errorBorder: CustomOutlineInputBorder.custom,
-                  focusedErrorBorder: CustomOutlineInputBorder.custom,
+        Padding(
+          padding: const EdgeInsets.only(top:20.0),
+          child: Row(mainAxisSize: MainAxisSize.max, children: [
+            SizedBox(
+              width: 300,
+              child: Padding(
+                padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 10, 0),
+                child: TextFormField(
+                  enabled: !_disabled!,
+                  controller: med,
+                  decoration: const InputDecoration(
+                    labelText: 'Enter Medication',
+                    labelStyle: TextStyle(fontSize: 16),
+                    hintText: 'Enter Name of Medication...',
+                    hintStyle:TextStyle(fontSize: 16),
+                    enabledBorder: CustomOutlineInputBorder.custom,
+                    focusedBorder: CustomOutlineInputBorder.custom,
+                    errorBorder: CustomOutlineInputBorder.custom,
+                    focusedErrorBorder: CustomOutlineInputBorder.custom,
+                  ),
+                  style: const TextStyle(fontSize: 16),
                 ),
-                style: CustomText.setCustom(FontWeight.w500, 14),
               ),
             ),
-          ),
-          FloatingActionButton(
-            heroTag: "medications",
-            onPressed: () {
-              _displayTextInputDialog(context);
-              if (med.text != "What Medications Do You Take?" &&
-                  med.text != "" &&
-                  !userHistory.medications.contains(ill.text)) {
-                setState(() {
-                  medications.add(med.text);
-                  med.clear();
-                });
-              }
-            },
-            backgroundColor: const Color(0xFF2190E5),
-            elevation: 8,
-            child: const Icon(
-              Icons.add_rounded,
-              color: Colors.white,
-              size: 28,
+            FloatingActionButton(
+              heroTag: "medications",
+              onPressed: () {
+                _displayTextInputDialog(context);
+                if (med.text != "What Medications Do You Take?" &&
+                    med.text != "" &&
+                    !userHistory.medications.contains(ill.text)) {
+                  setState(() {
+                    medications.add(med.text);
+                    med.clear();
+                  });
+                }
+              },
+              backgroundColor: const Color(0xFF2190E5),
+              elevation: 8,
+              child: const Icon(
+                Icons.add_rounded,
+                color: Colors.white,
+                size: 28,
+              ),
             ),
-          ),
 
-        ]),
+          ]),
+        ),
         const Padding(padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 20)),
         CustomCheckBoxGroup(
           buttonLables: medications,
@@ -274,49 +279,50 @@ class _MedicalHistory extends State<MedicalHistory> {
             selectedColor: const Color(0xFF2190E5),
             padding: 5,
           ),
-          padding(0, 20, 0, 0),
-          Row(mainAxisSize: MainAxisSize.max, children: [
-            SizedBox(
-              width: 300,
-              child: Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 10, 0),
-                child: TextFormField(
-                  controller: ill,
-                  decoration: InputDecoration(
-                    labelText: 'Any Other not on list?',
-                    labelStyle: CustomText.setCustom(FontWeight.w500, 14.0),
-                    hintText: 'Enter Name of Medication...',
-                    hintStyle: CustomText.setCustom(
-                        FontWeight.w500, 14.0, Colors.grey),
-                    enabledBorder: CustomOutlineInputBorder.custom,
-                    focusedBorder: CustomOutlineInputBorder.custom,
-                    errorBorder: CustomOutlineInputBorder.custom,
-                    focusedErrorBorder: CustomOutlineInputBorder.custom,
+          Padding(
+            padding: const EdgeInsets.only(top:20.0),
+            child: Row(mainAxisSize: MainAxisSize.max, children: [
+              SizedBox(
+                width: 300,
+                child: Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 10, 0),
+                  child: TextFormField(
+                    controller: ill,
+                    decoration: const InputDecoration(
+                      labelText: 'Any Other not on list?',
+                      labelStyle: const TextStyle(fontSize: 16),
+                      hintText: 'Enter Name of Medication...',
+                      hintStyle: const TextStyle(fontSize: 16),
+                      enabledBorder: CustomOutlineInputBorder.custom,
+                      focusedBorder: CustomOutlineInputBorder.custom,
+                      errorBorder: CustomOutlineInputBorder.custom,
+                      focusedErrorBorder: CustomOutlineInputBorder.custom,
+                    ),
+                    style: const TextStyle(fontSize: 16),
                   ),
-                  style: CustomText.setCustom(FontWeight.w500, 14),
                 ),
               ),
-            ),
-            FloatingActionButton(
-              heroTag: "illnesses",
-              onPressed: () {
-                if (ill.text != "Any Other not on list?" &&
-                    !presetIllnesses.contains(ill.text)) {
-                  setState(() {
-                    presetIllnesses.add(ill.text);
-                    ill.clear();
-                  });
-                }
-              },
-              backgroundColor: const Color(0xFF2190E5),
-              elevation: 8,
-              child: const Icon(
-                Icons.add_rounded,
-                color: Colors.white,
-                size: 28,
+              FloatingActionButton(
+                heroTag: "illnesses",
+                onPressed: () {
+                  if (ill.text != "Any Other not on list?" &&
+                      !presetIllnesses.contains(ill.text)) {
+                    setState(() {
+                      presetIllnesses.add(ill.text);
+                      ill.clear();
+                    });
+                  }
+                },
+                backgroundColor: const Color(0xFF2190E5),
+                elevation: 8,
+                child: const Icon(
+                  Icons.add_rounded,
+                  color: Colors.white,
+                  size: 28,
+                ),
               ),
-            ),
-          ]),
+            ]),
+          ),
         ]);
   }
 
@@ -338,49 +344,52 @@ class _MedicalHistory extends State<MedicalHistory> {
         selectedColor: const Color(0xFF2190E5),
         padding: 5,
       ),
-      padding(0, 20, 0, 0),
-      Row(mainAxisSize: MainAxisSize.max, children: [
-        SizedBox(
-          width: 300,
-          child: Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 10, 0),
-            child: TextFormField(
-              controller: dis,
-              decoration: InputDecoration(
-                labelText: 'Any Other not on list?',
-                labelStyle: CustomText.setCustom(FontWeight.w500, 14.0),
-                hintText: 'Enter Name of Disability...',
-                hintStyle:
-                    CustomText.setCustom(FontWeight.w500, 14.0, Colors.grey),
-                enabledBorder: CustomOutlineInputBorder.custom,
-                focusedBorder: CustomOutlineInputBorder.custom,
-                errorBorder: CustomOutlineInputBorder.custom,
-                focusedErrorBorder: CustomOutlineInputBorder.custom,
+
+      Padding(
+        padding: const EdgeInsets.only(top:20),
+        child: Row(mainAxisSize: MainAxisSize.max, children: [
+          SizedBox(
+            width: 300,
+            child: Padding(
+              padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 10, 0),
+              child: TextFormField(
+                controller: dis,
+                decoration: const InputDecoration(
+                  labelText: 'Any Other not on list?',
+                  labelStyle: TextStyle(fontSize: 16),
+                  hintText: 'Enter Name of Disability...',
+                  hintStyle:
+                  TextStyle(fontSize: 16),
+                  enabledBorder: CustomOutlineInputBorder.custom,
+                  focusedBorder: CustomOutlineInputBorder.custom,
+                  errorBorder: CustomOutlineInputBorder.custom,
+                  focusedErrorBorder: CustomOutlineInputBorder.custom,
+                ),
+                style: const TextStyle(fontSize: 16),
               ),
-              style: CustomText.setCustom(FontWeight.w500, 14),
             ),
           ),
-        ),
-        FloatingActionButton(
-          heroTag: "disabilities",
-          onPressed: () {
-            if (dis.text != "Any Other not on list?" &&
-                !presetDisabilities.contains(dis.text)) {
-              setState(() {
-                presetDisabilities.add(dis.text);
-                dis.clear();
-              });
-            }
-          },
-          backgroundColor: const Color(0xFF2190E5),
-          elevation: 8,
-          child: const Icon(
-            Icons.add_rounded,
-            color: Colors.white,
-            size: 28,
+          FloatingActionButton(
+            heroTag: "disabilities",
+            onPressed: () {
+              if (dis.text != "Any Other not on list?" &&
+                  !presetDisabilities.contains(dis.text)) {
+                setState(() {
+                  presetDisabilities.add(dis.text);
+                  dis.clear();
+                });
+              }
+            },
+            backgroundColor: const Color(0xFF2190E5),
+            elevation: 8,
+            child: const Icon(
+              Icons.add_rounded,
+              color: Colors.white,
+              size: 28,
+            ),
           ),
-        ),
-      ]),
+        ]),
+      ),
     ]);
   }
 
@@ -398,7 +407,7 @@ class _MedicalHistory extends State<MedicalHistory> {
                         context,
                         PageTransition(
                             type: PageTransitionType.fade,
-                            child: PatientDashboard(user: user)));
+                            child: HomePage(user: user)));
                   },
                   style: ElevatedButton.styleFrom(
                       minimumSize: const Size(230, 50),
@@ -409,7 +418,7 @@ class _MedicalHistory extends State<MedicalHistory> {
                   child: Text(
                     message,
                     style:
-                        CustomText.setCustom(FontWeight.w900, 16, Colors.white),
+                    const TextStyle(fontSize: 16,fontWeight: FontWeight.w900),
                   )))
         ]));
   }
@@ -465,13 +474,11 @@ class _MedicalHistory extends State<MedicalHistory> {
                               const EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
                           child: Row(
                             mainAxisSize: MainAxisSize.max,
-                            children: [
+                            children: const [
                               Padding(
-                                padding: const EdgeInsetsDirectional.fromSTEB(
+                                padding: EdgeInsetsDirectional.fromSTEB(
                                     0, 20, 0, 0),
-                                child: Text('Medical History',
-                                    style: CustomText.setCustom(FontWeight.w800,
-                                        40, const Color(0xFF2190E5))),
+                                child: Text('Medical History',style:TextStyle(fontSize: 30,color:AppColors.secondary,fontWeight: FontWeight.w800),)
                               ),
                             ],
                           ),
@@ -481,63 +488,62 @@ class _MedicalHistory extends State<MedicalHistory> {
                               const EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
                           child: Row(
                             mainAxisSize: MainAxisSize.max,
-                            children: [
+                            children: const [
                               Expanded(
                                 child: Padding(
                                     padding:
-                                        const EdgeInsetsDirectional.fromSTEB(
+                                        EdgeInsetsDirectional.fromSTEB(
                                             0, 4, 70, 0),
                                     child: Text(
                                       'Please enter your Medical History details below:',
-                                      style: CustomText.setCustom(
-                                          FontWeight.w900, 17.0),
+                                      style: TextStyle(fontWeight: FontWeight.w900,fontSize: 18),
                                     )),
                               ),
                             ],
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsetsDirectional.fromSTEB(
+                        const Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(
                               0, 20, 0, 10),
                           child: Text(
                             'Do you smoke?',
-                            style: CustomText.setCustom(FontWeight.w600, 16.0),
+                            style: TextStyle(fontSize: 16),
                           ),
                         ),
                         smokes(),
-                        Padding(
-                          padding: const EdgeInsetsDirectional.fromSTEB(
+                        const Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(
                               0, 20, 0, 10),
                           child: Text(
                             'Do you drink?',
-                            style: CustomText.setCustom(FontWeight.w600, 16.0),
+                            style: TextStyle(fontSize: 16),
                           ),
                         ),
                         drinks(),
-                        Padding(
-                          padding: const EdgeInsetsDirectional.fromSTEB(
+                        const Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(
                               0, 20, 0, 10),
                           child: Text(
                             'Do you take any medication?',
-                            style: CustomText.setCustom(FontWeight.w600, 16.0),
+                            style: TextStyle(fontSize: 16),
                           ),
                         ),
                         meds(),
-                        Padding(
-                          padding: const EdgeInsetsDirectional.fromSTEB(
+                        const Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(
                               0, 20, 0, 10),
                           child: Text(
                             'Do you have any Illnesses?',
-                            style: CustomText.setCustom(FontWeight.w600, 16.0),
+                            style: TextStyle(fontSize: 16),
                           ),
                         ),
                         illnesses(),
-                        Padding(
-                          padding: const EdgeInsetsDirectional.fromSTEB(
+                        const Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(
                               0, 20, 0, 10),
                           child: Text(
                             'Do you have any Disabilities?',
-                            style: CustomText.setCustom(FontWeight.w600, 16.0),
+                            style: const TextStyle(fontSize: 16),
                           ),
                         ),
                         disabilities(),

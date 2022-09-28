@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 
-import '../styles/background_style.dart';
-
 Widget dashboardUserIcon(){
   return Padding(
     padding:
@@ -59,8 +57,7 @@ Widget menuOption(Color color, Icon icon,Widget page,String message,BuildContext
             ),
             Text(message,
                 textAlign: TextAlign.center,
-                style: CustomText.setCustom(
-                    FontWeight.bold, 18, Colors.white)),
+                style: const TextStyle(fontSize: 20)),
           ],
         ),
       ),

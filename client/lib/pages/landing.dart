@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:nd_telemedicine/pages/register.dart';
+import 'package:page_transition/page_transition.dart';
 
-import '../styles/background_style.dart';
+import 'registration/register.dart';
 import '../widgets/buttons.dart';
 import 'log_in.dart';
 
@@ -11,6 +11,7 @@ class Landing extends StatefulWidget {
   @override
   State<Landing> createState() => _Landing();
 }
+
 class _Landing extends State<Landing> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -18,7 +19,7 @@ class _Landing extends State<Landing> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).backgroundColor,
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -50,57 +51,86 @@ class _Landing extends State<Landing> {
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Container(
-                      width: double.infinity,
-                      height: 350,
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
+                    Material(
+                      borderRadius: const BorderRadius.only(
                           bottomLeft: Radius.circular(0),
                           bottomRight: Radius.circular(0),
-                          topLeft: Radius.circular(130),
-                          topRight: Radius.circular(130),
+                          topLeft: Radius.elliptical(90, 100),
+                          topRight: Radius.elliptical(90, 150)),
+                      elevation: 50,
+                      child: Container(
+                        width: double.infinity,
+                        height: 350,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).cardColor,
+                          borderRadius: const BorderRadius.only(
+                            bottomLeft: Radius.circular(0),
+                            bottomRight: Radius.circular(0),
+                              topLeft: Radius.elliptical(90, 100),
+                              topRight: Radius.elliptical(90, 100)
+                          ),
                         ),
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsetsDirectional.fromSTEB(
-                                10, 50, 0, 0),
-                            child: Text(
-                              'For a better health!',
-                              textAlign: TextAlign.center,
-                              style:
-                                  CustomText.setCustom(FontWeight.w800, 30.0),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            const Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(10, 50, 0, 0),
+                              child: Text('For a better health!',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w800, fontSize: 30)
+                                  //CustomText.setCustom(FontWeight.w800, 30.0),
+                                  ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsetsDirectional.fromSTEB(
-                                0, 30, 0, 0),
-                            child: Text(
-                              'Keeping Yourself Healthy Has Never Been Easier!',
-                              style:
-                                  CustomText.setCustom(FontWeight.w500, 14.0),
-                            ),
-                          ),
-                          const Padding(
-                              padding: EdgeInsets.fromLTRB(0, 20, 0, 0)),
-                          buttonLanding(const Color(0xFF6CC987), "Sign In",
-                              const LogIn(), context),
-                          Padding(
-                              padding: const EdgeInsetsDirectional.fromSTEB(
-                                  0, 20, 0, 0),
+                            const Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(0, 30, 0, 0),
                               child: Text(
-                                'Dont Have an Account? Sign Up Below',
-                                style:
-                                    CustomText.setCustom(FontWeight.w500, 14.0),
-                              )),
-                          const Padding(
-                              padding: EdgeInsets.fromLTRB(0, 10, 0, 0)),
-                          buttonLanding(const Color(0xFF2190E5),
-                              "Create Account", const Register(), context)
-                        ],
+                                  'Keeping Yourself Healthy Has Never Been Easier!',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 14)),
+                            ),
+                            const Padding(
+                                padding: EdgeInsets.fromLTRB(0, 20, 0, 0)),
+                            SubmitButton(
+                              color: Colors.blueAccent,
+                              message: "Sign In",
+                              width: 225,
+                              height: 50,
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    PageTransition(
+                                        type: PageTransitionType.fade,
+                                        child: LogIn()));
+                              },
+                            ),
+                            const Padding(
+                                padding:
+                                    EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
+                                child: Text(
+                                    'Dont Have an Account? Sign Up Below',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 14))),
+                            const Padding(
+                                padding: EdgeInsets.fromLTRB(0, 10, 0, 0)),
+                            SubmitButton(
+                                color: Colors.teal,
+                                message: "Create Account",
+                                width: 225,
+                                height: 50,
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      PageTransition(
+                                          type: PageTransitionType.fade,
+                                          child: Register()));
+                                }),
+                          ],
+                        ),
                       ),
                     ),
                   ],

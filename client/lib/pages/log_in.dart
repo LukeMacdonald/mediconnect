@@ -1,15 +1,17 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:nd_telemedicine/pages/homepage/home_page.dart';
+import 'package:nd_telemedicine/widgets/form_widgets.dart';
 import 'package:page_transition/page_transition.dart';
 import '../main.dart';
 import '../models/user.dart';
-import '../styles/background_style.dart';
-import '../styles/custom_styles.dart';
 import '../widgets/alerts.dart';
-import '../widgets/format.dart';
-import 'create_profile.dart';
-import 'dashboard.dart';
+import '../widgets/buttons.dart';
+import 'homepage/admin_home.dart';
+import 'homepage/doctor_home.dart';
+import 'registration/create_profile.dart';
 import 'dart:convert';
 
 class LogIn extends StatefulWidget {
@@ -24,12 +26,6 @@ class _LogIn extends State<LogIn> {
 
   User user = User("", "", "","");
 
-  late TextEditingController emailController;
-
-  late TextEditingController passwordController;
-
-  late bool passwordVisibility;
-
   Future login() async {
     var response = await http.post(Uri.parse("${authenticationIP}login"),
         headers: {'Content-Type': 'application/json'},
@@ -38,6 +34,7 @@ class _LogIn extends State<LogIn> {
           'password': user.password,
         }));
     var responseData = json.decode(response.body);
+    print(responseData);
 
     if (responseData['status'] == 401) {
       if (!mounted) return;
@@ -71,7 +68,7 @@ class _LogIn extends State<LogIn> {
               context,
               PageTransition(
                   type: PageTransitionType.fade,
-                  child: PatientDashboard(user: user)));
+                  child: HomePage(user:user)));
         } else if (user.role == "doctor") {
           user.password = "";
           if (!mounted) return;
@@ -80,7 +77,7 @@ class _LogIn extends State<LogIn> {
               context,
               PageTransition(
                   type: PageTransitionType.fade,
-                  child: DoctorDashboard(user: user)));
+                  child: DoctorHomePage(user:user)));
         } else if (user.role == "superuser") {
           user.password = "";
           if (!mounted) return;
@@ -88,7 +85,7 @@ class _LogIn extends State<LogIn> {
               context,
               PageTransition(
                   type: PageTransitionType.fade,
-                  child: SuperAdminDashboard(user: user)));
+                  child: AdminHomePage(user:user)));
         } else {
           if (!mounted) return;
           alert("Error Logging In", context);
@@ -97,108 +94,32 @@ class _LogIn extends State<LogIn> {
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    emailController = TextEditingController();
-    passwordController = TextEditingController();
-    passwordVisibility = false;
-  }
 
-  Widget password() {
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        Expanded(
-            child: Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 8),
-                child: TextFormField(
-                  controller: passwordController,
-                  obscureText: !passwordVisibility,
-                  decoration: InputDecoration(
-                      labelText: 'Password',
-                      labelStyle: CustomText.setCustom(FontWeight.w500, 14),
-                      hintText: 'Enter Password',
-                      hintStyle: CustomText.setCustom(FontWeight.w500, 14),
-                      enabledBorder: CustomOutlineInputBorder.custom,
-                      focusedBorder: CustomOutlineInputBorder.custom,
-                      errorBorder: CustomOutlineInputBorder.custom,
-                      focusedErrorBorder: CustomOutlineInputBorder.custom,
-                      suffixIcon: InkWell(
-                        onTap: () => setState(
-                          () => passwordVisibility = !passwordVisibility,
-                        ),
-                        focusNode: FocusNode(skipTraversal: true),
-                        child: Icon(
-                          passwordVisibility
-                              ? Icons.visibility_outlined
-                              : Icons.visibility_off_outlined,
-                          color: Colors.black,
-                          size: 20,
-                        ),
-                      )),
-                  style: CustomText.setCustom(FontWeight.w500, 14),
-                )))
-      ],
-    );
-  }
+  bool _changeEmail = false;
+  bool _changePassword = false;
 
-  Widget email() {
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        Expanded(
-            child: Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
-                child: TextFormField(
-                  controller: emailController,
-                  obscureText: false,
-                  decoration: InputDecoration(
-                    labelText: 'Email Address',
-                    labelStyle: CustomText.setCustom(FontWeight.w500, 14),
-                    hintText: 'Enter your email address...',
-                    hintStyle: CustomText.setCustom(FontWeight.w500, 14),
-                    enabledBorder: CustomOutlineInputBorder.custom,
-                    focusedBorder: CustomOutlineInputBorder.custom,
-                    errorBorder: CustomOutlineInputBorder.custom,
-                    focusedErrorBorder: CustomOutlineInputBorder.custom,
-                  ),
-                  style: CustomText.setCustom(FontWeight.w500, 14),
-                  keyboardType: TextInputType.emailAddress,
-                )))
-      ],
-    );
-  }
+  String? email;
+  String? password;
 
-  Widget buttonLogIn() {
-    return Container(
-        constraints: const BoxConstraints(minWidth: 70, maxWidth: 500),
-        child: ElevatedButton(
-            onPressed: () => {
-                  user.email = emailController.text,
-                  user.password = passwordController.text,
-                  login(),
-                },
-            style: ElevatedButton.styleFrom(
-                minimumSize: const Size(230, 50),
-                padding: const EdgeInsets.all(15),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-                primary: const Color(0xFF6CC987)),
-            child: Text(
-              'Sign In',
-              style: CustomText.setCustom(FontWeight.w900, 16, Colors.white),
-            )));
+  changeEmailValue(String? newText) {
+    setState(() {
+      _changeEmail = !_changeEmail;
+      email = newText;
+    });
   }
-
+  changePasswordValue(String? newText) {
+    setState(() {
+      _changePassword = !_changePassword;
+      password = newText;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       body: Container(
-        width: double.infinity,
-        height: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [Color(0xFF27C6FF), Color(0xFF2190E5)],
@@ -207,94 +128,94 @@ class _LogIn extends State<LogIn> {
             end: AlignmentDirectional(0, 1),
           ),
         ),
-        child: SizedBox(
-          width: double.infinity,
-          height: double.infinity,
-          child: Stack(
-            children: [
-              Align(
-                alignment: const AlignmentDirectional(0, 0.05),
-                child: Image.asset(
-                  'images/doctor.jpeg',
-                  width: double.infinity,
-                  height: double.infinity,
-                  fit: BoxFit.cover,
-                ),
+        child: Stack(
+          children: [
+            Align(
+              alignment: const AlignmentDirectional(0, 0.05),
+              child: Image.asset(
+                'images/doctor.jpeg',
+                fit: BoxFit.cover,
               ),
-              Align(
-                alignment: const AlignmentDirectional(0, 0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Container(
-                      width: double.infinity,
-                      height: 350,
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(0),
-                          bottomRight: Radius.circular(0),
-                          topLeft: Radius.circular(0),
-                          topRight: Radius.circular(130),
-                        ),
+            ),
+            Align(
+              alignment: const AlignmentDirectional(0, 0),
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Container(
+                    width: double.infinity,
+                    decoration:  BoxDecoration(
+                      color: Theme.of(context).cardColor,
+                      borderRadius: const BorderRadius.only(
+                        bottomLeft: Radius.circular(0),
+                        bottomRight: Radius.circular(0),
+                        topLeft: Radius.circular(0),
+                        topRight: Radius.circular(130),
                       ),
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            IconButton(
-                                onPressed: () async {
-                                  Navigator.pop(context);
-                                },
-                                icon: const Icon(
-                                  Icons.arrow_back_ios,
-                                  size: 30,
-                                  color: Colors.black,
-                                )),
-                            const Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
-                              child: Text(
-                                'Welcome Back!',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontFamily: 'Overpass',
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 30,
-                                ),
+                    ),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          IconButton(
+                              onPressed: () async {
+                                Navigator.pop(context);
+                              },
+                              icon: const Icon(
+                                CupertinoIcons.back,
+                                size: 40,
+                              )),
+                          const Padding(
+                            padding:
+                                EdgeInsetsDirectional.fromSTEB(20, 5, 0, 0),
+                            child: Text(
+                              'Welcome Back!',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w800,
+                                fontSize: 30,
                               ),
                             ),
-                            const Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(15, 5, 0, 5),
-                              child: Text('Please Enter Your Details Below',
-                                  style: TextStyle(
-                                    fontFamily: 'Overpass',
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 14,
-                                  )),
-                            ),
-                            email(),
-                            password(),
-                            padding(0, 5, 0, 0),
-                            Container(
+                          ),
+                          const Padding(
+                            padding:
+                                EdgeInsetsDirectional.fromSTEB(15, 5, 0, 10),
+                            child: Text('Please Enter Your Details Below',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14,
+                                )),
+                          ),
+                          UserEmail(changeClassValue: changeEmailValue),
+                          UserGivenPassword(changeClassValue: changePasswordValue),
+                          Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: SizedBox(
                                 width: double.infinity,
-                                height: 90,
-                                decoration:
-                                    const BoxDecoration(color: Colors.white),
                                 child: Column(
                                     mainAxisSize: MainAxisSize.max,
                                     children: [
-                                      buttonLogIn(),
-                                    ]))
-                          ]),
-                    )
-                  ],
-                ),
+                                      SubmitButton(
+                                        color: Colors.blueAccent,
+                                        message: "Sign in",
+                                        width: 225,
+                                        height: 50,
+                                        onPressed: (){
+                                          user.email = email!;
+                                          user.password = password!;
+                                          login();
+                                          }
+                                        ,
+                                      ),
+                                    ])),
+                          )
+                        ]),
+                  )
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
