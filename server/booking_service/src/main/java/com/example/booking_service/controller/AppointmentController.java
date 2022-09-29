@@ -1,4 +1,8 @@
 package com.example.booking_service.controller;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import com.example.booking_service.model.Appointment;
 import com.example.booking_service.repository.AppointmentRepo;
 import lombok.RequiredArgsConstructor;
@@ -22,5 +26,22 @@ public class AppointmentController {
     public String saveAppointment(@RequestBody Appointment appoint){
         appointRepo.save(appoint);
         return "Appointment successfully saved";
+    }
+
+    // Search and return for docotors that the patients are booked with based on id.
+    @GetMapping(value="/search/appointment_doctors/{patientID}")
+    public List<Integer> BookedDoctorsList(@PathVariable("patientID") int patientID){
+        List<Appointment> booked_appointments = appointRepo.findAppointmentByPatient(patientID);
+
+        List<Integer> unique_doctors = new ArrayList<>();
+
+        for (Appointment appointment : booked_appointments) {
+            if (!unique_doctors.contains(appointment.getDoctor())) {
+                unique_doctors.add(appointment.getDoctor());
+            }
+        }
+
+        return unique_doctors;
+
     }
 }
