@@ -28,7 +28,7 @@ class _UserEmail extends State<UserEmail> {
             child: Padding(
               padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
               child: Material(
-                elevation: 5,
+                elevation: 2,
                 color: Theme.of(context).dividerColor,
                 borderRadius: const BorderRadius.all(Radius.circular(8)),
                 child: Padding(
@@ -90,7 +90,7 @@ class _UserGivenFirstName extends State<UserGivenFirstName> {
             child: Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
         child: Material(
-            elevation: 5,
+            elevation: 2,
             color: Theme.of(context).dividerColor,
             borderRadius: const BorderRadius.all(Radius.circular(8)),
             child: Padding(
@@ -139,7 +139,7 @@ class _UserGivenLastName extends State<UserGivenLastName> {
             child: Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
         child: Material(
-            elevation: 5,
+            elevation: 2,
             color: Theme.of(context).dividerColor,
             borderRadius: const BorderRadius.all(Radius.circular(8)),
             child: Padding(
@@ -191,7 +191,7 @@ class _UserGivenPassword extends State<UserGivenPassword> {
             child: Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
         child: Material(
-            elevation: 5,
+            elevation: 2,
             color: Theme.of(context).dividerColor,
             borderRadius: const BorderRadius.all(Radius.circular(8)),
             child: Padding(
@@ -257,7 +257,7 @@ class _UserGivenConfirmPassword extends State<UserGivenConfirmPassword> {
             child: Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
         child: Material(
-            elevation: 5,
+            elevation: 2,
             color: Theme.of(context).dividerColor,
             borderRadius: const BorderRadius.all(Radius.circular(8)),
             child: Padding(
@@ -322,7 +322,7 @@ class _UserGivenPhoneNumber extends State<UserGivenPhoneNumber> {
         child: Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
       child: Material(
-          elevation: 5,
+          elevation: 2,
           color: Theme.of(context).dividerColor,
           borderRadius: const BorderRadius.all(Radius.circular(8)),
           child: Padding(
@@ -370,7 +370,7 @@ class _UserDOB extends State<UserDOB> {
             child: Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
         child: Material(
-            elevation: 5,
+            elevation: 2,
             color: Theme.of(context).dividerColor,
             borderRadius: const BorderRadius.all(Radius.circular(8)),
             child: Padding(
@@ -435,7 +435,7 @@ class _DoctorCode  extends State<DoctorCode> {
         child: Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
       child: Material(
-          elevation: 5,
+          elevation: 2,
           color: Theme.of(context).dividerColor,
           borderRadius: const BorderRadius.all(Radius.circular(8)),
           child: Padding(

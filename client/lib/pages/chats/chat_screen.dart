@@ -87,10 +87,10 @@ class _ChatScreen extends State<ChatScreen> {
             DateTime.parse(element['timestamp']),
             element['message'],
             element['viewed'] as bool);
-        setState(() async {
-          name = name;
-          String id = "";
-          await UserSecureStorage.getID().then((value) => id = value!);
+        String id = "";
+        await UserSecureStorage.getID().then((value) => id = value!);
+        setState(() {
+          //name = name;
           if (message.senderID == int.parse(id)) {
             items.add(
                 MessageOwnTile(message: message.message, messageDate: ""));
@@ -99,6 +99,9 @@ class _ChatScreen extends State<ChatScreen> {
           }
         });
       }
+      setState(() {
+
+      });
     }
   }
 

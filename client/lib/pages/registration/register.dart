@@ -192,7 +192,6 @@ class _Register extends State<Register> {
                 width: 235,
                 height: 50,
                 onPressed: () async {
-                  print(email);
                   await UserSecureStorage.setEmail(email!);
                   validateSave();
                 }),
