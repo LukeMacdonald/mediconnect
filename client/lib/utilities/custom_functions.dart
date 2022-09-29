@@ -1,5 +1,8 @@
-import 'package:flutter/cupertino.dart';
+import '../security/storage_service.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import '../main.dart';
+import 'dart:io';
 
 String getDayStringFrontDayInt(int day){
   switch (day) {
@@ -43,10 +46,18 @@ int getDayIntFromDayString(String day){
 String createTime(String start, String end){
   return "${start.substring(0, start.length - 3)} - ${end.substring(0, end.length - 3)}";
 }
-String url(){
-  return "http://localhost:8080/";
-}
 String getTime(TimeOfDay time){
   return "${time.hour.toString().padLeft(2, "0")}:${time.minute.toString().padLeft(2, "0")}";
+}
+Future<String> getName(int id) async {
+  String jwt = "";
+  await UserSecureStorage.getJWTToken().then((value) => jwt = value!);
+
+  var response = await http.get(Uri.parse("${authenticationIP}get/name/$id"),
+      headers: {
+        'Content-Type': 'application/json',
+        HttpHeaders.authorizationHeader: jwt
+      });
+  return response.body;
 }
 

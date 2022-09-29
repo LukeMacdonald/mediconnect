@@ -5,7 +5,7 @@ export '../models/user.dart';
 export '../models/medical_history.dart';
 export '../widgets/buttons.dart';
 export '../widgets/form_widgets.dart';
-export '../widgets/icon_buttons.dart';
+export '../widgets/chat_widgets.dart';
 export '../widgets/navbar.dart';
 export '../widgets/alerts.dart';
 export '../widgets/dashboard.dart';

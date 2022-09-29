@@ -2,6 +2,7 @@ import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:page_transition/page_transition.dart';
 import '../../pages/imports.dart';
 import 'dart:convert';
 
@@ -54,13 +55,13 @@ class _Register extends State<Register> {
 
   Future<void> validateSave() async {
     if (await UserSecureStorage.getEmail() == ""
-        || await UserSecureStorage.getEmail() != null ) {
+        || await UserSecureStorage.getEmail() == null ) {
       alert("Invalid Input!\nEmail Required!", context);
     } else if (await UserSecureStorage.getPassword() == ""
-        || await UserSecureStorage.getPassword() != null) {
+        || await UserSecureStorage.getPassword() == null) {
       alert("Invalid Input!\nPassword Required!", context);
     } else if (await UserSecureStorage.getConfirmPassword() == ""
-        || await UserSecureStorage.getConfirmPassword() != null ) {
+        || await UserSecureStorage.getConfirmPassword() == null ) {
       alert("Invalid Input!\nConfirm Password Required!", context);
     } else if (await UserSecureStorage.getPassword() != await UserSecureStorage.getConfirmPassword()) {
       alert("Invalid Input!\nPassword Dont Match!", context);
@@ -75,14 +76,24 @@ class _Register extends State<Register> {
           final response = await http.post(
               Uri.parse("${authenticationIP}register"),
               headers: {'Content-Type': 'application/json'},
-              body: jsonEncode(UserSecureStorage().toJson()));
+              body: json.encode(
+                {
+                  'email': await UserSecureStorage.getEmail(),
+                  'password': await UserSecureStorage.getPassword(),
+                  'role':  await UserSecureStorage.getRole(),
+                  'confirmPassword': await UserSecureStorage.getConfirmPassword(),
+                }
+              ));
           switch (response.statusCode) {
             case 201:
               var responseData = json.decode(response.body);
-              UserSecureStorage.setID(responseData['id']);
+              UserSecureStorage.setID(responseData['id'].toString());
               if (!mounted) return;
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const ProfileCreation()));
+              Navigator.push(
+                  context,
+                  PageTransition(
+                      type: PageTransitionType.fade,
+                      child: const ProfileCreation()));
               break;
             default:
               var list = json.decode(response.body).values.toList();
@@ -181,6 +192,8 @@ class _Register extends State<Register> {
                 width: 235,
                 height: 50,
                 onPressed: () async {
+                  print(email);
+                  await UserSecureStorage.setEmail(email!);
                   validateSave();
                 }),
           ]),

@@ -27,16 +27,6 @@ class _ChatScreen extends State<ChatScreen> {
   late List<MessageData> allMessages;
   late List<Widget> items;
 
-  @override
-  void initState() {
-    allMessages = [];
-    items = [];
-    textEditingController = TextEditingController();
-    getMessages();
-    getUnreadMessages();
-    super.initState();
-  }
-
   Future<void> getMessages() async {
     var response = await http.get(
         Uri.parse(
@@ -56,10 +46,10 @@ class _ChatScreen extends State<ChatScreen> {
       await UserSecureStorage.getID().then((value) => id = value!);
 
       if (message.senderID == int.parse(id)) {
-        items.add(_MessageOwnTile(message: message.message, messageDate: ""));
+        items.add(MessageOwnTile(message: message.message, messageDate: ""));
       }
       else {
-        items.add(_MessageTile(message: message.message, messageDate: ""));
+        items.add(MessageTile(message: message.message, messageDate: ""));
       }
       setState(() {});
     }
@@ -79,8 +69,6 @@ class _ChatScreen extends State<ChatScreen> {
         })
     );
   }
-
-
   Future<MessageData> getUnreadMessages() async {
     MessageData message;
     while (true) {
@@ -99,22 +87,30 @@ class _ChatScreen extends State<ChatScreen> {
             DateTime.parse(element['timestamp']),
             element['message'],
             element['viewed'] as bool);
-
         setState(() async {
           name = name;
           String id = "";
           await UserSecureStorage.getID().then((value) => id = value!);
           if (message.senderID == int.parse(id)) {
             items.add(
-                _MessageOwnTile(message: message.message, messageDate: ""));
+                MessageOwnTile(message: message.message, messageDate: ""));
           } else {
-            items.add(_MessageTile(message: message.message, messageDate: ""));
+            items.add(MessageTile(message: message.message, messageDate: ""));
           }
         });
       }
     }
   }
 
+  @override
+  void initState() {
+    allMessages = [];
+    items = [];
+    textEditingController = TextEditingController();
+    getMessages();
+    getUnreadMessages();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -133,7 +129,7 @@ class _ChatScreen extends State<ChatScreen> {
               },
             ),
           ),
-          title: _AppBarTitle(name: name),
+          title: AppBarTitle(name: name),
           actions: [
             Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -189,7 +185,7 @@ class _ChatScreen extends State<ChatScreen> {
                         onPressed: () {
                           setState(() {
                             sendMessage(textEditingController.text);
-                            items.add(_MessageOwnTile(
+                            items.add(MessageOwnTile(
                                 message: textEditingController.text,
                                 messageDate: ""));
                             textEditingController.clear();
@@ -204,134 +200,4 @@ class _ChatScreen extends State<ChatScreen> {
     );
   }
 }
-class _AppBarTitle extends StatelessWidget {
-  const _AppBarTitle({
-    Key? key,
-    required this.name,
-  }) : super(key: key);
-  final String name;
 
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Avatar.small(
-          url: Helpers.randomPictureUrl(),
-        ),
-        const SizedBox(
-          width: 16,
-        ),
-        Expanded(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                name,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontSize: 14),
-              ),
-              const SizedBox(height: 2),
-            ],
-          ),
-        )
-      ],
-    );
-  }
-}
-class _MessageOwnTile extends StatelessWidget {
-  const _MessageOwnTile(
-      {Key? key, required this.message, required this.messageDate})
-      : super(key: key);
-  final String? message;
-  final String? messageDate;
-
-  static const _borderRadius = 20.0;
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 40.0, top: 5, bottom: 5),
-      child: Align(
-        alignment: Alignment.centerRight,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-                decoration: const BoxDecoration(
-                  color: AppColors.accent,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(_borderRadius),
-                    bottomRight: Radius.circular(_borderRadius),
-                    bottomLeft: Radius.circular(_borderRadius),
-                  ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 10.0, vertical: 15),
-                  child: Text(message!),
-                )),
-            Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Text(
-                  messageDate!,
-                  style: const TextStyle(
-                    color: AppColors.textFaded,
-                    fontSize: 10,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ))
-          ],
-        ),
-      ),
-    );
-  }
-}
-class _MessageTile extends StatelessWidget {
-  const _MessageTile(
-      {Key? key, required this.message, required this.messageDate})
-      : super(key: key);
-
-  final String? message;
-  final String? messageDate;
-
-  static const _borderRadius = 15.0;
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 40.0, top: 5, bottom: 5),
-      child: Align(
-        alignment: Alignment.centerLeft,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-                decoration: BoxDecoration(
-                    color: Theme.of(context).cardColor,
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(_borderRadius),
-                      topRight: Radius.circular(_borderRadius),
-                      bottomRight: Radius.circular(_borderRadius),
-                    )),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 12.0, vertical: 20),
-                  child: Text(message!),
-                )),
-            Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Text(
-                  messageDate!,
-                  style: const TextStyle(
-                    color: AppColors.textFaded,
-                    fontSize: 10,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ))
-          ],
-        ),
-      ),
-    );
-  }
-}

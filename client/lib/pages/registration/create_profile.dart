@@ -28,16 +28,26 @@ class _ProfileCreation extends State<ProfileCreation> {
           'Content-Type': 'application/json',
           HttpHeaders.authorizationHeader: token
         },
-        body: json.encode(await UserSecureStorage().toFullJson()));
+        body: json.encode(
+            {
+              'email': await UserSecureStorage.getEmail(),
+              'password':await UserSecureStorage.getPassword(),
+              'role': await UserSecureStorage.getRole(),
+              'firstName': await UserSecureStorage.getFirstName(),
+              'lastName': await UserSecureStorage.getLastName(),
+              'phoneNumber': await UserSecureStorage.getPhoneNumber(),
+              'dob': await UserSecureStorage.getDOB(),
+            }));
+    print(await UserSecureStorage.getRole());
 
     if (!mounted) return;
-    if (await UserSecureStorage.getRole() == 'patient') {
+    if (await UserSecureStorage.getRole() == 'patient' || await UserSecureStorage.getRole() == 'Patient' ) {
       Navigator.push(
           context,
           PageTransition(
               type: PageTransitionType.fade,
               child: const HomePage()));
-    } else if (await UserSecureStorage.getRole() == 'doctor') {
+    } else if (await UserSecureStorage.getRole() == 'doctor'||await UserSecureStorage.getRole() == 'Doctor') {
       Navigator.push(
           context,
           PageTransition(
@@ -141,7 +151,6 @@ class _ProfileCreation extends State<ProfileCreation> {
                         } else if (await UserSecureStorage.getConfirmPassword()!= await UserSecureStorage.getPassword()) {
                           alert("Passwords Did Not Match!", context);
                         } else {
-
                           save();
                         }
                       },

@@ -82,16 +82,15 @@ class UserSecureStorage {
   static Future<String?> getJWTRefreshToken() async =>
       await _storage.read(key: _keyJWTRefreshToken);
 
-
-  Future<Map<String, dynamic>> toJson()async => {
-    'email': UserSecureStorage.getEmail(),
-    'password': UserSecureStorage.getPassword(),
-    'role': UserSecureStorage.getRole(),
-    'confirmPassword': UserSecureStorage.getConfirmPassword(),
+  Future<Map<String, dynamic>> toJson() async => {
+    'email': await UserSecureStorage.getEmail(),
+    'password': await UserSecureStorage.getPassword(),
+    'role':  await UserSecureStorage.getRole(),
+    'confirmPassword': await UserSecureStorage.getConfirmPassword(),
   };
 
   Future<Map<String, dynamic>> toFullJson()async => {
-    'email': UserSecureStorage.getEmail(),
+    'email': await UserSecureStorage.getEmail(),
     'password': UserSecureStorage.getPassword(),
     'role': UserSecureStorage.getRole(),
     'firstName': UserSecureStorage.getFirstName(),
