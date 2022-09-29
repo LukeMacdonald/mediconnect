@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:client/update_appointment.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
@@ -214,7 +215,21 @@ class _UpcomingAppointment extends State<UpcomingAppointment> {
                     children: [
                       Expanded(
                         child: IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                //TODO: Uncomment this section
+                                // MaterialPageRoute(
+                                //     builder: (context) => UpdateAppointment(
+                                //         user: user,
+                                //         appointmentDetails:
+                                //             _appointment[index])));
+                                MaterialPageRoute(
+                                    builder: (context) => UpdateAppointment(
+                                        user: user,
+                                        appointmentDetails:
+                                            "Luke Macdonald | 29/09/2022 | 13:00-14:00")));
+                          },
                           icon: const Icon(Icons.edit),
                         ),
                       ),

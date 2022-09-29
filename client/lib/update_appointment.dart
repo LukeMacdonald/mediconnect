@@ -11,15 +11,18 @@ import 'utilities/user.dart';
 
 import 'package:flutter/material.dart';
 
-class BookingByTime extends StatefulWidget {
+class UpdateAppointment extends StatefulWidget {
   final User user;
-  const BookingByTime({Key? key, required this.user}) : super(key: key);
+  final String appointmentDetails;
+  const UpdateAppointment(
+      {Key? key, required this.user, required this.appointmentDetails})
+      : super(key: key);
 
   @override
-  State<BookingByTime> createState() => _BookingByTime();
+  State<UpdateAppointment> createState() => _UpdateAppointment();
 }
 
-class _BookingByTime extends State<BookingByTime> {
+class _UpdateAppointment extends State<UpdateAppointment> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   late User user = widget.user;
 
@@ -34,14 +37,20 @@ class _BookingByTime extends State<BookingByTime> {
     dateInput.text = ""; //set the initial value of text field
     super.initState();
     getAvailability();
+    splitString();
   }
 
   final List<Map> _booking = [];
   final List<Map> doctorIdToNames = [];
   final List<String> _doctors = ['Doctor'];
-  String doctorValue = 'Doctor';
   int? doctorId;
+  List<String> details = [];
 
+  void splitString() {
+    details = widget.appointmentDetails.split(" | ");
+  }
+
+  //TODO: Get availability according to the specific doctor
   Future getAvailability() async {
     final response = await http
         .get(Uri.parse("http://localhost:8080/GetAllDoctorsAvailabilities"));
@@ -92,7 +101,7 @@ class _BookingByTime extends State<BookingByTime> {
         "http://localhost:8080/SearchAppointment/$id/$date/$startTime"));
     var responseData = response.body;
     if (responseData == 'false') {
-      alert("Succesfully Booked the Appointment!!");
+      alert("Succesfully Updated the Appointment!!");
       save(id, date, startTime);
     } else {
       alert(
@@ -159,7 +168,7 @@ class _BookingByTime extends State<BookingByTime> {
         children: <Widget>[const SizedBox(height: 10), Container()]);
   }
 
-  Widget bookingByTime() {
+  Widget updateBooking() {
     return SingleChildScrollView(
         physics: const NeverScrollableScrollPhysics(),
         child: Column(children: [
@@ -172,7 +181,7 @@ class _BookingByTime extends State<BookingByTime> {
               )),
           Container(
               constraints: const BoxConstraints(
-                  minWidth: 800, maxWidth: 800, minHeight: 300, maxHeight: 300),
+                  minWidth: 800, maxWidth: 800, minHeight: 400, maxHeight: 400),
               decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10),
@@ -188,6 +197,29 @@ class _BookingByTime extends State<BookingByTime> {
                 children: [
                   Column(
                     children: [
+                      Padding(
+                          padding: const EdgeInsets.fromLTRB(80, 15, 0, 0),
+                          child: Column(
+                            children: [
+                              Text(
+                                "Original Appointment Details: ",
+                                style: GoogleFonts.lexendDeca(
+                                    fontSize: 14, fontWeight: FontWeight.bold),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                child: Text("Doctor: Dr.${details[0]}"),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                child: Text("Date: ${details[1]}"),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                child: Text("Time: ${details[2]}"),
+                              ),
+                            ],
+                          )),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(80, 15, 0, 0),
                         child: Container(
@@ -205,31 +237,11 @@ class _BookingByTime extends State<BookingByTime> {
                               ]),
                           height: 60,
                           child: Padding(
-                            padding: const EdgeInsets.fromLTRB(20, 0, 0, 20),
-                            child: DropdownButtonFormField(
-                              decoration: const InputDecoration(
-                                border: InputBorder.none,
-                                contentPadding: EdgeInsets.only(top: 15),
-                              ),
-                              // Initial Value
-                              value: doctorValue,
-
-                              // Down Arrow Icon
-                              icon: const Icon(Icons.keyboard_arrow_down),
-
-                              // Array list of items
-                              items: _doctors.map((String doctors) {
-                                return DropdownMenuItem(
-                                  value: doctors,
-                                  child: Text(doctors),
-                                );
-                              }).toList(),
-                              // After selecting the desired option,it will
-                              // change button value to selected value
-                              onChanged: (value) {
-                                doctorValue = value.toString();
-                              },
+                            padding: const EdgeInsets.fromLTRB(20, 20, 0, 20),
+                            child: Text(
+                              details[0],
                             ),
+                            // Initial Value
                           ),
                         ),
                       ),
@@ -347,16 +359,14 @@ class _BookingByTime extends State<BookingByTime> {
                           child: ElevatedButton(
                             onPressed: () {
                               //TODO: functions on backend
-                              if (doctorValue == 'Doctor') {
-                                alert("Select a doctor");
-                              } else if (dateInput.text == "") {
+                              if (dateInput.text == "") {
                                 alert("Provide a date");
                               } else if (hourValue == 'Hour') {
                                 alert("Select a hour range");
                               } else {
                                 if ((_booking.any((element) => mapEquals(
                                             element, {
-                                          'Doctor': doctorValue,
+                                          'Doctor': details[0],
                                           'Day': daySelected,
                                           'Hour': hourValue
                                         }))) &&
@@ -367,7 +377,7 @@ class _BookingByTime extends State<BookingByTime> {
                                   // Else, place an alert about appointment is already filled by the doctor
                                   int id = 0;
                                   for (var element in doctorIdToNames) {
-                                    if (element['Doctor_Name'] == doctorValue) {
+                                    if (element['Doctor_Name'] == details[0]) {
                                       id = element['doctor_id'];
                                     }
                                   }
@@ -426,7 +436,7 @@ class _BookingByTime extends State<BookingByTime> {
                     width: double.infinity,
                     height: 20,
                     decoration: const BoxDecoration(color: Colors.transparent)),
-                Text('Book Appointment By Time',
+                Text('Update Appointment',
                     style: GoogleFonts.roboto(
                       textStyle:
                           const TextStyle(color: Colors.white, fontSize: 40),
@@ -438,7 +448,7 @@ class _BookingByTime extends State<BookingByTime> {
                       constraints:
                           const BoxConstraints(minWidth: 700, minHeight: 580),
                       decoration: const BoxDecoration(color: Color(0x00FFFFFF)),
-                      child: bookingByTime()),
+                      child: updateBooking()),
                 ),
               ],
             ))));
