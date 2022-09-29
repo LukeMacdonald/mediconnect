@@ -2,7 +2,7 @@ package com.example.communication_service.controller;
 import com.example.communication_service.model.EmailDetails;
 import com.example.communication_service.service.EmailService;
 
-import com.example.profile_service.model.Verification;
+import com.example.communication_service.model.Verification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
