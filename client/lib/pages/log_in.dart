@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:nd_telemedicine/security/storage_service.dart';
 import 'package:page_transition/page_transition.dart';
 import '../../pages/imports.dart';
 import 'dart:convert';
@@ -37,7 +36,6 @@ class _LogIn extends State<LogIn> {
         }));
 
     var responseData = json.decode(response.body);
-    print(responseData);
 
     if (responseData['status'] == 401) {
       if (!mounted) return;
@@ -56,27 +54,25 @@ class _LogIn extends State<LogIn> {
       });
       responseData = json.decode(response.body);
 
-      print(responseData);
-
       await UserSecureStorage.setID(responseData['id'].toString());
       await UserSecureStorage.setRole(responseData['role']);
 
-      if (await UserSecureStorage.getFirstName() == "") {
+      if (responseData['firstName'] == null) {
         if (!mounted) return;
-
         Navigator.push(
             context,
             PageTransition(
                 type: PageTransitionType.fade,
                 child: const ProfileCreation())); // Should direct to profile creation page
       } else if (responseData['role'] == "patient") {
+        await UserSecureStorage().setDetails(responseData);
         if (!mounted) return;
-
         Navigator.push(
             context,
             PageTransition(
                 type: PageTransitionType.fade, child: const HomePage()));
       } else if (responseData['role'] == "doctor") {
+        await UserSecureStorage().setDetails(responseData);
         if (!mounted) return;
         Navigator.push(
             context,
@@ -84,6 +80,7 @@ class _LogIn extends State<LogIn> {
                 type: PageTransitionType.fade,
                 child: const DoctorHomePage()));
       } else if (responseData['role'] == "superuser") {
+        await UserSecureStorage().setDetails(responseData);
 
         if (!mounted) return;
         Navigator.push(

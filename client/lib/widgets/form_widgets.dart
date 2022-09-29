@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:nd_telemedicine/security/storage_service.dart';
-import '../main.dart';
-import '../styles/custom_styles.dart';
-
 
 class UserEmail extends StatefulWidget {
   const UserEmail ({
@@ -29,37 +26,42 @@ class _UserEmail extends State<UserEmail> {
       children: [
         Expanded(
             child: Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
-                child: TextFormField(
-                  controller: textController,
-                  obscureText: false,
-                  autofocus: true,
-                  onChanged: (val) {
-                    UserSecureStorage.setEmail(textController.text);
-                    widget.changeClassValue(textController.text);
-                  },
-                  decoration: const InputDecoration(
-                    labelText: 'Email Address',
-                    labelStyle: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
+              padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
+              child: Material(
+                elevation: 5,
+                color: Theme.of(context).dividerColor,
+                borderRadius: const BorderRadius.all(Radius.circular(8)),
+                child: Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
+                  child: TextFormField(
+                      controller: textController,
+                      obscureText: false,
+                      autofocus: true,
+                      onChanged: (val) {
+                        UserSecureStorage.setEmail(textController.text);
+                        widget.changeClassValue(textController.text);
+                      },
+                      decoration: const InputDecoration(
+                        labelText: 'Email Address',
+                        labelStyle: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        hintText: 'Enter your email address...',
+                        hintStyle: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      keyboardType: TextInputType.emailAddress,
                     ),
-                    hintText: 'Enter your email address...',
-                    hintStyle: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    enabledBorder: CustomOutlineInputBorder.custom,
-                    focusedBorder: CustomOutlineInputBorder.custom,
-                    errorBorder: CustomOutlineInputBorder.custom,
-                    focusedErrorBorder: CustomOutlineInputBorder.custom,
-                  ),
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  keyboardType: TextInputType.emailAddress,
-                )))
+                ),
+              ),
+            ))
       ],
     );
   }
@@ -86,6 +88,12 @@ class _UserGivenFirstName extends State<UserGivenFirstName> {
       children: [
         Expanded(
             child: Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
+        child: Material(
+            elevation: 5,
+            color: Theme.of(context).dividerColor,
+            borderRadius: const BorderRadius.all(Radius.circular(8)),
+            child: Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
                 child: TextFormField(
                   controller: textController,
@@ -98,16 +106,12 @@ class _UserGivenFirstName extends State<UserGivenFirstName> {
                     labelStyle: TextStyle(fontSize: 16,fontWeight: FontWeight.w500,),
                     hintText: 'Enter your first name...',
                     hintStyle: TextStyle(fontSize: 16,fontWeight: FontWeight.w500,),
-                    enabledBorder: CustomOutlineInputBorder.custom,
-                    focusedBorder: CustomOutlineInputBorder.custom,
-                    errorBorder: CustomOutlineInputBorder.custom,
-                    focusedErrorBorder: CustomOutlineInputBorder.custom,
                   ),
                   style: const TextStyle(fontSize: 16,fontWeight: FontWeight.w500,),
                   keyboardType: TextInputType.name,
                 )
             )
-        )
+        )))
       ],
     );
   }
@@ -133,6 +137,12 @@ class _UserGivenLastName extends State<UserGivenLastName> {
       children: [
         Expanded(
             child: Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
+        child: Material(
+            elevation: 5,
+            color: Theme.of(context).dividerColor,
+            borderRadius: const BorderRadius.all(Radius.circular(8)),
+            child: Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
                 child: TextFormField(
                   controller: textController,
@@ -146,15 +156,11 @@ class _UserGivenLastName extends State<UserGivenLastName> {
                     labelStyle: TextStyle(fontSize: 16,fontWeight: FontWeight.w500,),
                     hintText: 'Enter your last name...',
                     hintStyle: TextStyle(fontSize: 16,fontWeight: FontWeight.w500,),
-                    enabledBorder: CustomOutlineInputBorder.custom,
-                    focusedBorder: CustomOutlineInputBorder.custom,
-                    errorBorder: CustomOutlineInputBorder.custom,
-                    focusedErrorBorder: CustomOutlineInputBorder.custom,
                   ),
                   style: const TextStyle(fontSize: 16,fontWeight: FontWeight.w500,),
                   keyboardType: TextInputType.name,
                 )
-            )
+            )))
         )
       ],
     );
@@ -183,7 +189,13 @@ class _UserGivenPassword extends State<UserGivenPassword> {
       children: [
         Expanded(
             child: Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 8),
+            padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
+        child: Material(
+            elevation: 5,
+            color: Theme.of(context).dividerColor,
+            borderRadius: const BorderRadius.all(Radius.circular(8)),
+            child: Padding(
+                padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
                 child: TextFormField(
                   controller: textController,
                   onChanged: (val) {
@@ -202,10 +214,6 @@ class _UserGivenPassword extends State<UserGivenPassword> {
                       labelStyle: const TextStyle(fontSize: 16,fontWeight: FontWeight.w500,),
                       //hintText: 'Enter Password',
                       hintStyle: const TextStyle(fontSize: 16,fontWeight: FontWeight.w500,),
-                      enabledBorder: CustomOutlineInputBorder.custom,
-                      focusedBorder: CustomOutlineInputBorder.custom,
-                      errorBorder: CustomOutlineInputBorder.custom,
-                      focusedErrorBorder: CustomOutlineInputBorder.custom,
                       suffixIcon: InkWell(
                         onTap: () => setState(
                               () => passwordVisibility = !passwordVisibility,
@@ -219,7 +227,7 @@ class _UserGivenPassword extends State<UserGivenPassword> {
                         ),
                       )),
                   style: const TextStyle(fontSize: 16,fontWeight: FontWeight.w500,),
-                )))
+    )))))
       ],
     );
   }
@@ -247,7 +255,13 @@ class _UserGivenConfirmPassword extends State<UserGivenConfirmPassword> {
       children: [
         Expanded(
             child: Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 8),
+            padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
+        child: Material(
+            elevation: 5,
+            color: Theme.of(context).dividerColor,
+            borderRadius: const BorderRadius.all(Radius.circular(8)),
+            child: Padding(
+                padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
                 child: TextFormField(
                   controller: textController,
                   onChanged: (val) {
@@ -265,10 +279,6 @@ class _UserGivenConfirmPassword extends State<UserGivenConfirmPassword> {
                       labelStyle: const TextStyle(fontSize: 16,fontWeight: FontWeight.w500,),
                       hintText: 'Enter Password',
                       hintStyle: const TextStyle(fontSize: 16,fontWeight: FontWeight.w500,),
-                      enabledBorder: CustomOutlineInputBorder.custom,
-                      focusedBorder: CustomOutlineInputBorder.custom,
-                      errorBorder: CustomOutlineInputBorder.custom,
-                      focusedErrorBorder: CustomOutlineInputBorder.custom,
                       suffixIcon: InkWell(
                         onTap: () => setState(
                               () => passwordVisibility = !passwordVisibility,
@@ -283,7 +293,7 @@ class _UserGivenConfirmPassword extends State<UserGivenConfirmPassword> {
                       )),
                   style: const TextStyle(fontSize: 16,fontWeight: FontWeight.w500,),
                 )))
-      ],
+    ))],
     );
   }
 }
@@ -309,9 +319,15 @@ class _UserGivenPhoneNumber extends State<UserGivenPhoneNumber> {
           mainAxisSize: MainAxisSize.max,
           children: [
             Expanded(
-                child: Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
-                    child: TextFormField(
+        child: Padding(
+        padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
+      child: Material(
+          elevation: 5,
+          color: Theme.of(context).dividerColor,
+          borderRadius: const BorderRadius.all(Radius.circular(8)),
+          child: Padding(
+              padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
+              child: TextFormField(
                       controller: textController,
                       obscureText: false,
                       onChanged: (val) {
@@ -322,14 +338,10 @@ class _UserGivenPhoneNumber extends State<UserGivenPhoneNumber> {
                         labelStyle: TextStyle(fontSize: 16,fontWeight: FontWeight.w500,),
                         hintText: '1800160401',
                         hintStyle: TextStyle(fontSize: 16,fontWeight: FontWeight.w500,),
-                        enabledBorder: CustomOutlineInputBorder.custom,
-                        focusedBorder: CustomOutlineInputBorder.custom,
-                        errorBorder: CustomOutlineInputBorder.custom,
-                        focusedErrorBorder: CustomOutlineInputBorder.custom,
                       ),
                       style: const TextStyle(fontSize: 16,fontWeight: FontWeight.w500,),
                       keyboardType: TextInputType.phone,
-                    )))
+              )))))
           ],
         ));
   }
@@ -356,6 +368,12 @@ class _UserDOB extends State<UserDOB> {
       children: [
         Expanded(
             child: Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
+        child: Material(
+            elevation: 5,
+            color: Theme.of(context).dividerColor,
+            borderRadius: const BorderRadius.all(Radius.circular(8)),
+            child: Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
                 child: TextFormField(
                   controller: textController,
@@ -365,10 +383,6 @@ class _UserDOB extends State<UserDOB> {
                     labelStyle: TextStyle(fontSize: 16,fontWeight: FontWeight.w500,),
                     hintText: 'Enter your date of birth...',
                     hintStyle: TextStyle(fontSize: 16,fontWeight: FontWeight.w500,),
-                    enabledBorder: CustomOutlineInputBorder.custom,
-                    focusedBorder: CustomOutlineInputBorder.custom,
-                    errorBorder: CustomOutlineInputBorder.custom,
-                    focusedErrorBorder: CustomOutlineInputBorder.custom,
                     suffixIcon: Icon(Icons.calendar_today),
                   ),
                   readOnly: true,
@@ -391,7 +405,7 @@ class _UserDOB extends State<UserDOB> {
                     }
                   },
                   style: const TextStyle(fontSize: 16,fontWeight: FontWeight.w500,),
-                )))
+    )))))
       ],
     );
   }
@@ -418,9 +432,15 @@ class _DoctorCode  extends State<DoctorCode> {
           mainAxisSize: MainAxisSize.max,
           children: [
             Expanded(
-                child: Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
-                    child: TextFormField(
+        child: Padding(
+        padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
+      child: Material(
+          elevation: 5,
+          color: Theme.of(context).dividerColor,
+          borderRadius: const BorderRadius.all(Radius.circular(8)),
+          child: Padding(
+              padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
+              child: TextFormField(
                       controller: textController,
                       obscureText: false,
                       onChanged: (val) {
@@ -437,17 +457,13 @@ class _DoctorCode  extends State<DoctorCode> {
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
                         ),
-                        enabledBorder: CustomOutlineInputBorder.custom,
-                        focusedBorder: CustomOutlineInputBorder.custom,
-                        errorBorder: CustomOutlineInputBorder.custom,
-                        focusedErrorBorder: CustomOutlineInputBorder.custom,
                       ),
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
                       ),
                       keyboardType: TextInputType.number,
-                    )))
+              )))))
           ],
         ));
   }

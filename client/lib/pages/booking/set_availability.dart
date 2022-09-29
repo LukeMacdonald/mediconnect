@@ -1,13 +1,11 @@
-import 'dart:convert';
+import '../../utilities/custom_functions.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:nd_telemedicine/main.dart';
-import 'package:nd_telemedicine/security/storage_service.dart';
-import '../../styles/theme.dart';
-import '../../utilities/custom_functions.dart';
-import '../../widgets/buttons.dart';
-import '../../widgets/navbar.dart';
+import '../../pages/imports.dart';
+import 'dart:convert';
+
+
 
 class SetAvailability extends StatefulWidget {
   const SetAvailability({Key? key,}) : super(key: key);

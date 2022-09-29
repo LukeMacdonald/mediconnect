@@ -17,5 +17,3 @@ jobs:
       working-directory: client
     - run: flutter build ios
       working-directory: client
-    - run: flutter build android
-      working-directory: client

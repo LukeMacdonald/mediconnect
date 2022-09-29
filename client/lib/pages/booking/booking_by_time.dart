@@ -1,20 +1,13 @@
+import 'package:page_transition/page_transition.dart';
+import '../../utilities/custom_functions.dart';
+import 'package:http/http.dart' as http;
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import '../../pages/imports.dart';
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
-import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
-import 'package:flutter/foundation.dart';
-
-import 'package:flutter/material.dart';
-import 'package:nd_telemedicine/main.dart';
-import 'package:nd_telemedicine/pages/homepage/home_page.dart';
-import 'package:page_transition/page_transition.dart';
-
-import '../../security/storage_service.dart';
-import '../../styles/theme.dart';
-import '../../utilities/custom_functions.dart';
-import '../../widgets/buttons.dart';
-import '../../widgets/navbar.dart';
 class BookingByTime extends StatefulWidget {
 
   const BookingByTime({Key? key}) : super(key: key);

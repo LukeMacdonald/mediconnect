@@ -39,7 +39,7 @@ jobs:
       run: mvn -f server/communication_service -B package --f pom.xml    
       
     - name: Build Message Service
-      run: mvn -f server/message_service --batch-mode test
+      run: mvn -f server/message_service -B package --f pom.xml
       
     - name: Test Message Service
       run: mvn -f server/message_service --batch-mode test

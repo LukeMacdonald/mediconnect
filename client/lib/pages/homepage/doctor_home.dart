@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../pages/imports.dart';
-import '../../security/storage_service.dart';
 
 class DoctorHomePage extends StatefulWidget {
 
@@ -17,6 +16,9 @@ class _DoctorHomePage extends State<DoctorHomePage> {
 
   Future setName() async {
     await UserSecureStorage.getLastName().then((value) => name = value!);
+    setState(() {
+
+    });
   }
   @override
   void initState(){
@@ -135,6 +137,6 @@ class _DoctorHomePage extends State<DoctorHomePage> {
                 ]),
               )
             ]),
-      bottomNavigationBar: DoctorBottomNavigationBar(pageIndex: 0),);
+      bottomNavigationBar: const DoctorBottomNavigationBar(pageIndex: 0),);
   }
 }

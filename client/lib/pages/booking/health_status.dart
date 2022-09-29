@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:nd_telemedicine/pages/booking/booking_by_time.dart';
 import 'package:nd_telemedicine/styles/theme.dart';
 
-import '../../models/user.dart';
-import '../../styles/custom_styles.dart';
 import '../../widgets/buttons.dart';
 import '../../widgets/navbar.dart';
 
@@ -24,13 +22,14 @@ class HeathStatusPage extends StatefulWidget {
   bool headache = false;
   bool vomiting= false;
   bool faint= false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
-          leading: AppBarItem(
+          leading: const AppBarItem(
             icon: CupertinoIcons.home,
             index: 6,
           ),
@@ -39,17 +38,17 @@ class HeathStatusPage extends StatefulWidget {
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
               )),
-          actions: <Widget>[
+          actions: const <Widget>[
             AppBarItem(
               icon: CupertinoIcons.bell_fill,
               index: 5,
             ),
-            const SizedBox(width: 20),
+            SizedBox(width: 20),
             AppBarItem(
               icon: CupertinoIcons.settings_solid,
               index: 5,
             ),
-            const SizedBox(width: 20),
+            SizedBox(width: 20),
           ],
         ),
         body: Padding(
@@ -139,7 +138,7 @@ class HeathStatusPage extends StatefulWidget {
                             activeColor: AppColors.secondary,
                             onChanged: (bool? value){
                               setState(() {
-                                headache = value!;
+                                faint = value!;
                               });
                             }),
                         const Padding(
@@ -148,8 +147,14 @@ class HeathStatusPage extends StatefulWidget {
                               "please explain in 1-2 sentences why you "
                               "are booking an appointment?",),
                         ),
-                        SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.85,
+                    Padding(
+                      padding: const EdgeInsetsDirectional.fromSTEB(5, 10, 5, 8),
+                      child: Material(
+                        elevation: 5,
+                        color: Theme.of(context).dividerColor,
+                        borderRadius: const BorderRadius.all(Radius.circular(8)),
+                        child: Padding(
+                            padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
                             child: TextFormField(
                               //controller: textController,
                               obscureText: false,
@@ -162,10 +167,6 @@ class HeathStatusPage extends StatefulWidget {
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
                                 ),
-                                enabledBorder: CustomOutlineInputBorder.custom,
-                                focusedBorder: CustomOutlineInputBorder.custom,
-                                errorBorder: CustomOutlineInputBorder.custom,
-                                focusedErrorBorder: CustomOutlineInputBorder.custom,
                               ),
                               style: const TextStyle(
                                 fontSize: 16,
@@ -175,7 +176,7 @@ class HeathStatusPage extends StatefulWidget {
                               keyboardType: TextInputType.multiline,
                             )
                         ),
-                  ],
+                      ))],
                 ),
             ),
                 Row(

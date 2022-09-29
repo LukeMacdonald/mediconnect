@@ -56,7 +56,7 @@ class UserSecureStorage {
       await _storage.write(key: _keyLastName, value: name);
 
   static Future<String?> getLastName() async =>
-      await _storage.read(key: _keyFirstName);
+      await _storage.read(key: _keyLastName);
 
   static Future setPhoneNumber(String phone) async =>
       await _storage.write(key: _keyPhoneNumber, value: phone);
@@ -99,6 +99,7 @@ class UserSecureStorage {
     'phoneNumber': UserSecureStorage.getPhoneNumber(),
     'dob': UserSecureStorage.getDOB(),
 
+
   };
 
   Future<Map<String, dynamic>> doctorToJson(int code) async  => {
@@ -107,6 +108,15 @@ class UserSecureStorage {
     'role': UserSecureStorage.getRole(),
     'confirmPassword': UserSecureStorage.getConfirmPassword(),
     'code': code,
+  };
+  Future<void> setDetails(var responseData) async => {
+     UserSecureStorage.setID(responseData['id'].toString()),
+    UserSecureStorage.setEmail(responseData['email']),
+    UserSecureStorage.setFirstName(responseData['firstName']),
+    UserSecureStorage.setLastName(responseData['lastName']),
+    UserSecureStorage.setRole(responseData['role']),
+     UserSecureStorage.setDOB(responseData['dob']),
+    UserSecureStorage.setPhoneNumber(responseData['phoneNumber']),
   };
 
 

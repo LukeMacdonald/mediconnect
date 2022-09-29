@@ -42,7 +42,6 @@ class _AppBarItem extends State<AppBarItem> {
   }
 
   Widget getHomePage(String role){
-    print(role);
     if (role == "patient"){
       return const HomePage();
     }
@@ -272,7 +271,7 @@ class _DoctorBottomNavigationBar extends State<DoctorBottomNavigationBar> {
                 label: "patients",
                 icon: Icons.medication,
                 isSelected: (widget.pageIndex==7),
-                page:const HomePage(),
+                page:const DoctorHomePage(),
               ),
               NavigationBarItem(
                 label: "appointments",
@@ -350,9 +349,9 @@ class AppDropDown extends StatelessWidget {
         },
         onSelected:(value){
           if(value == 0){
-            print("My account menu is selected.");
+
           }else if(value == 1){
-            print("Settings menu is selected.");
+
           }else if(value == 2){
             Navigator.push(
                 context,

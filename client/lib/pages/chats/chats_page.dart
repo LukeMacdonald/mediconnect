@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:http/http.dart' as http;
 import '../../pages/imports.dart';
-import '../../security/storage_service.dart';
 
 
 
@@ -57,7 +56,6 @@ class _ChatPage  extends State<ChatPage > {
         Uri.parse("${messageIP}get/message_menu/${int.parse(id)}"),
         headers: {'Content-Type': 'application/json'});
     var responses = json.decode(response.body) as List;
-    print(responses);
     MessageData message;
     for (var element in responses) {
       message = MessageData(element['messageID'],
