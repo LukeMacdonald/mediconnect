@@ -17,7 +17,6 @@ class _DoctorHomePage extends State<DoctorHomePage> {
   Future setName() async {
     await UserSecureStorage.getLastName().then((value) => name = value!);
     setState(() {
-
     });
   }
   @override

@@ -12,8 +12,8 @@ class ChatScreen extends StatefulWidget {
 
   const ChatScreen(
       {Key? key,
-      required this.messageData,
-      required this.name})
+        required this.messageData,
+        required this.name})
       : super(key: key);
 
   @override
@@ -69,7 +69,7 @@ class _ChatScreen extends State<ChatScreen> {
         })
     );
   }
-  Future<MessageData> getUnreadMessages() async {
+  Future getUnreadMessages() async {
     MessageData message;
     while (true) {
       var response = await http.get(
@@ -89,20 +89,22 @@ class _ChatScreen extends State<ChatScreen> {
             element['viewed'] as bool);
         String id = "";
         await UserSecureStorage.getID().then((value) => id = value!);
-        setState(() {
-          //name = name;
-          if (message.senderID == int.parse(id)) {
-            items.add(
-                MessageOwnTile(message: message.message, messageDate: ""));
-          } else {
-            items.add(MessageTile(message: message.message, messageDate: ""));
-          }
-        });
+        if (mounted) {
+          setState(() {
+            if (message.senderID == int.parse(id)) {
+              items.add(
+                  MessageOwnTile(message: message.message, messageDate: ""));
+            } else {
+              items.add(MessageTile(message: message.message, messageDate: ""));
+            }
+          });
+        }
+        if (mounted) {
+          setState(() {});
+        }
       }
-      setState(() {
-
-      });
     }
+
   }
 
   @override
@@ -138,9 +140,9 @@ class _ChatScreen extends State<ChatScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Center(
                     child: IconBorder(
-                  icon: CupertinoIcons.person,
-                  onTap: () {},
-                )))
+                      icon: CupertinoIcons.person,
+                      onTap: () {},
+                    )))
           ]),
       //_
       body: Column(
@@ -203,4 +205,3 @@ class _ChatScreen extends State<ChatScreen> {
     );
   }
 }
-
