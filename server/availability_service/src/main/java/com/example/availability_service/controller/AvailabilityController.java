@@ -3,6 +3,7 @@ package com.example.availability_service.controller;
 import com.example.availability_service.model.Availability;
 import com.example.availability_service.repository.AvailabilityRepo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,18 +15,18 @@ public class AvailabilityController {
 
     // Sets Availability For Doctor
     @PostMapping(value = "doctor/set/availability")
-    public String availability(@RequestBody Availability avail){
+    public ResponseEntity<?> availability(@RequestBody Availability avail){
 
         int day = avail.getday_of_week();
         if(day >= 7 ){
-            return "Incorrect Entry: Day of Week Entered was To High";
+            return ResponseEntity.badRequest().body("Incorrect Entry: Day of Week Entered was To High");
         }
         else if(day <= 0 ){
-            return "Incorrect Entry: Day of Week Entered was To Low";
+            return ResponseEntity.badRequest().body("Incorrect Entry: Day of Week Entered was To Low");
         }
         else{
             availRepo.save(avail);
-            return "Availability Set!";
+            return ResponseEntity.ok().body("Availability Set!");
         }
     }
     // Sets an Availability For Doctor

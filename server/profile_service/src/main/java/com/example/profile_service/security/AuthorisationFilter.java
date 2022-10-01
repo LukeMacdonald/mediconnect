@@ -16,10 +16,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
+import static java.util.Arrays.stream;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -33,16 +32,20 @@ public class AuthorisationFilter extends OncePerRequestFilter {
         }
         else{
             String authorisationHeader = request.getHeader(AUTHORIZATION);
-            if (authorisationHeader != null && authorisationHeader.startsWith("Bearer ")){
+            if (authorisationHeader != null && authorisationHeader.startsWith(SecurityConstant.TOKEN_PREFIX)){
                 try{
-                    String token = authorisationHeader.substring("Bearer ".length());
-                    Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
+                    String token = authorisationHeader.substring(SecurityConstant.TOKEN_PREFIX.length());
+                    Algorithm algorithm = Algorithm.HMAC256(SecurityConstant.SECRET.getBytes());
                     JWTVerifier verifier = JWT.require(algorithm).build();
                     DecodedJWT decodedJWT = verifier.verify(token);
                     String email = decodedJWT.getSubject();
-                    String role = decodedJWT.getClaim("role").toString();
-                    SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role);
-                    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email,null, Collections.singleton(authority));
+                    String[] roles = decodedJWT.getClaim("role").asArray(String.class);
+
+                    Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+                    stream(roles).forEach(role->{
+                        authorities.add(new SimpleGrantedAuthority(role));
+                    });
+                    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email,null, authorities);
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                     filterChain.doFilter(request,response);
                 }catch(Exception exception){

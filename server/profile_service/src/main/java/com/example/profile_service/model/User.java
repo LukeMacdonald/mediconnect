@@ -156,6 +156,19 @@ public class User implements UserDetails {
                 break;
         }
     }
+    public String getRoleAuthority(){
+        switch(this.role.getRoleName()){
+            case "patient":
+                return "ROLE_USER";
+            case "doctor":
+                return "ROLE_DOCTOR";
+            case "superuser":
+                return "ROLE_ADMIN";
+            default:
+                return "ERROR";
+
+        }
+    }
 
     public Role getRole() {
         return this.role;

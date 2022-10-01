@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             log.info("User {} Found in the Database!",email);
         }
         Collection<SimpleGrantedAuthority> authority = new ArrayList<>();
-        authority.add(new SimpleGrantedAuthority(user.getRole().getRoleName()));
+        authority.add(new SimpleGrantedAuthority(user.getRoleAuthority()));
         return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),authority);
     }
 
