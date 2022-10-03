@@ -2,20 +2,24 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:nd_telemedicine/pages/chats/new_chat.dart';
+import 'package:page_transition/page_transition.dart';
 import '../../pages/imports.dart';
 import '../../utilities/custom_functions.dart';
 
-class ChatPage extends StatefulWidget {
-  const ChatPage({Key? key}) : super(key: key);
+class ChatMenuPatient extends StatefulWidget {
+  const ChatMenuPatient({Key? key}) : super(key: key);
 
   @override
-  State<ChatPage> createState() => _ChatPage();
+  State<ChatMenuPatient> createState() => _ChatMenuPatient();
 }
 
-class _ChatPage extends State<ChatPage> {
+class _ChatMenuPatient extends State<ChatMenuPatient> {
   late List<MessageData> _messages;
   late List<String> _names;
   final int pageIndex = 1;
+  late List<dynamic> _doctors;
+
 
   Future<void> getMessages() async {
     String id = "";
@@ -40,6 +44,8 @@ class _ChatPage extends State<ChatPage> {
       });
     }
   }
+
+
 
   @override
   void initState() {
@@ -67,7 +73,13 @@ class _ChatPage extends State<ChatPage> {
             Padding(
               padding: const EdgeInsets.only(right: 5),
               child: IconButton(
-                  onPressed: () {}, icon: const Icon(CupertinoIcons.plus)),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        PageTransition(
+                            type: PageTransitionType.fade,
+                            child: const NewChat()));
+                  }, icon: const Icon(CupertinoIcons.plus)),
             ),
             const AppBarItem(
               icon: CupertinoIcons.bell_fill,

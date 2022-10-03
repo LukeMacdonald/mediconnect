@@ -48,94 +48,96 @@ class _DoctorHomePage extends State<DoctorHomePage> {
             AppDropDown(),
           ],
         ),
-        body: Column(
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(
-                height: 20,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 20, bottom: 30),
-                child: Text("Welcome Dr $name",
-                    style: const TextStyle(fontSize: 30)),
-              ),
-              SingleChildScrollView(
-                child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          menuOption(
-                              Colors.teal,
-                              const Icon(
-                                CupertinoIcons.clock_fill,
-                                color: Colors.white,
-                                size: 50,
-                              ),
-                              const SetAvailability(),
-                              'Set Availability',
-                              context),
-                          menuOption(
-                              AppColors.accent,
-                              const Icon(
-                                CupertinoIcons.calendar_badge_plus,
-                                color: Colors.white,
-                                size: 50,
-                              ),
-                              const BookingByTime(),
-                              'Update Appointments',
-                              context),
-                        ],
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Padding(
-                        padding:
-                            const EdgeInsetsDirectional.fromSTEB(0, 40, 0, 0),
-                        child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              menuOption(
-                                const Color.fromRGBO(33, 150, 243, 1),
+        body: SizedBox(
+          child: Column(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(
+                  height: 20,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, bottom: 30),
+                  child: Text("Welcome Dr $name",
+                      style: const TextStyle(fontSize: 30)),
+                ),
+                SingleChildScrollView(
+                  child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            menuOption(
+                                Colors.teal,
                                 const Icon(
-                                  CupertinoIcons.calendar_today,
+                                  CupertinoIcons.clock_fill,
                                   color: Colors.white,
                                   size: 50,
                                 ),
-                                const DoctorHomePage(),
-                                'Upcoming Appointments',
-                                context,
-                              ),
-                              menuOption(
-                                  Colors.orangeAccent,
+                                const SetAvailability(),
+                                'Set Availability',
+                                context),
+                            menuOption(
+                                AppColors.accent,
+                                const Icon(
+                                  CupertinoIcons.calendar_badge_plus,
+                                  color: Colors.white,
+                                  size: 50,
+                                ),
+                                const BookingByTime(),
+                                'Update Appointments',
+                                context),
+                          ],
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Padding(
+                          padding:
+                              const EdgeInsetsDirectional.fromSTEB(0, 40, 0, 0),
+                          child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                menuOption(
+                                  const Color.fromRGBO(33, 150, 243, 1),
                                   const Icon(
-                                    CupertinoIcons.bubble_left_bubble_right_fill,
+                                    CupertinoIcons.calendar_today,
                                     color: Colors.white,
                                     size: 50,
                                   ),
                                   const DoctorHomePage(),
-                                  'Contact Patient',
-                                  context),
-                            ]),
-                      )
-                    ],
-                  ),
-                ]),
-              )
-            ]),
+                                  'Upcoming Appointments',
+                                  context,
+                                ),
+                                menuOption(
+                                    Colors.orangeAccent,
+                                    const Icon(
+                                      CupertinoIcons.bubble_left_bubble_right_fill,
+                                      color: Colors.white,
+                                      size: 50,
+                                    ),
+                                    const DoctorHomePage(),
+                                    'Contact Patient',
+                                    context),
+                              ]),
+                        )
+                      ],
+                    ),
+                  ]),
+                )
+              ]),
+        ),
       bottomNavigationBar: const DoctorBottomNavigationBar(pageIndex: 0),);
   }
 }

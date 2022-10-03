@@ -24,6 +24,7 @@ class SubmitButton extends StatelessWidget {
     return Material(
           borderRadius: const BorderRadius.all(Radius.circular(10)),
           color: color,
+          elevation: 2,
           child: InkWell(
 
             splashColor: AppColors.cardLight,

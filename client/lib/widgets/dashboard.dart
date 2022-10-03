@@ -45,7 +45,7 @@ Widget menuOption(Color color, Icon icon,Widget page,String message,BuildContext
           children: [
             IconButton(
               iconSize: 70,
-              color: const Color(0x00F77173),
+              color: Theme.of(context).iconTheme.color,
               icon: icon,
               onPressed: () {
                 Navigator.push(

@@ -57,44 +57,48 @@ class ChatTile extends StatelessWidget {
                   messageData: messageData,
                   name: name,)));
       },
-      child: Container(
-          height: 100,
-          margin: const EdgeInsets.symmetric(horizontal: 8),
-          decoration: const BoxDecoration(
-              border:
-              Border(bottom: BorderSide(color: Colors.grey, width: 0.2))),
-          child: Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: Row(children: [
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Avatar.medium(url: Helpers.randomPictureUrl()),
-              ),
-              Expanded(
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Text(name,
-                              style: const TextStyle(
-                                letterSpacing: 0.2,
-                                wordSpacing: 1.5,
-                                fontWeight: FontWeight.w900,
-                              )),
-                        ),
-                        SizedBox(
-                            height: 20,
-                            child: Text(messageData.message,
-                                overflow: TextOverflow.ellipsis,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 5.0),
+        child: Container(
+            height: 100,
+            margin: const EdgeInsets.symmetric(horizontal: 8),
+
+            decoration: BoxDecoration(
+                borderRadius: const BorderRadius.all(Radius.circular(15)),
+                color: Theme.of(context).cardColor,),
+            child: Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: Row(children: [
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Avatar.medium(url: Helpers.randomPictureUrl()),
+                ),
+                Expanded(
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: Text(name,
                                 style: const TextStyle(
-                                  fontSize: 12,
-                                  color: AppColors.textFaded,
-                                )))
-                      ]))
-            ]),
-          )),
+                                  letterSpacing: 0.2,
+                                  wordSpacing: 1.5,
+                                  fontWeight: FontWeight.w900,
+                                )),
+                          ),
+                          SizedBox(
+                              height: 20,
+                              child: Text(messageData.message,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: AppColors.textFaded,
+                                  )))
+                        ]))
+              ]),
+            )),
+      ),
     );
   }
 }

@@ -77,10 +77,15 @@ class _AddDoctor extends State<AddDoctor> {
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return GestureDetector(
+        onTap: ()=>FocusScope.of(context).unfocus(),
+    child:Scaffold(
+        extendBodyBehindAppBar: true,
+        resizeToAvoidBottomInset: true,
         appBar: AppBar(
           iconTheme: Theme.of(context).iconTheme,
           backgroundColor: Colors.transparent,
+
           elevation: 0,
           leadingWidth: 54,
           leading: Align(
@@ -154,6 +159,6 @@ class _AddDoctor extends State<AddDoctor> {
                 }
                 },
             ),
-          )]));
+          )])));
   }
 }

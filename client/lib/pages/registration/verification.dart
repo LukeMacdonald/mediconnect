@@ -62,9 +62,12 @@ class _Verification extends State<Verification> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return GestureDetector(
+        onTap: ()=>FocusScope.of(context).unfocus(),
+    child:Scaffold(
         key: scaffoldKey,
-        resizeToAvoidBottomInset: false,
+        extendBodyBehindAppBar: true,
+        resizeToAvoidBottomInset: true,
         backgroundColor: Theme.of(context).backgroundColor,
         appBar: AppBar(
           iconTheme: Theme.of(context).iconTheme,
@@ -131,6 +134,6 @@ class _Verification extends State<Verification> {
           validateSave();
         },
       )
-    ]));
+    ])));
   }
 }

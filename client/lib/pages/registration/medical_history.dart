@@ -302,191 +302,197 @@ class _MedicalHistory extends State<MedicalHistory> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        key: scaffoldKey,
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          iconTheme: Theme.of(context).iconTheme,
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          leadingWidth: 54,
-          leading: Align(
-            alignment: Alignment.centerRight,
-            child: IconBackground(
-              icon: CupertinoIcons.back,
-              onTap: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ),
-        ),
-        body: SizedBox(
-            child: Column(children: [
-          Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 0, 10),
-            child: Row(
-              children: const [
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-                  child: Text(
-                    'Medical History',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w800,
-                      fontSize: 30,
-                      color: Color(0xFF2190E5),
-                    ),
-                  ),
+    return GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: Scaffold(
+            key: scaffoldKey,
+            extendBodyBehindAppBar: true,
+            resizeToAvoidBottomInset: true,
+            appBar: AppBar(
+              iconTheme: Theme.of(context).iconTheme,
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              leadingWidth: 54,
+              leading: Align(
+                alignment: Alignment.centerRight,
+                child: IconBackground(
+                  icon: CupertinoIcons.back,
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
                 ),
-              ],
+              ),
             ),
-          ),
-          Expanded(
-              child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: ListView(children: [
+            body: SizedBox(
+                child: Column(children: [
               Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 0, 10),
                 child: Row(
-                  mainAxisSize: MainAxisSize.max,
                   children: const [
-                    Expanded(
-                      child: Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-                          child: Text(
-                            'Please enter your Medical History details below:',
-                            style: TextStyle(fontSize: 17,fontWeight: FontWeight.w800),
-                          )),
+                    Padding(
+                      padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                      child: Text(
+                        'Medical History',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 30,
+                          color: Color(0xFF2190E5),
+                        ),
+                      ),
                     ),
                   ],
                 ),
               ),
-              const Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 10),
-                child: Text(
-                  'Do you smoke?',
-                  style: TextStyle(fontSize: 16),
-                ),
-              ),
-              ListTile(
-                title: const Text('Yes'),
-                leading: Radio<SingingCharacter>(
-                  value: SingingCharacter.yes,
-                  groupValue: _smokes,
-                  onChanged: (SingingCharacter? value) {
-                    setState(() {
-                      _smokes = value;
-                    });
-                  },
-                ),
-              ),
-              ListTile(
-                title: const Text('No'),
-                leading: Radio<SingingCharacter>(
-                  value: SingingCharacter.no,
-                  groupValue: _smokes,
-                  onChanged: (SingingCharacter? value) {
-                    setState(() {
-                      _smokes = value;
-                    });
-                  },
-                ),
-              ),
-              const Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 10),
-                child: Text(
-                  'Do you drink?',
-                  style: TextStyle(fontSize: 16),
-                ),
-              ),
-              ListTile(
-                title: const Text('Yes'),
-                leading: Radio<SingingCharacter>(
-                  value: SingingCharacter.yes,
-                  groupValue: _drinks,
-                  onChanged: (SingingCharacter? value) {
-                    setState(() {
-                      _drinks = value;
-                    });
-                  },
-                ),
-              ),
-              ListTile(
-                title: const Text('No'),
-                leading: Radio<SingingCharacter>(
-                  value: SingingCharacter.no,
-                  groupValue: _drinks,
-                  onChanged: (SingingCharacter? value) {
-                    setState(() {
-                      _drinks = value;
-                    });
-                  },
-                ),
-              ),
-              const Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 10),
-                child: Text(
-                  'Do you take any medication?',
-                  style: TextStyle(fontSize: 16),
-                ),
-              ),
-              ListTile(
-                title: const Text('Yes'),
-                leading: Radio<SingingCharacter>(
-                  value: SingingCharacter.yes,
-                  groupValue: _medications,
-                  onChanged: (SingingCharacter? value) {
-                    setState(() {
-                      userHistory.medication = true;
-                      setState(() {
-                        _disabled = false;
-                      });
-                      _medications = value;
-                    });
-                  },
-                ),
-              ),
-              ListTile(
-                title: const Text('No'),
-                leading: Radio<SingingCharacter>(
-                  value: SingingCharacter.no,
-                  groupValue: _medications,
-                  onChanged: (SingingCharacter? value) {
-                    setState(() {
-                      userHistory.medications.clear();
-                      medications.clear();
-                      userHistory.medication = false;
-                      setState(() {
-                        _disabled = true;
-                      });
-                      _medications = value;
-                    });
-                  },
-                ),
-              ),
-              meds(),
-              const Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 10),
-                child: Text(
-                  'Do you have any Illnesses?',
-                  style: TextStyle(fontSize: 16),
-                ),
-              ),
-              illnesses(),
-              const Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 10),
-                child: Text(
-                  'Do you have any Disabilities?',
-                  style: TextStyle(fontSize: 16),
-                ),
-              ),
-              disabilities(),
-              const Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 10),
-              ),
-            ]),
-          )),Padding(
-            padding: const EdgeInsets.symmetric(vertical:30),
-            child: SubmitButton(
+              Expanded(
+                  child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: ListView(children: [
+                  Padding(
+                    padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: const [
+                        Expanded(
+                          child: Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                              child: Text(
+                                'Please enter your Medical History details below:',
+                                style: TextStyle(
+                                    fontSize: 17, fontWeight: FontWeight.w800),
+                              )),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 10),
+                    child: Text(
+                      'Do you smoke?',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ),
+                  ListTile(
+                    title: const Text('Yes'),
+                    leading: Radio<SingingCharacter>(
+                      value: SingingCharacter.yes,
+                      groupValue: _smokes,
+                      onChanged: (SingingCharacter? value) {
+                        setState(() {
+                          _smokes = value;
+                        });
+                      },
+                    ),
+                  ),
+                  ListTile(
+                    title: const Text('No'),
+                    leading: Radio<SingingCharacter>(
+                      value: SingingCharacter.no,
+                      groupValue: _smokes,
+                      onChanged: (SingingCharacter? value) {
+                        setState(() {
+                          _smokes = value;
+                        });
+                      },
+                    ),
+                  ),
+                  const Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 10),
+                    child: Text(
+                      'Do you drink?',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ),
+                  ListTile(
+                    title: const Text('Yes'),
+                    leading: Radio<SingingCharacter>(
+                      value: SingingCharacter.yes,
+                      groupValue: _drinks,
+                      onChanged: (SingingCharacter? value) {
+                        setState(() {
+                          _drinks = value;
+                        });
+                      },
+                    ),
+                  ),
+                  ListTile(
+                    title: const Text('No'),
+                    leading: Radio<SingingCharacter>(
+                      value: SingingCharacter.no,
+                      groupValue: _drinks,
+                      onChanged: (SingingCharacter? value) {
+                        setState(() {
+                          _drinks = value;
+                        });
+                      },
+                    ),
+                  ),
+                  const Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 10),
+                    child: Text(
+                      'Do you take any medication?',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ),
+                  ListTile(
+                    title: const Text('Yes'),
+                    leading: Radio<SingingCharacter>(
+                      value: SingingCharacter.yes,
+                      groupValue: _medications,
+                      onChanged: (SingingCharacter? value) {
+                        setState(() {
+                          userHistory.medication = true;
+                          setState(() {
+                            _disabled = false;
+                          });
+                          _medications = value;
+                        });
+                      },
+                    ),
+                  ),
+                  ListTile(
+                    title: const Text('No'),
+                    leading: Radio<SingingCharacter>(
+                      value: SingingCharacter.no,
+                      groupValue: _medications,
+                      onChanged: (SingingCharacter? value) {
+                        setState(() {
+                          userHistory.medications.clear();
+                          medications.clear();
+                          userHistory.medication = false;
+                          setState(() {
+                            _disabled = true;
+                          });
+                          _medications = value;
+                        });
+                      },
+                    ),
+                  ),
+                  meds(),
+                  const Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 10),
+                    child: Text(
+                      'Do you have any Illnesses?',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ),
+                  illnesses(),
+                  const Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 10),
+                    child: Text(
+                      'Do you have any Disabilities?',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ),
+                  disabilities(),
+                  const Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 10),
+                  ),
+                ]),
+              )),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 30),
+                child: SubmitButton(
                     color: Colors.teal,
                     message: "Submit",
                     width: 250,
@@ -498,7 +504,7 @@ class _MedicalHistory extends State<MedicalHistory> {
                               type: PageTransitionType.fade,
                               child: const HomePage()));
                     }),
-          )
-        ])));
+              )
+            ]))));
   }
 }

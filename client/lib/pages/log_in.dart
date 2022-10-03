@@ -99,23 +99,15 @@ class _LogIn extends State<LogIn> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: scaffoldKey,
-      resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.white,
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFF27C6FF), Color(0xFF2190E5)],
-            stops: [0, 1],
-            begin: AlignmentDirectional(0, -1),
-            end: AlignmentDirectional(0, 1),
-          ),
-        ),
-        child: Stack(
+    return GestureDetector(
+      onTap: ()=>FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        key: scaffoldKey,
+        extendBodyBehindAppBar: true,
+        backgroundColor: Colors.transparent,
+        body: Stack(
           children: [
             Align(
-              alignment: const AlignmentDirectional(0, 0.05),
               child: Image.asset(
                 'images/doctor.jpeg',
                 fit: BoxFit.cover,
@@ -128,6 +120,7 @@ class _LogIn extends State<LogIn> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Container(
+                    //height: MediaQuery.of(context).size.height * 0.5,
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: Theme.of(context).cardColor,
@@ -185,12 +178,11 @@ class _LogIn extends State<LogIn> {
                                     mainAxisSize: MainAxisSize.max,
                                     children: [
                                       SubmitButton(
-                                        color: Colors.blueAccent,
+                                        color: Colors.lightBlueAccent,
                                         message: "Sign in",
                                         width: 225,
                                         height: 50,
                                         onPressed: () {
-                                          UserSecureStorage.setFirstName("Luke");
                                           login();
                                         },
                                       ),

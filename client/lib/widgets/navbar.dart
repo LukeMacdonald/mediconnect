@@ -1,12 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:nd_telemedicine/pages/booking/set_availability.dart';
-import 'package:nd_telemedicine/pages/chats/chats_page.dart';
+import 'package:nd_telemedicine/pages/chats/chats_menu_patient.dart';
 import 'package:nd_telemedicine/pages/booking/booking_by_time.dart';
 import 'package:nd_telemedicine/security/storage_service.dart';
 import 'package:page_transition/page_transition.dart';
 
 import '../models/user.dart';
+import '../pages/chats/chats_menu_doctor.dart';
 import '../pages/homepage/admin_home.dart';
 import '../pages/homepage/doctor_home.dart';
 import '../pages/homepage/home_page.dart';
@@ -115,7 +116,7 @@ class _CustomBBottomNavigationBar extends State<CustomBBottomNavigationBar> {
                 icon: CupertinoIcons.bubble_left_bubble_right_fill,
                 index: 1,
                 isSelected: (widget.pageIndex==1),
-                page:const ChatPage(),
+                page:const ChatMenuPatient(),
               ),
               NavigationBarItem(
                 index:2,
@@ -264,12 +265,12 @@ class _DoctorBottomNavigationBar extends State<DoctorBottomNavigationBar> {
                 icon: CupertinoIcons.bubble_left_bubble_right_fill,
                 index: 1,
                 isSelected: (widget.pageIndex==1),
-                page:const ChatPage(),
+                page:const ChatMenuDoctor(),
               ),
               NavigationBarItem(
                 index:2,
                 label: "patients",
-                icon: Icons.medication,
+                icon: CupertinoIcons.person_2,
                 isSelected: (widget.pageIndex==7),
                 page:const DoctorHomePage(),
               ),

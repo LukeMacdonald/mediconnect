@@ -38,7 +38,6 @@ class _ProfileCreation extends State<ProfileCreation> {
               'phoneNumber': await UserSecureStorage.getPhoneNumber(),
               'dob': await UserSecureStorage.getDOB(),
             }));
-    print(await UserSecureStorage.getRole());
 
     if (!mounted) return;
     if (await UserSecureStorage.getRole() == 'patient' || await UserSecureStorage.getRole() == 'Patient' ) {
@@ -59,9 +58,12 @@ class _ProfileCreation extends State<ProfileCreation> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return GestureDetector(
+        onTap: ()=>FocusScope.of(context).unfocus(),
+    child:Scaffold(
         key: scaffoldKey,
-        resizeToAvoidBottomInset: false,
+        //extendBodyBehindAppBar: true,
+        resizeToAvoidBottomInset: true,
         appBar: AppBar(
           iconTheme: Theme.of(context).iconTheme,
           backgroundColor: Colors.transparent,
@@ -157,6 +159,6 @@ class _ProfileCreation extends State<ProfileCreation> {
                     ),
                   ),
                 ]),
-            ));
+            )));
   }
 }

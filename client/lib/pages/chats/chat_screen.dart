@@ -21,6 +21,7 @@ class ChatScreen extends StatefulWidget {
 }
 class _ChatScreen extends State<ChatScreen> {
 
+  final ScrollController _scrollController = ScrollController();
   late MessageData messageData = widget.messageData;
   late String name = widget.name;
   late TextEditingController textEditingController;
@@ -51,6 +52,7 @@ class _ChatScreen extends State<ChatScreen> {
       else {
         items.add(MessageTile(message: message.message, messageDate: ""));
       }
+      _scrollController.animateTo(_scrollController.position.maxScrollExtent, duration: const Duration(milliseconds: 500), curve: Curves.easeOut);
       setState(() {});
     }
   }
@@ -118,7 +120,10 @@ class _ChatScreen extends State<ChatScreen> {
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return GestureDetector(
+        onTap: ()=>FocusScope.of(context).unfocus(),
+
+    child:Scaffold(
       appBar: AppBar(
           iconTheme: Theme.of(context).iconTheme,
           centerTitle: false,
@@ -151,6 +156,7 @@ class _ChatScreen extends State<ChatScreen> {
               child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: ListView.builder(
+                    controller: _scrollController,
                     itemCount: items.length,
                     itemBuilder: (context, index) {
                       return items[index];
@@ -170,6 +176,7 @@ class _ChatScreen extends State<ChatScreen> {
                           padding: const EdgeInsets.only(
                               left: 16, bottom: 10, top: 10),
                           child: TextFormField(
+                            autofocus: true,
                             controller: textEditingController,
                             style: const TextStyle(fontSize: 14.0),
                             decoration: const InputDecoration(
@@ -194,6 +201,7 @@ class _ChatScreen extends State<ChatScreen> {
                                 message: textEditingController.text,
                                 messageDate: ""));
                             textEditingController.clear();
+                            _scrollController.animateTo(_scrollController.position.maxScrollExtent, duration: const Duration(milliseconds: 500), curve: Curves.easeOut);
                             name = name;
                           });
                         },
@@ -202,6 +210,6 @@ class _ChatScreen extends State<ChatScreen> {
               )),
         ],
       ),
-    );
+    ));
   }
 }

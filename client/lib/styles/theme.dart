@@ -5,16 +5,19 @@ import 'package:google_fonts/google_fonts.dart';
 abstract class AppColors {
   static const secondary = Color(0xFF2190E5);
   static const accent = Color(0xFFD6755B);
-  static const textDark = Color(0xFF53585A);
+  static const textDark = Color(0xFF000000);
   static const textLight = Color(0xFFF5F5F5);
   static const textFaded = Color(0xFF9899A5);
   static const iconLight = Color(0xFFB1B4C0);
   static const iconDark = Color(0xFFB1B3C1);
   static const textHighlight = secondary;
-  static const cardLight = Color(0xFFF9FAFE);
+  static const cardLight = Color(0xFFF4F4F4);
   static const cardDark = Color(0xFF303334);
-  static const button1 = Color(0xFF6CC987);
   static const buttonSelected = Colors.lightBlueAccent;
+  static const buttonOption1Dark = secondary;
+  static const buttonOption2Dark = Colors.teal;
+  static const buttonOption1Light = Colors.lightBlueAccent;
+  static const buttonOption2Light = Colors.greenAccent;
 }
 
 abstract class _LightColors {
@@ -57,7 +60,7 @@ class AppTheme {
     ),
     scaffoldBackgroundColor: _LightColors.background,
     elevatedButtonTheme: ElevatedButtonThemeData(
-      style: ElevatedButton.styleFrom(primary: AppColors.secondary),
+      style: ElevatedButton.styleFrom(primary: AppColors.buttonOption1Light),
     ),
     cardColor: _LightColors.card,
     primaryTextTheme: const TextTheme(
@@ -85,7 +88,7 @@ class AppTheme {
     ),
     scaffoldBackgroundColor: _DarkColors.background,
     elevatedButtonTheme: ElevatedButtonThemeData(
-      style: ElevatedButton.styleFrom(primary: AppColors.secondary),
+      style: ElevatedButton.styleFrom(primary: AppColors.buttonOption1Dark),
     ),
     cardColor: _DarkColors.card,
     primaryTextTheme: const TextTheme(

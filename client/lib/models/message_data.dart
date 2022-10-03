@@ -1,5 +1,5 @@
 class MessageData{
-  final int messageID;
+  final int? messageID;
   final int senderID;
   final int receiverID;
   final DateTime timestamp;
