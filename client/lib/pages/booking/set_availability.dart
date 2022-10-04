@@ -1,11 +1,11 @@
+import 'dart:io';
+
 import '../../utilities/custom_functions.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../pages/imports.dart';
 import 'dart:convert';
-
-
 
 class SetAvailability extends StatefulWidget {
   const SetAvailability({Key? key,}) : super(key: key);
@@ -17,11 +17,17 @@ class SetAvailability extends StatefulWidget {
 class _SetAvailability extends State<SetAvailability> {
 
   Future save() async {
+
+    String token = "";
+    await UserSecureStorage.getJWTToken().then((value) => token = value!);
+
+
     int day = getDayIntFromDayString(dayValue);
     String id = "";
     await UserSecureStorage.getID().then((value) => id = value!);
     await http.post(Uri.parse("${availabilityIP}doctor/set/availability"),
-        headers: {'Content-Type': 'application/json'},
+        headers: {'Content-Type': 'application/json',
+       HttpHeaders.authorizationHeader: "Bearer $token"},
         body: json.encode({
           'doctor_id': int.parse(id),
           'day_of_week': day,
