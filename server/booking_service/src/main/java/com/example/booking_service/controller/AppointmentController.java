@@ -1,13 +1,17 @@
 package com.example.booking_service.controller;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.example.booking_service.model.Appointment;
 import com.example.booking_service.repository.AppointmentRepo;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.web.bind.annotation.*;
-import java.sql.Date;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -42,6 +46,21 @@ public class AppointmentController {
         }
 
         return unique_doctors;
-
     }
+
+    // Get list of appointments by the current date
+    @GetMapping(value="/search/appointment/date")
+    public List<Appointment> getUpcomingAppointments() {
+
+        // Parse date to just dd/mm/YYYY
+        Date in = new Date();
+        LocalDateTime ldt = LocalDateTime.ofInstant(in.toInstant(), ZoneId.systemDefault());
+        Date out = Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant());
+
+        return appointRepo.findAppointmentByDate(out);
+    }
+
+    // On every day at midnight perform this task:
+    // Get appointments by the current date
+    // For all appointments at the current date, send an email to the patient
 }
