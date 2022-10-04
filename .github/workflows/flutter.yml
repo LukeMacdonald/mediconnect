@@ -15,5 +15,5 @@ jobs:
       working-directory: client
     - run: flutter test
       working-directory: client
-    - run: flutter build ios
+    - run: flutter build ios --release --no-codesign
       working-directory: client
