@@ -34,6 +34,18 @@ class _SetAvailability extends State<SetAvailability> {
         }));
   }
 
+  Future deleteAvailability(int index) async {
+    List availabilityTarget = _availability.elementAt(index).split(' ');
+    await http.delete(Uri.parse("${url}RemoveAvailability"),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'doctor_id': user.id,
+          'day_of_week': getDayIntFromDayString(availabilityTarget[0]),
+          'start_time': availabilityTarget[4] + ":00",
+          'end_time': availabilityTarget[6] + ":00",
+        }));
+  }
+
   final List<String> _availability = [];
   @override
   void initState() {
@@ -405,9 +417,10 @@ class _SetAvailability extends State<SetAvailability> {
                   color: Colors.red,
                 ),
                 onPressed: () {
+                  deleteAvailability(index);
                   SnackBar snackBar = SnackBar(
                     content: Text("Color Removed :  ${_availability[index]}"),
-                    backgroundColor: Colors.blueGrey,
+                    backgroundColor: Color.fromARGB(255, 10, 216, 27),
                   );
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
                   setState(() {

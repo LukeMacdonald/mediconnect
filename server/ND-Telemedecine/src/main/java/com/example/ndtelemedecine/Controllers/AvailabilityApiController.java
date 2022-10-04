@@ -60,4 +60,10 @@ public class AvailabilityApiController {
     public List<Availability> getDoctorsAvailabilities(){
         return availRepo.findAll();
     }
+
+    // Remove an Avaiability
+    @DeleteMapping(value = "/RemoveAvailability")
+    public void removeAvailability(@RequestBody Availability avail){
+        availRepo.delete(avail);
+    }
 }
