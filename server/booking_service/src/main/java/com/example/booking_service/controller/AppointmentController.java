@@ -1,13 +1,13 @@
 package com.example.booking_service.controller;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import com.example.booking_service.model.Appointment;
 import com.example.booking_service.repository.AppointmentRepo;
+import com.example.booking_service.repository.UserRepo;
+
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.*;
@@ -48,19 +48,32 @@ public class AppointmentController {
         return unique_doctors;
     }
 
-    // Get list of appointments by the current date
-    @GetMapping(value="/search/appointment/date")
-    public List<Appointment> getUpcomingAppointments() {
+    // // Get list of appointments by the current date
+    // @GetMapping(value="/search/appointment/date")
+    // public List<Appointment> getUpcomingAppointments() {
 
-        // Parse date to just dd/mm/YYYY
-        Date in = new Date();
-        LocalDateTime ldt = LocalDateTime.ofInstant(in.toInstant(), ZoneId.systemDefault());
-        Date out = Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant());
+    //     // Parse date to just dd/mm/YYYY
+    //     Date in = new Date();
+    //     LocalDateTime ldt = LocalDateTime.ofInstant(in.toInstant(), ZoneId.systemDefault());
+    //     Date out = Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant());
+        
+    //     List<Appointment> upcomingAppointments = appointRepo.findAppointmentByDate(out);
 
-        return appointRepo.findAppointmentByDate(out);
-    }
+    //     for (int i = 0; i < upcomingAppointments.size(); i++) {
+    //         System.out.println(upcomingAppointments.get(i));
+    //     }
 
-    // On every day at midnight perform this task:
-    // Get appointments by the current date
-    // For all appointments at the current date, send an email to the patient
+    //     return upcomingAppointments;
+    // }
+
+    // // On every day at midnight perform this task:
+    // // Get appointments by the current date
+    // // For all appointments at the current date, send an email to the patient
+    // @GetMapping(value="/search/user/{id}")
+    // public UserProjection notifyPatientBooking(@PathVariable int id) {
+
+    //     List<Appointment> upcomingAppointments = getUpcomingAppointments();
+
+    //     return userRepo.findUserById(id);
+    // }
 }
