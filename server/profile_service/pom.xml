@@ -8,7 +8,7 @@
         <version>2.7.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.example</groupId>
+    <groupId>sept.group1</groupId>
     <artifactId>profile_service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>profile_service</name>

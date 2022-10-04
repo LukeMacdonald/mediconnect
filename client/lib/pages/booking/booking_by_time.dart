@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:page_transition/page_transition.dart';
 import '../../utilities/custom_functions.dart';
 import 'package:http/http.dart' as http;
@@ -20,14 +22,23 @@ class _BookingByTime extends State<BookingByTime> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   String? daySelected;
+  String token = "";
+  String id = "";
   //Not sure if url needed
 
   TextEditingController dateInput = TextEditingController();
 
+  Future set() async{
+    await UserSecureStorage.getID().then((value) => id = value!);
+    await UserSecureStorage.getJWTToken().then((value) => token = value!);
+    getAvailability();
+  }
+
   @override
   void initState() {
-    dateInput.text = ""; //set the initial value of text field
-    getAvailability();
+    dateInput.text = "";
+    //set the initial value of text field
+    set();
     super.initState();
 
   }
@@ -40,7 +51,9 @@ class _BookingByTime extends State<BookingByTime> {
 
   Future getAvailability() async {
     final response = await http
-        .get(Uri.parse("${availabilityIP}get/all/availabilities"));
+        .get(Uri.parse("${availabilityIP}get/all/availabilities"),
+      headers: {'Content-Type': 'application/json',
+        HttpHeaders.authorizationHeader: "Bearer $token"},);
     var responseData = json.decode(response.body);
     String day = "";
 

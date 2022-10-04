@@ -15,19 +15,20 @@ class SetAvailability extends StatefulWidget {
 }
 
 class _SetAvailability extends State<SetAvailability> {
+  String token = "";
+  String id = "";
+
+  Future set() async{
+    await UserSecureStorage.getID().then((value) => id = value!);
+    await UserSecureStorage.getJWTToken().then((value) => token = value!);
+    getAvailability();
+  }
 
   Future save() async {
-
-    String token = "";
-    await UserSecureStorage.getJWTToken().then((value) => token = value!);
-
-
     int day = getDayIntFromDayString(dayValue);
-    String id = "";
-    await UserSecureStorage.getID().then((value) => id = value!);
     await http.post(Uri.parse("${availabilityIP}doctor/set/availability"),
         headers: {'Content-Type': 'application/json',
-       HttpHeaders.authorizationHeader: "Bearer $token"},
+          HttpHeaders.authorizationHeader: "Bearer $token"},
         body: json.encode({
           'doctor_id': int.parse(id),
           'day_of_week': day,
@@ -35,20 +36,19 @@ class _SetAvailability extends State<SetAvailability> {
           'end_time': hourValue.substring(8,)
         }));
   }
-
   late List<String> _availability;
   @override
   void initState() {
     _availability = [];
-    getAvailability();
+    set();
     super.initState();
   }
 
   Future getAvailability() async {
-    String id = "";
-    await UserSecureStorage.getID().then((value) => id = value!);
     final response =
-        await http.get(Uri.parse("${availabilityIP}get/availabilities/${int.parse(id)}"));
+        await http.get(Uri.parse("${availabilityIP}get/availabilities/${int.parse(id)}"),
+          headers: {'Content-Type': 'application/json',
+            HttpHeaders.authorizationHeader: "Bearer $token"},);
     var responseData = json.decode(response.body);
     String day = "";
     if(responseData!=""|| responseData!=null){
