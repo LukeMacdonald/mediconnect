@@ -1,11 +1,9 @@
-import '../../pages/imports.dart';
+import '../../utilities/imports.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
-
-import '../../security/storage_service.dart';
 
 class AddDoctor extends StatefulWidget {
 
@@ -52,6 +50,7 @@ class _AddDoctor extends State<AddDoctor> {
           throw Exception(list.join("\n\n"));
       }
     } catch (e) {
+      if(!mounted)return;
       alert(e.toString().substring(11), context);
     }
   }

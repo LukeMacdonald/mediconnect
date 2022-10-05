@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import 'package:page_transition/page_transition.dart';
-import '../../pages/imports.dart';
+import '../../utilities/imports.dart';
 
 enum SingingCharacter { yes, no }
 

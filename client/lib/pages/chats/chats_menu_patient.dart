@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:nd_telemedicine/pages/chats/new_chat.dart';
 import 'package:page_transition/page_transition.dart';
-import '../../pages/imports.dart';
+import '../../utilities/imports.dart';
 import '../../utilities/custom_functions.dart';
 
 class ChatMenuPatient extends StatefulWidget {
@@ -18,8 +18,6 @@ class _ChatMenuPatient extends State<ChatMenuPatient> {
   late List<MessageData> _messages;
   late List<String> _names;
   final int pageIndex = 1;
-  late List<dynamic> _doctors;
-
 
   Future<void> getMessages() async {
     String id = "";

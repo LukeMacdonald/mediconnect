@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:page_transition/page_transition.dart';
-import '../../pages/imports.dart';
+import '../../utilities/imports.dart';
 import 'dart:convert';
 import 'dart:io';
 
@@ -72,7 +72,6 @@ class _LogIn extends State<LogIn> {
             PageTransition(
                 type: PageTransitionType.fade, child: const HomePage()));
       } else if (responseData['role'] == "doctor") {
-        print(responseData);
         await UserSecureStorage().setDetails(responseData);
         if (!mounted) return;
         Navigator.push(

@@ -2,13 +2,13 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import '../../pages/imports.dart';
+import '../../utilities/imports.dart';
 
 class NewChat extends StatefulWidget {
   const NewChat({Key? key}) : super(key: key);
 
   @override
-  _NewChatState createState() => _NewChatState();
+  State<NewChat> createState() => _NewChatState();
 }
 
 class _NewChatState extends State<NewChat> {

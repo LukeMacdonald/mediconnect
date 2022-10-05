@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../pages/imports.dart';
+import '../../utilities/imports.dart';
 
 class AdminHomePage extends StatefulWidget {
 

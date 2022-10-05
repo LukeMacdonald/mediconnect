@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:nd_telemedicine/pages/imports.dart';
+import 'package:nd_telemedicine/utilities/imports.dart';
 import 'dart:io' show Platform;
-
-import 'package:nd_telemedicine/pages/view_own_profile.dart';
 
 String authenticationIP = "http://localhost:8080/";
 String availabilityIP = "http://localhost:8081/";

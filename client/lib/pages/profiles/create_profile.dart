@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:page_transition/page_transition.dart';
-import '../../pages/imports.dart';
+import '../../utilities/imports.dart';
 
 class ProfileCreation extends StatefulWidget {
 

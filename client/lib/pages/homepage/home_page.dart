@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../pages/imports.dart';
+import 'package:nd_telemedicine/pages/chats/chats_menu_patient.dart';
+import '../../utilities/imports.dart';
 
 class HomePage extends StatefulWidget {
 
@@ -23,8 +24,6 @@ class _HomePage extends State<HomePage> {
     setName();
     super.initState();
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -99,6 +98,42 @@ class _HomePage extends State<HomePage> {
                             ],
                           ),
                         ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Padding(
+                          padding:
+                          const EdgeInsetsDirectional.fromSTEB(0, 40, 0, 0),
+                          child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                menuOption(
+                                  Colors.teal,
+                                  const Icon(
+                                    CupertinoIcons.calendar_today,
+                                    color: Colors.white,
+                                    size: 50,
+                                  ),
+                                  const DoctorHomePage(),
+                                  'Upcoming Appointments',
+                                  context,
+                                ),
+                                menuOption(
+                                    Colors.orangeAccent,
+                                    const Icon(
+                                      CupertinoIcons.bubble_left_bubble_right_fill,
+                                      color: Colors.white,
+                                      size: 50,
+                                    ),
+                                    const ChatMenuPatient(),
+                                    'Contact Patient',
+                                    context),
+                              ]),
+                        )
                       ],
                     ),
                   ],
