@@ -48,7 +48,14 @@ public class NotificationService {
             System.out.println(currentAppointment);
 
             // Send notification emails
-            String userEmail = userRepo.findUserById(currentAppointment.getPatient()).getEmail();
+            String userEmail = "";
+            try {
+                userEmail = userRepo.findUserById(currentAppointment.getPatient()).getEmail();
+            } catch (Exception e) {
+                // This should never occur in the first place, but as a safety measure anyway:
+                System.out.println("User with ID: " + currentAppointment.getPatient() + " could not be found. Skipping...");
+                continue;
+            }
             String emailSubj = "Reminder: Appointment scheduled at " + currentAppointment.getTime() + " today";
             String emailBody = "This email is a reminder that you have an appointment on " + currentAppointment.getDate() + " at " + 
                 currentAppointment.getTime() + " If you wish to update the appointment details, please do so in the app.";
