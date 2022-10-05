@@ -2,6 +2,8 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:nd_telemedicine/pages/view_other_profile.dart';
+import 'package:page_transition/page_transition.dart';
 import '../../pages/imports.dart';
 import 'dart:async';
 import 'dart:convert';
@@ -27,6 +29,8 @@ class _ChatScreen extends State<ChatScreen> {
   late TextEditingController textEditingController;
   late List<MessageData> allMessages;
   late List<Widget> items;
+  String id = "";
+  int otherID = -1;
 
   Future<void> getMessages() async {
     var response = await http.get(
@@ -48,9 +52,11 @@ class _ChatScreen extends State<ChatScreen> {
 
       if (message.senderID == int.parse(id)) {
         items.add(MessageOwnTile(message: message.message, messageDate: ""));
+        otherID = message.receiverID;
       }
       else {
         items.add(MessageTile(message: message.message, messageDate: ""));
+        otherID = message.senderID;
       }
       _scrollController.animateTo(_scrollController.position.maxScrollExtent, duration: const Duration(milliseconds: 500), curve: Curves.easeOut);
       setState(() {});
@@ -146,7 +152,13 @@ class _ChatScreen extends State<ChatScreen> {
                 child: Center(
                     child: IconBorder(
                       icon: CupertinoIcons.person,
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            PageTransition(
+                                type: PageTransitionType.fade,
+                                child: ViewOtherProfile(id: otherID)));
+                      },
                     )))
           ]),
       //_

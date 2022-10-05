@@ -109,13 +109,13 @@ class UserSecureStorage {
     'code': code,
   };
   Future<void> setDetails(var responseData) async => {
-     UserSecureStorage.setID(responseData['id'].toString()),
-    UserSecureStorage.setEmail(responseData['email']),
-    UserSecureStorage.setFirstName(responseData['firstName']),
-    UserSecureStorage.setLastName(responseData['lastName']),
-    UserSecureStorage.setRole(responseData['role']),
-     UserSecureStorage.setDOB(responseData['dob']),
-    UserSecureStorage.setPhoneNumber(responseData['phoneNumber']),
+    await UserSecureStorage.setID(responseData['id'].toString()),
+    await UserSecureStorage.setEmail(responseData['email']),
+    await UserSecureStorage.setFirstName(responseData['firstName']),
+    await UserSecureStorage.setLastName(responseData['lastName']),
+    await UserSecureStorage.setRole(responseData['role']),
+    await UserSecureStorage.setDOB(responseData['dob']),
+    await UserSecureStorage.setPhoneNumber(responseData['phoneNumber']),
   };
 
 

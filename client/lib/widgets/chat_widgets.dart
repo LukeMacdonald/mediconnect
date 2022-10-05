@@ -43,8 +43,10 @@ class AppBarTitle extends StatelessWidget {
 }
 class ChatTile extends StatelessWidget {
   const ChatTile({Key? key, required this.messageData,required this.name}) : super(key: key);
+
   final MessageData messageData;
   final String name;
+
   @override
   Widget build(BuildContext context) {
     return InkWell(

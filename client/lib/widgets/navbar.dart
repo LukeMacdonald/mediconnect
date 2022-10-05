@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:nd_telemedicine/pages/booking/set_availability.dart';
 import 'package:nd_telemedicine/pages/chats/chats_menu_patient.dart';
 import 'package:nd_telemedicine/pages/booking/booking_by_time.dart';
+import 'package:nd_telemedicine/pages/view_own_profile.dart';
 import 'package:nd_telemedicine/security/storage_service.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -350,6 +351,11 @@ class AppDropDown extends StatelessWidget {
         },
         onSelected:(value){
           if(value == 0){
+            Navigator.push(
+                context,
+                PageTransition(
+                    type: PageTransitionType.fade,
+                    child: const ViewProfile()));
 
           }else if(value == 1){
 

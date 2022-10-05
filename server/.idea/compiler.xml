@@ -10,7 +10,6 @@
         <module name="availability_service" />
         <module name="communication_service" />
         <module name="message_service" />
-        <module name="server" />
         <module name="profile_service" />
         <module name="booking_service" />
       </profile>

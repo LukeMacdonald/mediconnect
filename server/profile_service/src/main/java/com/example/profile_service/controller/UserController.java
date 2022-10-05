@@ -46,6 +46,10 @@ public class UserController {
         String name = userRepo.findById(id).getFirstName() + " " + userRepo.findById(id).getLastName();
         return ResponseEntity.ok().body(name);
     }
+    @GetMapping(value = "/get/id/{id}")
+    public ResponseEntity<?> getUserByID(@PathVariable("id") int id){
+        return ResponseEntity.ok().body(userRepo.findById(id));
+    }
     @GetMapping(value = "/get/{email}")
     public ResponseEntity<User> getUserFromEmail(@PathVariable("email") String email){
         return ResponseEntity.ok().body(userRepo.findByEmail(email));

@@ -72,6 +72,7 @@ class _LogIn extends State<LogIn> {
             PageTransition(
                 type: PageTransitionType.fade, child: const HomePage()));
       } else if (responseData['role'] == "doctor") {
+        print(responseData);
         await UserSecureStorage().setDetails(responseData);
         if (!mounted) return;
         Navigator.push(
