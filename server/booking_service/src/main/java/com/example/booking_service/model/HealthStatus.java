@@ -37,22 +37,22 @@ public class HealthStatus{
     public void setId(int id){
         this.id = id;
     }
-    public void FeverOrChills(Boolean FeverOrChills) {
+    public void setFeverOrChills(Boolean FeverOrChills) {
         this.FeverOrChills = FeverOrChills;
     }
-    public void Coughing(Boolean Coughing) {
+    public void setCoughing(Boolean Coughing) {
         this.Coughing = Coughing;
     }
-    public void Headaches(Boolean Headaches) {
+    public void setHeadaches(Boolean Headaches) {
         this.Headaches = Headaches;
     }
-    public void Vomiting(Boolean Vomiting) {
+    public void setVomiting(Boolean Vomiting) {
         this.Vomiting = Vomiting;
     }
-    public void Fainting(Boolean Fainting) {
+    public void setFainting(Boolean Fainting) {
         this.Fainting = Fainting;
     }
-    public void description(String description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 
