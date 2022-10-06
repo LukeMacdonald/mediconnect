@@ -20,13 +20,13 @@ public class HealthStatusController {
     private final HealthStatusRepo HealthStatRepo;
 
     @GetMapping(value="/search/healthstatus/{id}")
-    public Boolean validateAppointment(@PathVariable("id") int id){
+    public HealthStatus getHealthStatus(@PathVariable("id") int id){
         HealthStatus validHealthStatus = HealthStatRepo.findHealthStatusById(id);
-        return validHealthStatus != null;
+        return validHealthStatus;
     }
     // Save Health Status
     @PostMapping(value="/set/healthstatus")
-    public String saveAppointment(@RequestBody HealthStatus healthstatus){
+    public String saveHealthStatus(@RequestBody HealthStatus healthstatus){
         HealthStatRepo.save(healthstatus);
         return "Health Status successfully set";
     }
