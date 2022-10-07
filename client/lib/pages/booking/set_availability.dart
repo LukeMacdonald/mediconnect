@@ -8,7 +8,9 @@ import '../../utilities/imports.dart';
 import 'dart:convert';
 
 class SetAvailability extends StatefulWidget {
-  const SetAvailability({Key? key,}) : super(key: key);
+  const SetAvailability({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<SetAvailability> createState() => _SetAvailability();
@@ -18,7 +20,7 @@ class _SetAvailability extends State<SetAvailability> {
   String token = "";
   String id = "";
 
-  Future set() async{
+  Future set() async {
     await UserSecureStorage.getID().then((value) => id = value!);
     await UserSecureStorage.getJWTToken().then((value) => token = value!);
     getAvailability();
@@ -27,15 +29,35 @@ class _SetAvailability extends State<SetAvailability> {
   Future save() async {
     int day = getDayIntFromDayString(dayValue);
     await http.post(Uri.parse("${availabilityIP}doctor/set/availability"),
-        headers: {'Content-Type': 'application/json',
-          HttpHeaders.authorizationHeader: "Bearer $token"},
+        headers: {
+          'Content-Type': 'application/json',
+          HttpHeaders.authorizationHeader: "Bearer $token"
+        },
         body: json.encode({
           'doctor_id': int.parse(id),
           'day_of_week': day,
           'start_time': hourValue.substring(0, 5),
-          'end_time': hourValue.substring(8,)
+          'end_time': hourValue.substring(
+            8,
+          )
         }));
   }
+
+  Future deleteAvailability(int index) async {
+    List availabilityTarget = _availability.elementAt(index).split(' ');
+    await http.delete(Uri.parse("${availabilityIP}remove/availability"),
+        headers: {
+          'Content-Type': 'application/json',
+          HttpHeaders.authorizationHeader: "Bearer $token"
+        },
+        body: json.encode({
+          'doctor_id': int.parse(id),
+          'day_of_week': getDayIntFromDayString(availabilityTarget[0]),
+          'start_time': availabilityTarget[4] + ":00",
+          'end_time': availabilityTarget[6] + ":00",
+        }));
+  }
+
   late List<String> _availability;
   @override
   void initState() {
@@ -45,24 +67,27 @@ class _SetAvailability extends State<SetAvailability> {
   }
 
   Future getAvailability() async {
-    final response =
-        await http.get(Uri.parse("${availabilityIP}get/availabilities/${int.parse(id)}"),
-          headers: {'Content-Type': 'application/json',
-            HttpHeaders.authorizationHeader: "Bearer $token"},);
+    final response = await http.get(
+      Uri.parse("${availabilityIP}get/availabilities/${int.parse(id)}"),
+      headers: {
+        'Content-Type': 'application/json',
+        HttpHeaders.authorizationHeader: "Bearer $token"
+      },
+    );
     var responseData = json.decode(response.body);
     String day = "";
-    if(responseData!=""|| responseData!=null){
-    for (var availability in responseData) {
-      day = getDayStringFrontDayInt(availability["day_of_week"]);
+    if (responseData != "" || responseData != null) {
+      for (var availability in responseData) {
+        day = getDayStringFrontDayInt(availability["day_of_week"]);
 // Provided the doctor has gone through the dashboard, we simply take the doctor_id from their current availabilities
-      String time = availability["_start_time"]
-          .substring(0, availability["_start_time"].length) +
-          " - " +
-          availability["_end_time"]
-              .substring(0, availability["_end_time"].length);
-      _availability.add("$day  |  $time");
-      setState(() {});
-    }
+        String time = availability["_start_time"]
+                .substring(0, availability["_start_time"].length) +
+            " - " +
+            availability["_end_time"]
+                .substring(0, availability["_end_time"].length);
+        _availability.add("$day  |  $time");
+        setState(() {});
+      }
     }
   }
 
@@ -170,7 +195,6 @@ class _SetAvailability extends State<SetAvailability> {
                           blurRadius: 6,
                           offset: Offset(0, 2))
                     ]),
-
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -179,51 +203,51 @@ class _SetAvailability extends State<SetAvailability> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Container(
-                              constraints: const BoxConstraints(
-                                  minWidth: 100, maxWidth: 250),
-                              alignment: Alignment.centerLeft,
-                              decoration: BoxDecoration(
-                                  color: AppColors.secondary,
-                                  borderRadius: BorderRadius.circular(10),
-                                  boxShadow: const [
-                                    BoxShadow(
-                                        color: Colors.black26,
-                                        blurRadius: 6,
-                                        offset: Offset(0, 2))
-                                  ]),
-                              height: 60,
-                              child: Padding(
-                                padding: const EdgeInsets.fromLTRB(20, 0, 0, 20),
-                                child: DropdownButtonFormField(
-                                  decoration: const InputDecoration(
-                                    border: InputBorder.none,
-                                    contentPadding: EdgeInsets.only(top: 15),
-                                  ),
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Container(
+                            constraints: const BoxConstraints(
+                                minWidth: 100, maxWidth: 250),
+                            alignment: Alignment.centerLeft,
+                            decoration: BoxDecoration(
+                                color: AppColors.secondary,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: const [
+                                  BoxShadow(
+                                      color: Colors.black26,
+                                      blurRadius: 6,
+                                      offset: Offset(0, 2))
+                                ]),
+                            height: 60,
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(20, 0, 0, 20),
+                              child: DropdownButtonFormField(
+                                decoration: const InputDecoration(
+                                  border: InputBorder.none,
+                                  contentPadding: EdgeInsets.only(top: 15),
+                                ),
 // Initial Value
-                                  value: dayValue,
+                                value: dayValue,
 
 // Down Arrow Icon
-                                  icon: const Icon(Icons.keyboard_arrow_down),
+                                icon: const Icon(Icons.keyboard_arrow_down),
 
 // Array list of items
-                                  items: _days.map((String days) {
-                                    return DropdownMenuItem(
-                                      value: days,
-                                      child: Text(days),
-                                    );
-                                  }).toList(),
+                                items: _days.map((String days) {
+                                  return DropdownMenuItem(
+                                    value: days,
+                                    child: Text(days),
+                                  );
+                                }).toList(),
 // After selecting the desired option,it will
 // change button value to selected value
-                                  onChanged: (value) {
-                                    dayValue = value.toString();
-                                  },
-                                ),
+                                onChanged: (value) {
+                                  dayValue = value.toString();
+                                },
                               ),
                             ),
                           ),
+                        ),
                         Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: Container(
@@ -270,37 +294,38 @@ class _SetAvailability extends State<SetAvailability> {
                           ),
                         ),
                         Padding(
-                            padding:
-                                const EdgeInsetsDirectional.fromSTEB(00, 15, 0, 10),
-                            child: GlowingActionButton(
-                              color: AppColors.secondary,
-                              icon: CupertinoIcons.add,
-                              onPressed: () {
-                                if (dayValue == 'Day') {
-                                  {
-                                    alert('Please Enter A Day');
-                                  }
-                                } else if (hourValue == 'Hour') {
-                                  {
-                                    alert('Please Enter A Time');
-                                  }
-                                } else {
-                                  {
-                                    if (_availability
-                                        .contains('$dayValue  -  $hourValue')) {
-                                      alert('Availability Already Set');
-                                    } else {
-                                      setState(() {
-                                        _availability
-                                            .add('$dayValue  -  $hourValue');
-                                        save();
-                                      });
-                                    }
+                          padding: const EdgeInsetsDirectional.fromSTEB(
+                              00, 15, 0, 10),
+                          child: GlowingActionButton(
+                            color: AppColors.secondary,
+                            icon: CupertinoIcons.add,
+                            onPressed: () {
+                              if (dayValue == 'Day') {
+                                {
+                                  alert('Please Enter A Day');
+                                }
+                              } else if (hourValue == 'Hour') {
+                                {
+                                  alert('Please Enter A Time');
+                                }
+                              } else {
+                                {
+                                  if (_availability
+                                      .contains('$dayValue  -  $hourValue')) {
+                                    alert('Availability Already Set');
+                                  } else {
+                                    setState(() {
+                                      _availability
+                                          .add('$dayValue  -  $hourValue');
+                                      save();
+                                    });
                                   }
                                 }
-                              },),
-    //
-    ),
+                              }
+                            },
+                          ),
+                          //
+                        ),
                       ],
                     )
                   ],
@@ -312,61 +337,61 @@ class _SetAvailability extends State<SetAvailability> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          leading: const AppBarItem(
-            icon: CupertinoIcons.home,
-            index: 0,
-          ),
-          title: const Text("Set Availability",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              )),
-          actions: const <Widget>[
-            AppBarItem(
-              icon: CupertinoIcons.bell_fill,
-              index: 5,
-            ),
-            SizedBox(width: 20),
-            AppBarItem(
-              icon: CupertinoIcons.settings_solid,
-              index: 5,
-
-            ),
-            SizedBox(width: 20),
-          ],
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: const AppBarItem(
+          icon: CupertinoIcons.home,
+          index: 0,
         ),
-        body: SingleChildScrollView(
-            child: Column(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
-              child: Container(
-                  constraints:
-                      const BoxConstraints(minWidth: 700, minHeight: 580),
-                  decoration: const BoxDecoration(color: Color(0x00FFFFFF)),
-                  child: availability()),
+        title: const Text("Set Availability",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            )),
+        actions: const <Widget>[
+          AppBarItem(
+            icon: CupertinoIcons.bell_fill,
+            index: 5,
+          ),
+          SizedBox(width: 20),
+          AppBarItem(
+            icon: CupertinoIcons.settings_solid,
+            index: 5,
+          ),
+          SizedBox(width: 20),
+        ],
+      ),
+      body: SingleChildScrollView(
+          child: Column(
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
+            child: Container(
+                constraints:
+                    const BoxConstraints(minWidth: 700, minHeight: 580),
+                decoration: const BoxDecoration(color: Color(0x00FFFFFF)),
+                child: availability()),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 20),
+            child: SubmitButton(
+              color: Colors.teal,
+              message: "Done",
+              width: 225,
+              height: 50,
+              onPressed: () {
+                Navigator.pop(context);
+              },
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 20),
-              child: SubmitButton(
-                color: Colors.teal,
-                message: "Done",
-                width: 225,
-                height: 50,
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ),
-          ],
-        )),
+          ),
+        ],
+      )),
     );
   }
+
   Widget _createListView() {
     return ListView.builder(
         itemCount: _availability.length,
@@ -382,6 +407,7 @@ class _SetAvailability extends State<SetAvailability> {
                   color: Colors.black,
                 ),
                 onPressed: () {
+                  deleteAvailability(index);
                   SnackBar snackBar = SnackBar(
                     content:
                         Text("Availability Removed :  ${_availability[index]}"),

@@ -34,8 +34,16 @@ public class AvailabilityController {
     public List<Availability> doctorsAvailability(@PathVariable("id") int id){
         return availRepo.findByDoctorId(id);
     }
+    
+    // Get all doctor's availabilities
     @GetMapping(value = "/get/all/availabilities")
     public List<Availability> getDoctorsAvailabilities(){
         return availRepo.findAll();
+    }
+
+    // Remove an Avaiability
+    @DeleteMapping(value = "/remove/availability")
+    public void removeAvailability(@RequestBody Availability avail){
+        availRepo.delete(avail);
     }
 }
