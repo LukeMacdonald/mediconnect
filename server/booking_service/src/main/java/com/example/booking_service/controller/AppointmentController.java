@@ -48,6 +48,19 @@ public class AppointmentController {
         return unique_doctors;
     }
 
+    // Search for all appointments based off the patient's id
+    @GetMapping(value="/search/userappointments/{id}")
+    public List<Appointment> getAllAppointments(@PathVariable("id") int id){
+        return appointRepo.findAppointmentByPatient(id);
+    }
+
+    // Remove an Appointment by it's ID
+    @DeleteMapping(value = "/delete/appointment/{id}")
+    public void deleteAppointment(@PathVariable("id") int id){
+        Appointment targetAppointment = appointRepo.findAppointmentById(id);
+        appointRepo.delete(targetAppointment);
+    }
+
     // // Get list of appointments by the current date
     // @GetMapping(value="/search/appointment/date")
     // public List<Appointment> getUpcomingAppointments() {
