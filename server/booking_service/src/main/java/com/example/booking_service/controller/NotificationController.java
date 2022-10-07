@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,9 +28,14 @@ public class NotificationController {
 
     // Get list of appointments by the current date
     @GetMapping(value="/search/appointment/date")
-    public List<Appointment> getUpcomingAppointments() {
-
-        return notificationService.getUpcomingAppointments();
+    public ResponseEntity<?>getUpcomingAppointments() {
+        List<Appointment> upcoming = notificationService.getUpcomingAppointments();
+        if(upcoming.isEmpty()){
+            return ResponseEntity.badRequest().body("No Appointments");
+        }
+        else{
+            return ResponseEntity.ok().body(upcoming);
+        }
     }
 
     // Custom Controller method that force notifies patients

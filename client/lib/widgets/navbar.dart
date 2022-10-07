@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:nd_telemedicine/pages/booking/set_availability.dart';
+import 'package:nd_telemedicine/pages/booking/upcoming_appointment.dart';
 import 'package:nd_telemedicine/pages/chats/chats_menu_patient.dart';
 import 'package:nd_telemedicine/pages/booking/booking_by_time.dart';
 import 'package:nd_telemedicine/pages/profiles/view_own_profile.dart';
@@ -123,15 +124,15 @@ class _CustomBBottomNavigationBar extends State<CustomBBottomNavigationBar> {
                 index:2,
                 label: "prescriptions",
                 icon: Icons.medication,
-                isSelected: (widget.pageIndex==3),
+                isSelected: (widget.pageIndex==2),
                 page:const HomePage(),
               ),
               NavigationBarItem(
                   label: "appointments",
                   icon: CupertinoIcons.calendar,
                   index: 3,
-                  isSelected: (widget.pageIndex==4),
-                  page:const BookingByTime(),
+                  isSelected: (widget.pageIndex==3),
+                  page:const UpcomingAppointment(),
               )
               //_NavigationBarItem(),
               //_NavigationBarItem(),

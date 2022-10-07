@@ -20,23 +20,23 @@ public class BookingServiceApplication {
     }
 
     // Push Appointment Notifications every X
-    @Component
-    public class JobScheduler {
-
-        @Autowired 
-        private NotificationService notifService;
-
-        @Async
-        @Scheduled(cron = "0 0 * * * *")    // Asterisks indicate that next task scheduled will be on the next day at midnight
-        void someJob() {
-            System.out.println("Starting async cron job...");
-            notifService.notifyPatientBooking();
-            System.out.println("Cron job finished.");
-        }
-    }
+//    @Component
+//    public class JobScheduler {
+//
+//        @Autowired
+//        private NotificationService notifService;
+//
+//        @Async
+//        @Scheduled(cron = "0 0 * * * *")    // Asterisks indicate that next task scheduled will be on the next day at midnight
+//        void someJob() {
+//            System.out.println("Starting async cron job...");
+//            notifService.notifyPatientBooking();
+//            System.out.println("Cron job finished.");
+//        }
+//    }
 }
 
-@Configuration
-@EnableScheduling
-@ConditionalOnProperty(name = "scheduling.enabled", matchIfMissing = true)
-class SchedulingConfiguration {}
+//@Configuration
+//@EnableScheduling
+//@ConditionalOnProperty(name = "scheduling.enabled", matchIfMissing = true)
+//class SchedulingConfiguration {}

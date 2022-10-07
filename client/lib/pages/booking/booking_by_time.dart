@@ -102,7 +102,7 @@ class _BookingByTime extends State<BookingByTime> {
     final response = await http.get(Uri.parse(
         "${appointmentIP}search/appointment/$id/$date/$startTime"));
     var responseData = response.body;
-    if (responseData == 'false') {
+    if (responseData == 'true') {
       alert("Successfully Booked the Appointment!!");
       save(id, date, startTime);
     } else {

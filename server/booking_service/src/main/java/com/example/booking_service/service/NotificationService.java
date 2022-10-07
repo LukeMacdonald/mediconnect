@@ -1,7 +1,8 @@
 package com.example.booking_service.service;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -71,24 +72,18 @@ public class NotificationService {
             System.out.println("\n\n");
         }
 
-        String response = upcomingAppointments.size() + " patients have been notified about their appointments on " + new Date();
+        SimpleDateFormat formDate = new SimpleDateFormat("dd-MM-yyyy");
+        String strDate = formDate.format(new Date());
+
+        String response = upcomingAppointments.size() + " patients have been notified about their appointments on " + strDate;
 
         return response;
     }
 
     public List<Appointment> getUpcomingAppointments() {
-
         // Parse date to just dd/mm/YYYY
-        Date in = new Date();
-        LocalDateTime ldt = LocalDateTime.ofInstant(in.toInstant(), ZoneId.systemDefault());
-        Date out = Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant());
-        
-        List<Appointment> upcomingAppointments = appointRepo.findAppointmentByDate(out);
-
-        for (int i = 0; i < upcomingAppointments.size(); i++) {
-            System.out.println(upcomingAppointments.get(i));
-        }
-
-        return upcomingAppointments;
+        SimpleDateFormat formDate = new SimpleDateFormat("dd-MM-yyyy");
+        String today = formDate.format(new Date());
+        return appointRepo.findAppointmentByDate(java.sql.Date.valueOf(today));
     }
 }

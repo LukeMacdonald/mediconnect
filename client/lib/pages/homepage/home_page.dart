@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:nd_telemedicine/pages/booking/upcoming_appointment.dart';
 import 'package:nd_telemedicine/pages/chats/chats_menu_patient.dart';
 import '../../utilities/imports.dart';
 
@@ -24,7 +25,6 @@ class _HomePage extends State<HomePage> {
     setName();
     super.initState();
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -92,8 +92,8 @@ class _HomePage extends State<HomePage> {
                                     color: Colors.white,
                                     size: 50,
                                   ),
-                                  const HomePage(),
-                                  'Update Appointment',
+                                  const UpcomingAppointment(),
+                                  'Upcoming Appointment',
                                   context),
                             ],
                           ),
@@ -107,21 +107,7 @@ class _HomePage extends State<HomePage> {
                         Padding(
                           padding:
                           const EdgeInsetsDirectional.fromSTEB(0, 40, 0, 0),
-                          child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                menuOption(
-                                  Colors.teal,
-                                  const Icon(
-                                    CupertinoIcons.calendar_today,
-                                    color: Colors.white,
-                                    size: 50,
-                                  ),
-                                  const DoctorHomePage(),
-                                  'Upcoming Appointments',
-                                  context,
-                                ),
+                          child:
                                 menuOption(
                                     Colors.orangeAccent,
                                     const Icon(
@@ -132,14 +118,12 @@ class _HomePage extends State<HomePage> {
                                     const ChatMenuPatient(),
                                     'Contact Patient',
                                     context),
-                              ]),
-                        )
-                      ],
+                        )]),
+                        ])
                     ),
                   ],
                 ),
-              ),
-            ]),bottomNavigationBar:const CustomBBottomNavigationBar(pageIndex: 0));
+        bottomNavigationBar:const CustomBBottomNavigationBar(pageIndex: 0));
   }
 }
 

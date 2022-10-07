@@ -1,4 +1,7 @@
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
+import 'package:page_transition/page_transition.dart';
+
 import '../../utilities/imports.dart';
 
 import 'package:flutter/material.dart';
@@ -6,8 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 
 class UpcomingAppointment extends StatefulWidget {
-  final User user;
-  const UpcomingAppointment({Key? key, required this.user}) : super(key: key);
+  const UpcomingAppointment({Key? key}) : super(key: key);
 
   @override
   State<UpcomingAppointment> createState() => _UpcomingAppointment();
@@ -16,47 +18,55 @@ class UpcomingAppointment extends StatefulWidget {
 class _UpcomingAppointment extends State<UpcomingAppointment> {
   String token = "";
   String id = "";
+  int pageIndex = 9;
 
   Future set() async {
     await UserSecureStorage.getID().then((value) => id = value!);
     await UserSecureStorage.getJWTToken().then((value) => token = value!);
+    getUpcomingAppointment();
   }
 
   final List<String> _appointment = [];
   final List<String> _appointmentIds = [];
+  List<String> details = [];
   final Map _hours = {
-    '09:00:00': '09:00 - 10:00',
-    '10:00:00': '10:00 - 11:00',
-    '11:00:00': '11:00 - 12:00',
-    '12:00:00': '12:00 - 13:00',
-    '13:00:00': '13:00 - 14:00',
-    '14:00:00': '14:00 - 15:00',
-    '15:00:00': '15:00 - 16:00',
-    '16:00:00': '16:00 - 17:00'
+    '09:00': '09:00 - 10:00',
+    '10:00': '10:00 - 11:00',
+    '11:00': '11:00 - 12:00',
+    '12:00': '12:00 - 13:00',
+    '13:00': '13:00 - 14:00',
+    '14:00': '14:00 - 15:00',
+    '15:00': '15:00 - 16:00',
+    '16:00': '16:00 - 17:00'
   };
 
   @override
   void initState() {
     set();
     super.initState();
-    getUpcomingAppointment();
+
   }
 
   Future getUpcomingAppointment() async {
     final response = await http.get(
-        Uri.parse("${appointmentIP}search/userappointments/${int.parse(id)}"));
+        Uri.parse("${appointmentIP}search/userappointments/$id"));
     var responseData = json.decode(response.body);
 
     for (var appointment in responseData) {
       var doctorId = appointment['doctor'];
       final responseName =
-          await http.get(Uri.parse("${authenticationIP}get/name/${doctorId}"));
-      String day = responseName.body.toString();
+          await http.get(Uri.parse("${authenticationIP}get/name/$doctorId"));
+      //print(responseName.body);
+      String doctor = responseName.body;
       String date = appointment['date'];
       String time = _hours[appointment['time']];
-      _appointment.add("${day} | ${date} | ${time}");
+
+      _appointment.add("$doctor | $date | $time");
       _appointmentIds.add(appointment['id'].toString());
     }
+    setState(() {
+
+    });
   }
 
   Future deleteAppointment(int index) async {
@@ -80,48 +90,13 @@ class _UpcomingAppointment extends State<UpcomingAppointment> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  Widget submit() {
-    return Container(
-        constraints: const BoxConstraints(minWidth: 70, maxWidth: 500),
-        child: ElevatedButton(
-            onPressed: () => {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const HomePage()))
-                },
-            style: ElevatedButton.styleFrom(
-                minimumSize: const Size(230, 50),
-                padding: const EdgeInsets.all(15),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-                primary: const Color.fromRGBO(57, 210, 192, 1)),
-            child: Text('Submit',
-                style: GoogleFonts.lexendDeca(
-                  textStyle: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                  ),
-                ))));
-  }
-
   Widget appointmentList() {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           const SizedBox(height: 10),
-          Container(
-              constraints: const BoxConstraints(
-                  minWidth: 800, maxWidth: 800, minHeight: 300, maxHeight: 300),
-              decoration: BoxDecoration(
-                  color: const Color(0x86C6F7FD),
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: const [
-                    BoxShadow(
-                        color: Colors.black26,
-                        blurRadius: 6,
-                        offset: Offset(0, 2))
-                  ]),
-              height: 60,
-              // LISTVIEW
+          SizedBox(
+            height: 800,
               child: SizedBox(height: 200, child: _createListView()))
         ]);
   }
@@ -137,17 +112,14 @@ class _UpcomingAppointment extends State<UpcomingAppointment> {
         physics: const NeverScrollableScrollPhysics(),
         child: Column(children: [
           const Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 0)),
-          Align(
-              alignment: const AlignmentDirectional(-1, 0.05),
+          const Align(
+              alignment: AlignmentDirectional(-1, 0.05),
               child: Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(40, 0, 0, 0),
+                padding: EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
                 child: Text('Appointments',
-                    style: GoogleFonts.lexendDeca(
-                        textStyle: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 14,
-                    ))),
-              )),
+                  style: TextStyle(fontSize: 20),)
+              ),
+              ),
           appointmentList(),
         ]));
   }
@@ -155,17 +127,35 @@ class _UpcomingAppointment extends State<UpcomingAppointment> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        key: scaffoldKey,
-        body: Container(
-            height: MediaQuery.of(context).size.height * 1,
-            decoration: BoxDecoration(
-                color: const Color(0xFF14181B),
-                image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: const AssetImage('images/background.jpeg'),
-                    colorFilter: ColorFilter.mode(
-                        Colors.black.withOpacity(0.5), BlendMode.darken))),
-            child: SingleChildScrollView(
+        appBar: AppBar(
+          centerTitle: false,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: AppBarItem(
+            icon: CupertinoIcons.home,
+            index: pageIndex,
+          ),
+          title: const Text("Upcoming Appointments",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              )),
+          actions: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(right: 5),
+              child: IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        PageTransition(
+                            type: PageTransitionType.fade,
+                            child: const HeathStatusPage()));
+                  }, icon: const Icon(CupertinoIcons.plus)),
+            ),
+            const AppDropDown(),
+          ],
+        ),
+        body: SingleChildScrollView(
                 child: Column(
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -174,11 +164,6 @@ class _UpcomingAppointment extends State<UpcomingAppointment> {
                     width: double.infinity,
                     height: 20,
                     decoration: const BoxDecoration(color: Colors.transparent)),
-                Text('Upcoming Appointment',
-                    style: GoogleFonts.roboto(
-                      textStyle:
-                          const TextStyle(color: Colors.white, fontSize: 60),
-                    )),
                 Padding(
                   padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
                   child: Container(
@@ -188,59 +173,67 @@ class _UpcomingAppointment extends State<UpcomingAppointment> {
                       decoration: const BoxDecoration(color: Color(0x00FFFFFF)),
                       child: appointment()),
                 ),
-                submit()
-              ],
-            ))));
+               ],
+            )),
+        bottomNavigationBar: CustomBBottomNavigationBar(pageIndex: 3));
+  }
+  void splitString(String detail) {
+    details = detail.split(" | ");
   }
 
   Widget _createListView() {
     return ListView.builder(
         itemCount: _appointment.length,
         itemBuilder: (context, index) {
-          return Card(
-            color: const Color(0x86C6F7FD),
-            child: ListTile(
-              contentPadding: const EdgeInsets.all(10),
-              title: Text(_appointment[index]),
-              trailing: Container(
-                  width: 70,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: IconButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => UpdateAppointment(
-                                        appointmentDetails:
-                                            _appointment[index] +
-                                                " | " +
-                                                _appointmentIds[index])));
-                          },
-                          icon: const Icon(Icons.edit),
+
+          splitString(_appointment[index]);
+
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 5.0),
+            child: Card(
+              color: Theme.of(context).cardColor,
+              child: ListTile(
+                contentPadding: const EdgeInsets.all(10),
+                title: Text("Doctor: ${details[0]}\nDate: ${details[1]}\nTime: ${details[2]}"),//Text(_appointment[index]),
+                trailing: SizedBox(
+                    width: 70,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: IconButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  PageTransition(
+                                      type: PageTransitionType.fade,
+                                      child: UpdateAppointment(
+                                          appointmentDetails:
+                                          "${_appointment[index]} | ${_appointmentIds[index]}")));
+                            },
+                            icon: const Icon(Icons.edit,color: Colors.grey),
+                          ),
                         ),
-                      ),
-                      Expanded(
-                        child: IconButton(
-                          onPressed: () {
-                            deleteAppointment(index);
-                            SnackBar snackBar = SnackBar(
-                              content: Text(
-                                  "Appointment Removed :  ${_appointment[index]}"),
-                              backgroundColor: Color.fromARGB(255, 10, 216, 27),
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                            setState(() {
-                              _appointment.removeAt(index);
-                            });
-                          },
-                          icon: const Icon(Icons.delete),
-                        ),
-                      )
-                    ],
-                  )),
+                        Expanded(
+                          child: IconButton(
+                            onPressed: () {
+                              deleteAppointment(index);
+                              SnackBar snackBar = SnackBar(
+                                content: Text(
+                                    "Appointment Removed :  ${_appointment[index]}"),
+                                backgroundColor: Theme.of(context).cardColor,
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                              setState(() {
+                                _appointment.removeAt(index);
+                              });
+                            },
+                            icon:  const Icon(Icons.delete,color: Colors.grey),
+                          ),
+                        )
+                      ],
+                    )),
+              ),
             ),
           );
         });

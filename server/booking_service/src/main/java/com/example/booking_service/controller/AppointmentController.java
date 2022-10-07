@@ -1,15 +1,14 @@
 package com.example.booking_service.controller;
 
+import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import com.example.booking_service.model.Appointment;
 import com.example.booking_service.repository.AppointmentRepo;
-import com.example.booking_service.repository.UserRepo;
-
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -50,8 +49,14 @@ public class AppointmentController {
 
     // Search for all appointments based off the patient's id
     @GetMapping(value="/search/userappointments/{id}")
-    public List<Appointment> getAllAppointments(@PathVariable("id") int id){
-        return appointRepo.findAppointmentByPatient(id);
+    public ResponseEntity<?> getAllAppointments(@PathVariable("id") int id){
+        List<Appointment> upcoming = appointRepo.findAppointmentByPatient(id);
+        if(upcoming.isEmpty()){
+            return ResponseEntity.badRequest().body("No Upcoming Appointments");
+        }
+        else{
+            return ResponseEntity.ok().body(upcoming);
+        }
     }
 
     // Remove an Appointment by it's ID
