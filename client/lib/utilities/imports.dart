@@ -1,5 +1,5 @@
-export 'package:nd_telemedicine/widgets/form_widgets.dart';
-export 'package:nd_telemedicine/styles/theme.dart';
+export '../widgets/form_widgets.dart';
+export '../styles/theme.dart';
 export '../models/message_data.dart';
 export '../models/user.dart';
 export '../models/medical_history.dart';
@@ -17,6 +17,7 @@ export '../pages/homepage/admin_home.dart';
 export '../pages/booking/booking_by_time.dart';
 export '../pages/booking/set_availability.dart';
 export '../pages/booking/health_status.dart';
+export '../pages/booking/update_appointment.dart';
 export '../pages/chats/chat_screen.dart';
 export '../pages/profiles/create_profile.dart';
 export '../pages/profiles/register.dart';
@@ -26,4 +27,3 @@ export '../pages/landing.dart';
 export '../pages/profiles/log_in.dart';
 export '../main.dart';
 export '../security/storage_service.dart';
-

@@ -61,6 +61,12 @@ public class AppointmentController {
         appointRepo.delete(targetAppointment);
     }
 
+    // Update appointment
+    @PutMapping(value="/update/appointment")
+    public void updateAppointment(@RequestBody Appointment appoint){
+        appointRepo.save(appoint);
+    }
+
     // // Get list of appointments by the current date
     // @GetMapping(value="/search/appointment/date")
     // public List<Appointment> getUpcomingAppointments() {
