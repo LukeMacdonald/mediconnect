@@ -42,4 +42,10 @@ public class AppointmentApiController {
         Appointment targetAppointment = appointRepo.findById(id);
         appointRepo.delete(targetAppointment);
     }
+
+    // Update appointment
+    @PutMapping(value="/UpdateAppointment")
+    public void updateAppointment(@RequestBody Appointment appoint){
+        appointRepo.save(appoint);
+    }
 }

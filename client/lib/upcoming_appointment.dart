@@ -215,7 +215,9 @@ class _UpcomingAppointment extends State<UpcomingAppointment> {
                                     builder: (context) => UpdateAppointment(
                                         user: user,
                                         appointmentDetails:
-                                            _appointment[index])));
+                                            _appointment[index] +
+                                                " | " +
+                                                _appointmentIds[index])));
                           },
                           icon: const Icon(Icons.edit),
                         ),

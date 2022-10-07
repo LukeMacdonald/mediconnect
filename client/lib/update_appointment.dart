@@ -82,9 +82,10 @@ class _UpdateAppointment extends State<UpdateAppointment> {
   }
 
   Future save(int doctorId, String date, String startTime) async {
-    await http.post(Uri.parse("http://localhost:8080/SetAppointment"),
+    await http.put(Uri.parse("http://localhost:8080/UpdateAppointment"),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
+          'id': details[3],
           'patient': user.id,
           'doctor': doctorId,
           'date': date,
