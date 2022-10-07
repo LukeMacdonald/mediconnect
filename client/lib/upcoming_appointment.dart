@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
+import 'package:intl/intl.dart';
 import 'dashboard.dart';
 import 'utilities/appointment.dart';
 import 'utilities/user.dart';
@@ -21,52 +22,44 @@ class _UpcomingAppointment extends State<UpcomingAppointment> {
   late User user = widget.user;
   String url = "http://localhost:8080/";
 
-  // Future save() async {
-  //   int day = getDayIntFromDayString(dayValue);
-  //   await http.post(Uri.parse("${url}ModifyAppointDetail"),
-  //       headers: {'Content-Type': 'application/json'},
-  //       body: json.encode({
-  //         'doctor_id': user.id,
-  //         'day_of_week': day,
-  //         'start_time': hourValue.substring(0, 5),
-  //         'end_time': hourValue.substring(
-  //           8,
-  //         )
-  //       }));
-  // }
-
-  final List<String> _appointment = [
-    "Testing 1",
-    "Testing 2",
-    "Testing 3",
-    "Testing 4",
-    "Testing 5",
-    "Testing 6"
-  ];
+  final List<String> _appointment = [];
+  final List<String> _appointmentIds = [];
+  final Map _hours = {
+    '09:00:00': '09:00 - 10:00',
+    '10:00:00': '10:00 - 11:00',
+    '11:00:00': '11:00 - 12:00',
+    '12:00:00': '12:00 - 13:00',
+    '13:00:00': '13:00 - 14:00',
+    '14:00:00': '14:00 - 15:00',
+    '15:00:00': '15:00 - 16:00',
+    '16:00:00': '16:00 - 17:00'
+  };
   @override
   void initState() {
     super.initState();
-    // getUpcomingAppointment();
+    getUpcomingAppointment();
   }
 
-  //TODO: Change this code
   Future getUpcomingAppointment() async {
     final response =
-        await http.get(Uri.parse("${url}GetAllDoctorAvailability/${user.id}"));
+        await http.get(Uri.parse("${url}SearchUserAppointments/${user.id}"));
     var responseData = json.decode(response.body);
-    String day = "";
 
-    for (var availability in responseData) {
-      day = getDayStringFrontDayInt(availability["day_of_week"]);
-      // Provided the doctor has gone through the dashboard, we simply take the doctor_id from their current availabilities
-      String time = availability["_start_time"]
-              .substring(0, availability["_start_time"].length - 3) +
-          " - " +
-          availability["_end_time"]
-              .substring(0, availability["_end_time"].length - 3);
-      // _availability.add({'Day': day, 'Hour': time});
-      _appointment.add("$day  |  $time");
+    for (var appointment in responseData) {
+      var doctorId = appointment['doctor'];
+      final responseName =
+          await http.get(Uri.parse("${url}GetUserFullName/${doctorId}"));
+      String day = responseName.body.toString();
+      String date = appointment['date'];
+      String time = _hours[appointment['time']];
+      _appointment.add("${day} | ${date} | ${time}");
+      _appointmentIds.add(appointment['id'].toString());
     }
+  }
+
+  Future deleteAppointment(int index) async {
+    await http
+        .delete(Uri.parse("${url}DeleteAppointment/${_appointmentIds[index]}"));
   }
 
   Future<String?> alert(String message) {
@@ -218,17 +211,11 @@ class _UpcomingAppointment extends State<UpcomingAppointment> {
                           onPressed: () {
                             Navigator.push(
                                 context,
-                                //TODO: Uncomment this section
-                                // MaterialPageRoute(
-                                //     builder: (context) => UpdateAppointment(
-                                //         user: user,
-                                //         appointmentDetails:
-                                //             _appointment[index])));
                                 MaterialPageRoute(
                                     builder: (context) => UpdateAppointment(
                                         user: user,
                                         appointmentDetails:
-                                            "Luke Macdonald | 29/09/2022 | 13:00-14:00")));
+                                            _appointment[index])));
                           },
                           icon: const Icon(Icons.edit),
                         ),
@@ -236,6 +223,14 @@ class _UpcomingAppointment extends State<UpcomingAppointment> {
                       Expanded(
                         child: IconButton(
                           onPressed: () {
+                            deleteAppointment(index);
+                            SnackBar snackBar = SnackBar(
+                              content: Text(
+                                  "Appointment Removed :  ${_appointment[index]}"),
+                              backgroundColor: Color.fromARGB(255, 10, 216, 27),
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
                             setState(() {
                               _appointment.removeAt(index);
                             });

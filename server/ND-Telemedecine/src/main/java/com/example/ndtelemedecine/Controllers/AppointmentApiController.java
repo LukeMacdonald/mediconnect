@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
+import java.util.List;
 
 @RestController
 public class AppointmentApiController {
@@ -26,5 +27,19 @@ public class AppointmentApiController {
     public String saveAppointment(@RequestBody Appointment appoint){
         appointRepo.save(appoint);
         return "Appointment successfuly saved";
+    }
+
+    // Search for all appointments based off the patient's id
+    // Potential to change
+    @GetMapping(value="/SearchUserAppointments/{id}")
+    public List<Appointment> getAllAppointments(@PathVariable("id") int id){
+        return appointRepo.findByPatient(id);
+    }
+
+    // Remove an Appointment by it's ID
+    @DeleteMapping(value = "/DeleteAppointment/{id}")
+    public void deleteAppointment(@PathVariable("id") int id){
+        Appointment targetAppointment = appointRepo.findById(id);
+        appointRepo.delete(targetAppointment);
     }
 }
