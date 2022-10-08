@@ -79,7 +79,6 @@ class _AddDoctor extends State<AddDoctor> {
     return GestureDetector(
         onTap: ()=>FocusScope.of(context).unfocus(),
     child:Scaffold(
-        extendBodyBehindAppBar: true,
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
           iconTheme: Theme.of(context).iconTheme,

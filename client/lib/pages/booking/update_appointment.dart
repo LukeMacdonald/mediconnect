@@ -155,7 +155,7 @@ class _UpdateAppointment extends State<UpdateAppointment> {
               },
             ),
           ),
-          title: const Text("Set Availability",
+          title: const Text("Update Appointment",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 16,

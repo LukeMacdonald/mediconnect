@@ -95,8 +95,7 @@ class _UpcomingAppointment extends State<UpcomingAppointment> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           const SizedBox(height: 10),
-          SizedBox(
-            height: 800,
+          SizedBox(height: 550,
               child: SizedBox(height: 200, child: _createListView()))
         ]);
   }
@@ -109,7 +108,6 @@ class _UpcomingAppointment extends State<UpcomingAppointment> {
 
   Widget appointment() {
     return SingleChildScrollView(
-        physics: const NeverScrollableScrollPhysics(),
         child: Column(children: [
           const Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 0)),
           const Align(
@@ -175,7 +173,7 @@ class _UpcomingAppointment extends State<UpcomingAppointment> {
                 ),
                ],
             )),
-        bottomNavigationBar: CustomBBottomNavigationBar(pageIndex: 3));
+        bottomNavigationBar: const CustomBBottomNavigationBar(pageIndex: 3));
   }
   void splitString(String detail) {
     details = detail.split(" | ");
@@ -185,54 +183,55 @@ class _UpcomingAppointment extends State<UpcomingAppointment> {
     return ListView.builder(
         itemCount: _appointment.length,
         itemBuilder: (context, index) {
-
           splitString(_appointment[index]);
-
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 5.0),
             child: Card(
               color: Theme.of(context).cardColor,
-              child: ListTile(
-                contentPadding: const EdgeInsets.all(10),
-                title: Text("Doctor: ${details[0]}\nDate: ${details[1]}\nTime: ${details[2]}"),//Text(_appointment[index]),
-                trailing: SizedBox(
-                    width: 70,
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: IconButton(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  PageTransition(
-                                      type: PageTransitionType.fade,
-                                      child: UpdateAppointment(
-                                          appointmentDetails:
-                                          "${_appointment[index]} | ${_appointmentIds[index]}")));
-                            },
-                            icon: const Icon(Icons.edit,color: Colors.grey),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 15.0),
+                child: ListTile(
+                  contentPadding: const EdgeInsets.all(10),
+                  title: Text("Doctor: ${details[0]}\nDate: ${details[1]}\nTime: ${details[2]}"),//Text(_appointment[index]),
+                  trailing: SizedBox(
+                      width: 70,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: IconButton(
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    PageTransition(
+                                        type: PageTransitionType.fade,
+                                        child: UpdateAppointment(
+                                            appointmentDetails:
+                                            "${_appointment[index]} | ${_appointmentIds[index]}")));
+                              },
+                              icon: const Icon(Icons.edit,color: Colors.grey),
+                            ),
                           ),
-                        ),
-                        Expanded(
-                          child: IconButton(
-                            onPressed: () {
-                              deleteAppointment(index);
-                              SnackBar snackBar = SnackBar(
-                                content: Text(
-                                    "Appointment Removed :  ${_appointment[index]}"),
-                                backgroundColor: Theme.of(context).cardColor,
-                              );
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(snackBar);
-                              setState(() {
-                                _appointment.removeAt(index);
-                              });
-                            },
-                            icon:  const Icon(Icons.delete,color: Colors.grey),
-                          ),
-                        )
-                      ],
-                    )),
+                          Expanded(
+                            child: IconButton(
+                              onPressed: () {
+                                deleteAppointment(index);
+                                SnackBar snackBar = SnackBar(
+                                  content: Text(
+                                      "Appointment Removed :  ${_appointment[index]}"),
+                                  backgroundColor: Theme.of(context).cardColor,
+                                );
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                                setState(() {
+                                  _appointment.removeAt(index);
+                                });
+                              },
+                              icon:  const Icon(Icons.delete,color: Colors.grey),
+                            ),
+                          )
+                        ],
+                      )),
+                ),
               ),
             ),
           );
