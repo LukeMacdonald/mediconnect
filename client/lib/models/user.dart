@@ -13,4 +13,11 @@ class User {
 
    User();
 
+  void setDetails(var responseData) {
+    id = responseData['id'];
+    email = responseData['email'];
+    firstName = responseData['firstName'];
+    lastName = responseData['lastName'];
+    role = responseData['role'];
+  }
 }

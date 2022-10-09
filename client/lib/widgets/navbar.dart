@@ -4,7 +4,6 @@ import 'package:nd_telemedicine/pages/booking/set_availability.dart';
 import 'package:nd_telemedicine/pages/booking/upcoming_appointment.dart';
 import 'package:nd_telemedicine/pages/chats/chats_menu_patient.dart';
 import 'package:nd_telemedicine/pages/booking/booking_by_time.dart';
-import 'package:nd_telemedicine/pages/profiles/view_own_profile.dart';
 import 'package:nd_telemedicine/security/storage_service.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -15,6 +14,7 @@ import '../pages/homepage/doctor_home.dart';
 import '../pages/homepage/home_page.dart';
 import '../pages/landing.dart';
 import '../pages/profiles/log_in.dart';
+import '../pages/profiles/view_profiles.dart';
 import '../styles/theme.dart';
 //
 

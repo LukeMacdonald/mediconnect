@@ -61,3 +61,13 @@ Future<String> getName(int id) async {
   return response.body;
 }
 
+Future<void> deleteProfile(String email) async {
+  String jwt = "";
+  await UserSecureStorage.getJWTToken().then((value) => jwt = value!);
+  await http.delete(Uri.parse("${authenticationIP}remove/$email"),
+      headers: {
+        'Content-Type': 'application/json',
+        HttpHeaders.authorizationHeader: jwt
+      });
+}
+

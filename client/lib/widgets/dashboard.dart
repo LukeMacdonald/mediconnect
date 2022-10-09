@@ -1,27 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 
-Widget dashboardUserIcon(){
-  return Padding(
-    padding:
-    const EdgeInsetsDirectional.fromSTEB(
-        0, 10, 0, 0),
-    child: Container(
-      width: 80,
-      height: 80,
-      clipBehavior: Clip.antiAlias,
-      decoration: const BoxDecoration(
-        shape: BoxShape.circle,
-        image: DecorationImage(
-          fit: BoxFit.cover,
-          image: AssetImage(
-              'images/user.png'),
-        ),
-      ),
-    ),
-  );
-}
-
 Widget menuOption(Color color, Icon icon,Widget page,String message,BuildContext context){
   return Padding(
     padding:
@@ -64,3 +43,6 @@ Widget menuOption(Color color, Icon icon,Widget page,String message,BuildContext
     ),
   );
 }
+
+
+

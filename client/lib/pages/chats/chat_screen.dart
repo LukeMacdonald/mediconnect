@@ -2,11 +2,12 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:nd_telemedicine/pages/profiles/view_other_profile.dart';
 import 'package:page_transition/page_transition.dart';
 import '../../utilities/imports.dart';
 import 'dart:async';
 import 'dart:convert';
+
+import '../profiles/view_profiles.dart';
 
 class ChatScreen extends StatefulWidget {
   final MessageData messageData;

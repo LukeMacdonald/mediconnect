@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:nd_telemedicine/pages/profiles/remove_profile.dart';
 import '../../utilities/imports.dart';
 
 class AdminHomePage extends StatefulWidget {
@@ -91,6 +92,42 @@ class _AdminHomePage extends State<AdminHomePage> {
                                   ),
                                   const AdminHomePage(),
                                   'Add Admin',
+                                  context),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsetsDirectional.fromSTEB(
+                              20, 40, 20, 0),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              menuOption(
+                                  Colors.orangeAccent,
+                                  const Icon(
+                                    CupertinoIcons.person_badge_minus,
+                                    color: Colors.white,
+                                    size: 50,
+                                  ),
+                                  const RemoveProfile(role: "doctor"),
+                                  'Remove Doctor',
+                                  context),
+                              menuOption(
+                                  Colors.redAccent,
+                                  const Icon(
+                                    CupertinoIcons.person_badge_minus,
+                                    color: Colors.white,
+                                    size: 50,
+                                  ),
+                                  const RemoveProfile(role: "patient"),
+                                  'Remove Patient',
                                   context),
                             ],
                           ),
