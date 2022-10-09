@@ -21,22 +21,20 @@ class _RemoveProfileState extends State<RemoveProfile> {
   late List<User> users;
 
   Future getUsers() async {
-      var response = await http.get(
-          Uri.parse(
-              "${authenticationIP}get/users/role/${widget.role}"),
+
+    var response = await http.get(
+          Uri.parse("${authenticationIP}get/users/role/${widget.role}"),
           headers: {'Content-Type': 'application/json'});
+
       var responses = json.decode(response.body) as List;
 
       for (var element in responses) {
-        print(element);
         User user = User();
         if(element['firstName'] != null) {
           user.setDetails(element);
           users.add(user);
-          setState(() {
-          });
+          setState(() {});
         }
-        //setState(() {});
       }
     }
 

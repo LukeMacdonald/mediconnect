@@ -28,16 +28,23 @@ class _Verification extends State<Verification> {
   }
 
   Future<void> validateSave() async {
+    String email = "";
+    var data = await UserSecureStorage().doctorToJson(int.parse(code!));
+    await UserSecureStorage.getEmail().then((value) => email = value!);
     if (code == "" || code == null) {
+      if(!mounted) return;
       alert("No Code Entered!", context);
     } else {
       try {
         final response = await http.post(
             Uri.parse("${authenticationIP}register/doctor"),
             headers: {'Content-Type': 'application/json'},
-            body:
-
-                jsonEncode(await UserSecureStorage().doctorToJson(int.parse(code!))));
+            body: json.encode({
+              'email': await UserSecureStorage.getEmail(),
+              'password': await UserSecureStorage.getPassword(),
+              'role': await UserSecureStorage.getRole(),
+              'confirmPassword': await UserSecureStorage.getConfirmPassword(),
+              'code': code}));
         switch (response.statusCode) {
           case 201:
             var responseData = json.decode(response.body);
@@ -54,6 +61,7 @@ class _Verification extends State<Verification> {
             throw Exception(list.join("\n\n"));
         }
       } catch (e) {
+        if(!mounted) return;
         alert(e.toString().substring(11), context);
       }
     }

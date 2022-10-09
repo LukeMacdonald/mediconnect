@@ -24,14 +24,7 @@ class _ViewProfileState extends State<ViewProfile> {
   final TextEditingController _phoneNumber =  TextEditingController();
 
   Future getFields() async {
-    await UserSecureStorage.getEmail().then((value) => user.email = value!);
-    await UserSecureStorage.getFirstName()
-        .then((value) => user.firstName = value!);
-    await UserSecureStorage.getLastName()
-        .then((value) => user.lastName = value!);
-    await UserSecureStorage.getDOB().then((value) => user.dob = value!);
-    await UserSecureStorage.getPhoneNumber()
-        .then((value) => user.phoneNumber = value!);
+    await user.transferDetails();
     setState(() {
       _firstName.text = user.firstName;
       _lastName.text = user.lastName;
@@ -46,12 +39,10 @@ class _ViewProfileState extends State<ViewProfile> {
     UserSecureStorage.setPhoneNumber(user.phoneNumber);
     UserSecureStorage.setDOB(user.dob);
 
-    String token = "";
-    await UserSecureStorage.getJWTToken().then((value) => token = value!);
     await http.put(Uri.parse("${authenticationIP}update"),
         headers: {
           'Content-Type': 'application/json',
-          HttpHeaders.authorizationHeader: token
+          HttpHeaders.authorizationHeader: user.accessToken
         },
         body: json.encode({
           'email': await UserSecureStorage.getEmail(),
@@ -102,45 +93,43 @@ class _ViewProfileState extends State<ViewProfile> {
                   child: ListView(
                     children: [
                       const Icon(CupertinoIcons.person, size: 100,color: AppColors.secondary,),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 20.0),
-                      ),
-                      TextFormField(
-                        controller: _firstName,
-                        readOnly: isTextFieldDisabled,
-                        decoration: const InputDecoration(
-                          labelText: 'First Name',
-                          labelStyle: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 20.0),
-                      ),
-                      TextFormField(
-                        controller: _lastName,
-                        readOnly: isTextFieldDisabled,
-                        decoration: const InputDecoration(
-                          labelText: 'Last Name',
-                          labelStyle: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 20.0),
-                      ),
                       TextFormField(
                         controller: TextEditingController()..text = user.email,
                         readOnly: true,
                         decoration: const InputDecoration(
+                          border: InputBorder.none,
                           labelText: 'Email',
                           labelStyle: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 20.0),
+                        child: TextFormField(
+                          controller: _firstName,
+                          readOnly: isTextFieldDisabled,
+                          decoration: const InputDecoration(
+                            labelText: 'First Name',
+                            labelStyle: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 20.0),
+                        child: TextFormField(
+                          controller: _lastName,
+                          readOnly: isTextFieldDisabled,
+                          decoration: const InputDecoration(
+                            labelText: 'Last Name',
+                            labelStyle: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
                       ),
@@ -299,10 +288,23 @@ class _ViewOtherProfileState extends State<ViewOtherProfile> {
                         padding: EdgeInsets.symmetric(vertical: 20.0),
                       ),
                       TextFormField(
+                        controller: TextEditingController()..text = user.email,
+                        readOnly: true,
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                          labelText: 'Email',
+                          labelStyle: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      TextFormField(
                         controller: TextEditingController()
                           ..text = user.firstName,
                         readOnly: true,
                         decoration: const InputDecoration(
+                          border: InputBorder.none,
                           labelText: 'First Name',
                           labelStyle: TextStyle(
                             fontSize: 20,
@@ -311,13 +313,14 @@ class _ViewOtherProfileState extends State<ViewOtherProfile> {
                         ),
                       ),
                       const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 20.0),
+                        padding: EdgeInsets.symmetric(vertical: 10.0),
                       ),
                       TextFormField(
                         controller: TextEditingController()
                           ..text = user.lastName,
                         readOnly: true,
                         decoration: const InputDecoration(
+                          border: InputBorder.none,
                           labelText: 'Last Name',
                           labelStyle: TextStyle(
                             fontSize: 20,
@@ -325,27 +328,14 @@ class _ViewOtherProfileState extends State<ViewOtherProfile> {
                           ),
                         ),
                       ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 20.0),
-                      ),
-                      TextFormField(
-                        controller: TextEditingController()..text = user.email,
-                        readOnly: true,
-                        decoration: const InputDecoration(
-                          labelText: 'Email',
-                          labelStyle: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
                       Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 20.0),
+                          padding: const EdgeInsets.symmetric(vertical: 10.0),
                           child: TextFormField(
                             readOnly: true,
                             controller: TextEditingController()
                               ..text = user.dob,
                             decoration: const InputDecoration(
+                              border: InputBorder.none,
                               labelText: 'DOB',
                               labelStyle: TextStyle(
                                 fontSize: 20,
@@ -360,6 +350,7 @@ class _ViewOtherProfileState extends State<ViewOtherProfile> {
                           controller: TextEditingController()
                             ..text = user.phoneNumber,
                           decoration: const InputDecoration(
+                            border: InputBorder.none,
                             labelText: 'Phone Number',
                             labelStyle: TextStyle(
                               fontSize: 20,

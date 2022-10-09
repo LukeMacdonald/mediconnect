@@ -18,18 +18,17 @@ class _UserEmail extends State<UserEmail> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        Expanded(
-            child: Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
-          child: Material(
-            //elevation: 2,
-            color: Theme.of(context).dividerColor,
-            borderRadius: const BorderRadius.all(Radius.circular(8)),
-            child: Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
+    return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10),
+    child: Row(mainAxisSize: MainAxisSize.max, children: [
+    Expanded(
+    child: Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 15),
+    child: Material(
+    color: Theme.of(context).dividerColor,
+    borderRadius: const BorderRadius.all(Radius.circular(8)),
+    child: Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 15),
               child: TextFormField(
                 controller: textController,
                 obscureText: false,
@@ -39,6 +38,7 @@ class _UserEmail extends State<UserEmail> {
                   widget.changeClassValue(textController.text);
                 },
                 decoration: const InputDecoration(
+                  border: InputBorder.none,
                   labelText: 'Email Address',
                   labelStyle: TextStyle(
                     fontSize: 16,
@@ -60,7 +60,7 @@ class _UserEmail extends State<UserEmail> {
           ),
         ))
       ],
-    );
+    ));
   }
 }
 
@@ -78,18 +78,17 @@ class _UserGivenFirstName extends State<UserGivenFirstName> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      children: [
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Row(mainAxisSize: MainAxisSize.max, children: [
         Expanded(
             child: Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
+                padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Material(
                     color: Theme.of(context).dividerColor,
                     borderRadius: const BorderRadius.all(Radius.circular(8)),
                     child: Padding(
-                        padding:
-                            const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
                         child: TextFormField(
                           controller: textController,
                           obscureText: false,
@@ -97,6 +96,7 @@ class _UserGivenFirstName extends State<UserGivenFirstName> {
                             UserSecureStorage.setFirstName(textController.text);
                           },
                           decoration: const InputDecoration(
+                            border: InputBorder.none,
                             labelText: 'First Name',
                             labelStyle: TextStyle(
                               fontSize: 16,
@@ -114,7 +114,7 @@ class _UserGivenFirstName extends State<UserGivenFirstName> {
                           ),
                           keyboardType: TextInputType.name,
                         )))))
-      ],
+      ]),
     );
   }
 }
@@ -133,19 +133,17 @@ class _UserGivenLastName extends State<UserGivenLastName> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      children: [
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Row(mainAxisSize: MainAxisSize.max, children: [
         Expanded(
             child: Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
+                padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Material(
-
                     color: Theme.of(context).dividerColor,
                     borderRadius: const BorderRadius.all(Radius.circular(8)),
                     child: Padding(
-                        padding:
-                            const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
                         child: TextFormField(
                           controller: textController,
                           obscureText: false,
@@ -153,6 +151,7 @@ class _UserGivenLastName extends State<UserGivenLastName> {
                             UserSecureStorage.setLastName(textController.text);
                           },
                           decoration: const InputDecoration(
+                            border: InputBorder.none,
                             labelText: 'Last Name',
                             labelStyle: TextStyle(
                               fontSize: 16,
@@ -170,7 +169,7 @@ class _UserGivenLastName extends State<UserGivenLastName> {
                           ),
                           keyboardType: TextInputType.name,
                         )))))
-      ],
+      ]),
     );
   }
 }
@@ -190,62 +189,65 @@ class _UserGivenPassword extends State<UserGivenPassword> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        Expanded(
-            child: Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
-                child: Material(
-
-                    color: Theme.of(context).dividerColor,
-                    borderRadius: const BorderRadius.all(Radius.circular(8)),
-                    child: Padding(
-                        padding:
-                            const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
-                        child: TextFormField(
-                          controller: textController,
-                          onChanged: (val) {
-                            UserSecureStorage.setPassword(textController.text);
-                          },
-                          validator: (val) {
-                            if (val == "") {
-                              return 'Password is empty';
-                            }
-                            return null;
-                          },
-                          obscureText: !passwordVisibility,
-                          decoration: InputDecoration(
-                              labelText: 'Password',
-                              labelStyle: const TextStyle(
+    return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Expanded(
+                child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: Material(
+                        color: Theme.of(context).dividerColor,
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(8)),
+                        child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            child: TextFormField(
+                              controller: textController,
+                              onChanged: (val) {
+                                UserSecureStorage.setPassword(
+                                    textController.text);
+                              },
+                              validator: (val) {
+                                if (val == "") {
+                                  return 'Password is empty';
+                                }
+                                return null;
+                              },
+                              obscureText: !passwordVisibility,
+                              decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  labelText: 'Password',
+                                  labelStyle: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  //hintText: 'Enter Password',
+                                  hintStyle: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  suffixIcon: InkWell(
+                                    onTap: () => setState(
+                                      () => passwordVisibility =
+                                          !passwordVisibility,
+                                    ),
+                                    focusNode: FocusNode(skipTraversal: true),
+                                    child: Icon(
+                                      passwordVisibility
+                                          ? Icons.visibility_outlined
+                                          : Icons.visibility_off_outlined,
+                                      size: 20,
+                                    ),
+                                  )),
+                              style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
                               ),
-                              //hintText: 'Enter Password',
-                              hintStyle: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                              ),
-                              suffixIcon: InkWell(
-                                onTap: () => setState(
-                                  () =>
-                                      passwordVisibility = !passwordVisibility,
-                                ),
-                                focusNode: FocusNode(skipTraversal: true),
-                                child: Icon(
-                                  passwordVisibility
-                                      ? Icons.visibility_outlined
-                                      : Icons.visibility_off_outlined,
-                                  size: 20,
-                                ),
-                              )),
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        )))))
-      ],
-    );
+                            )))))
+          ],
+        ));
   }
 }
 
@@ -264,62 +266,65 @@ class _UserGivenConfirmPassword extends State<UserGivenConfirmPassword> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        Expanded(
-            child: Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
-                child: Material(
-                    color: Theme.of(context).dividerColor,
-                    borderRadius: const BorderRadius.all(Radius.circular(8)),
-                    child: Padding(
-                        padding:
-                            const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
-                        child: TextFormField(
-                          controller: textController,
-                          onChanged: (val) {
-                            UserSecureStorage.setConfirmPassword(
-                                textController.text);
-                          },
-                          validator: (val) {
-                            if (val == "") {
-                              return 'Password is empty';
-                            }
-                            return null;
-                          },
-                          obscureText: !passwordVisibility,
-                          decoration: InputDecoration(
-                              labelText: 'Confirm Password',
-                              labelStyle: const TextStyle(
+    return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Expanded(
+                child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: Material(
+                        color: Theme.of(context).dividerColor,
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(8)),
+                        child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            child: TextFormField(
+                              controller: textController,
+                              onChanged: (val) {
+                                UserSecureStorage.setConfirmPassword(
+                                    textController.text);
+                              },
+                              validator: (val) {
+                                if (val == "") {
+                                  return 'Password is empty';
+                                }
+                                return null;
+                              },
+                              obscureText: !passwordVisibility,
+                              decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  labelText: 'Confirm Password',
+                                  labelStyle: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  hintText: 'Enter Password',
+                                  hintStyle: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  suffixIcon: InkWell(
+                                    onTap: () => setState(
+                                      () => passwordVisibility =
+                                          !passwordVisibility,
+                                    ),
+                                    focusNode: FocusNode(skipTraversal: true),
+                                    child: Icon(
+                                      passwordVisibility
+                                          ? Icons.visibility_outlined
+                                          : Icons.visibility_off_outlined,
+                                      size: 20,
+                                    ),
+                                  )),
+                              style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
                               ),
-                              hintText: 'Enter Password',
-                              hintStyle: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                              ),
-                              suffixIcon: InkWell(
-                                onTap: () => setState(
-                                  () =>
-                                      passwordVisibility = !passwordVisibility,
-                                ),
-                                focusNode: FocusNode(skipTraversal: true),
-                                child: Icon(
-                                  passwordVisibility
-                                      ? Icons.visibility_outlined
-                                      : Icons.visibility_off_outlined,
-                                  size: 20,
-                                ),
-                              )),
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        )))))
-      ],
-    );
+                            )))))
+          ],
+        ));
   }
 }
 
@@ -338,20 +343,19 @@ class _UserGivenPhoneNumber extends State<UserGivenPhoneNumber> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(0, 8, 0, 0),
+        padding: const EdgeInsets.symmetric(vertical: 10),
         child: Row(
           mainAxisSize: MainAxisSize.max,
           children: [
             Expanded(
                 child: Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
                     child: Material(
                         color: Theme.of(context).dividerColor,
                         borderRadius:
                             const BorderRadius.all(Radius.circular(8)),
                         child: Padding(
-                            padding: const EdgeInsetsDirectional.fromSTEB(
-                                16, 0, 16, 8),
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
                             child: TextFormField(
                               controller: textController,
                               obscureText: false,
@@ -360,6 +364,7 @@ class _UserGivenPhoneNumber extends State<UserGivenPhoneNumber> {
                                     textController.text);
                               },
                               decoration: const InputDecoration(
+                                border: InputBorder.none,
                                 labelText: 'Phone Number ',
                                 labelStyle: TextStyle(
                                   fontSize: 16,
@@ -396,62 +401,65 @@ class _UserDOB extends State<UserDOB> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        Expanded(
-            child: Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
-                child: Material(
-                    color: Theme.of(context).dividerColor,
-                    borderRadius: const BorderRadius.all(Radius.circular(8)),
-                    child: Padding(
-                        padding:
-                            const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
-                        child: TextFormField(
-                          controller: textController,
-                          obscureText: false,
-                          decoration: const InputDecoration(
-                            labelText: 'DOB',
-                            labelStyle: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            hintText: 'Enter your date of birth...',
-                            hintStyle: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            suffixIcon: Icon(Icons.calendar_today),
-                          ),
-                          readOnly: true,
-                          onTap: () async {
-                            DateTime? pickedDate = await showDatePicker(
-                              context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime(1950),
-                              lastDate: DateTime.now(),
-                              initialEntryMode:
-                                  DatePickerEntryMode.calendarOnly,
-                            );
-                            if (pickedDate != null) {
-                              String formattedDate = DateFormat('yyyy-MM-dd')
-                                  .format(
-                                      pickedDate); // Note that backend needs this format for string to be converted!!
-                              setState(() {
-                                textController.text = formattedDate;
-                                // Will be converted in backend
-                              });
-                              UserSecureStorage.setDOB(textController.text);
-                            }
-                          },
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        )))))
-      ],
-    );
+    return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Expanded(
+                child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: Material(
+                        color: Theme.of(context).dividerColor,
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(8)),
+                        child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            child: TextFormField(
+                              controller: textController,
+                              obscureText: false,
+                              decoration: const InputDecoration(
+                                border: InputBorder.none,
+                                labelText: 'DOB',
+                                labelStyle: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                hintText: 'Enter your date of birth...',
+                                hintStyle: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                suffixIcon: Icon(Icons.calendar_today),
+                              ),
+                              readOnly: true,
+                              onTap: () async {
+                                DateTime? pickedDate = await showDatePicker(
+                                  context: context,
+                                  initialDate: DateTime.now(),
+                                  firstDate: DateTime(1950),
+                                  lastDate: DateTime.now(),
+                                  initialEntryMode:
+                                      DatePickerEntryMode.calendarOnly,
+                                );
+                                if (pickedDate != null) {
+                                  String formattedDate =
+                                      DateFormat('yyyy-MM-dd').format(
+                                          pickedDate); // Note that backend needs this format for string to be converted!!
+                                  setState(() {
+                                    textController.text = formattedDate;
+                                    // Will be converted in backend
+                                  });
+                                  UserSecureStorage.setDOB(textController.text);
+                                }
+                              },
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            )))))
+          ],
+        ));
   }
 }
 
@@ -469,21 +477,19 @@ class _DoctorCode extends State<DoctorCode> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(0, 8, 0, 0),
+        padding: const EdgeInsets.symmetric(vertical: 10),
         child: Row(
           mainAxisSize: MainAxisSize.max,
           children: [
             Expanded(
                 child: Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
                     child: Material(
-                        elevation: 2,
                         color: Theme.of(context).dividerColor,
                         borderRadius:
                             const BorderRadius.all(Radius.circular(8)),
                         child: Padding(
-                            padding: const EdgeInsetsDirectional.fromSTEB(
-                                16, 0, 16, 8),
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
                             child: TextFormField(
                               controller: textController,
                               obscureText: false,
@@ -491,6 +497,7 @@ class _DoctorCode extends State<DoctorCode> {
                                 widget.changeClassValue(textController.text);
                               },
                               decoration: const InputDecoration(
+                                border: InputBorder.none,
                                 labelText: 'Enter Code ',
                                 labelStyle: TextStyle(
                                   fontSize: 16,
