@@ -67,6 +67,9 @@ public class HealthStatusTests {
         mockhealthStatus.setId(1);
         mockhealthStatus.setCoughing(true);
         mockhealthStatus.setHeadaches(true);
+        mockhealthStatus.setFainting(false);
+        mockhealthStatus.setVomiting(false);
+        mockhealthStatus.setFeverOrChills(false);
         mockhealthStatus.setDescription("I woke up with a dry throat and headache");
     }
 
@@ -94,8 +97,7 @@ public class HealthStatusTests {
         .contentType(MediaType.APPLICATION_JSON)
         .content(requestJson))
         .andExpect(MockMvcResultMatchers.status().isOk())
-        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.getId()", Matchers.is(mockhealthStatus.getId())));
+        .andExpect(MockMvcResultMatchers.content().string("Health Status successfully set"));
     }
 
 }

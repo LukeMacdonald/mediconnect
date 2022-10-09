@@ -19,6 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -122,7 +123,10 @@ public class BookingNotificationTests {
         appointmentList.add(mockAppointment2);
         appointmentList.add(mockAppointment3);
         
-        Mockito.doReturn(appointmentList).when(notificationController).getUpcomingAppointments();
+        String expectedResponse = ow.writeValueAsString(appointmentList);
+
+        ResponseEntity responseEntity = ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(expectedResponse);
+        Mockito.doReturn(responseEntity).when(notificationController).getUpcomingAppointments();
 
         mockMvc.perform(MockMvcRequestBuilders.get("/search/appointment/date"))
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -181,7 +185,12 @@ public class BookingNotificationTests {
         appointmentList.add(mockAppointment1);
         appointmentList.add(mockAppointment2);
         appointmentList.add(mockAppointment3);
-        Mockito.doReturn(appointmentList).when(notificationController).getUpcomingAppointments();
+
+        String expectedResponse = ow.writeValueAsString(appointmentList);
+
+        ResponseEntity responseEntity = ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(expectedResponse);
+
+        Mockito.doReturn(responseEntity).when(notificationController).getUpcomingAppointments();
 
         assertDoesNotThrow(() -> notificationController.notifyPatientBooking());
     }
