@@ -1,10 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:page_transition/page_transition.dart';
+import '../../utilities/custom_functions.dart';
 import '../../utilities/imports.dart';
-import 'dart:convert';
-import 'dart:io';
 
 class LogIn extends StatefulWidget {
   const LogIn({Key? key}) : super(key: key);
@@ -16,7 +14,6 @@ class LogIn extends StatefulWidget {
 class _LogIn extends State<LogIn> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-
   bool _changeEmail = false;
   String? email;
 
@@ -26,76 +23,6 @@ class _LogIn extends State<LogIn> {
       email = newText;
     });
   }
-
-  Future login() async {
-    var response = await http.post(Uri.parse("${authenticationIP}login"),
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode({
-          'email': await UserSecureStorage.getEmail(),
-          'password': await UserSecureStorage.getPassword()
-        }));
-
-    var responseData = json.decode(response.body);
-
-    if (responseData['status'] == 401) {
-      if (!mounted) return;
-      alert("User does not exist", context);
-    } else {
-      UserSecureStorage.setJWTToken(responseData['access_token']);
-
-
-      String token = "";
-      await UserSecureStorage.getJWTToken().then((value) => token = value!);
-
-      response = await http
-          .get(Uri.parse("${authenticationIP}get/${await UserSecureStorage.getEmail()}"), headers: {
-        'Content-Type': 'application/json',
-        HttpHeaders.authorizationHeader: token,
-      });
-      responseData = json.decode(response.body);
-
-      await UserSecureStorage.setID(responseData['id'].toString());
-      await UserSecureStorage.setRole(responseData['role']);
-
-      if (responseData['firstName'] == null) {
-        if (!mounted) return;
-        Navigator.push(
-            context,
-            PageTransition(
-                type: PageTransitionType.fade,
-                child: const ProfileCreation())); // Should direct to profile creation page
-      } else if (responseData['role'] == "patient") {
-        await UserSecureStorage().setDetails(responseData);
-        if (!mounted) return;
-        Navigator.push(
-            context,
-            PageTransition(
-                type: PageTransitionType.fade, child: const HomePage()));
-      } else if (responseData['role'] == "doctor") {
-        await UserSecureStorage().setDetails(responseData);
-        if (!mounted) return;
-        Navigator.push(
-            context,
-            PageTransition(
-                type: PageTransitionType.fade,
-                child: const DoctorHomePage()));
-      } else if (responseData['role'] == "superuser") {
-        await UserSecureStorage().setDetails(responseData);
-
-        if (!mounted) return;
-        Navigator.push(
-            context,
-            PageTransition(
-                type: PageTransitionType.fade,
-                child: const AdminHomePage()));
-      } else {
-        if (!mounted) return;
-        alert("Error Logging In", context);
-      }
-    }
-  }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -183,7 +110,7 @@ class _LogIn extends State<LogIn> {
                                         width: 225,
                                         height: 50,
                                         onPressed: () {
-                                          login();
+                                          login(context);
                                         },
                                       ),
                                     ])),

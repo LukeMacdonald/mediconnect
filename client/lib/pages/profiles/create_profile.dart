@@ -1,15 +1,11 @@
-import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:page_transition/page_transition.dart';
+import 'package:nd_telemedicine/utilities/custom_functions.dart';
 import '../../utilities/imports.dart';
 
 class ProfileCreation extends StatefulWidget {
 
   const ProfileCreation({Key? key}) : super(key: key);
-
   @override
   State<ProfileCreation> createState() => _ProfileCreation();
 }
@@ -19,43 +15,6 @@ class _ProfileCreation extends State<ProfileCreation> {
   void initState() {
     super.initState();
   }
-  Future save() async {
-    String token = "";
-    await UserSecureStorage.getJWTToken().then((value) => token = value!);
-
-    await http.put(Uri.parse("${authenticationIP}update"),
-        headers: {
-          'Content-Type': 'application/json',
-          HttpHeaders.authorizationHeader: token
-        },
-        body: json.encode(
-            {
-              'email': await UserSecureStorage.getEmail(),
-              'password':await UserSecureStorage.getPassword(),
-              'role': await UserSecureStorage.getRole(),
-              'firstName': await UserSecureStorage.getFirstName(),
-              'lastName': await UserSecureStorage.getLastName(),
-              'phoneNumber': await UserSecureStorage.getPhoneNumber(),
-              'dob': await UserSecureStorage.getDOB(),
-            }));
-
-    if (!mounted) return;
-    if (await UserSecureStorage.getRole() == 'patient' || await UserSecureStorage.getRole() == 'Patient' ) {
-      Navigator.push(
-          context,
-          PageTransition(
-              type: PageTransitionType.fade,
-              child: const HomePage()));
-    } else if (await UserSecureStorage.getRole() == 'doctor'||await UserSecureStorage.getRole() == 'Doctor') {
-      Navigator.push(
-          context,
-          PageTransition(
-              type: PageTransitionType.fade,
-              child: const DoctorHomePage()));
-    }
-  }
-
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -153,7 +112,7 @@ class _ProfileCreation extends State<ProfileCreation> {
                         } else if (await UserSecureStorage.getConfirmPassword()!= await UserSecureStorage.getPassword()) {
                           alert("Passwords Did Not Match!", context);
                         } else {
-                          save();
+                          savePatient(context);
                         }
                       },
                     ),

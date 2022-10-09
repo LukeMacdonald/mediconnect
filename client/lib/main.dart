@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:nd_telemedicine/utilities/imports.dart';
 import 'dart:io' show Platform;
 
-String authenticationIP = "http://localhost:8080/";
-String availabilityIP = "http://localhost:8081/";
-String communicationIP = "http://localhost:8082/";
-String appointmentIP = "http://localhost:8083/";
-String messageIP = "http://localhost:8085/";
-
+String? authenticationIP;
+String? availabilityIP;
+String? communicationIP;
+String? appointmentIP;
+String? messageIP;
 
 void main() {
 
@@ -20,12 +19,20 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+
     if (Platform.isAndroid) {
       authenticationIP = "http://10.0.2.2:8080/";
       availabilityIP = "http://10.0.2.2:8081/";
       communicationIP = "http://10.0.2.2:8082/";
       appointmentIP = "http://10.0.2.2:8083/";
       messageIP = "http://10.0.2.2:8085/";
+    }
+    else{
+     authenticationIP = "http://localhost:8080/";
+     availabilityIP = "http://localhost:8081/";
+     communicationIP = "http://localhost:8082/";
+     appointmentIP = "http://localhost:8083/";
+     messageIP = "http://localhost:8085/";
 
     }
 

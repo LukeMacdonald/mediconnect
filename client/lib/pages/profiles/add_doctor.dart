@@ -1,3 +1,4 @@
+import '../../utilities/custom_functions.dart';
 import '../../utilities/imports.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -31,49 +32,6 @@ class _AddDoctor extends State<AddDoctor> {
     super.initState();
   }
 
-  Future save() async {
-    String token = "";
-    await UserSecureStorage.getJWTToken().then((value) => token = value!);
-
-    try {
-      final response = await http.get(
-          Uri.parse("${authenticationIP}admin/add/doctor/verification/$email"),
-          headers: {'Content-Type': 'application/json',
-            HttpHeaders.authorizationHeader: "Bearer $token"},);
-      switch (response.statusCode) {
-        case 201:
-          dynamic responseData = json.decode(response.body);
-          sendEmail(responseData['email'], responseData['code']);
-          break;
-        default:
-          var list = json.decode(response.body).values.toList();
-          throw Exception(list.join("\n\n"));
-      }
-    } catch (e) {
-      if(!mounted)return;
-      alert(e.toString().substring(11), context);
-    }
-  }
-  Future sendEmail(String email, int code) async {
-    try {
-      final response =
-      await http.post(Uri.parse("${communicationIP}send/html/mail"),
-          headers: {'Content-Type': 'application/json'},
-          body: json.encode({'email': email, 'code': code}));
-      switch (response.statusCode) {
-        case 202:
-          dynamic responseData = json.decode(response.body);
-          if(!mounted)return;
-          alert(responseData['message'],context);
-          break;
-        default:
-          var list = json.decode(response.body).values.toList();
-          throw Exception(list.join("\n\n"));
-      }
-    } catch (e) {
-      alert(e.toString().substring(11), context);
-    }
-  }
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -151,7 +109,7 @@ class _AddDoctor extends State<AddDoctor> {
               height: 50,
               onPressed: ()async {
                 if(email!="") {
-                  save();
+                  saveDoctor(email!,context);
                 } else {
                   alert("Email Not Entered!", context);
                 }

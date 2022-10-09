@@ -20,42 +20,48 @@ class BookingByTime extends StatefulWidget {
 
 class _BookingByTime extends State<BookingByTime> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
-
   String? daySelected;
-  String token = "";
-  String id = "";
-  //Not sure if url needed
-
   TextEditingController dateInput = TextEditingController();
+  final List<Map> _booking = [];
+  final List<Map> doctorIdToNames = [];
+  final List<String> _doctors = ['Doctor'];
 
-  Future set() async{
-    await UserSecureStorage.getID().then((value) => id = value!);
-    await UserSecureStorage.getJWTToken().then((value) => token = value!);
-    getAvailability();
-  }
+  String doctorValue = 'Doctor';
+  int? doctorId;
+  String day = "";
+
+  final List<String> _hours = [
+    'Hour',
+    '09:00 - 10:00',
+    '10:00 - 11:00',
+    '11:00 - 12:00',
+    '12:00 - 13:00',
+    '13:00 - 14:00',
+    '14:00 - 15:00',
+    '15:00 - 16:00',
+    '16:00 - 17:00'
+  ];
+  String hourValue = 'Hour';
+
 
   @override
   void initState() {
     dateInput.text = "";
     //set the initial value of text field
-    set();
+    getAvailability();
     super.initState();
 
   }
-
-  final List<Map> _booking = [];
-  final List<Map> doctorIdToNames = [];
-  final List<String> _doctors = ['Doctor'];
-  String doctorValue = 'Doctor';
-  int? doctorId;
-
   Future getAvailability() async {
-    final response = await http
-        .get(Uri.parse("${availabilityIP}get/all/availabilities"),
+    User user = User();
+    await user.transferDetails();
+
+    final response = await http.get(
+      Uri.parse("${availabilityIP}get/all/availabilities"),
       headers: {'Content-Type': 'application/json',
-        HttpHeaders.authorizationHeader: "Bearer $token"},);
+        HttpHeaders.authorizationHeader: "Bearer ${user.accessToken}"},);
     var responseData = json.decode(response.body);
-    String day = "";
+
 
     for (var availability in responseData) {
       day = getDayStringFrontDayInt(availability["day_of_week"]);
@@ -78,64 +84,6 @@ class _BookingByTime extends State<BookingByTime> {
       }
     }
     setState(() {});
-  }
-
-  Future save(int doctorId, String date, String startTime) async {
-    await http.post(Uri.parse("${appointmentIP}set/appointment"),
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode({
-          'patient': await UserSecureStorage.getID(),
-          'doctor': doctorId,
-          'date': date,
-          'time': startTime,
-          'today': DateFormat("HH:mm:ss").format(DateTime.now()).toString()
-        }));
-    if (!mounted) return;
-    Navigator.push(
-        context,
-        PageTransition(
-            type: PageTransitionType.fade,
-            child: const HomePage()));
-  }
-
-  Future checkAppointment(int id, String date, String startTime) async {
-    final response = await http.get(Uri.parse(
-        "${appointmentIP}search/appointment/$id/$date/$startTime"));
-    var responseData = response.body;
-    if (responseData == 'true') {
-      alert("Successfully Booked the Appointment!!");
-      save(id, date, startTime);
-    } else {
-      alert(
-          "An appointment has already been made for this doctor on date selected");
-    }
-  }
-
-  final List<String> _hours = [
-    'Hour',
-    '09:00 - 10:00',
-    '10:00 - 11:00',
-    '11:00 - 12:00',
-    '12:00 - 13:00',
-    '13:00 - 14:00',
-    '14:00 - 15:00',
-    '15:00 - 16:00',
-    '16:00 - 17:00'
-  ];
-  String hourValue = 'Hour';
-
-  Future<String?> alert(String message) {
-    return showDialog<String>(
-        context: context,
-        builder: (BuildContext context) =>
-            AlertDialog(content: Text(message), actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context, 'OK');
-                },
-                child: const Text('OK'),
-              ),
-            ]));
   }
 
   Widget bookingList() {
@@ -162,12 +110,6 @@ class _BookingByTime extends State<BookingByTime> {
                 child: _createTable(),
               ))
         ]);
-  }
-
-  Widget setting() {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[const SizedBox(height: 10), Container()]);
   }
 
   Widget bookingByTime() {
@@ -276,12 +218,12 @@ class _BookingByTime extends State<BookingByTime> {
                                   initialDate: DateTime.now(),
                                   firstDate: DateTime.now(),
                                   lastDate: DateTime(2030),
-                                  selectableDayPredicate: (DateTime datetime) {
-                                    if (datetime.weekday == DateTime.sunday) {
-                                      return false;
-                                    }
-                                    return true;
-                                  },
+                                  // selectableDayPredicate: (DateTime datetime) {
+                                  //   if (datetime.weekday == DateTime.sunday) {
+                                  //     return false;
+                                  //   }
+                                  //   return true;
+                                  // },
                                   initialEntryMode:
                                       DatePickerEntryMode.calendarOnly,
                                 );
@@ -356,11 +298,11 @@ class _BookingByTime extends State<BookingByTime> {
                         height: 50,
                         onPressed: () {
                           if (doctorValue == 'Doctor') {
-                            alert("Select a doctor");
+                            alert("Select a doctor",context);
                           } else if (dateInput.text == "") {
-                            alert("Provide a date");
+                            alert("Provide a date",context);
                           } else if (hourValue == 'Hour') {
-                            alert("Select a hour range");
+                            alert("Select a hour range",context);
                           } else {
                             if ((_booking.any((element) => mapEquals(element, {
                                       'Doctor': doctorValue,
@@ -379,13 +321,13 @@ class _BookingByTime extends State<BookingByTime> {
                                 }
                               }
                               if (id == 0) {
-                                alert('Invalid Doctor ID');
+                                alert('Invalid Doctor ID',context);
                               } else {
                                 checkAppointment(id, dateInput.text,
-                                    hourValue.substring(0, 5));
+                                    hourValue.substring(0, 5),context);
                               }
                             } else {
-                              alert('Invalid Booking Appointment');
+                              alert('Invalid Booking Appointment',context);
                             }
                           }
                         },

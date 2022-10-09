@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nd_telemedicine/pages/profiles/remove_profile.dart';
 import 'package:page_transition/page_transition.dart';
-
 import '../utilities/custom_functions.dart';
 
 Future<String?> alert(String message, BuildContext context) {

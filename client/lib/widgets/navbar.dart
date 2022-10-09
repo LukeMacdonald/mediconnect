@@ -4,6 +4,7 @@ import 'package:nd_telemedicine/pages/booking/set_availability.dart';
 import 'package:nd_telemedicine/pages/booking/upcoming_appointment.dart';
 import 'package:nd_telemedicine/pages/chats/chats_menu_patient.dart';
 import 'package:nd_telemedicine/pages/booking/booking_by_time.dart';
+import 'package:nd_telemedicine/pages/prescriptions/patients_menu.dart';
 import 'package:nd_telemedicine/security/storage_service.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -273,8 +274,8 @@ class _DoctorBottomNavigationBar extends State<DoctorBottomNavigationBar> {
                 index:2,
                 label: "patients",
                 icon: CupertinoIcons.person_2,
-                isSelected: (widget.pageIndex==7),
-                page:const DoctorHomePage(),
+                isSelected: (widget.pageIndex==2),
+                page:const PatientsMenu(),
               ),
               NavigationBarItem(
                 label: "appointments",

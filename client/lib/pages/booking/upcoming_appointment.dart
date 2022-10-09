@@ -114,7 +114,7 @@ class _UpcomingAppointment extends State<UpcomingAppointment> {
               alignment: AlignmentDirectional(-1, 0.05),
               child: Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
-                child: Text('Appointments',
+                child: Text('Upcoming Appointments',
                   style: TextStyle(fontSize: 20),)
               ),
               ),
@@ -126,14 +126,14 @@ class _UpcomingAppointment extends State<UpcomingAppointment> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          centerTitle: false,
+          centerTitle: true,
           backgroundColor: Colors.transparent,
           elevation: 0,
           leading: AppBarItem(
             icon: CupertinoIcons.home,
             index: pageIndex,
           ),
-          title: const Text("Upcoming Appointments",
+          title: const Text("Appointments",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
@@ -178,7 +178,6 @@ class _UpcomingAppointment extends State<UpcomingAppointment> {
   void splitString(String detail) {
     details = detail.split(" | ");
   }
-
   Widget _createListView() {
     return ListView.builder(
         itemCount: _appointment.length,
