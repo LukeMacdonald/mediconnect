@@ -13,7 +13,7 @@ import javax.persistence.Id;
 @Entity
 public class HealthStatus{
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private int id;
 
     @Column(name="FeverOrChills")

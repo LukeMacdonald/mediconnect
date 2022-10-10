@@ -21,7 +21,7 @@ public class MessageController {
         if(messages.isEmpty()){
             return ResponseEntity.badRequest().body("No Messages Available");
         }
-        return ResponseEntity.badRequest().body(messages);
+        return ResponseEntity.ok().body(messages);
     }
 
     @GetMapping(value="/get/messages/{messageID}")
@@ -37,7 +37,7 @@ public class MessageController {
     public ResponseEntity<?> getMessageMenu(@PathVariable("senderID") int senderID) {
         List<?> individual = messageService.getMessageMenu(senderID);
         if(individual.isEmpty()){
-            return ResponseEntity.badRequest().body("No Doctors Available to Message");
+            return ResponseEntity.badRequest().body("No Previous Messages Available");
         }
         return ResponseEntity.ok(individual);
     }
