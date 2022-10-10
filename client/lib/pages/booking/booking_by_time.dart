@@ -1,7 +1,3 @@
-import 'dart:io';
-
-import 'package:page_transition/page_transition.dart';
-import '../../utilities/custom_functions.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -9,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../utilities/imports.dart';
 import 'dart:convert';
+import 'dart:io';
 
 class BookingByTime extends StatefulWidget {
-
-  const BookingByTime({Key? key}) : super(key: key);
-
+  final HealthStatus symptoms;
+  const BookingByTime({Key? key, required this.symptoms}) : super(key: key);
   @override
   State<BookingByTime> createState() => _BookingByTime();
 }
@@ -43,7 +39,6 @@ class _BookingByTime extends State<BookingByTime> {
   ];
   String hourValue = 'Hour';
 
-
   @override
   void initState() {
     dateInput.text = "";
@@ -52,6 +47,7 @@ class _BookingByTime extends State<BookingByTime> {
     super.initState();
 
   }
+
   Future getAvailability() async {
     User user = User();
     await user.transferDetails();
@@ -84,6 +80,50 @@ class _BookingByTime extends State<BookingByTime> {
       }
     }
     setState(() {});
+  }
+
+  Future checkAppointment(int id, String date, String startTime) async {
+    final response = await http.get(Uri.parse(
+        "${appointmentIP}search/appointment/$id/$date/$startTime"));
+    var responseData = response.body;
+    if (responseData == 'false') {
+      if(!mounted)return;
+      saveAppointment(id, date, startTime);
+    } else {
+      if(!mounted)return;
+      alert(
+          "An appointment has already been made for this doctor on date selected",context);
+    }
+  }
+
+  Future saveAppointment(int doctorId, String date, String startTime) async {
+    var response = await http.post(Uri.parse("${appointmentIP}set/appointment"),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'patient': await UserSecureStorage.getID(),
+          'doctor': doctorId,
+          'date': date,
+          'time': startTime,
+          'today': DateFormat("HH:mm:ss").format(DateTime.now()).toString()
+        }));
+    if(!mounted)return;
+    var responseData = response.body.toString();
+    widget.symptoms.id = int.parse(responseData);
+
+    await http.post(Uri.parse("${appointmentIP}set/healthstatus"),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'id': widget.symptoms.id,
+          'feverOrChills': widget.symptoms.fever,
+          'coughing': widget.symptoms.cough,
+          'fainting': widget.symptoms.faint,
+          'vomiting':widget.symptoms.vomiting,
+          'headaches':widget.symptoms.headache,
+          'description': widget.symptoms.description
+        }));
+
+    if(!mounted)return;
+    navigate(const HomePage(), context);
   }
 
   Widget bookingList() {
@@ -324,7 +364,7 @@ class _BookingByTime extends State<BookingByTime> {
                                 alert('Invalid Doctor ID',context);
                               } else {
                                 checkAppointment(id, dateInput.text,
-                                    hourValue.substring(0, 5),context);
+                                    hourValue.substring(0, 5));
                               }
                             } else {
                               alert('Invalid Booking Appointment',context);

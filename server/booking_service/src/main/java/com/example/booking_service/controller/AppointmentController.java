@@ -26,9 +26,9 @@ public class AppointmentController {
     }
     // Save appointment
     @PostMapping(value="/set/appointment")
-    public String saveAppointment(@RequestBody Appointment appoint){
+    public ResponseEntity<?> saveAppointment(@RequestBody Appointment appoint){
         appointRepo.save(appoint);
-        return "Appointment successfully saved";
+        return ResponseEntity.ok().body(appoint.getId());
     }
 
     // Search and return for docotors that the patients are booked with based on id.
@@ -45,6 +45,17 @@ public class AppointmentController {
         }
 
         return unique_doctors;
+    }
+    @GetMapping(value="/search/appointment_patients/{doctorID}")
+    public List<Integer> BookedPatientsList(@PathVariable("doctorID") int doctorID){
+        List<Appointment> booked_appointments = appointRepo.findAppointmentByDoctor(doctorID);
+        List<Integer> unique_patients = new ArrayList<>();
+        for (Appointment appointment : booked_appointments) {
+            if (!unique_patients.contains(appointment.getPatient())) {
+                unique_patients.add(appointment.getPatient());
+            }
+        }
+        return unique_patients;
     }
 
     // Search for all appointments based off the patient's id
