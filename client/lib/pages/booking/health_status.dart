@@ -1,10 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:nd_telemedicine/pages/booking/booking_by_time.dart';
-import 'package:nd_telemedicine/styles/theme.dart';
-
-import '../../widgets/buttons.dart';
-import '../../widgets/navbar.dart';
+import '../../utilities/imports.dart';
 
 class HeathStatusPage extends StatefulWidget {
   const HeathStatusPage({Key? key}) : super(key: key);
@@ -15,6 +11,10 @@ class HeathStatusPage extends StatefulWidget {
 
   class _HeathStatusPage extends State<HeathStatusPage> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  HealthStatus symptoms = HealthStatus();
+
+  TextEditingController description = TextEditingController();
 
 
   bool fever = false;
@@ -91,6 +91,7 @@ class HeathStatusPage extends StatefulWidget {
                         onChanged: (bool? value){
                           setState(() {
                             fever = value!;
+                            symptoms.fever = fever;
                           });
                     }),
                         CheckboxListTile(
@@ -103,6 +104,7 @@ class HeathStatusPage extends StatefulWidget {
                             onChanged: (bool? value){
                               setState(() {
                                 cough = value!;
+                                symptoms.cough = cough;
                               });
                             })
                         ,CheckboxListTile(
@@ -115,6 +117,7 @@ class HeathStatusPage extends StatefulWidget {
                             onChanged: (bool? value){
                               setState(() {
                                 headache = value!;
+                                symptoms.headache = headache;
                               });
                             })
                         ,CheckboxListTile(
@@ -127,6 +130,7 @@ class HeathStatusPage extends StatefulWidget {
                             onChanged: (bool? value){
                               setState(() {
                                 vomiting = value!;
+                                symptoms.vomiting = vomiting;
                               });
                             }),
                         CheckboxListTile(
@@ -139,6 +143,7 @@ class HeathStatusPage extends StatefulWidget {
                             onChanged: (bool? value){
                               setState(() {
                                 faint = value!;
+                                symptoms.faint = faint;
                               });
                             }),
                         const Padding(
@@ -156,7 +161,7 @@ class HeathStatusPage extends StatefulWidget {
                         child: Padding(
                             padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
                             child: TextFormField(
-                              //controller: textController,
+                              controller: description,
                               obscureText: false,
                               decoration: const InputDecoration(
                                 labelStyle: TextStyle(
@@ -190,8 +195,9 @@ class HeathStatusPage extends StatefulWidget {
                         width: 225,
                         height: 50,
                         onPressed: (){
+                          symptoms.description = description.text;
                           Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => const BookingByTime()));
+                              MaterialPageRoute(builder: (context) => BookingByTime(symptoms: symptoms,)));
                         }
                         ,
                       ),

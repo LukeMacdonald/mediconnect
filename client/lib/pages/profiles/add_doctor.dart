@@ -1,4 +1,3 @@
-import '../../utilities/custom_functions.dart';
 import '../../utilities/imports.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +24,53 @@ class _AddDoctor extends State<AddDoctor> {
       _changeEmail = !_changeEmail;
       email = newText;
     });
+  }
+
+  Future saveDoctor(String email) async {
+    String token = "";
+    await UserSecureStorage.getJWTToken().then((value) => token = value!);
+    try {
+      final response = await http.get(
+        Uri.parse("${authenticationIP}admin/add/doctor/verification/$email"),
+        headers: {
+          'Content-Type': 'application/json',
+          HttpHeaders.authorizationHeader: "Bearer $token"
+        },
+      );
+      switch (response.statusCode) {
+        case 201:
+          dynamic responseData = json.decode(response.body);
+          sendVerificationEmail(responseData['email'], responseData['code']);
+          break;
+        default:
+          var list = json.decode(response.body).values.toList();
+          throw Exception(list.join("\n\n"));
+      }
+    } catch (e) {
+      if(!mounted)return;
+      alert(e.toString().substring(11), context);
+    }
+  }
+
+  Future sendVerificationEmail(String email, int code) async {
+    try {
+      final response = await http.post(
+          Uri.parse("${communicationIP}send/html/mail"),
+          headers: {'Content-Type': 'application/json'},
+          body: json.encode({'email': email, 'code': code}));
+      switch (response.statusCode) {
+        case 202:
+          dynamic responseData = json.decode(response.body);
+          if(!mounted)return;
+          alert(responseData['message'], context);
+          break;
+        default:
+          var list = json.decode(response.body).values.toList();
+          throw Exception(list.join("\n\n"));
+      }
+    } catch (e) {
+      alert(e.toString().substring(11), context);
+    }
   }
 
   @override
@@ -76,8 +122,12 @@ class _AddDoctor extends State<AddDoctor> {
                 Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
                   child: Text(
-                    'Add Doctor',style: TextStyle(fontSize: 30),
-                  ),
+                    'Add Doctor',
+                    style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.secondary),
+                  )
                 ),
               ],
             ),
@@ -109,7 +159,7 @@ class _AddDoctor extends State<AddDoctor> {
               height: 50,
               onPressed: ()async {
                 if(email!="") {
-                  saveDoctor(email!,context);
+                  saveDoctor(email!);
                 } else {
                   alert("Email Not Entered!", context);
                 }

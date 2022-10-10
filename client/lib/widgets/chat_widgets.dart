@@ -1,10 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-import '../models/message_data.dart';
-import '../pages/chats/chat_screen.dart';
-import '../styles/theme.dart';
-import 'avatar.dart';
-import 'helpers.dart';
+import 'package:flutter/material.dart';
+import '../../utilities/imports.dart';
 
 class AppBarTitle extends StatelessWidget {
   const AppBarTitle({

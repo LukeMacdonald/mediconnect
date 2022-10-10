@@ -1,18 +1,38 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:nd_telemedicine/pages/profiles/view_profiles.dart';
 import 'package:nd_telemedicine/utilities/imports.dart';
-import '../pages/prescriptions/add_prescription.dart';
 
 class ProfileTile extends StatefulWidget {
   final User user;
   const ProfileTile({Key? key, required this.user}) : super(key: key);
 
   @override
-  _ProfileTileState createState() => _ProfileTileState();
+  State<ProfileTile> createState() => _ProfileTile();
 }
 
-class _ProfileTileState extends State<ProfileTile> {
+class _ProfileTile extends State<ProfileTile> {
+
+  Future<String?> deleteAccount(String email,String role, BuildContext context) {
+    return showDialog<String>(
+        context: context,
+        builder: (BuildContext context) =>
+            AlertDialog(content: const Text("Are you sure you want to remove account?"), actions: <Widget>[
+              TextButton(
+                onPressed: () async {
+                  await deleteProfile(email);
+                  if(!mounted)return;
+                  navigate(RemoveProfile(role: role), context);
+                },
+                child: const Text('Confirm'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context, 'Cancel');
+                },
+                child: const Text('Cancel'),
+              ),
+            ]));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +58,7 @@ class _ProfileTileState extends State<ProfileTile> {
                     ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text("Name: ${widget.user.firstName} ${widget.user.lastName}",style: TextStyle(fontSize: 14)),
+                    child: Text("Name: ${widget.user.firstName} ${widget.user.lastName}",style: const TextStyle(fontSize: 14)),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -67,10 +87,10 @@ class PatientTile extends StatefulWidget {
   const PatientTile({Key? key, required this.user, required this.id}) : super(key: key);
 
   @override
-  _PatientTileState createState() => _PatientTileState ();
+  State<PatientTile> createState() => _PatientTile();
 }
 
-class _PatientTileState extends State<PatientTile> {
+class _PatientTile extends State<PatientTile> {
   final scrollController = ScrollController();
 
   @override

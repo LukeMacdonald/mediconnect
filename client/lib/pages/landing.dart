@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
 import '../utilities/imports.dart';
 
 
@@ -12,8 +11,6 @@ class Landing extends StatefulWidget {
 
 class _Landing extends State<Landing> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -100,11 +97,7 @@ class _Landing extends State<Landing> {
                               width: 225,
                               height: 50,
                               onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    PageTransition(
-                                        type: PageTransitionType.fade,
-                                        child: const LogIn()));
+                                navigate(const LogIn(), context);
                               },
                             ),
                             const Padding(
@@ -123,11 +116,7 @@ class _Landing extends State<Landing> {
                                 width: 225,
                                 height: 50,
                                 onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      PageTransition(
-                                          type: PageTransitionType.fade,
-                                          child: const Register()));
+                                  navigate(const Register(), context);
                                 }),
                           ],
                         ),

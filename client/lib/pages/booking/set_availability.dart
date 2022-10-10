@@ -1,6 +1,4 @@
 import 'dart:io';
-
-import '../../utilities/custom_functions.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

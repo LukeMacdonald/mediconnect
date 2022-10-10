@@ -1,24 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:nd_telemedicine/pages/booking/set_availability.dart';
-import 'package:nd_telemedicine/pages/booking/upcoming_appointment.dart';
-import 'package:nd_telemedicine/pages/chats/chats_menu_patient.dart';
-import 'package:nd_telemedicine/pages/booking/booking_by_time.dart';
-import 'package:nd_telemedicine/pages/prescriptions/patients_menu.dart';
-import 'package:nd_telemedicine/security/storage_service.dart';
 import 'package:page_transition/page_transition.dart';
-
-import '../models/user.dart';
-import '../pages/chats/chats_menu_doctor.dart';
-import '../pages/homepage/admin_home.dart';
-import '../pages/homepage/doctor_home.dart';
-import '../pages/homepage/home_page.dart';
-import '../pages/landing.dart';
-import '../pages/profiles/log_in.dart';
-import '../pages/profiles/view_profiles.dart';
-import '../styles/theme.dart';
-//
-
+import '../../utilities/imports.dart';
 
 class AppBarItem extends StatefulWidget {
   const AppBarItem( {
@@ -88,8 +71,8 @@ class _AppBarItem extends State<AppBarItem> {
 
 }
 
-class CustomBBottomNavigationBar extends StatefulWidget {
-  const CustomBBottomNavigationBar({
+class PatientBottomNavigationBar extends StatefulWidget {
+  const PatientBottomNavigationBar({
     Key? key,
     required this.pageIndex,
   }) : super(key: key);
@@ -98,10 +81,10 @@ class CustomBBottomNavigationBar extends StatefulWidget {
   final int pageIndex ;
 
   @override
-  State<CustomBBottomNavigationBar> createState() => _CustomBBottomNavigationBar();
+  State<PatientBottomNavigationBar> createState() => _PatientBottomNavigationBar();
 }
 
-class _CustomBBottomNavigationBar extends State<CustomBBottomNavigationBar> {
+class _PatientBottomNavigationBar extends State<PatientBottomNavigationBar> {
 
 
   @override
@@ -133,7 +116,7 @@ class _CustomBBottomNavigationBar extends State<CustomBBottomNavigationBar> {
                   icon: CupertinoIcons.calendar,
                   index: 3,
                   isSelected: (widget.pageIndex==3),
-                  page:const UpcomingAppointment(),
+                  page:const UpcomingAppointment(role: "patient",),
               )
               //_NavigationBarItem(),
               //_NavigationBarItem(),
@@ -199,6 +182,7 @@ class NavigationBarItem extends StatelessWidget {
     );
   }
 }
+
 class CustomAppBar extends StatelessWidget {
   const CustomAppBar({
     Key? key,
@@ -282,10 +266,8 @@ class _DoctorBottomNavigationBar extends State<DoctorBottomNavigationBar> {
                 icon: CupertinoIcons.calendar,
                 index: 3,
                 isSelected: (widget.pageIndex==8),
-                page:const SetAvailability(),
-              )
-              //_NavigationBarItem(),
-              //_NavigationBarItem(),
+                page:const UpcomingAppointment(role: "doctor"),
+              ),
             ],
           ),
         )
@@ -293,11 +275,15 @@ class _DoctorBottomNavigationBar extends State<DoctorBottomNavigationBar> {
 
   }
 }
-class AppDropDown extends StatelessWidget {
+class AppDropDown extends StatefulWidget {
   const AppDropDown({
     Key? key,
   }) : super(key: key);
 
+  @override
+  State<AppDropDown> createState() => _AppDropDown();
+}
+class _AppDropDown extends State<AppDropDown>{
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton(
@@ -351,7 +337,7 @@ class AppDropDown extends StatelessWidget {
             ),
           ];
         },
-        onSelected:(value){
+        onSelected:(value) async {
           if(value == 0){
             Navigator.push(
                 context,
@@ -362,6 +348,8 @@ class AppDropDown extends StatelessWidget {
           }else if(value == 1){
 
           }else if(value == 2){
+            await UserSecureStorage.logOut();
+            if(!mounted)return;
             Navigator.push(
                 context,
                 PageTransition(

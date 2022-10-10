@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:numberpicker/numberpicker.dart';
-
 import '../../widgets/buttons.dart';
-import '../../widgets/form_widgets.dart';
+
 
 class AddPrescription extends StatefulWidget {
   const AddPrescription({Key? key}) : super(key: key);
@@ -13,7 +11,6 @@ class AddPrescription extends StatefulWidget {
 }
 
 class _AddPrescription extends State<AddPrescription> {
-  int _currentValue = 0;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(

@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:nd_telemedicine/pages/profiles/remove_profile.dart';
 import '../../utilities/imports.dart';
 
 class AdminHomePage extends StatefulWidget {

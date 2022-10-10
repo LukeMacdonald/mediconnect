@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:nd_telemedicine/widgets/profile_tile.dart';
-
 import '../../utilities/imports.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';

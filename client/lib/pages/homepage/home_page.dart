@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:nd_telemedicine/pages/booking/upcoming_appointment.dart';
-import 'package:nd_telemedicine/pages/chats/chats_menu_patient.dart';
 import '../../utilities/imports.dart';
 
 class HomePage extends StatefulWidget {
@@ -92,7 +90,7 @@ class _HomePage extends State<HomePage> {
                                     color: Colors.white,
                                     size: 50,
                                   ),
-                                  const UpcomingAppointment(),
+                                  const UpcomingAppointment(role:"patient"),
                                   'Upcoming Appointment',
                                   context),
                             ],
@@ -123,7 +121,7 @@ class _HomePage extends State<HomePage> {
                     ),
                   ],
                 ),
-        bottomNavigationBar:const CustomBBottomNavigationBar(pageIndex: 0));
+        bottomNavigationBar:const PatientBottomNavigationBar(pageIndex: 0));
   }
 }
 

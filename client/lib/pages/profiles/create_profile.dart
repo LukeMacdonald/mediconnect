@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:nd_telemedicine/utilities/custom_functions.dart';
 import '../../utilities/imports.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'dart:io';
+
 
 class ProfileCreation extends StatefulWidget {
 
@@ -11,10 +14,40 @@ class ProfileCreation extends StatefulWidget {
 }
 class _ProfileCreation extends State<ProfileCreation> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  Future savePatient(BuildContext context) async {
+    String token = "";
+    await UserSecureStorage.getJWTToken().then((value) => token = value!);
+    await http.put(Uri.parse("${authenticationIP}update"),
+        headers: {
+          'Content-Type': 'application/json',
+          HttpHeaders.authorizationHeader: token
+        },
+        body: json.encode({
+          'email': await UserSecureStorage.getEmail(),
+          'password': await UserSecureStorage.getPassword(),
+          'role': await UserSecureStorage.getRole(),
+          'firstName': await UserSecureStorage.getFirstName(),
+          'lastName': await UserSecureStorage.getLastName(),
+          'phoneNumber': await UserSecureStorage.getPhoneNumber(),
+          'dob': await UserSecureStorage.getDOB(),
+        }));
+    if (await UserSecureStorage.getRole() == 'patient' ||
+        await UserSecureStorage.getRole() == 'Patient') {
+      if(!mounted)return;
+      navigate(const HomePage(), context);
+    } else if (await UserSecureStorage.getRole() == 'doctor' ||
+        await UserSecureStorage.getRole() == 'Doctor') {
+      if(!mounted)return;
+      navigate(const DoctorHomePage(), context);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -87,36 +120,37 @@ class _ProfileCreation extends State<ProfileCreation> {
                     const UserGivenPhoneNumber(),
                     const UserGivenPassword(),
                     const UserGivenConfirmPassword(),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical:40,horizontal: 80),
+                        child: SubmitButton(
+                          color: Colors.teal,
+                          message: "Submit",
+                          width: 100,
+                          height: 50,
+                          onPressed: () async {
+                            if (await UserSecureStorage.getFirstName() == "" || await UserSecureStorage.getFirstName() == null) {
+                              alert("Please Enter Your First Name!", context);
+                            } else if (await UserSecureStorage.getLastName() == "" || await UserSecureStorage.getLastName() == null) {
+                              alert("Please Enter Your Last Name!", context);
+                            } else if (await UserSecureStorage.getDOB() == "" || await UserSecureStorage.getDOB() == null) {
+                              alert("Please Enter Your Date of Birth!", context);
+                            } else if (await UserSecureStorage.getFirstName() == "" || await UserSecureStorage.getPhoneNumber() == null) {
+                              alert("Please Enter Your Phone Number!", context);
+                            } else if (await UserSecureStorage.getPassword() == "" || await UserSecureStorage.getPassword()== null) {
+                              alert("Please Enter Your Password!", context);
+                            } else if (await UserSecureStorage.getConfirmPassword() == "" || await UserSecureStorage.getConfirmPassword() == null) {
+                              alert("Please Confirm Your Password!", context);
+                            } else if (await UserSecureStorage.getConfirmPassword()!= await UserSecureStorage.getPassword()) {
+                              alert("Passwords Did Not Match!", context);
+                            } else {
+                              savePatient(context);
+                            }
+                          },
+                        ),
+                      ),
                     ]),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical:10),
-                    child: SubmitButton(
-                      color: Colors.teal,
-                      message: "Submit",
-                      width: 220,
-                      height: 50,
-                      onPressed: () async {
-                        if (await UserSecureStorage.getFirstName() == "" || await UserSecureStorage.getFirstName() == null) {
-                          alert("Please Enter Your First Name!", context);
-                        } else if (await UserSecureStorage.getLastName() == "" || await UserSecureStorage.getLastName() == null) {
-                          alert("Please Enter Your Last Name!", context);
-                        } else if (await UserSecureStorage.getDOB() == "" || await UserSecureStorage.getDOB() == null) {
-                          alert("Please Enter Your Date of Birth!", context);
-                        } else if (await UserSecureStorage.getFirstName() == "" || await UserSecureStorage.getPhoneNumber() == null) {
-                          alert("Please Enter Your Phone Number!", context);
-                        } else if (await UserSecureStorage.getPassword() == "" || await UserSecureStorage.getPassword()== null) {
-                          alert("Please Enter Your Password!", context);
-                        } else if (await UserSecureStorage.getConfirmPassword() == "" || await UserSecureStorage.getConfirmPassword() == null) {
-                          alert("Please Confirm Your Password!", context);
-                        } else if (await UserSecureStorage.getConfirmPassword()!= await UserSecureStorage.getPassword()) {
-                          alert("Passwords Did Not Match!", context);
-                        } else {
-                          savePatient(context);
-                        }
-                      },
-                    ),
-                  ),
+
                 ]),
             )));
   }

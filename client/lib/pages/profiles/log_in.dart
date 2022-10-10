@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-import '../../utilities/custom_functions.dart';
+import 'package:http/http.dart' as http;
 import '../../utilities/imports.dart';
+import 'dart:convert';
 
 class LogIn extends StatefulWidget {
   const LogIn({Key? key}) : super(key: key);
@@ -22,6 +25,59 @@ class _LogIn extends State<LogIn> {
       _changeEmail = !_changeEmail;
       email = newText;
     });
+  }
+
+  Future login() async {
+    var response = await http.post(Uri.parse("${authenticationIP}login"),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'email': await UserSecureStorage.getEmail(),
+          'password': await UserSecureStorage.getPassword()
+        }));
+
+    var responseData = json.decode(response.body);
+
+    if (responseData['status'] == 401) {
+      if (!mounted)return;
+      alert("User does not exist", context);
+    } else {
+      UserSecureStorage.setJWTToken(responseData['access_token']);
+
+      String token = "";
+      await UserSecureStorage.getJWTToken().then((value) => token = value!);
+
+      response = await http.get(
+          Uri.parse(
+              "${authenticationIP}get/${await UserSecureStorage.getEmail()}"),
+          headers: {
+            'Content-Type': 'application/json',
+            HttpHeaders.authorizationHeader: token,
+          });
+      responseData = json.decode(response.body);
+
+      await UserSecureStorage.setID(responseData['id'].toString());
+      await UserSecureStorage.setRole(responseData['role']);
+
+      if (responseData['firstName'] == null) {
+        if (!mounted)return;
+        navigate(const ProfileCreation(), context);
+      } else if (responseData['role'] == "patient") {
+        await UserSecureStorage().setDetails(responseData);
+        if (!mounted)return;
+        navigate(const HomePage(), context);
+      } else if (responseData['role'] == "doctor") {
+        await UserSecureStorage().setDetails(responseData);
+        if (!mounted)return;
+        navigate(const DoctorHomePage(), context);
+      } else if (responseData['role'] == "superuser") {
+        await UserSecureStorage().setDetails(responseData);
+        if (!mounted)return;
+        navigate(const AdminHomePage(), context);
+      } else {
+        if (!mounted)return;
+        alert("Error Logging In", context);
+      }
+    }
   }
 
   @override
@@ -98,19 +154,19 @@ class _LogIn extends State<LogIn> {
                           UserEmail(changeClassValue: changeEmailValue),
                           const UserGivenPassword(),
                           Padding(
-                            padding: const EdgeInsets.all(20.0),
+                            padding: const EdgeInsets.all(40.0),
                             child: SizedBox(
                                 width: double.infinity,
                                 child: Column(
                                     mainAxisSize: MainAxisSize.max,
                                     children: [
                                       SubmitButton(
-                                        color: Colors.lightBlueAccent,
+                                        color: AppColors.secondary,
                                         message: "Sign in",
                                         width: 225,
                                         height: 50,
                                         onPressed: () {
-                                          login(context);
+                                          login();
                                         },
                                       ),
                                     ])),

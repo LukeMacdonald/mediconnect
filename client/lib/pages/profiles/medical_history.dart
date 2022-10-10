@@ -336,7 +336,7 @@ class _MedicalHistory extends State<MedicalHistory> {
                         style: TextStyle(
                           fontWeight: FontWeight.w800,
                           fontSize: 30,
-                          color: Color(0xFF2190E5),
+                          color: AppColors.secondary,
                         ),
                       ),
                     ),

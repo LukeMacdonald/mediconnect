@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../../utilities/imports.dart';
-import '../../utilities/custom_functions.dart';
 
 class ChatMenuDoctor extends StatefulWidget {
   const ChatMenuDoctor({Key? key}) : super(key: key);
@@ -13,43 +12,56 @@ class ChatMenuDoctor extends StatefulWidget {
 }
 
 class _ChatMenuDoctor extends State<ChatMenuDoctor> {
-  late List<MessageData> _messages;
-  late List<String> _names;
+  late List<Widget> _messages;
   final int pageIndex = 1;
 
   Future<void> getMessages() async {
-    String id = "";
-    await UserSecureStorage.getID().then((value) => id = value!);
-    var response = await http.get(
-        Uri.parse("${messageIP}get/message_menu/${int.parse(id)}"),
-        headers: {'Content-Type': 'application/json'});
-    var responses = json.decode(response.body) as List;
-    MessageData message;
-    for (var element in responses) {
-      message = MessageData(
-          element['messageID'],
-          element['senderID'],
-          element['receiverID'],
-          DateTime.parse(element['timestamp']),
-          element['message'],
-          element['viewed'] as bool);
-      String name = await getName(message.receiverID);
-      setState(() {
-        _messages.add(message);
-        _names.add(name);
-      });
+    try {
+      String id = "";
+      await UserSecureStorage.getID().then((value) => id = value!);
+      var response = await http.get(
+          Uri.parse("${messageIP}get/message_menu/${int.parse(id)}"),
+          headers: {'Content-Type': 'application/json'});
+      switch (response.statusCode) {
+        case 200:
+          var responses = json.decode(response.body) as List;
+          MessageData message;
+          for (var element in responses) {
+            message = MessageData(
+                element['messageID'],
+                element['senderID'],
+                element['receiverID'],
+                DateTime.parse(element['timestamp']),
+                element['message'],
+                element['viewed'] as bool);
+            String name = await getName(message.receiverID);
+            _messages.add(ChatTile(messageData: message,name:name));
+          }
+          setState(() {});
+          break;
+        case 400:
+          _messages.add(Center(child:Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Text(response.body),
+          )));
+          setState(() {});
+          break;
+        default:
+          var list = json.decode(response.body).values.toList();
+          throw Exception(list.join("\n\n"));
+      }
+    } catch (e) {
+      alert(e.toString().substring(11), context);
     }
   }
-
-
 
   @override
   void initState() {
     _messages = [];
-    _names = [];
     getMessages();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,10 +92,7 @@ class _ChatMenuDoctor extends State<ChatMenuDoctor> {
                   child: ListView.builder(
                     itemCount: _messages.length,
                     itemBuilder: (context, index) {
-                      return ChatTile(
-                        messageData: _messages[index],
-                        name: _names[index],
-                      );
+                      return _messages[index];
                     },
                   ))),
         ]),

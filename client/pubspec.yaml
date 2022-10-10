@@ -45,12 +45,13 @@ dependencies:
   cached_network_image: ^3.2.1
   faker: ^2.0.0
   helpers: ^1.1.4
-  stream_chat_flutter_core: ^4.6.0
+  stream_chat_flutter_core: ^5.0.0
   jiffy: ^5.0.0
   logger: ^1.1.0
   rethink_db_ns: ^0.0.4
   flutter_secure_storage: ^6.0.0
   get: ^4.6.5
+  numberpicker: ^2.1.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

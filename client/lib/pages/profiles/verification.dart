@@ -28,9 +28,6 @@ class _Verification extends State<Verification> {
   }
 
   Future<void> validateSave() async {
-    String email = "";
-    var data = await UserSecureStorage().doctorToJson(int.parse(code!));
-    await UserSecureStorage.getEmail().then((value) => email = value!);
     if (code == "" || code == null) {
       if(!mounted) return;
       alert("No Code Entered!", context);

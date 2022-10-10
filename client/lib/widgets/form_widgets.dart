@@ -473,6 +473,7 @@ class DoctorCode extends StatefulWidget {
 }
 
 class _DoctorCode extends State<DoctorCode> {
+
   final textController = TextEditingController();
   @override
   Widget build(BuildContext context) {

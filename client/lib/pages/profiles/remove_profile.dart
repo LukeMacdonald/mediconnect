@@ -1,43 +1,43 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:nd_telemedicine/widgets/profile_tile.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:http/http.dart' as http;
 import '../../utilities/imports.dart';
 import 'dart:async';
 import 'dart:convert';
 
-
 class RemoveProfile extends StatefulWidget {
   final String role;
   const RemoveProfile({Key? key, required this.role}) : super(key: key);
 
   @override
-  _RemoveProfileState createState() => _RemoveProfileState();
+  State<RemoveProfile> createState() => _RemoveProfile();
 }
 
-class _RemoveProfileState extends State<RemoveProfile> {
-  
+class _RemoveProfile extends State<RemoveProfile> {
   late List<User> users;
 
   Future getUsers() async {
-
-    var response = await http.get(
+    try {
+      var response = await http.get(
           Uri.parse("${authenticationIP}get/users/role/${widget.role}"),
           headers: {'Content-Type': 'application/json'});
-
-      var responses = json.decode(response.body) as List;
-
-      for (var element in responses) {
-        User user = User();
-        if(element['firstName'] != null) {
-          user.setDetails(element);
-          users.add(user);
-          setState(() {});
-        }
+      switch (response.statusCode) {
+        case 200:
+          var responses = json.decode(response.body) as List;
+          for (var element in responses) {
+            User user = User();
+            if (element['firstName'] != null) {
+              user.setDetails(element);
+              users.add(user);
+              setState(() {});
+            }
+          }
       }
+    } catch (e) {
+      alert(e.toString().substring(11), context);
     }
-
+  }
 
   @override
   void initState() {
@@ -76,9 +76,8 @@ class _RemoveProfileState extends State<RemoveProfile> {
             //_
             body: ListView.builder(
                 itemCount: users.length,
-                itemBuilder: (BuildContext context, int index){
-                  return ProfileTile(user:users[index]);
-                })
-        ));
+                itemBuilder: (BuildContext context, int index) {
+                  return ProfileTile(user: users[index]);
+                })));
   }
 }

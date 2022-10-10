@@ -7,23 +7,18 @@ import '../../utilities/imports.dart';
 import 'dart:async';
 import 'dart:convert';
 
-import '../profiles/view_profiles.dart';
-
 class ChatScreen extends StatefulWidget {
   final MessageData messageData;
   final String name;
 
-  const ChatScreen(
-      {Key? key,
-        required this.messageData,
-        required this.name})
+  const ChatScreen({Key? key, required this.messageData, required this.name})
       : super(key: key);
 
   @override
   State<ChatScreen> createState() => _ChatScreen();
 }
-class _ChatScreen extends State<ChatScreen> {
 
+class _ChatScreen extends State<ChatScreen> {
   final ScrollController _scrollController = ScrollController();
   late MessageData messageData = widget.messageData;
   late String name = widget.name;
@@ -34,86 +29,115 @@ class _ChatScreen extends State<ChatScreen> {
   int otherID = -1;
 
   Future<void> getMessages() async {
-    var response = await http.get(
-        Uri.parse(
-            "${messageIP}get/messages/"
-                "${messageData.senderID}/"
-                "${messageData.receiverID}"),
-        headers: {'Content-Type': 'application/json'});
-    var responses = json.decode(response.body) as List;
-    MessageData message;
-    for (var element in responses) {
-      message = MessageData(
-          element['messageID'], element['senderID'],
-          element['receiverID'], DateTime.parse(element['timestamp']),
-          element['message'], element['viewed'] as bool);
+    try {
+      var response = await http.get(
+          Uri.parse("${messageIP}get/messages/"
+              "${messageData.senderID}/"
+              "${messageData.receiverID}"),
+          headers: {'Content-Type': 'application/json'});
+      switch (response.statusCode) {
 
-      String id = "";
-      await UserSecureStorage.getID().then((value) => id = value!);
+        case 200:
+          var responses = json.decode(response.body) as List;
+          MessageData message;
+          for (var element in responses) {
+            message = MessageData(
+                element['messageID'],
+                element['senderID'],
+                element['receiverID'],
+                DateTime.parse(element['timestamp']),
+                element['message'],
+                element['viewed'] as bool);
+            String id = "";
+            await UserSecureStorage.getID().then((value) => id = value!);
 
-      if (message.senderID == int.parse(id)) {
-        items.add(MessageOwnTile(message: message.message, messageDate: ""));
-        otherID = message.receiverID;
+            if (message.senderID == int.parse(id)) {
+              items.add(
+                  MessageOwnTile(message: message.message, messageDate: ""));
+              otherID = message.receiverID;
+            } else {
+              items.add(MessageTile(message: message.message, messageDate: ""));
+              otherID = message.senderID;
+            }
+            _scrollController.animateTo(
+                _scrollController.position.maxScrollExtent,
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.easeOut);
+            setState(() {});
+          }
+          break;
+        default:
+          var list = json.decode(response.body).values.toList();
+
+          throw Exception(list.join("\n\n"));
       }
-      else {
-        items.add(MessageTile(message: message.message, messageDate: ""));
-        otherID = message.senderID;
-      }
-      _scrollController.animateTo(_scrollController.position.maxScrollExtent, duration: const Duration(milliseconds: 500), curve: Curves.easeOut);
-      setState(() {});
+    } catch (e) {
+      alert(e.toString().substring(11), context);
     }
   }
+
   Future<void> sendMessage(String message) async {
-    var now = DateTime.now();
-    var formatter = DateFormat('yyyy-MM-dd');
-    String formattedDate = formatter.format(now);
-    await http.post(Uri.parse("${messageIP}post/message"),
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode({
-          'senderID': messageData.senderID,
-          'receiverID': messageData.receiverID,
-          'timestamp': formattedDate,
-          'message': message,
-          'viewed': false,
-        })
-    );
+    try {
+      var now = DateTime.now();
+      var formatter = DateFormat('yyyy-MM-dd');
+      String formattedDate = formatter.format(now);
+      await http.post(Uri.parse("${messageIP}post/message"),
+          headers: {'Content-Type': 'application/json'},
+          body: json.encode({
+            'senderID': messageData.senderID,
+            'receiverID': messageData.receiverID,
+            'timestamp': formattedDate,
+            'message': message,
+            'viewed': false,
+          }));
+    } catch (e) {
+      alert(e.toString().substring(11), context);
+    }
   }
   Future getUnreadMessages() async {
     MessageData message;
     while (true) {
-      var response = await http.get(
-          Uri.parse(
-              "${messageIP}get/unread/message/"
-                  "${messageData.senderID}/"
-                  "${messageData.receiverID}"),
-          headers: {'Content-Type': 'application/json'});
-      if (response.statusCode == 200) {
-        var element = json.decode(response.body);
-        message = MessageData(
-            element['messageID'],
-            element['senderID'],
-            element['receiverID'],
-            DateTime.parse(element['timestamp']),
-            element['message'],
-            element['viewed'] as bool);
-        String id = "";
-        await UserSecureStorage.getID().then((value) => id = value!);
-        if (mounted) {
-          setState(() {
-            if (message.senderID == int.parse(id)) {
-              items.add(
-                  MessageOwnTile(message: message.message, messageDate: ""));
-            } else {
-              items.add(MessageTile(message: message.message, messageDate: ""));
+      try {
+        var response = await http.get(
+            Uri.parse("${messageIP}get/unread/message/"
+                "${messageData.senderID}/"
+                "${messageData.receiverID}"),
+            headers: {'Content-Type': 'application/json'});
+        switch (response.statusCode) {
+          case 200:
+            var element = json.decode(response.body);
+            message = MessageData(
+                element['messageID'],
+                element['senderID'],
+                element['receiverID'],
+                DateTime.parse(element['timestamp']),
+                element['message'],
+                element['viewed'] as bool);
+            String id = "";
+            await UserSecureStorage.getID().then((value) => id = value!);
+            if (mounted) {
+              setState(() {
+                if (message.senderID == int.parse(id)) {
+                  items.add(MessageOwnTile(
+                      message: message.message, messageDate: ""));
+                } else {
+                  items.add(
+                      MessageTile(message: message.message, messageDate: ""));
+                }
+              });
             }
-          });
+            if (mounted) {
+              setState(() {});
+            }
+            break;
+          default:
+            var list = json.decode(response.body).values.toList();
+            throw Exception(list.join("\n\n"));
         }
-        if (mounted) {
-          setState(() {});
-        }
+      } catch (e) {
+        //alert(e.toString().substring(11), context);
       }
     }
-
   }
 
   @override
@@ -125,33 +149,33 @@ class _ChatScreen extends State<ChatScreen> {
     getUnreadMessages();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: ()=>FocusScope.of(context).unfocus(),
-
-    child:Scaffold(
-      appBar: AppBar(
-          iconTheme: Theme.of(context).iconTheme,
-          centerTitle: false,
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          leadingWidth: 54,
-          leading: Align(
-            alignment: Alignment.centerRight,
-            child: IconBackground(
-              icon: CupertinoIcons.back,
-              onTap: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ),
-          title: AppBarTitle(name: name),
-          actions: [
-            Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Center(
-                    child: IconBorder(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: Scaffold(
+          appBar: AppBar(
+              iconTheme: Theme.of(context).iconTheme,
+              centerTitle: false,
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              leadingWidth: 54,
+              leading: Align(
+                alignment: Alignment.centerRight,
+                child: IconBackground(
+                  icon: CupertinoIcons.back,
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ),
+              title: AppBarTitle(name: name),
+              actions: [
+                Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Center(
+                        child: IconBorder(
                       icon: CupertinoIcons.person,
                       onTap: () {
                         Navigator.push(
@@ -161,68 +185,71 @@ class _ChatScreen extends State<ChatScreen> {
                                 child: ViewOtherProfile(id: otherID)));
                       },
                     )))
-          ]),
-      //_
-      body: Column(
-        children: [
-          Expanded(
-              child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: ListView.builder(
-                    controller: _scrollController,
-                    itemCount: items.length,
-                    itemBuilder: (context, index) {
-                      return items[index];
-                    },
-                  ))),
-          SafeArea(
-              bottom: true,
-              top: false,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Card(
-                        color: Theme.of(context).cardColor,
+              ]),
+          //_
+          body: Column(
+            children: [
+              Expanded(
+                  child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: ListView.builder(
+                        controller: _scrollController,
+                        itemCount: items.length,
+                        itemBuilder: (context, index) {
+                          return items[index];
+                        },
+                      ))),
+              SafeArea(
+                  bottom: true,
+                  top: false,
+                  child: Row(
+                    children: [
+                      Expanded(
                         child: Padding(
-                          padding: const EdgeInsets.only(
-                              left: 16, bottom: 10, top: 10),
-                          child: TextFormField(
-                            autofocus: true,
-                            controller: textEditingController,
-                            style: const TextStyle(fontSize: 14.0),
-                            decoration: const InputDecoration(
-                              hintText: "Enter Message Here",
-                              border: InputBorder.none,
+                          padding: const EdgeInsets.all(4.0),
+                          child: Card(
+                            color: Theme.of(context).cardColor,
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 16, bottom: 10, top: 10),
+                              child: TextFormField(
+                                autofocus: true,
+                                controller: textEditingController,
+                                style: const TextStyle(fontSize: 14.0),
+                                decoration: const InputDecoration(
+                                  hintText: "Enter Message Here",
+                                  border: InputBorder.none,
+                                ),
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                  Padding(
-                      padding: const EdgeInsets.only(
-                          left: 12, right: 24, bottom: 10, top: 10),
-                      child: GlowingActionButton(
-                        color: AppColors.accent,
-                        icon: Icons.send_rounded,
-                        onPressed: () {
-                          setState(() {
-                            sendMessage(textEditingController.text);
-                            items.add(MessageOwnTile(
-                                message: textEditingController.text,
-                                messageDate: ""));
-                            textEditingController.clear();
-                            _scrollController.animateTo(_scrollController.position.maxScrollExtent, duration: const Duration(milliseconds: 500), curve: Curves.easeOut);
-                            name = name;
-                          });
-                        },
-                      ))
-                ],
-              )),
-        ],
-      ),
-    ));
+                      Padding(
+                          padding: const EdgeInsets.only(
+                              left: 12, right: 24, bottom: 10, top: 10),
+                          child: GlowingActionButton(
+                            color: AppColors.accent,
+                            icon: Icons.send_rounded,
+                            onPressed: () {
+                              setState(() {
+                                sendMessage(textEditingController.text);
+                                items.add(MessageOwnTile(
+                                    message: textEditingController.text,
+                                    messageDate: ""));
+                                textEditingController.clear();
+                                _scrollController.animateTo(
+                                    _scrollController.position.maxScrollExtent,
+                                    duration: const Duration(milliseconds: 500),
+                                    curve: Curves.easeOut);
+                                name = name;
+                              });
+                            },
+                          ))
+                    ],
+                  )),
+            ],
+          ),
+        ));
   }
 }

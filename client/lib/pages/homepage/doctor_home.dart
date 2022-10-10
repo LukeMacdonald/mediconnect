@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:nd_telemedicine/pages/chats/chats_menu_doctor.dart';
 import '../../utilities/imports.dart';
 
 class DoctorHomePage extends StatefulWidget {
@@ -92,7 +91,7 @@ class _DoctorHomePage extends State<DoctorHomePage> {
                                   color: Colors.white,
                                   size: 50,
                                 ),
-                                const BookingByTime(),
+                                const DoctorHomePage(),
                                 'Update Appointments',
                                 context),
                           ],
@@ -117,7 +116,7 @@ class _DoctorHomePage extends State<DoctorHomePage> {
                                     color: Colors.white,
                                     size: 50,
                                   ),
-                                  const DoctorHomePage(),
+                                  const UpcomingAppointment(role: "doctor"),
                                   'Upcoming Appointments',
                                   context,
                                 ),

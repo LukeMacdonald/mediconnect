@@ -2,10 +2,8 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:nd_telemedicine/pages/chats/new_chat.dart';
 import 'package:page_transition/page_transition.dart';
 import '../../utilities/imports.dart';
-import '../../utilities/custom_functions.dart';
 
 class ChatMenuPatient extends StatefulWidget {
   const ChatMenuPatient({Key? key}) : super(key: key);
@@ -15,43 +13,57 @@ class ChatMenuPatient extends StatefulWidget {
 }
 
 class _ChatMenuPatient extends State<ChatMenuPatient> {
-  late List<MessageData> _messages;
-  late List<String> _names;
+  late List<Widget> _messages;
+
   final int pageIndex = 1;
 
   Future<void> getMessages() async {
-    String id = "";
-    await UserSecureStorage.getID().then((value) => id = value!);
-    var response = await http.get(
-        Uri.parse("${messageIP}get/message_menu/${int.parse(id)}"),
-        headers: {'Content-Type': 'application/json'});
-    var responses = json.decode(response.body) as List;
-    MessageData message;
-    for (var element in responses) {
-      message = MessageData(
-          element['messageID'],
-          element['senderID'],
-          element['receiverID'],
-          DateTime.parse(element['timestamp']),
-          element['message'],
-          element['viewed'] as bool);
-      String name = await getName(message.receiverID);
-      setState(() {
-        _messages.add(message);
-        _names.add(name);
-      });
+    try {
+      String id = "";
+      await UserSecureStorage.getID().then((value) => id = value!);
+      var response = await http.get(
+          Uri.parse("${messageIP}get/message_menu/${int.parse(id)}"),
+          headers: {'Content-Type': 'application/json'});
+      switch (response.statusCode) {
+        case 200:
+          var responses = json.decode(response.body) as List;
+          MessageData message;
+          for (var element in responses) {
+            message = MessageData(
+                element['messageID'],
+                element['senderID'],
+                element['receiverID'],
+                DateTime.parse(element['timestamp']),
+                element['message'],
+                element['viewed'] as bool);
+            String name = await getName(message.receiverID);
+            _messages.add(ChatTile(messageData: message,name:name));
+          }
+          setState(() {});
+          break;
+        case 400:
+          _messages.add(Center(child:Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Text(response.body),
+          )));
+          setState(() {});
+          break;
+        default:
+          var list = json.decode(response.body).values.toList();
+          throw Exception(list.join("\n\n"));
+      }
+    } catch (e) {
+      alert(e.toString().substring(11), context);
     }
   }
-
-
 
   @override
   void initState() {
     _messages = [];
-    _names = [];
     getMessages();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,7 +89,8 @@ class _ChatMenuPatient extends State<ChatMenuPatient> {
                         PageTransition(
                             type: PageTransitionType.fade,
                             child: const NewChat()));
-                  }, icon: const Icon(CupertinoIcons.plus)),
+                  },
+                  icon: const Icon(CupertinoIcons.plus)),
             ),
             const AppBarItem(
               icon: CupertinoIcons.bell_fill,
@@ -93,13 +106,10 @@ class _ChatMenuPatient extends State<ChatMenuPatient> {
                   child: ListView.builder(
                     itemCount: _messages.length,
                     itemBuilder: (context, index) {
-                      return ChatTile(
-                        messageData: _messages[index],
-                        name: _names[index],
-                      );
+                      return  _messages[index];
                     },
                   ))),
         ]),
-        bottomNavigationBar: CustomBBottomNavigationBar(pageIndex: pageIndex));
+        bottomNavigationBar: PatientBottomNavigationBar(pageIndex: pageIndex));
   }
 }

@@ -1,18 +1,16 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
-
-import '../../utilities/custom_functions.dart';
 import '../../utilities/imports.dart';
-
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/foundation.dart';
 
 class UpdateAppointment extends StatefulWidget {
-  final String appointmentDetails;
-  const UpdateAppointment({Key? key, required this.appointmentDetails})
+  final Appointment appointmentDetails;
+  final String doctorName;
+  const UpdateAppointment({Key? key, required this.appointmentDetails,required this.doctorName})
       : super(key: key);
 
   @override
@@ -27,7 +25,6 @@ class _UpdateAppointment extends State<UpdateAppointment> {
   final List<Map> doctorIdToNames = [];
   final List<String> _doctors = ['Doctor'];
   int? doctorId;
-  List<String> details = [];
   String? daySelected;
   TextEditingController dateInput = TextEditingController();
 
@@ -45,21 +42,16 @@ class _UpdateAppointment extends State<UpdateAppointment> {
 
   String hourValue = 'Hour';
 
-  Future set() async {
+  Future getDetails() async {
     await UserSecureStorage.getID().then((value) => id = value!);
     await UserSecureStorage.getJWTToken().then((value) => token = value!);
     getAvailability();
   }
 
-  void splitString() {
-    details = widget.appointmentDetails.split(" | ");
-  }
-
   @override
   void initState() {
     dateInput.text = "";
-    set();
-    splitString();
+    getDetails();
     super.initState();
   }
 
@@ -101,7 +93,7 @@ class _UpdateAppointment extends State<UpdateAppointment> {
     await http.put(Uri.parse("${appointmentIP}update/appointment"),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
-          'id': int.parse(details[3]),
+          'id': widget.appointmentDetails.id,
           'patient': int.parse(id),
           'doctor': doctorId,
           'date': date,
@@ -259,15 +251,15 @@ class _UpdateAppointment extends State<UpdateAppointment> {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
-                          child: Text("Doctor: Dr.${details[0]}"),
+                          child: Text("Doctor: Dr.${widget.doctorName}"),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
-                          child: Text("Date: ${details[1]}"),
+                          child: Text("Date: ${widget.appointmentDetails.date}"),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
-                          child: Text("Time: ${details[2]}"),
+                          child: Text("Time: ${widget.appointmentDetails.time}"),
                         ),
                       ],
                     ),
@@ -285,7 +277,7 @@ class _UpdateAppointment extends State<UpdateAppointment> {
                       height: 60,
                       child: Center(
                         child: Text(
-                          details[0],
+                          widget.doctorName,
                           textAlign: TextAlign.center,
                           style: const TextStyle(fontSize: 16),
                         ),
@@ -402,7 +394,7 @@ class _UpdateAppointment extends State<UpdateAppointment> {
                             alert("Select a hour range");
                           } else {
                             if ((_booking.any((element) => mapEquals(element, {
-                                      'Doctor': details[0],
+                                      'Doctor': widget.doctorName,
                                       'Day': daySelected,
                                       'Hour': hourValue
                                     }))) &&
@@ -413,7 +405,7 @@ class _UpdateAppointment extends State<UpdateAppointment> {
                               // Else, place an alert about appointment is already filled by the doctor
                               int id = 0;
                               for (var element in doctorIdToNames) {
-                                if (element['Doctor_Name'] == details[0]) {
+                                if (element['Doctor_Name'] == widget.doctorName) {
                                   id = element['doctor_id'];
                                 }
                               }

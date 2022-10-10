@@ -16,12 +16,12 @@ class _ViewProfileState extends State<ViewProfile> {
   bool isTextFieldDisabled = true;
   Color button = AppColors.secondary;
   String buttonText = "Update Profile";
-  String titleText = "View Profile";
+  String titleText = "Profile";
   User user = User();
-  final TextEditingController _firstName =  TextEditingController();
+  final TextEditingController _firstName = TextEditingController();
   final TextEditingController _lastName = TextEditingController();
-  final TextEditingController _dob =  TextEditingController();
-  final TextEditingController _phoneNumber =  TextEditingController();
+  final TextEditingController _dob = TextEditingController();
+  final TextEditingController _phoneNumber = TextEditingController();
 
   Future getFields() async {
     await user.transferDetails();
@@ -34,25 +34,38 @@ class _ViewProfileState extends State<ViewProfile> {
   }
 
   Future updateFields() async {
-    UserSecureStorage.setFirstName(user.firstName);
-    UserSecureStorage.setLastName(user.lastName);
-    UserSecureStorage.setPhoneNumber(user.phoneNumber);
-    UserSecureStorage.setDOB(user.dob);
+    try {
+      UserSecureStorage.setFirstName(user.firstName);
+      UserSecureStorage.setLastName(user.lastName);
+      UserSecureStorage.setPhoneNumber(user.phoneNumber);
+      UserSecureStorage.setDOB(user.dob);
+      var response = await http.put(Uri.parse("${authenticationIP}update"),
+          headers: {
+            'Content-Type': 'application/json',
+            HttpHeaders.authorizationHeader: user.accessToken
+          },
+          body: json.encode({
+            'email': await UserSecureStorage.getEmail(),
+            'password': await UserSecureStorage.getPassword(),
+            'role': await UserSecureStorage.getRole(),
+            'firstName': await UserSecureStorage.getFirstName(),
+            'lastName': await UserSecureStorage.getLastName(),
+            'phoneNumber': await UserSecureStorage.getPhoneNumber(),
+            'dob': await UserSecureStorage.getDOB(),
+          }));
 
-    await http.put(Uri.parse("${authenticationIP}update"),
-        headers: {
-          'Content-Type': 'application/json',
-          HttpHeaders.authorizationHeader: user.accessToken
-        },
-        body: json.encode({
-          'email': await UserSecureStorage.getEmail(),
-          'password': await UserSecureStorage.getPassword(),
-          'role': await UserSecureStorage.getRole(),
-          'firstName': await UserSecureStorage.getFirstName(),
-          'lastName': await UserSecureStorage.getLastName(),
-          'phoneNumber': await UserSecureStorage.getPhoneNumber(),
-          'dob': await UserSecureStorage.getDOB(),
-        }));
+      switch (response.statusCode) {
+        case 200:
+          if (!mounted) return;
+          alert("Profile Updated!", context);
+          break;
+        default:
+          var list = json.decode(response.body).values.toList();
+          throw Exception(list.join("\n\n"));
+      }
+    } catch (e) {
+      alert(e.toString().substring(11), context);
+    }
   }
 
   @override
@@ -92,7 +105,15 @@ class _ViewProfileState extends State<ViewProfile> {
                   padding: const EdgeInsets.symmetric(horizontal: 15.0),
                   child: ListView(
                     children: [
-                      const Icon(CupertinoIcons.person, size: 100,color: AppColors.secondary,),
+                      const Icon(
+                        CupertinoIcons.person_alt_circle_fill,
+                        size: 120,
+                        color: AppColors.secondary,
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 8.0),
+                        child: Text("Account Details",style: TextStyle(fontSize: 24),),
+                      ),
                       TextFormField(
                         controller: TextEditingController()..text = user.email,
                         readOnly: true,
@@ -176,11 +197,10 @@ class _ViewProfileState extends State<ViewProfile> {
                                 titleText = "Update Profile";
                                 buttonText = "Submit";
                                 button = Colors.teal;
-
                               }
                               if (isTextFieldDisabled) {
                                 buttonText = "Update Profile";
-                                titleText = "View Profile";
+                                titleText = "Profile";
                                 button = AppColors.secondary;
                                 user.firstName = _firstName.text;
                                 user.lastName = _lastName.text;
@@ -194,22 +214,22 @@ class _ViewProfileState extends State<ViewProfile> {
                       ),
                       isTextFieldDisabled
                           ? SizedBox(
-                        width: 20,
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: SubmitButton(
-                            color: AppColors.accent,
-                            message: "View Medical History",
-                            width: 0,
-                            height: 50,
-                            onPressed: () {
-                              setState(() {
-                                isTextFieldDisabled = false;
-                              });
-                            },
-                          ),
-                        ),
-                      )
+                              width: 20,
+                              child: Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: SubmitButton(
+                                  color: AppColors.accent,
+                                  message: "View Medical History",
+                                  width: 0,
+                                  height: 50,
+                                  onPressed: () {
+                                    setState(() {
+                                      isTextFieldDisabled = false;
+                                    });
+                                  },
+                                ),
+                              ),
+                            )
                           : Container(),
                     ],
                   ),
@@ -272,7 +292,7 @@ class _ViewOtherProfileState extends State<ViewOtherProfile> {
                   },
                 ),
               ),
-              title: const Text("View Profile"),
+              title: const Text("Profile"),
             ),
             //_
             body: Padding(
@@ -283,7 +303,15 @@ class _ViewOtherProfileState extends State<ViewOtherProfile> {
                   padding: const EdgeInsets.symmetric(horizontal: 15.0),
                   child: ListView(
                     children: [
-                      const Icon(CupertinoIcons.person, size: 100,color: AppColors.secondary,),
+                      const Icon(
+                        CupertinoIcons.person_alt_circle_fill,
+                        size: 120,
+                        color: AppColors.secondary,
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 8.0),
+                        child: Text("Account Details",style: TextStyle(fontSize: 24),),
+                      ),
                       const Padding(
                         padding: EdgeInsets.symmetric(vertical: 20.0),
                       ),
