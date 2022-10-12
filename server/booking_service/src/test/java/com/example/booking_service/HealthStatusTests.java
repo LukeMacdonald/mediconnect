@@ -65,11 +65,11 @@ public class HealthStatusTests {
         mockhealthStatus = new HealthStatus();
 
         mockhealthStatus.setId(1);
+        mockhealthStatus.setFeverOrChills(false);
         mockhealthStatus.setCoughing(true);
         mockhealthStatus.setHeadaches(true);
         mockhealthStatus.setFainting(false);
         mockhealthStatus.setVomiting(false);
-        mockhealthStatus.setFeverOrChills(false);
         mockhealthStatus.setDescription("I woke up with a dry throat and headache");
     }
 
@@ -98,6 +98,34 @@ public class HealthStatusTests {
         .content(requestJson))
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.content().string("Health Status successfully set"));
+    }
+
+    @Test
+    // -----------------------------------------------------------------------------------
+    // Test: Getting health status
+    // -----------------------------------------------------------------------------------
+    // 1. Create Health Status Objects
+    // 2. Mock into database
+    // 2. Assert get health status
+    // 3. Expect returned health status
+    // -----------------------------------------------------------------------------------
+    public void getHealthStatus_NotEmpty_ReturnsHealthStatus() throws Exception {
+        setup();
+
+        Mockito.doReturn("Health Status successfully set").when(healthStatusController).saveHealthStatus(mockhealthStatus);
+        Mockito.doReturn(mockhealthStatus).when(healthStatusController).getHealthStatus(mockhealthStatus.getId());
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
+
+        String requestJson = ow.writeValueAsString(mockhealthStatus.getId());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/search/healthstatus/{id}", mockhealthStatus.getId())
+        .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.id", Matchers.is(mockhealthStatus.getId())));
     }
 
 }
