@@ -1,8 +1,11 @@
-package com.example.booking_service.model;
+package com.example.prescription_service.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-import javax.persistence.*;
-
+// NOT SAME MODEL AS USER IN PROFILE_SERVICE
 
 @Entity
 @Table(name = "users")

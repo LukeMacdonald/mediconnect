@@ -34,4 +34,16 @@ public class ExceptionHandler {
 
         return new ResponseEntity<ExceptionMessage>(exceptionMessage, HttpStatus.BAD_REQUEST);
     }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler(value=UserEmailNotValid.class)
+    public ResponseEntity<ExceptionMessage> userEmailNotvalid(UserEmailNotValid ex, WebRequest request) {
+        ExceptionMessage exceptionMessage = new ExceptionMessage(
+            400, 
+            new Date(), 
+            ex.getMessage(),
+            request.getDescription(false)
+        );
+
+        return new ResponseEntity<ExceptionMessage>(exceptionMessage, HttpStatus.BAD_REQUEST);
+    }
 }

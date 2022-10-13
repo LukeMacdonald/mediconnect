@@ -17,11 +17,18 @@ import com.example.prescription_service.exception.EmptyListException;
 import com.example.prescription_service.exception.PrescriptionNotExists;
 import com.example.prescription_service.model.Prescription;
 import com.example.prescription_service.repository.PrescriptionRepo;
+import com.example.prescription_service.service.PrescriptionAlertService;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 public class PrescriptionController {
+    
     @Autowired
     private PrescriptionRepo prescriptionRepo;
+
+    @Autowired
+    private PrescriptionAlertService prescriptionAlertService;
 
     @GetMapping(value = "/")
     public String Home() {
@@ -56,7 +63,7 @@ public class PrescriptionController {
     public ResponseEntity<List<Prescription>> viewPatientPrescriptions(@PathVariable("patientId") int patientId) {
         
         if (prescriptionRepo.findAllByPatientID(patientId).size() == 0) {
-            throw new EmptyListException("Could not find any prescriptions");
+            throw new EmptyListException("Could not find any prescriptions.");
         }
 
         return new ResponseEntity<>(prescriptionRepo.findAllByPatientID(patientId), HttpStatus.OK);
@@ -65,8 +72,9 @@ public class PrescriptionController {
     @GetMapping(value = "/search/prescriptions")
     public ResponseEntity<?> viewAllPrescriptions() {
         
-        if (prescriptionRepo.findAll().size() == 0){
-            throw new EmptyListException("Could not find any prescriptions");
+        List<Prescription> prescriptionList = prescriptionAlertService.getAllPrescription();
+        if (prescriptionList.size() <= 0) {
+            throw new EmptyListException("There is currently no prescriptions.");
         }
 
         return new ResponseEntity<>(prescriptionRepo.findAll(), HttpStatus.OK);
@@ -81,5 +89,19 @@ public class PrescriptionController {
         }
         prescriptionRepo.delete(prescriptionToRemove);
         return new ResponseEntity<>("Prescription removed successfully.", HttpStatus.OK);
+    }
+
+    // Manually call prescription alert service, alerting all users that they have prescriptions to take.
+    @GetMapping(value="/alert/prescription")
+    public String alertPrescriptions() {
+        return prescriptionAlertService.remindPrescriptions();
+    }
+    
+    @GetMapping(value="/alert/prescription/{prescriptionID}")
+    public String alertSinglePrescription(@RequestParam("prescriptionID") int prescriptionID) {
+        Prescription prescriptionToNotify = prescriptionRepo.findByPrescriptionID(prescriptionID);
+
+        prescriptionAlertService.alertSinglePatient(prescriptionToNotify);
+        return "Sent prescription alert message successfully.";
     }
 }

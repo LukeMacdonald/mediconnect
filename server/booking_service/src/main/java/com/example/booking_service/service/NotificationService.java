@@ -34,7 +34,8 @@ public class NotificationService {
 
     @Value("${spring.mail.username}") private String sender;
 
-    @Scheduled(cron = "5 * * * * *")
+    // {0th minute, 0th hour, every day (in the month), every month, every day (of the week)}
+    @Scheduled(cron = "0 0 * * * *")
     public String notifyPatientBooking() {
 
         List<Appointment> upcomingAppointments = getUpcomingAppointments();
