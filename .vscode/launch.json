@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch AvailabilityServiceApplication",
+            "request": "launch",
+            "mainClass": "com.example.availability_service.AvailabilityServiceApplication",
+            "projectName": "availability_service"
+        },
+        {
+            "type": "java",
             "name": "Launch BookingServiceApplication",
             "request": "launch",
             "mainClass": "com.example.booking_service.BookingServiceApplication",
