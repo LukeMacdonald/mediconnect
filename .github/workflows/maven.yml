@@ -43,3 +43,9 @@ jobs:
       
     - name: Test Message Service
       run: mvn -f server/message_service --batch-mode test
+      
+    - name: Build Prescription Service
+      run: mvn -f server/prescription_service -B package --f pom.xml
+      
+    - name: Test Prescription Service
+      run: mvn -f server/prescription_service --batch-mode test
