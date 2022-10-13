@@ -20,4 +20,5 @@ public class Prescription {
 
     @Column
     private int repeats;
+    
 }
