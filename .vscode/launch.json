@@ -6,6 +6,20 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch PrescriptionServiceApplication",
+            "request": "launch",
+            "mainClass": "com.example.prescription_service.PrescriptionServiceApplication",
+            "projectName": "prescription_service"
+        },
+        {
+            "type": "java",
+            "name": "Launch PrescriptionServiceApplication",
+            "request": "launch",
+            "mainClass": "PrescriptionServiceApplication",
+            "projectName": "prescription_service"
+        },
+        {
+            "type": "java",
             "name": "Launch AvailabilityServiceApplication",
             "request": "launch",
             "mainClass": "com.example.availability_service.AvailabilityServiceApplication",
