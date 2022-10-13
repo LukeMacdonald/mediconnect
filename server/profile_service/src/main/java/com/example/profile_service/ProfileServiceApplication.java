@@ -15,6 +15,4 @@ public class ProfileServiceApplication {
     BCryptPasswordEncoder bCryptPasswordEncoder(){
         return new BCryptPasswordEncoder();
     }
-
-
 }

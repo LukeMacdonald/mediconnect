@@ -10,6 +10,7 @@
     <module>availability_service</module>
     <module>booking_service</module>
     <module>communication_service</module>
+    <module>prescription_service</module>
     <module>message_service</module>
     <module>profile_service</module>
   </modules>

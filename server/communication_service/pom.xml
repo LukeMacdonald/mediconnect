@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>sept.group1</groupId>
-    <artifactId>communication_service</artifactId>
+    <artifactId>prescription_service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>communication_service</name>
-    <description>communication_service</description>
+    <name>prescription_service</name>
+    <description>prescription_service</description>
     <properties>
         <java.version>11</java.version>
         <spring-cloud.version>2021.0.4</spring-cloud.version>
@@ -110,12 +110,6 @@
             <artifactId>mysql</artifactId>
             <scope>test</scope>
         </dependency>
-        <!-- <dependency>
-            <groupId>com.example</groupId>
-            <artifactId>profile_service</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency> -->
     </dependencies>
     <dependencyManagement>
         <dependencies>
