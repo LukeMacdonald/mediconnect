@@ -29,14 +29,14 @@ public class PrescriptionController {
         return new ResponseEntity<>(prescription, HttpStatus.OK);
     }
 
-    @GetMapping(value = "search/prescription/{patientId}")
-    public ResponseEntity<?> viewPrescription(@PathVariable("patientId") int patientId) {
+    @GetMapping(value = "search/prescriptions/{patientId}")
+    public ResponseEntity<?> viewPatientPrescriptions(@PathVariable("patientId") int patientId) {
         
-        if (prescriptionRepo.findByPatientId(patientId) == null){
-            return ResponseEntity.badRequest().body("Could not find prescription");
+        if (prescriptionRepo.findAllByPatientId(patientId).size() == 0){
+            return ResponseEntity.badRequest().body("Could not find prescriptions");
         }
 
-        return new ResponseEntity.ok().body(prescriptionRepo.findByPatientId(patientId));
+        return new ResponseEntity.ok().body(prescriptionRepo.findAllByPatientId(patientId));
     }
 
     @GetMapping(value = "search/prescriptions")
