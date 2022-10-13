@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:page_transition/page_transition.dart';
 import '../../utilities/imports.dart';
+import '../homepage/notifcation_page.dart';
 
 class ChatMenuPatient extends StatefulWidget {
   const ChatMenuPatient({Key? key}) : super(key: key);
@@ -37,12 +38,13 @@ class _ChatMenuPatient extends State<ChatMenuPatient> {
                 element['message'],
                 element['viewed'] as bool);
             String name = await getName(message.receiverID);
-            _messages.add(ChatTile(messageData: message,name:name));
+            _messages.add(ChatTile(messageData: message, name: name));
           }
           setState(() {});
           break;
         case 400:
-          _messages.add(Center(child:Padding(
+          _messages.add(Center(
+              child: Padding(
             padding: const EdgeInsets.all(20.0),
             child: Text(response.body),
           )));
@@ -92,11 +94,18 @@ class _ChatMenuPatient extends State<ChatMenuPatient> {
                   },
                   icon: const Icon(CupertinoIcons.plus)),
             ),
-            const AppBarItem(
-              icon: CupertinoIcons.bell_fill,
-              index: 5,
+            Padding(
+              padding: const EdgeInsets.only(right: 5),
+              child: IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        PageTransition(
+                            type: PageTransitionType.fade,
+                            child: const Notifications()));
+                  },
+                  icon: const Icon(CupertinoIcons.bell_fill)),
             ),
-            const AppDropDown(),
           ],
         ),
         body: Column(children: [
@@ -106,7 +115,7 @@ class _ChatMenuPatient extends State<ChatMenuPatient> {
                   child: ListView.builder(
                     itemCount: _messages.length,
                     itemBuilder: (context, index) {
-                      return  _messages[index];
+                      return _messages[index];
                     },
                   ))),
         ]),
