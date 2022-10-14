@@ -126,6 +126,6 @@ public class HealthStatusTests {
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.id", Matchers.is(mockhealthStatus.getId())));
-    }
+    } 
 
 }

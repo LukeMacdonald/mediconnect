@@ -31,6 +31,4 @@ public class HealthInformation extends User{
     @Column
     private List<Object> userIllnesses;
 
-
-
 }
