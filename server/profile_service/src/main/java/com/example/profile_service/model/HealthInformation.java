@@ -19,16 +19,4 @@ public class HealthInformation extends User{
     @Column
     private Boolean medication;
 
-    @Column
-    private List<Medication> medications;
-
-    @Column
-    private List<Object> userDisabilities;
-
-    @Column
-    private List<Medication> userMedications;
-
-    @Column
-    private List<Object> userIllnesses;
-
 }
