@@ -1,10 +1,11 @@
-package com.example.profile_service.model;
+package com.example.medication_service.model;
 
 import java.util.Objects;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
+import javax.persistence.*;
 
+@Entity
+@Table(name = "medication")
 public class Medication {
     
     @Id
