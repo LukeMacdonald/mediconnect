@@ -9,7 +9,7 @@ import java.sql.Date;
 import java.util.*;
 
 public interface AppointmentRepo extends JpaRepository<Appointment, Long>{
-
+    Appointment findById(int id);
     Appointment findAppointmentByDoctorAndDateAndTime(int doctor, Date date, String time);
     List<Appointment> findAppointmentByPatient(int patient);
     List<Appointment> findAppointmentByDoctor(int doctor);

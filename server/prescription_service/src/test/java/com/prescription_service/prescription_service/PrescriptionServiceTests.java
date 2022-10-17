@@ -13,6 +13,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.http.HttpHeaders;
@@ -28,6 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.example.prescription_service.*;
 import com.example.prescription_service.controller.PrescriptionController;
 import com.example.prescription_service.model.Prescription;
+import com.example.prescription_service.repository.PrescriptionRepo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
@@ -44,6 +46,9 @@ public class PrescriptionServiceTests {
 
     @SpyBean
     private PrescriptionController prescriptionController;
+
+    @MockBean
+    private PrescriptionRepo prescriptionRepo;
 
     private Prescription prescription1;
     private Prescription prescription2;
@@ -91,6 +96,26 @@ public class PrescriptionServiceTests {
         prescription2.setprescriptionID(2);
         prescription3.setprescriptionID(3);
     }
+
+    @Test
+   public void GetPrescription_NoErrorThrown_PrescriptionReturnedSuccessfully() throws Exception {
+       setup();
+       List<Prescription> prescriptionList = new ArrayList<>();
+       prescriptionList.add(prescription1);
+       String expectedResponse = ow.writeValueAsString(prescriptionList);
+
+       ResponseEntity responseEntity = ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(expectedResponse);
+
+       Mockito.doReturn(prescriptionList).when(prescriptionRepo).findAllByPatientID(prescription1.getPatientID());
+       Mockito.doReturn(responseEntity).when(prescriptionController).viewPatientPrescriptions(prescription1.getPatientID());
+
+       mockMvc.perform(
+           MockMvcRequestBuilders.get("/search/prescriptions/{patientId}", prescription1.getPatientID()))
+           .andExpect(MockMvcResultMatchers.status().isOk())
+           .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+           .andExpect(jsonPath("$[0].name", Matchers.is(prescription1.getName()))
+       );
+   }
 
    @Test
    public void PostPrescription_Saved_PrescriptionSavedSuccessfully() throws Exception {

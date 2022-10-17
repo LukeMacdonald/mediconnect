@@ -89,8 +89,16 @@ public class AppointmentController {
 
     // Update appointment
     @PutMapping(value="/update/appointment")
-    public void updateAppointment(@RequestBody Appointment appoint){
-        appointRepo.save(appoint);
+    public ResponseEntity<?> updateAppointment(@RequestBody Appointment appointment) {
+
+        Appointment availabilityToUpdate = appointRepo.findById(appointment.getId());
+
+        if (availabilityToUpdate == null) {
+            return ResponseEntity.badRequest().body("Appointment does not exist.");
+        }
+
+        appointRepo.save(availabilityToUpdate);
+        return ResponseEntity.ok().body("Appointment Updated!");
     }
 
     // // Get list of appointments by the current date
