@@ -8,6 +8,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.http.HttpHeaders;
@@ -21,6 +22,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.example.booking_service.controller.AppointmentController;
 import com.example.booking_service.model.Appointment;
+import com.example.booking_service.repository.AppointmentRepo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
@@ -41,6 +43,9 @@ public class BookingServiceTests {
 
     @SpyBean
     private AppointmentController appointmentController;
+
+    @MockBean
+    private AppointmentRepo appointmentRepo;
 
     private Appointment appointment1;
     private Appointment appointment2;
@@ -110,9 +115,9 @@ public class BookingServiceTests {
 
        ResponseEntity responseEntity = ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(appointment1.getId());
 
-       Mockito.doReturn(responseEntity).when(appointmentController).saveAppointment(appointment1);
-
-       mockMvc.perform(MockMvcRequestBuilders.post("/set/appointment")
+       Mockito.doReturn(appointment1).when(appointmentRepo).findById(appointment1.getId());
+       Mockito.doReturn(responseEntity).when(appointmentController).updateAppointment(appointment1);
+       mockMvc.perform(MockMvcRequestBuilders.put("/update/appointment")
        .contentType(MediaType.APPLICATION_JSON)
        .content(expectedResponse))
        .andExpect(MockMvcResultMatchers.status().isOk());
