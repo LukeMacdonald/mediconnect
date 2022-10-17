@@ -91,6 +91,7 @@ class _SetAvailability extends State<SetAvailability> {
 
   String dayValue = 'Day';
   String hourValue = 'Hour';
+
   final _days = [
     'Day',
     'Monday',
@@ -129,8 +130,6 @@ class _SetAvailability extends State<SetAvailability> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  final int pageIndex = 8;
-
   Widget availabilityList() {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -153,13 +152,6 @@ class _SetAvailability extends State<SetAvailability> {
               child: SizedBox(height: 200, child: _createListView()))
         ]);
   }
-
-  Widget setting() {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[const SizedBox(height: 10), Container()]);
-  }
-
   Widget availability() {
     return SingleChildScrollView(
         physics: const NeverScrollableScrollPhysics(),
@@ -331,7 +323,6 @@ class _SetAvailability extends State<SetAvailability> {
           )
         ]));
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -340,25 +331,13 @@ class _SetAvailability extends State<SetAvailability> {
         elevation: 0,
         leading: const AppBarItem(
           icon: CupertinoIcons.home,
-          index: 0,
+          index: 10,
         ),
         title: const Text("Set Availability",
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 16,
             )),
-        actions: const <Widget>[
-          AppBarItem(
-            icon: CupertinoIcons.bell_fill,
-            index: 5,
-          ),
-          SizedBox(width: 20),
-          AppBarItem(
-            icon: CupertinoIcons.settings_solid,
-            index: 5,
-          ),
-          SizedBox(width: 20),
-        ],
       ),
       body: SingleChildScrollView(
           child: Column(

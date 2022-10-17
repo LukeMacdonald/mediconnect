@@ -38,18 +38,7 @@ class HeathStatusPage extends StatefulWidget {
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
               )),
-          actions: const <Widget>[
-            AppBarItem(
-              icon: CupertinoIcons.bell_fill,
-              index: 5,
-            ),
-            SizedBox(width: 20),
-            AppBarItem(
-              icon: CupertinoIcons.settings_solid,
-              index: 5,
-            ),
-            SizedBox(width: 20),
-          ],
+
         ),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),

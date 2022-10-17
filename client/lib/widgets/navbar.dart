@@ -265,7 +265,7 @@ class _DoctorBottomNavigationBar extends State<DoctorBottomNavigationBar> {
                 label: "appointments",
                 icon: CupertinoIcons.calendar,
                 index: 3,
-                isSelected: (widget.pageIndex==8),
+                isSelected: (widget.pageIndex==3),
                 page:const UpcomingAppointment(role: "doctor"),
               ),
             ],

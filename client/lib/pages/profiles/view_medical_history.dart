@@ -2,8 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:nd_telemedicine/utilities/imports.dart';
 
-import '../../styles/theme.dart';
-import '../../widgets/buttons.dart';
 
 class ViewOtherMedicalHistory extends StatefulWidget {
   final int id;
