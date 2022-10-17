@@ -1,11 +1,13 @@
-package com.example.profile_service.model;
-
-import java.util.List;
+package com.example.medication_service.model;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
+import javax.persistence.*;
 
-public class HealthInformation extends User{
+
+@Entity
+@Table(name = "healthinformation")
+public class HealthInformation{
     
     @Id
     private int id; 
