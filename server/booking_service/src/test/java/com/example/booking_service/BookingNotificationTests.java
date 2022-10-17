@@ -197,8 +197,6 @@ public class BookingNotificationTests {
        assertDoesNotThrow(() -> notificationController.notifyPatientBooking());
    }
 
-
-    // /delete/appointment/{id}"
     @Test
     public void cancelAppointment_ErrorNotThrown_SuccessfullyRemovedAppointment() throws Exception {
         setup();
