@@ -10,6 +10,8 @@ import com.example.booking_service.repository.UserRepo;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -29,6 +31,20 @@ public class HealthStatusController {
     public String saveHealthStatus(@RequestBody HealthStatus healthstatus){
         HealthStatRepo.save(healthstatus);
         return "Health Status successfully set";
+    }
+
+    // Save Health Status
+    @PutMapping(value="/update/healthstatus")
+    public ResponseEntity<HealthStatus> updateHealthStatus(@RequestBody HealthStatus healthstatus){
+        HealthStatus healthStatusToUpdate = HealthStatRepo.findHealthStatusById(healthstatus.getId());
+
+        if (healthStatusToUpdate != null) {         
+            HealthStatRepo.save(healthStatusToUpdate);
+        }
+
+        HealthStatRepo.save(healthstatus);
+        return new ResponseEntity<>(healthStatusToUpdate, HttpStatus.OK);
+        
     }
 
 }

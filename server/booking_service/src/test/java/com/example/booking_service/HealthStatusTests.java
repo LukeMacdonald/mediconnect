@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -113,6 +114,38 @@ public class HealthStatusTests {
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.id", Matchers.is(mockhealthStatus.getId())));
+    }
+    
+    @Test
+    // -----------------------------------------------------------------------------------
+    // Test: Updating health status
+    // -----------------------------------------------------------------------------------
+    // 1. Create Health Status Objects
+    // 2. Mock into database
+    // 2. Assert update health status
+    // 3. Expect returned health status
+    // -----------------------------------------------------------------------------------
+    public void updateHealthStatus_NotEmpty_ReturnsUpdatedHealthStatus() throws Exception {
+        setup();
+
+        Mockito.doReturn("Health Status successfully set").when(healthStatusController).saveHealthStatus(mockhealthStatus);
+
+
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
+        String expectedResponse = ow.writeValueAsString(mockhealthStatus);
+
+        Mockito.doReturn(mockhealthStatus).when(healthStatusRepo).findHealthStatusById(mockhealthStatus.getId());
+
+        mockhealthStatus.setDescription("I woke up feeling dizzy and tired");
+
+        expectedResponse = ow.writeValueAsString(mockhealthStatus);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/update/healthstatus").contentType(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON).content(expectedResponse))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.description", Matchers.is("I woke up feeling dizzy and tired")));
     } 
 
 }
