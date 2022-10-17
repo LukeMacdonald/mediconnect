@@ -6,6 +6,9 @@ import com.example.profile_service.model.User;
 import com.example.profile_service.repository.UserRepo;
 import com.example.profile_service.service.UserService;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
@@ -55,29 +58,14 @@ public class UserController {
     public ResponseEntity<User> getUserFromEmail(@PathVariable("email") String email){
         return ResponseEntity.ok().body(userRepo.findByEmail(email));
     }
-    @GetMapping(value = "/get/users/role/{role}")
-    public ResponseEntity<?> getUserFromRole(@PathVariable("role") String role){
-        Role userRole;
-
-        switch (role) {
-            case "Patient":
-            case "patient":
-                userRole = Role.patient;
-                break;
-            case "Doctor":
-            case "doctor":
-                userRole = Role.doctor;
-                break;
-            default:
-                userRole = null;
-                break;
-        }
-        return ResponseEntity.ok().body(userService.getUsersByRole(userRole));
+    @GetMapping(value = "/get/users/{role}")
+    public ResponseEntity<List<User>> getUserByRole(@PathVariable("role") Role role){
+        return ResponseEntity.ok().body(userRepo.findByRole(role));
     }
-    @DeleteMapping (value = "/remove/{email}")
-    public void remove(@PathVariable("email") String email){
-        User user = userService.getUser(email);
-        System.out.println(user.getEmail());
-        userRepo.delete(user);
+
+    @DeleteMapping(value = "/remove/{email}")
+    public ResponseEntity<String> removeUserByEmail(@PathVariable("email") String email){
+        userRepo.delete(userRepo.findByEmail(email));
+        return ResponseEntity.ok().body("Successfully deleted");
     }
 }

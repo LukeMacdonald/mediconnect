@@ -7,6 +7,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 import java.sql.Date;
 import java.util.Collection;
 
@@ -15,6 +17,7 @@ import java.util.Collection;
 @Table(name = "users")
 public class User implements UserDetails {
 
+    @NotNull
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
