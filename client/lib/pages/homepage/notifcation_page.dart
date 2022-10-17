@@ -5,7 +5,6 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:nd_telemedicine/widgets/notification_tile.dart';
 import '../../models/prescription.dart';
-import '../../models/appointment.dart';
 
 class Notifications extends StatefulWidget {
   const Notifications({Key? key}) : super(key: key);
@@ -20,9 +19,7 @@ class _Notifications extends State<Notifications> {
   Future getAppointment() async {
     http.Response response;
     try {
-      //TODO: change url for getting appointment details (date and time)
-      response = await http
-          .get(Uri.parse("${appointmentIP}search/userappointments/$id"));
+      response = await http.get(Uri.parse("/search/patient/appointments/$id"));
 
       switch (response.statusCode) {
         case 200:
@@ -64,9 +61,7 @@ class _Notifications extends State<Notifications> {
   Future getPrescription() async {
     http.Response response;
     try {
-      //TODO: change url for getting prescription details (name and dosage)
-      response = await http
-          .get(Uri.parse("${appointmentIP}search/userappointments/$id"));
+      response = await http.get(Uri.parse("/search/prescriptions/$id"));
 
       switch (response.statusCode) {
         case 200:
@@ -111,8 +106,7 @@ class _Notifications extends State<Notifications> {
   void initState() {
     appointments = [];
     prescriptions = [];
-    //TODO: uncomment when done
-    //getDetails();
+    getDetails();
     super.initState();
   }
 
@@ -204,9 +198,9 @@ class _Notifications extends State<Notifications> {
 
   Widget _createPrescriptionListView() {
     return ListView.builder(
-        itemCount: appointments.length,
+        itemCount: prescriptions.length,
         itemBuilder: (context, index) {
-          return appointments[index];
+          return prescriptions[index];
         });
   }
 }

@@ -9,6 +9,7 @@ import javax.persistence.*;
 public class Medication {
     
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column
