@@ -92,7 +92,7 @@ class _ChatMenuPatient extends State<ChatMenuPatient> {
                             type: PageTransitionType.fade,
                             child: const NewChat()));
                   },
-                  icon: const Icon(CupertinoIcons.plus)),
+                  icon: const Icon(CupertinoIcons.plus_bubble_fill)),
             ),
             Padding(
               padding: const EdgeInsets.only(right: 5),

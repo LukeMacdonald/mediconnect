@@ -306,7 +306,7 @@ class _MedicalHistory extends State<MedicalHistory> {
         onTap: () => FocusScope.of(context).unfocus(),
         child: Scaffold(
             key: scaffoldKey,
-            extendBodyBehindAppBar: true,
+            //extendBodyBehindAppBar: true,
             resizeToAvoidBottomInset: true,
             appBar: AppBar(
               iconTheme: Theme.of(context).iconTheme,

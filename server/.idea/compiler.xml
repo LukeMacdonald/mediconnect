@@ -11,6 +11,7 @@
         <module name="communication_service" />
         <module name="message_service" />
         <module name="profile_service" />
+        <module name="prescription_service" />
         <module name="booking_service" />
       </profile>
     </annotationProcessing>
@@ -21,6 +22,7 @@
       <module name="booking_service" options="-parameters" />
       <module name="communication_service" options="-parameters" />
       <module name="message_service" options="-parameters" />
+      <module name="prescription_service" options="-parameters" />
       <module name="profile_service" options="-parameters" />
     </option>
   </component>

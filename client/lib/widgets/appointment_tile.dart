@@ -99,12 +99,6 @@ class _AppointmentDoctorTile extends State<AppointmentDoctorTile> {
                   children: [
                     Expanded(
                       child: IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.edit,color: Colors.white,size: 30,),
-                      ),
-                    ),
-                    Expanded(
-                      child: IconButton(
                         onPressed: () async {
                           await deleteAppointment(widget.appointment.id);
                           if(!mounted)return;

@@ -33,6 +33,9 @@ class User {
     lastName = (await  UserSecureStorage.getLastName())!;
     phoneNumber =  (await UserSecureStorage.getPhoneNumber())!;
     dob = (await UserSecureStorage.getDOB())!;
-    accessToken = (await UserSecureStorage.getJWTToken())!;
+    String? token = await UserSecureStorage.getJWTToken();
+    if(token !=null ){
+      accessToken = token;
+    }
   }
 }

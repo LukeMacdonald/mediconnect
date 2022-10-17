@@ -18,8 +18,6 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-
-
     if (Platform.isAndroid) {
       authenticationIP = "http://10.0.2.2:8080/";
       availabilityIP = "http://10.0.2.2:8081/";
@@ -33,7 +31,6 @@ class MyApp extends StatelessWidget {
      communicationIP = "http://localhost:8082/";
      appointmentIP = "http://localhost:8083/";
      messageIP = "http://localhost:8085/";
-
     }
 
     return GestureDetector(

@@ -1,7 +1,11 @@
 package com.example.message_service.model;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,7 +25,7 @@ public class Message {
     @Column
     @NotBlank(message = "Message can't be empty")
     private String message;
-    
+
     @Column
     @NotNull
     private int senderID;
@@ -32,7 +36,9 @@ public class Message {
 
     @Column
     @NotNull
-    private LocalDate timestamp;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss", iso = DateTimeFormat.ISO.DATE_TIME)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime timestamp;
 
 
 
@@ -52,7 +58,7 @@ public class Message {
     public String getMessage() {
         return message;
     }
-    public LocalDate getTimestamp() {
+    public LocalDateTime getTimestamp() {
         return timestamp;
     }
     public boolean isViewed() { return viewed; }
@@ -70,7 +76,7 @@ public class Message {
     public void setMessage(String message) {
         this.message = message;
     }
-    public void setTimestamp(LocalDate timestamp) {
+    public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
     }
     public void setViewed(boolean viewed) {this.viewed = viewed;}

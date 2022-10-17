@@ -97,23 +97,23 @@ class _ViewAppointmentDetails extends State<ViewAppointmentDetails> {
                       ),
                       Padding(
                         padding: const EdgeInsets.all(10.0),
-                        child: Text("Faint: ${widget.appointment.healthStatus.faint? "Yex" : "No"}",style: const TextStyle(fontSize: 18),),
+                        child: Text("Faint: ${widget.appointment.healthStatus.faint? "Yes" : "No"}",style: const TextStyle(fontSize: 18),),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(10.0),
-                        child: Text("Fever: ${widget.appointment.healthStatus.fever? "Yex" : "No"}",style: const TextStyle(fontSize: 18),),
+                        child: Text("Fever: ${widget.appointment.healthStatus.fever? "Yes" : "No"}",style: const TextStyle(fontSize: 18),),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(10.0),
-                        child: Text("Headaches: ${widget.appointment.healthStatus.headache? "Yex" : "No"}",style: const TextStyle(fontSize: 18),),
+                        child: Text("Headaches: ${widget.appointment.healthStatus.headache? "Yes" : "No"}",style: const TextStyle(fontSize: 18),),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(10.0),
-                        child: Text("Vomiting: ${widget.appointment.healthStatus.vomiting? "Yex" : "No"}",style: const TextStyle(fontSize: 18),),
+                        child: Text("Vomiting: ${widget.appointment.healthStatus.vomiting? "Yes" : "No"}",style: const TextStyle(fontSize: 18),),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(10.0),
-                        child: Text("Cough: ${widget.appointment.healthStatus.cough? "Yex" : "No"}",style: const TextStyle(fontSize: 18),),
+                        child: Text("Cough: ${widget.appointment.healthStatus.cough? "Yes" : "No"}",style: const TextStyle(fontSize: 18),),
                       ),
                       const Padding(
                         padding: EdgeInsets.symmetric(vertical: 10.0),

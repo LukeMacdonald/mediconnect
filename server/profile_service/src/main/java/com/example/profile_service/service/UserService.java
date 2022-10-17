@@ -1,4 +1,5 @@
 package com.example.profile_service.service;
+import com.example.profile_service.model.Role;
 import com.example.profile_service.model.User;
 import com.example.profile_service.model.Verification;
 
@@ -10,6 +11,8 @@ public interface UserService {
 
     List<User> getUsers();
     Verification saveCode(Verification verification);
+
+    List<User> getUsersByRole(Role role);
 
 
 

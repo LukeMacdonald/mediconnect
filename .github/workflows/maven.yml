@@ -24,7 +24,7 @@ jobs:
       run: mvn -f server/profile_service --batch-mode test
       
     - name: Build Availability Service
-      run: mvn -f server/availability_service -B package --f pom.xml
+      run: mvn -f server/booking_service -B package --f pom.xml
       
     - name: Test Availability Service
       run: mvn -f server/availability_service --batch-mode test

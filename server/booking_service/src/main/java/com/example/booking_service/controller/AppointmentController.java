@@ -59,9 +59,19 @@ public class AppointmentController {
     }
 
     // Search for all appointments based off the patient's id
-    @GetMapping(value="/search/userappointments/{id}")
-    public ResponseEntity<?> getAllAppointments(@PathVariable("id") int id){
+    @GetMapping(value="/search/patient/appointments/{id}")
+    public ResponseEntity<?> getAllPatientAppointments(@PathVariable("id") int id){
         List<Appointment> upcoming = appointRepo.findAppointmentByPatient(id);
+        if(upcoming.isEmpty()){
+            return ResponseEntity.badRequest().body("No Upcoming Appointments");
+        }
+        else{
+            return ResponseEntity.ok().body(upcoming);
+        }
+    }
+    @GetMapping(value="/search/doctor/appointments/{id}")
+    public ResponseEntity<?> getAllDoctorAppointments(@PathVariable("id") int id){
+        List<Appointment> upcoming = appointRepo.findAppointmentByDoctor(id);
         if(upcoming.isEmpty()){
             return ResponseEntity.badRequest().body("No Upcoming Appointments");
         }

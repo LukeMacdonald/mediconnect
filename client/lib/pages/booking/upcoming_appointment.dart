@@ -26,20 +26,8 @@ class _UpcomingAppointment extends State<UpcomingAppointment> {
 
   late List<Widget> appointments;
 
-  // final Map _hours = {
-  //   '09:00': '09:00 - 10:00',
-  //   '10:00': '10:00 - 11:00',
-  //   '11:00': '11:00 - 12:00',
-  //   '12:00': '12:00 - 13:00',
-  //   '13:00': '13:00 - 14:00',
-  //   '14:00': '14:00 - 15:00',
-  //   '15:00': '15:00 - 16:00',
-  //   '16:00': '16:00 - 17:00'
-  // };
-
   Future getDetails() async {
     await UserSecureStorage.getID().then((value) => id = value!);
-    await UserSecureStorage.getJWTToken().then((value) => token = value!);
     getUpcomingAppointment();
   }
 
@@ -59,11 +47,10 @@ class _UpcomingAppointment extends State<UpcomingAppointment> {
     try {
       if (widget.role == "patient") {
         response = await http
-            .get(Uri.parse("${appointmentIP}search/userappointments/$id"));
+            .get(Uri.parse("${appointmentIP}search/patient/appointments/$id"));
       } else {
-        // TODO: Add backend call for getting doctors upcoming appointments
         response = await http
-            .get(Uri.parse("${appointmentIP}search/userappointments/$id"));
+            .get(Uri.parse("${appointmentIP}search/doctor/appointments/$id"));
       }
       switch (response.statusCode) {
         case 200:
@@ -78,21 +65,17 @@ class _UpcomingAppointment extends State<UpcomingAppointment> {
 
             symptoms.setDetails(json.decode(responseSymptoms.body));
             appointment.healthStatus = symptoms;
-
             if (widget.role == "patient") {
               var responseName = await http.get(Uri.parse(
                   "${authenticationIP}get/name/${appointment.doctor}"));
               String name = responseName.body;
-
               appointments.add(AppointmentPatientTile(
                   appointment: appointment, doctor: name));
             }
             else {
               var responseName = await http.get(Uri.parse(
                   "${authenticationIP}get/name/${appointment.patient}"));
-
               String name = responseName.body;
-
               appointments.add(AppointmentDoctorTile(
                 appointment: appointment,
                 patient: name,

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../../utilities/imports.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'dart:io';
 
 
 class ProfileCreation extends StatefulWidget {
@@ -15,13 +14,12 @@ class ProfileCreation extends StatefulWidget {
 class _ProfileCreation extends State<ProfileCreation> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+
+
   Future savePatient(BuildContext context) async {
-    String token = "";
-    await UserSecureStorage.getJWTToken().then((value) => token = value!);
     await http.put(Uri.parse("${authenticationIP}update"),
         headers: {
           'Content-Type': 'application/json',
-          HttpHeaders.authorizationHeader: token
         },
         body: json.encode({
           'email': await UserSecureStorage.getEmail(),
@@ -35,7 +33,7 @@ class _ProfileCreation extends State<ProfileCreation> {
     if (await UserSecureStorage.getRole() == 'patient' ||
         await UserSecureStorage.getRole() == 'Patient') {
       if(!mounted)return;
-      navigate(const HomePage(), context);
+      navigate(const MedicalHistory(), context);
     } else if (await UserSecureStorage.getRole() == 'doctor' ||
         await UserSecureStorage.getRole() == 'Doctor') {
       if(!mounted)return;

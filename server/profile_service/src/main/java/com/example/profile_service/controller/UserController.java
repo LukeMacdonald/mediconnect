@@ -1,5 +1,6 @@
 package com.example.profile_service.controller;
 
+import com.example.profile_service.model.Role;
 import com.example.profile_service.model.User;
 
 import com.example.profile_service.repository.UserRepo;
@@ -53,5 +54,30 @@ public class UserController {
     @GetMapping(value = "/get/{email}")
     public ResponseEntity<User> getUserFromEmail(@PathVariable("email") String email){
         return ResponseEntity.ok().body(userRepo.findByEmail(email));
+    }
+    @GetMapping(value = "/get/users/role/{role}")
+    public ResponseEntity<?> getUserFromRole(@PathVariable("role") String role){
+        Role userRole;
+
+        switch (role) {
+            case "Patient":
+            case "patient":
+                userRole = Role.patient;
+                break;
+            case "Doctor":
+            case "doctor":
+                userRole = Role.doctor;
+                break;
+            default:
+                userRole = null;
+                break;
+        }
+        return ResponseEntity.ok().body(userService.getUsersByRole(userRole));
+    }
+    @DeleteMapping (value = "/remove/{email}")
+    public void remove(@PathVariable("email") String email){
+        User user = userService.getUser(email);
+        System.out.println(user.getEmail());
+        userRepo.delete(user);
     }
 }

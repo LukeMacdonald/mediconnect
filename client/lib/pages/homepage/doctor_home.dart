@@ -77,7 +77,7 @@ class _DoctorHomePage extends State<DoctorHomePage> {
                             menuOption(
                                 Colors.teal,
                                 const Icon(
-                                  CupertinoIcons.clock_fill,
+                                  CupertinoIcons.time_solid,
                                   color: Colors.white,
                                   size: 50,
                                 ),
@@ -85,14 +85,14 @@ class _DoctorHomePage extends State<DoctorHomePage> {
                                 'Set Availability',
                                 context),
                             menuOption(
-                                AppColors.accent,
+                                AppColors.secondary,
                                 const Icon(
-                                  CupertinoIcons.calendar_badge_plus,
+                                  CupertinoIcons.calendar_today,
                                   color: Colors.white,
                                   size: 50,
                                 ),
-                                const DoctorHomePage(),
-                                'Update Appointments',
+                                const UpcomingAppointment(role: "doctor"),
+                                'Upcoming Appointments',
                                 context),
                           ],
                         ),
@@ -109,17 +109,6 @@ class _DoctorHomePage extends State<DoctorHomePage> {
                               mainAxisSize: MainAxisSize.max,
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                menuOption(
-                                  const Color.fromRGBO(33, 150, 243, 1),
-                                  const Icon(
-                                    CupertinoIcons.calendar_today,
-                                    color: Colors.white,
-                                    size: 50,
-                                  ),
-                                  const UpcomingAppointment(role: "doctor"),
-                                  'Upcoming Appointments',
-                                  context,
-                                ),
                                 menuOption(
                                     Colors.orangeAccent,
                                     const Icon(

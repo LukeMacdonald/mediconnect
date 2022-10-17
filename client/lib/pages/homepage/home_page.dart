@@ -17,7 +17,9 @@ class _HomePage extends State<HomePage> {
   String name = "";
 
   Future setName() async {
-    await UserSecureStorage.getLastName().then((value) => name = value!);
+    await UserSecureStorage.getFirstName().then((value) => name = value!);
+    setState(() {
+    });
   }
 
   @override
@@ -82,7 +84,7 @@ class _HomePage extends State<HomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         menuOption(
-                            const Color(0xFFF77173),
+                            Colors.redAccent,
                             const Icon(
                               CupertinoIcons.calendar_badge_plus,
                               color: Colors.white,
@@ -92,9 +94,9 @@ class _HomePage extends State<HomePage> {
                             'Book Appointment',
                             context),
                         menuOption(
-                            const Color(0xFF2190E5),
+                            AppColors.secondary,
                             const Icon(
-                              CupertinoIcons.calendar,
+                              CupertinoIcons.calendar_today,
                               color: Colors.white,
                               size: 50,
                             ),

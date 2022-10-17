@@ -1,4 +1,5 @@
 package com.example.profile_service.service;
+import com.example.profile_service.model.Role;
 import com.example.profile_service.model.Verification;
 import com.example.profile_service.repository.UserRepo;
 import com.example.profile_service.model.User;
@@ -73,6 +74,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public Verification saveCode(Verification verification){
         log.info("Saving verification code for doctor {} in database",verification.getEmail());
         return verificationRepo.save(verification);
+    }
+    @Override
+    public List<User> getUsersByRole(Role role){
+        log.info("Getting users with role {} from database: ", role.getRoleName());
+        return userRepo.findAllByRole(role);
     }
 
 

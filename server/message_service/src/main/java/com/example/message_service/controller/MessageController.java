@@ -19,7 +19,7 @@ public class MessageController {
     public ResponseEntity<?> getMessages(@PathVariable("senderID") int senderID,  @PathVariable("receiverID") int receiverID) {
         List<Message> messages = messageService.getMessages(senderID,receiverID);
         if(messages.isEmpty()){
-            return ResponseEntity.badRequest().body("No Messages Available");
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok().body(messages);
     }

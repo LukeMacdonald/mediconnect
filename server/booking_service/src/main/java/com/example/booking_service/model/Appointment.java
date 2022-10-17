@@ -1,6 +1,6 @@
 package com.example.booking_service.model;
 
-import java.util.Date;
+import java.sql.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -33,7 +33,7 @@ public class Appointment{
     public void setDoctorId(int doctor) {
         this.doctor = doctor;
     }
-    public void setDate(java.util.Date currentDate) {
+    public void setDate(Date currentDate) {
         this.date = currentDate;
     }
     public void setTime(String time){

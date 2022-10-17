@@ -41,7 +41,7 @@ class _Verification extends State<Verification> {
               'password': await UserSecureStorage.getPassword(),
               'role': await UserSecureStorage.getRole(),
               'confirmPassword': await UserSecureStorage.getConfirmPassword(),
-              'code': code}));
+              'code': int.parse(code!)}));
         switch (response.statusCode) {
           case 201:
             var responseData = json.decode(response.body);
@@ -70,7 +70,7 @@ class _Verification extends State<Verification> {
         onTap: ()=>FocusScope.of(context).unfocus(),
     child:Scaffold(
         key: scaffoldKey,
-        extendBodyBehindAppBar: true,
+        //extendBodyBehindAppBar: true,
         resizeToAvoidBottomInset: true,
         backgroundColor: Theme.of(context).backgroundColor,
         appBar: AppBar(

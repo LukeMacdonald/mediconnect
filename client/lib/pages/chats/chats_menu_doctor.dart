@@ -34,7 +34,13 @@ class _ChatMenuDoctor extends State<ChatMenuDoctor> {
                 DateTime.parse(element['timestamp']),
                 element['message'],
                 element['viewed'] as bool);
-            String name = await getName(message.receiverID);
+            String name;
+            if(message.senderID == int.parse(id)){
+              name = await getName(message.receiverID);
+            }
+            else{
+              name = await getName(message.senderID);
+            }
             _messages.add(ChatTile(messageData: message,name:name));
           }
           setState(() {});
