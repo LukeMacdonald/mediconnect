@@ -77,7 +77,6 @@ class _AddDoctor extends State<AddDoctor> {
   void initState() {
     super.initState();
   }
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -87,7 +86,6 @@ class _AddDoctor extends State<AddDoctor> {
         appBar: AppBar(
           iconTheme: Theme.of(context).iconTheme,
           backgroundColor: Colors.transparent,
-
           elevation: 0,
           leadingWidth: 54,
           leading: Align(
@@ -99,19 +97,6 @@ class _AddDoctor extends State<AddDoctor> {
               },
             ),
           ),
-          actions: const <Widget>[
-            AppBarItem(
-              icon: CupertinoIcons.bell_fill,
-              index: 5,
-            ),
-            SizedBox(width: 20),
-            AppBarItem(
-              icon: CupertinoIcons.settings_solid,
-              index: 5,
-            ),
-            SizedBox(width: 20),
-
-          ],
         ),
         body: Column(mainAxisSize: MainAxisSize.max, children: [
           Padding(
