@@ -147,6 +147,5 @@ public class PrescriptionServiceTests {
            .andExpect(MockMvcResultMatchers.status().isOk()
        );
    }
-
    
 }
