@@ -53,9 +53,9 @@ class _AdminHomePage extends State<AdminHomePage> {
               const SizedBox(
                 height: 20,
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 20,bottom: 30),
-                child: Text("Welcome Dr $name",style:const TextStyle(fontSize: 30)),
+              const Padding(
+                padding: EdgeInsets.only(left: 20,bottom: 30),
+                child: Text("Welcome Administrator",style:TextStyle(fontSize: 30)),
               ),
               SingleChildScrollView(
                 child: Column(

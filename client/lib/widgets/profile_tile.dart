@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:nd_telemedicine/pages/profiles/view_medical_history.dart';
 import 'package:nd_telemedicine/utilities/imports.dart';
 
 class ProfileTile extends StatefulWidget {
@@ -109,39 +110,54 @@ class _PatientTile extends State<PatientTile> {
                   children: [
                     const Padding(
                       padding: EdgeInsets.symmetric(horizontal: 20.0,vertical: 20.0),
-                      child: Text("Patient Details",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
+                      child: Text("Patient Details",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 30.0,vertical: 10.0),
-                      child: Text("Name: ${widget.user.firstName} ${widget.user.lastName}",style: const TextStyle(fontSize: 16)),
+                      child: Text("Name: ${widget.user.firstName} ${widget.user.lastName}",style: const TextStyle(fontSize: 18)),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 30.0,vertical: 10.0),
-                      child: Text("Email: ${widget.user.email}", style: const TextStyle(fontSize: 16)),
+                      child: Text("Email: ${widget.user.email}", style: const TextStyle(fontSize: 18)),
                     ),
                     Center(
                       child: Padding(
                         padding: const EdgeInsets.only(top:20.0,bottom:20.0,left:20.0),
                           child: SizedBox(
-                            height: 100.0,
-                            child: ListView(
-                              scrollDirection: Axis.horizontal,
+                            //height: 220.0,
+                            child: Column(
+
                               children: <Widget>[
-                                menuOption2(AppColors.buttonOption2Dark, const Icon(Icons.medication_rounded), const AddPrescription(), "Add Prescription", context),
-                                menuOption2(
-                                    AppColors.buttonOption1Dark,
-                                    const Icon(CupertinoIcons.bubble_left_bubble_right_fill),
-                                    ChatScreen(
-                                        messageData: MessageData(
-                                            null, widget.id, widget.user.id!,
-                                            DateTime.now(),"", false),
-                                        name: "${widget.user.firstName}  ${widget.user.lastName}" ),
-                                    "Message Patient", context),
-                                menuOption2(
-                                    AppColors.accent,
-                                    const Icon(CupertinoIcons.person),
-                                    ViewOtherProfile(id: widget.user.id!),
-                                    "View Profile", context),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+
+                                  menuOption2(AppColors.buttonOption2Dark, const Icon(Icons.medication_rounded), const AddPrescription(), "Add Prescription", context),
+                                  menuOption2(
+                                      AppColors.buttonOption1Dark,
+                                      const Icon(CupertinoIcons.bubble_left_bubble_right_fill),
+                                      ChatScreen(
+                                          messageData: MessageData(
+                                              null, widget.id, widget.user.id!,
+                                              DateTime.now(),"", false),
+                                          name: "${widget.user.firstName}  ${widget.user.lastName}" ),
+                                      "Message Patient", context),
+                                ],),
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                            menuOption2(
+                                AppColors.accent,
+                                const Icon(CupertinoIcons.person),
+                                ViewOtherProfile(id: widget.user.id!),
+                                "View Profile", context),
+                            menuOption2(
+                                Colors.orangeAccent,
+                                const Icon(CupertinoIcons.doc_checkmark),
+                                ViewOtherMedicalHistory(id: widget.user.id!),
+                                "View Medical History", context),
+                          ])
+
                             ],
                             ),
                           )
