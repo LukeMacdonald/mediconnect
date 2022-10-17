@@ -125,7 +125,7 @@ public class HealthStatusTests {
     // 2. Assert update health status
     // 3. Expect returned health status
     // -----------------------------------------------------------------------------------
-    public void updateHealthStatus_NotEmpty_ReturnsUpdatedHealthStatus() throws Exception {
+    public void updateHealthStatus_NotNull_ReturnsUpdatedHealthStatus() throws Exception {
         setup();
 
         Mockito.doReturn("Health Status successfully set").when(healthStatusController).saveHealthStatus(mockhealthStatus);
