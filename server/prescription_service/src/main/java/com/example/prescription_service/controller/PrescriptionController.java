@@ -74,7 +74,7 @@ public class PrescriptionController {
         
         List<Prescription> prescriptionList = prescriptionAlertService.getAllPrescription();
         if (prescriptionList.size() <= 0) {
-            throw new EmptyListException("There is currently no prescriptions.");
+            throw new EmptyListException("There are currently no prescriptions.");
         }
 
         return new ResponseEntity<>(prescriptionRepo.findAll(), HttpStatus.OK);
