@@ -71,9 +71,24 @@ public class AvailabilityServiceApplicationTests {
         availability3.setday_of_week(3);
     }
 
+    @Test
+    public void addAvailability_NoErrorThrown_AvailabilityAddedSuccessfully() throws Exception {
+        setup();
+       ResponseEntity responseEntity = ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body("Availability set!");
+       String expectedResponse = ow.writeValueAsString(availability1);
+       Mockito.doReturn(responseEntity).when(availabilityController).availability(availability1);
+
+
+       mockMvc.perform(MockMvcRequestBuilders.post("/doctor/set/availability")
+	   .contentType(MediaType.APPLICATION_JSON)
+	   .content(expectedResponse))
+       .andExpect(MockMvcResultMatchers.status().isOk()
+       );
+    }
+
 	@Test
     public void removeAvailability_NoErrorThrown_AvailabilityRemovedSuccessfully() throws Exception {
-        setup();
+       setup();
 
        String expectedResponse = ow.writeValueAsString(availability1);
 	   Mockito.doNothing().when(availabilityRepo).delete(availability1);
