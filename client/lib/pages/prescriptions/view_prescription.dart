@@ -39,17 +39,14 @@ class _PrescriptionList extends State<PrescriptionList> {
   void initState() {
     prescriptions = [];
 
-    //TODO: Uncomment this line when complete backend
-    // getDetails();
+    getDetails();
     super.initState();
   }
 
   Future getPrescriptions() async {
     http.Response response;
     try {
-      //TODO: change url for getting prescription
-      response = await http
-          .get(Uri.parse("${appointmentIP}search/userappointments/$id"));
+      response = await http.get(Uri.parse("/search/prescriptions/$id"));
 
       switch (response.statusCode) {
         case 200:
