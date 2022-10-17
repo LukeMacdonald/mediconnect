@@ -93,7 +93,7 @@ class _LogIn extends State<LogIn> {
             Align(
               child: Image.asset(
                 'images/doctor.jpeg',
-                fit: BoxFit.cover,
+                fit: BoxFit.fill,
               ),
             ),
             Align(

@@ -11,7 +11,6 @@ class Landing extends StatefulWidget {
 
 class _Landing extends State<Landing> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

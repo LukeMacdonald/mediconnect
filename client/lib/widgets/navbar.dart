@@ -350,11 +350,7 @@ class _AppDropDown extends State<AppDropDown>{
           }else if(value == 2){
             await UserSecureStorage.logOut();
             if(!mounted)return;
-            Navigator.push(
-                context,
-                PageTransition(
-                    type: PageTransitionType.leftToRight,
-                    child: const LogIn()));
+            navigate(const Landing(), context);
           }
         }
     );
