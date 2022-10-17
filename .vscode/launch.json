@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch MedicationServiceApplication",
+            "request": "launch",
+            "mainClass": "com.example.medication_service.MedicationServiceApplication",
+            "projectName": "medication_service"
+        },
+        {
+            "type": "java",
             "name": "Launch PrescriptionServiceApplication",
             "request": "launch",
             "mainClass": "com.example.prescription_service.PrescriptionServiceApplication",

@@ -13,5 +13,6 @@
     <module>prescription_service</module>
     <module>message_service</module>
     <module>profile_service</module>
+    <module>medication_service</module>
   </modules>
 </project>
