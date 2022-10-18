@@ -59,3 +59,6 @@ In order to run the application, there are certain prerequisites required:
 * Dockerization was implemented, allowing each microservice to be contained inside a single Docker container for an isolated testing environment.
 * In order to deploy the application however, the initial attempt was in deploying such a container to Heroku, but in doing so, requires for each microservice to be deployed to a seperate application.
 * As each microservice communicates to a single h2 database, the main issue is the innability to communicate certain entity variables such as a given user's ID to other services.
+### Example Admin Details
+Email: admin@gmail.com
+Password: admin@123
