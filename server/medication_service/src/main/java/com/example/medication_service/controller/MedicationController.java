@@ -118,7 +118,11 @@ public class MedicationController {
         if(!disabilities.isEmpty()) {
             disabilityRepo.deleteAll(disabilities);
         }
-        if(information ==null && illnesses.isEmpty() && disabilities.isEmpty()){
+        List<Medication> medications = medicationRepo.findAllByUserId(id);
+        if (!medications.isEmpty()) {
+            medicationRepo.deleteAll(medications);
+        }
+        if(information ==null && illnesses.isEmpty() && disabilities.isEmpty() && medications.isEmpty()){
             return new ResponseEntity<>("Nothing to Delete", HttpStatus.BAD_REQUEST);
         }
         else {
