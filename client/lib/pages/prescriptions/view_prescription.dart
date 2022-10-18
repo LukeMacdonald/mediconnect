@@ -11,16 +11,7 @@ class PrescriptionList extends StatefulWidget {
 class _PrescriptionList extends State<PrescriptionList> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  Widget bottom = const PatientBottomNavigationBar(
-    pageIndex: 2,
-  );
-
-  // String token = "";
-
   String id = "";
-
-  bool _visibility = true;
-
   late List<Widget> prescriptions;
 
   Future getDetails() async {
@@ -28,26 +19,15 @@ class _PrescriptionList extends State<PrescriptionList> {
     getPrescriptions();
   }
 
-  @override
-  void initState() {
-    prescriptions = [];
-
-    getDetails();
-    super.initState();
-  }
-
   Future getPrescriptions() async {
     http.Response response;
     try {
       response = await http.get(Uri.parse("${prescriptionIP}search/prescriptions/${int.parse(id)}"));
-      print(response.body);
-
       switch (response.statusCode) {
         case 200:
           var responseData = json.decode(response.body);
           for (var data in responseData) {
             Prescription prescription = Prescription();
-            print(data);
             prescription.setDetails(data);
             prescriptions.add(PrescriptionTile(
               prescription: prescription,
@@ -57,7 +37,6 @@ class _PrescriptionList extends State<PrescriptionList> {
           break;
         case 400:
           var responseData = json.decode(response.body);
-          print(responseData);
           prescriptions.add(Center(child: Padding(padding: const EdgeInsets.all(20.0), child: Text(responseData['message'],))));
           setState(() {});
           break;
@@ -98,6 +77,21 @@ class _PrescriptionList extends State<PrescriptionList> {
     ]));
   }
 
+  Widget _createListView() {
+    return ListView.builder(
+        itemCount: prescriptions.length,
+        itemBuilder: (context, index) {
+          return prescriptions[index];
+        });
+  }
+
+  @override
+  void initState() {
+    prescriptions = [];
+    getDetails();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -114,23 +108,8 @@ class _PrescriptionList extends State<PrescriptionList> {
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
               )),
-          actions: <Widget>[
-            Visibility(
-              visible: _visibility,
-              child: Padding(
-                padding: const EdgeInsets.only(right: 5),
-                // child: IconButton(
-                //     onPressed: () {
-                //       Navigator.push(
-                //           context,
-                //           PageTransition(
-                //               type: PageTransitionType.fade,
-                //               child: const HeathStatusPage()));
-                //     },
-                //     icon: const Icon(CupertinoIcons.plus)),
-              ),
-            ),
-            const AppDropDown(),
+          actions: const <Widget>[
+            AppDropDown(),
           ],
         ),
         body: SingleChildScrollView(
@@ -152,14 +131,8 @@ class _PrescriptionList extends State<PrescriptionList> {
             ),
           ],
         )),
-        bottomNavigationBar: bottom);
+        bottomNavigationBar: const PatientBottomNavigationBar(pageIndex: 2));
   }
 
-  Widget _createListView() {
-    return ListView.builder(
-        itemCount: prescriptions.length,
-        itemBuilder: (context, index) {
-          return prescriptions[index];
-        });
-  }
+
 }

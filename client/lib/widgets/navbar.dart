@@ -315,19 +315,6 @@ class _AppDropDown extends State<AppDropDown>{
                   children:const [
                     Padding(
                       padding: EdgeInsets.only(right:10.0),
-                      child: Icon(CupertinoIcons.settings_solid),
-                    ),
-                    Text("Settings"),
-                  ]
-              ),
-            ),
-
-            PopupMenuItem<int>(
-              value: 2,
-              child: Row(
-                  children:const [
-                    Padding(
-                      padding: EdgeInsets.only(right:10.0),
                       child: Icon(Icons.logout),
                     ),
                     Text("Logout"),
@@ -345,8 +332,6 @@ class _AppDropDown extends State<AppDropDown>{
                     child: const ViewProfile()));
 
           }else if(value == 1){
-
-          }else if(value == 2){
             await UserSecureStorage.logOut();
             if(!mounted)return;
             navigate(const Landing(), context);

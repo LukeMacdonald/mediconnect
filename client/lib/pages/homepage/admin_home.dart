@@ -82,14 +82,14 @@ class _AdminHomePage extends State<AdminHomePage> {
                                   'Add Doctor',
                                   context),
                               menuOption(
-                                  Colors.lightBlueAccent,
+                                  Colors.orangeAccent,
                                   const Icon(
-                                    CupertinoIcons.person_add,
+                                    CupertinoIcons.person_badge_minus,
                                     color: Colors.white,
                                     size: 50,
                                   ),
-                                  const AdminHomePage(),
-                                  'Add Admin',
+                                  const RemoveProfile(role: "doctor"),
+                                  'Remove Doctor',
                                   context),
                             ],
                           ),
@@ -107,16 +107,6 @@ class _AdminHomePage extends State<AdminHomePage> {
                             mainAxisSize: MainAxisSize.max,
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              menuOption(
-                                  Colors.orangeAccent,
-                                  const Icon(
-                                    CupertinoIcons.person_badge_minus,
-                                    color: Colors.white,
-                                    size: 50,
-                                  ),
-                                  const RemoveProfile(role: "doctor"),
-                                  'Remove Doctor',
-                                  context),
                               menuOption(
                                   Colors.redAccent,
                                   const Icon(

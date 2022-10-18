@@ -67,6 +67,7 @@ class _ViewProfileState extends State<ViewProfile> {
 
   @override
   void initState() {
+
     getFields();
     super.initState();
   }
@@ -87,7 +88,15 @@ class _ViewProfileState extends State<ViewProfile> {
                 child: IconBackground(
                   icon: CupertinoIcons.back,
                   onTap: () {
-                    navigate(const HomePage(), context);
+                    if(user.role=="patient"||user.role == "Patient") {
+                      navigate(const HomePage(), context);
+                    }
+                    else if(user.role=="doctor"||user.role == "Doctor") {
+                      navigate(const DoctorHomePage(), context);
+                    }
+                    else if(user.role=="superuser"||user.role == "Superuser") {
+                      navigate(const AdminHomePage(), context);
+                    }
                   },
                 ),
               ),
@@ -209,7 +218,7 @@ class _ViewProfileState extends State<ViewProfile> {
                           },
                         ),
                       ),
-                      isTextFieldDisabled
+                      isTextFieldDisabled && user.role == "patient"
                           ? SizedBox(
                               width: 20,
                               child: Padding(
@@ -221,9 +230,6 @@ class _ViewProfileState extends State<ViewProfile> {
                                   height: 50,
                                   onPressed: () {
                                     navigate(ViewMedicalHistory(id: user.id!), context);
-                                    // setState(() {
-                                    //   isTextFieldDisabled = false;
-                                    // });
                                   },
                                 ),
                               ),

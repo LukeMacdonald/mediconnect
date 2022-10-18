@@ -19,9 +19,16 @@ class _PrescriptionTile extends State<PrescriptionTile> {
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 15.0),
           child: ListTile(
+            leading: const Icon(
+              Icons.medication,
+              size: 60,
+              color: Colors.white,
+            ),
             contentPadding: const EdgeInsets.all(10),
             title: Text(
-                "Name: ${widget.prescription.name}\nDosage: ${widget.prescription.dosage}\nRepeats: ${widget.prescription.repeats}"), //Text(_appointment[index]),
+                "Name: ${widget.prescription.name}\nDosage: ${widget.prescription.dosage}\nRepeats: ${widget.prescription.repeats}",
+                style:
+                    const TextStyle(fontSize: 18)), //Text(_appointment[index]),
           ),
         ),
       ),
