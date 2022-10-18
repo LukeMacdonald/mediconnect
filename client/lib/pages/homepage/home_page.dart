@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:nd_telemedicine/pages/prescriptions/view_prescription.dart';
-import 'package:page_transition/page_transition.dart';
 import '../../utilities/imports.dart';
+import '../prescriptions/view_prescription.dart';
 import 'notifcation_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -136,7 +134,7 @@ class _HomePage extends State<HomePage> {
                               color: Colors.white,
                               size: 50,
                             ),
-                            const HomePage(),
+                            const PrescriptionList(),
                             'View Prescriptions',
                             context),
                       ],

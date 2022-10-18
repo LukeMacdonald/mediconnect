@@ -36,6 +36,15 @@ services:
     ports:
       - "8083:8083"
 
+  medication_service:
+    container_name: medication_service
+    image: medication_service:latest
+    build:
+      context: ../server/medication_service
+      dockerfile: Dockerfile
+    ports:
+      - "8084:8084"
+
   message_service:
     container_name: message_service
     image: message_service:latest

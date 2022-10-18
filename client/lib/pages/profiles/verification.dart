@@ -1,10 +1,6 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
-import '../../utilities/imports.dart';
 import 'package:http/http.dart' as http;
+import '../../utilities/imports.dart';
 
 
 class Verification extends StatefulWidget {
@@ -45,7 +41,7 @@ class _Verification extends State<Verification> {
         switch (response.statusCode) {
           case 201:
             var responseData = json.decode(response.body);
-            UserSecureStorage.setID(responseData['id']);
+            UserSecureStorage.setID(responseData['id'].toString());
             if(!mounted)return;
             Navigator.push(
                 context,

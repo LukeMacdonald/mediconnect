@@ -1,6 +1,7 @@
 export '../widgets/form_widgets.dart';
 export '../styles/theme.dart';
 export '../models/message_data.dart';
+export '../models/prescription.dart';
 export '../models/user.dart';
 export '../models/health_status.dart';
 export '../models/appointment.dart';
@@ -14,7 +15,7 @@ export '../widgets/dashboard.dart';
 export '../widgets/avatar.dart';
 export '../widgets/helpers.dart';
 export '../widgets/profile_tile.dart';
-
+export '../widgets/prescription_tile.dart';
 export '../security/storage_service.dart';
 export '../pages/homepage/doctor_home.dart';
 export '../pages/homepage/home_page.dart';
@@ -35,6 +36,7 @@ export '../pages/profiles/register.dart';
 export '../pages/profiles/verification.dart';
 export '../pages/profiles/add_doctor.dart';
 export '../pages/profiles/medical_history.dart';
+export '../pages/profiles/view_medical_history.dart';
 export '../pages/profiles/log_in.dart';
 export '../pages/profiles/remove_profile.dart';
 export '../pages/prescriptions/add_prescription.dart';
@@ -42,5 +44,9 @@ export '../pages/prescriptions/patients_menu.dart';
 export '../pages/landing.dart';
 export '../main.dart';
 export 'custom_functions.dart';
-
-
+export 'dart:async';
+export 'dart:convert';
+export 'dart:io';
+export 'package:page_transition/page_transition.dart';
+export 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
+export 'package:flutter/material.dart';

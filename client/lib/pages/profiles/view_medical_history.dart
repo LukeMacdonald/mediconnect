@@ -1,10 +1,7 @@
-import 'dart:convert';
-import 'dart:ffi';
-
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:nd_telemedicine/utilities/imports.dart';
 import 'package:http/http.dart' as http;
+
 
 class ViewOtherMedicalHistory extends StatefulWidget {
   final int id;
@@ -16,28 +13,31 @@ class ViewOtherMedicalHistory extends StatefulWidget {
 }
 
 class _ViewOtherMedicalHistoryState extends State<ViewOtherMedicalHistory> {
-  late Bool smokes;
-  late Bool drinks;
-  late String illnesses = "";
-  late String disabilities = "";
+
+  UserMedicalHistory history = UserMedicalHistory();
 
   Future getMedicalHistory() async {
+
     var response = await http.get(Uri.parse(
-        "${medicationIP}get/healthinformation/${UserSecureStorage.getID()}"));
+        "${medicationIP}get/healthinformation/${widget.id}"));
 
     var responseData = json.decode(response.body);
-    smokes = responseData['smoke'];
-    drinks = responseData['drink'];
+    history.smoke = responseData['smoke'];
+    history.drink = responseData['drink'];
 
     response = await http.get(
-        Uri.parse("${medicationIP}get/illnesses/${UserSecureStorage.getID()}"));
+        Uri.parse("${medicationIP}get/illnesses/${widget.id}"));
     responseData = json.decode(response.body);
-    illnesses = responseData['illness'];
+    for(dynamic element in responseData){
+      history.userIllnesses.add(element['illness']);
+    }
 
     response = await http.get(Uri.parse(
-        "${medicationIP}get/disabilities/${UserSecureStorage.getID()}"));
+        "${medicationIP}get/disabilities/${widget.id}"));
     responseData = json.decode(response.body);
-    illnesses = responseData['disability'];
+    for(dynamic element in responseData){
+      history.userDisabilities.add(element['disability']);
+    }
 
     setState(() {});
   }
@@ -48,7 +48,6 @@ class _ViewOtherMedicalHistoryState extends State<ViewOtherMedicalHistory> {
     super.initState();
   }
 
-  // TODO: GET MEDICAL HISTORY FROM BACKEND
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -80,12 +79,12 @@ class _ViewOtherMedicalHistoryState extends State<ViewOtherMedicalHistory> {
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: ListView(
                     children: [
-                      Icon(
+                      const Icon(
                         CupertinoIcons.info_circle_fill,
                         size: 120,
                         color: AppColors.secondary,
                       ),
-                      Padding(
+                      const Padding(
                         padding: EdgeInsets.symmetric(vertical: 15.0),
                         child: Text(
                           "Medical History",
@@ -93,45 +92,69 @@ class _ViewOtherMedicalHistoryState extends State<ViewOtherMedicalHistory> {
                         ),
                       ),
                       Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Text(
+                          "Smokes: ${history.smoke}",
+                          style: const TextStyle(fontSize: 18),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Text(
+                          "Drinks Alcohol: ${history.drink}",
+                          style: const TextStyle(fontSize: 18),
+                        ),
+                      ),
+                      const Padding(
                         padding: EdgeInsets.all(10.0),
                         child: Text(
-                          "Smokes: $smokes",
+                          "Known Illnesses:",
                           style: TextStyle(fontSize: 18),
                         ),
                       ),
                       Padding(
+                        padding: const EdgeInsets.only(left: 10.0,right:10,bottom:10),
+                        child: SizedBox(
+                          height:120,
+                          child:Material(
+                            elevation: 2,
+                            color: Theme.of(context).cardColor,
+                            borderRadius: const BorderRadius.all(Radius.circular(5)),
+                            child: Padding(
+                              padding: const EdgeInsets.all(20.0),
+                              child: ListView.builder(
+                                  itemCount: history.userIllnesses.length,
+                                  itemBuilder: (BuildContext context, int index) {
+                                    return Text("- ${history.userIllnesses[index]}",style: const TextStyle(fontSize: 14),);
+                                  }),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const Padding(
                         padding: EdgeInsets.all(10.0),
                         child: Text(
-                          "Drinks: $drinks",
+                          "Known Disabilities:",
                           style: TextStyle(fontSize: 18),
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.all(10.0),
-                        child: Text(
-                          "Takes Medication: ",
-                          style: TextStyle(fontSize: 18),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(10.0),
-                        child: Text(
-                          "Medications: ",
-                          style: TextStyle(fontSize: 18),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(10.0),
-                        child: Text(
-                          "Illnesses: $illnesses",
-                          style: TextStyle(fontSize: 18),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(10.0),
-                        child: Text(
-                          "Disabilities: $disabilities",
-                          style: TextStyle(fontSize: 18),
+                        padding: const EdgeInsets.only(left: 10.0,right:10,bottom:10),
+                        child: SizedBox(
+                          height:120,
+                          child:Material(
+                            elevation: 2,
+                            color: Theme.of(context).cardColor,
+                            borderRadius: const BorderRadius.all(Radius.circular(5)),
+                            child: Padding(
+                              padding: const EdgeInsets.all(20.0),
+                              child: ListView.builder(
+                                  itemCount: history.userDisabilities.length,
+                                  itemBuilder: (BuildContext context, int index) {
+                                    return Text("- ${history.userDisabilities[index]}",style: const TextStyle(fontSize: 14),);
+                                  }),
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -151,7 +174,39 @@ class ViewMedicalHistory extends StatefulWidget {
 }
 
 class _ViewMedicalHistoryState extends State<ViewMedicalHistory> {
-  // TODO: GET MEDICAL HISTORY FROM BACKEND
+  UserMedicalHistory history = UserMedicalHistory();
+  String id = "";
+
+  Future getMedicalHistory() async {
+    
+    await UserSecureStorage.getID().then(((value) => id = value!));
+    var response = await http.get(Uri.parse(
+        "${medicationIP}get/healthinformation/${int.parse(id)}"));
+
+
+    var responseData = json.decode(response.body);
+    history.smoke = responseData['smoke'];
+    history.drink = responseData['drink'];
+    response = await http.get(
+        Uri.parse("${medicationIP}get/illnesses/${int.parse(id)}"));
+    responseData = json.decode(response.body);
+    for(dynamic element in responseData){
+      history.userIllnesses.add(element['illness']);
+    }
+    response = await http.get(Uri.parse(
+        "${medicationIP}get/disabilities/${int.parse(id)}"));
+    responseData = json.decode(response.body);
+
+    for(dynamic element in responseData){
+      history.userDisabilities.add(element['disability']);
+    }
+    setState(() {});
+  }
+  @override
+  void initState() {
+    getMedicalHistory();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -168,7 +223,7 @@ class _ViewMedicalHistoryState extends State<ViewMedicalHistory> {
                 child: IconBackground(
                   icon: CupertinoIcons.back,
                   onTap: () {
-                    Navigator.of(context).pop();
+                    navigate(const ViewProfile(), context);
                   },
                 ),
               ),
@@ -183,12 +238,12 @@ class _ViewMedicalHistoryState extends State<ViewMedicalHistory> {
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: ListView(
                     children: [
-                      Icon(
+                      const Icon(
                         CupertinoIcons.info_circle_fill,
                         size: 120,
                         color: AppColors.secondary,
                       ),
-                      Padding(
+                      const Padding(
                         padding: EdgeInsets.symmetric(vertical: 15.0),
                         child: Text(
                           "Medical History",
@@ -196,56 +251,80 @@ class _ViewMedicalHistoryState extends State<ViewMedicalHistory> {
                         ),
                       ),
                       Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Text(
+                          "Smokes: ${history.smoke}",
+                          style: const TextStyle(fontSize: 18),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Text(
+                          "Drinks Alcohol: ${history.drink}",
+                          style: const TextStyle(fontSize: 18),
+                        ),
+                      ),
+                      const Padding(
                         padding: EdgeInsets.all(10.0),
                         child: Text(
-                          "Smokes: ",
+                          "Known Illnesses:",
                           style: TextStyle(fontSize: 18),
                         ),
                       ),
                       Padding(
+                        padding: const EdgeInsets.only(left: 10.0,right:10,bottom:10),
+                        child: SizedBox(
+                          height:120,
+                          child:Material(
+                            elevation: 2,
+                          color: Theme.of(context).cardColor,
+                          borderRadius: const BorderRadius.all(Radius.circular(5)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: ListView.builder(
+                                itemCount: history.userIllnesses.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return Text("- ${history.userIllnesses[index]}",style: const TextStyle(fontSize: 14),);
+                                }),
+                          ),
+                        ),
+                        ),
+                      ),
+                      const Padding(
                         padding: EdgeInsets.all(10.0),
                         child: Text(
-                          "Drinks: ",
+                          "Known Disabilities:",
                           style: TextStyle(fontSize: 18),
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.all(10.0),
-                        child: Text(
-                          "Takes Medication: ",
-                          style: TextStyle(fontSize: 18),
+                        padding: const EdgeInsets.only(left: 10.0,right:10,bottom:10),
+                        child: SizedBox(
+                          height:120,
+                          child:Material(
+                            elevation: 2,
+                            color: Theme.of(context).cardColor,
+                            borderRadius: const BorderRadius.all(Radius.circular(5)),
+                            child: Padding(
+                              padding: const EdgeInsets.all(20.0),
+                              child: ListView.builder(
+                                  itemCount: history.userDisabilities.length,
+                                  itemBuilder: (BuildContext context, int index) {
+                                    return Text("- ${history.userDisabilities[index]}",style: const TextStyle(fontSize: 14),);
+                                  }),
+                            ),
+                          ),
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.all(10.0),
-                        child: Text(
-                          "Medications: ",
-                          style: TextStyle(fontSize: 18),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(10.0),
-                        child: Text(
-                          "Illnesses: ",
-                          style: TextStyle(fontSize: 18),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(10.0),
-                        child: Text(
-                          "Disabilities:",
-                          style: TextStyle(fontSize: 18),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(10.0),
+                        padding: const EdgeInsets.all(20.0),
                         child: SubmitButton(
                           color: Colors.teal,
                           message: "Update Medical History",
                           width: 50,
                           height: 50,
                           onPressed: () {
-                            Navigator.of(context).pop();
+                            navigate(UpdateMedicalHistory(id: int.parse(id)), context);
                           },
                         ),
                       ),

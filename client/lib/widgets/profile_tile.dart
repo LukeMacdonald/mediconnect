@@ -1,6 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:nd_telemedicine/pages/profiles/view_medical_history.dart';
 import 'package:nd_telemedicine/utilities/imports.dart';
 
 class ProfileTile extends StatefulWidget {
@@ -20,9 +18,19 @@ class _ProfileTile extends State<ProfileTile> {
             AlertDialog(content: const Text("Are you sure you want to remove account?"), actions: <Widget>[
               TextButton(
                 onPressed: () async {
-                  await deleteProfile(email);
-                  if(!mounted)return;
-                  navigate(RemoveProfile(role: role), context);
+                  print(widget.user.role);
+                  print(widget.user.id);
+                  if(widget.user.role == "doctor") {
+                    await deleteDoctor(email, widget.user.id!);
+                    if(!mounted)return;
+                    navigate(RemoveProfile(role: role), context);
+                  }
+                  else{
+                    await deletePatient(email, widget.user.id!);
+                    if(!mounted)return;
+                    navigate(RemoveProfile(role: role), context);
+                  }
+
                 },
                 child: const Text('Confirm'),
               ),
@@ -132,7 +140,7 @@ class _PatientTile extends State<PatientTile> {
                                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   children: [
 
-                                  menuOption2(AppColors.buttonOption2Dark, const Icon(Icons.medication_rounded), const AddPrescription(), "Add Prescription", context),
+                                  menuOption2(AppColors.buttonOption2Dark, const Icon(Icons.medication_rounded), AddPrescription(patientId:widget.user.id!), "Add Prescription", context),
                                   menuOption2(
                                       AppColors.buttonOption1Dark,
                                       const Icon(CupertinoIcons.bubble_left_bubble_right_fill),

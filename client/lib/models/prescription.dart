@@ -10,7 +10,7 @@ class Prescription {
   late int repeats;
 
   setDetails(var details) {
-    id = details['id'];
+    id = details['prescriptionID'];
     name = details['name'];
     dosage = details['dosage'];
     repeats = details['repeats'];

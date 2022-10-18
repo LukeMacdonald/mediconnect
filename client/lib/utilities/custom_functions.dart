@@ -1,9 +1,5 @@
-import 'package:page_transition/page_transition.dart';
-import '../security/storage_service.dart';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import '../main.dart';
-import 'dart:io';
+import '../../utilities/imports.dart';
 
 
 String getDayStringFrontDayInt(int day) {
@@ -67,12 +63,32 @@ Future<String> getName(int id) async {
   return response.body;
 }
 
-Future<void> deleteProfile(String email) async {
+Future<void> deletePatient(String email,int id) async {
   String jwt = "";
   await UserSecureStorage.getJWTToken().then((value) => jwt = value!);
   await http.delete(Uri.parse("${authenticationIP}remove/$email"), headers: {
     'Content-Type': 'application/json',
     HttpHeaders.authorizationHeader: jwt
+  });
+  await http.delete(Uri.parse("${appointmentIP}delete/patient/$id"), headers: {
+    'Content-Type': 'application/json',
+  });
+  await http.delete(Uri.parse("${messageIP}delete/user/$id"), headers: {
+    'Content-Type': 'application/json',
+  });
+}
+Future<void> deleteDoctor(String email,int id) async {
+  String jwt = "";
+  await UserSecureStorage.getJWTToken().then((value) => jwt = value!);
+  await http.delete(Uri.parse("${authenticationIP}remove/$email"), headers: {
+    'Content-Type': 'application/json',
+    HttpHeaders.authorizationHeader: jwt
+  });
+  await http.delete(Uri.parse("${appointmentIP}delete/doctor/$id"), headers: {
+    'Content-Type': 'application/json',
+  });
+  await http.delete(Uri.parse("${messageIP}delete/user/$id"), headers: {
+    'Content-Type': 'application/json',
   });
 }
 

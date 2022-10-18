@@ -1,11 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:http/http.dart' as http;
 import '../../utilities/imports.dart';
-import 'dart:convert';
 
 class LogIn extends StatefulWidget {
   const LogIn({Key? key}) : super(key: key);

@@ -385,26 +385,13 @@ class _BookingByTime extends State<BookingByTime> {
           elevation: 0,
           leading: const AppBarItem(
             icon: CupertinoIcons.home,
-            index: 0,
+            index: 3,
           ),
           title: const Text("Book Appointment",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
               )),
-          actions: const <Widget>[
-            AppBarItem(
-              icon: CupertinoIcons.bell_fill,
-              index: 5,
-
-            ),
-            SizedBox(width: 20),
-            AppBarItem(
-              icon: CupertinoIcons.settings_solid,
-              index: 5,
-            ),
-            SizedBox(width: 20),
-          ],
         ),
         body: SingleChildScrollView(
             child: Column(

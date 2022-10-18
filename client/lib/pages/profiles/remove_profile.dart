@@ -1,10 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:http/http.dart' as http;
 import '../../utilities/imports.dart';
-import 'dart:async';
-import 'dart:convert';
 
 class RemoveProfile extends StatefulWidget {
   final String role;

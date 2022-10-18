@@ -1,16 +1,38 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import '../../widgets/buttons.dart';
+import '../../utilities/imports.dart';
+import 'package:http/http.dart' as http;
 
 
 class AddPrescription extends StatefulWidget {
-  const AddPrescription({Key? key}) : super(key: key);
+  final int patientId;
+  const AddPrescription({Key? key,required this.patientId}) : super(key: key);
 
   @override
   State<AddPrescription> createState() => _AddPrescription();
 }
 
 class _AddPrescription extends State<AddPrescription> {
+  Prescription prescription = Prescription();
+
+  Future save() async {
+    String id = "";
+    await UserSecureStorage.getID().then(((value) => id = value!));
+
+    await http.post(Uri.parse("${prescriptionIP}prescribe"),
+    headers: {'Content-Type': 'application/json'},
+    body: json.encode({
+    'patientID': widget.patientId,
+    'doctorID': int.parse(id),
+    'name': prescription.name,
+    'repeats': prescription.repeats,
+    'dosage': prescription.dosage,
+    }));
+
+    if(!mounted)return;
+    navigate(const DoctorHomePage(), context);
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -94,9 +116,10 @@ class _AddPrescription extends State<AddPrescription> {
                                             child: Padding(
                                                 padding: const EdgeInsets.symmetric(horizontal: 15),
                                                 child: TextFormField(
-
                                                   obscureText: false,
-                                                  onChanged: (val) {},
+                                                  onChanged: (val) {
+                                                    prescription.name = val;
+                                                  },
                                                   decoration: const InputDecoration(
                                                     border: InputBorder.none,
                                                     labelText: 'Name',
@@ -134,7 +157,10 @@ class _AddPrescription extends State<AddPrescription> {
                                                 padding: const EdgeInsets.symmetric(horizontal: 15),
                                                 child: TextFormField(
                                                   obscureText: false,
-                                                  onChanged: (val) {},
+                                                  onChanged: (val) {
+                                                    prescription.dosage = double.parse(val);
+
+                                                  },
                                                   decoration: const InputDecoration(
                                                     border: InputBorder.none,
                                                     labelText: 'Dosage',
@@ -173,7 +199,9 @@ class _AddPrescription extends State<AddPrescription> {
                                                 child: TextFormField(
 
                                                   obscureText: false,
-                                                  onChanged: (val) {},
+                                                  onChanged: (val) {
+                                                    prescription.repeats = int.parse(val);
+                                                  },
                                                   decoration: const InputDecoration(
                                                     border: InputBorder.none,
                                                     labelText: 'Repeats',
@@ -202,7 +230,9 @@ class _AddPrescription extends State<AddPrescription> {
                             message: "Submit",
                             width: 100,
                             height: 50,
-                            onPressed: () async {},
+                            onPressed: () async {
+                              save();
+                            },
                           ),
                         ),
                       ]),

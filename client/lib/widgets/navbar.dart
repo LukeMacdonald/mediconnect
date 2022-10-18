@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
+import 'package:nd_telemedicine/pages/prescriptions/view_prescription.dart';
 import '../../utilities/imports.dart';
 
 class AppBarItem extends StatefulWidget {
@@ -29,13 +28,13 @@ class _AppBarItem extends State<AppBarItem> {
   }
 
   Widget getHomePage(String role){
-    if (role == "patient"){
+    if (role == "patient" || role == "Patient"){
       return const HomePage();
     }
-    else if(role == "doctor"){
+    else if(role == "doctor"|| role == "Doctor"){
       return const DoctorHomePage();
     }
-    else if(role == "superuser"){
+    else if(role == "superuser"|| role == "Superuser"){
       return const AdminHomePage();
     }
     else {
@@ -109,7 +108,7 @@ class _PatientBottomNavigationBar extends State<PatientBottomNavigationBar> {
                 label: "prescriptions",
                 icon: Icons.medication,
                 isSelected: (widget.pageIndex==2),
-                page:const HomePage(),
+                page:const PrescriptionList(),
               ),
               NavigationBarItem(
                   label: "appointments",
@@ -316,19 +315,6 @@ class _AppDropDown extends State<AppDropDown>{
                   children:const [
                     Padding(
                       padding: EdgeInsets.only(right:10.0),
-                      child: Icon(CupertinoIcons.settings_solid),
-                    ),
-                    Text("Settings"),
-                  ]
-              ),
-            ),
-
-            PopupMenuItem<int>(
-              value: 2,
-              child: Row(
-                  children:const [
-                    Padding(
-                      padding: EdgeInsets.only(right:10.0),
                       child: Icon(Icons.logout),
                     ),
                     Text("Logout"),
@@ -346,8 +332,6 @@ class _AppDropDown extends State<AppDropDown>{
                     child: const ViewProfile()));
 
           }else if(value == 1){
-
-          }else if(value == 2){
             await UserSecureStorage.logOut();
             if(!mounted)return;
             navigate(const Landing(), context);

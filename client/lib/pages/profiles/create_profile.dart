@@ -1,9 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import '../../utilities/imports.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
-
 
 class ProfileCreation extends StatefulWidget {
 
@@ -12,8 +9,8 @@ class ProfileCreation extends StatefulWidget {
   State<ProfileCreation> createState() => _ProfileCreation();
 }
 class _ProfileCreation extends State<ProfileCreation> {
-  final scaffoldKey = GlobalKey<ScaffoldState>();
 
+  final scaffoldKey = GlobalKey<ScaffoldState>();
 
 
   Future savePatient(BuildContext context) async {
@@ -50,30 +47,14 @@ class _ProfileCreation extends State<ProfileCreation> {
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: ()=>FocusScope.of(context).unfocus(),
-    child:Scaffold(
+    child: Scaffold(
         key: scaffoldKey,
-        //extendBodyBehindAppBar: true,
         resizeToAvoidBottomInset: true,
-        appBar: AppBar(
-          iconTheme: Theme.of(context).iconTheme,
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          leadingWidth: 54,
-          leading: Align(
-            alignment: Alignment.centerRight,
-            child: IconBackground(
-              icon: CupertinoIcons.back,
-              onTap: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ),
-        ),
         body: SizedBox(
             child: Column(
                     children: [
                   Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 0, 10),
+                    padding: const EdgeInsetsDirectional.fromSTEB(20, 100, 0, 10),
                     child: Row(
                       children: const [
                         Padding(
@@ -116,8 +97,10 @@ class _ProfileCreation extends State<ProfileCreation> {
                     const UserGivenLastName(),
                     const UserDOB(),
                     const UserGivenPhoneNumber(),
-                    const UserGivenPassword(),
-                    const UserGivenConfirmPassword(),
+                    const Padding(
+                      padding: EdgeInsets.only(top:20.0),
+                      child: UserGivenConfirmPassword(),
+                    ),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical:40,horizontal: 80),
                         child: SubmitButton(
@@ -134,11 +117,13 @@ class _ProfileCreation extends State<ProfileCreation> {
                               alert("Please Enter Your Date of Birth!", context);
                             } else if (await UserSecureStorage.getFirstName() == "" || await UserSecureStorage.getPhoneNumber() == null) {
                               alert("Please Enter Your Phone Number!", context);
-                            } else if (await UserSecureStorage.getPassword() == "" || await UserSecureStorage.getPassword()== null) {
-                              alert("Please Enter Your Password!", context);
-                            } else if (await UserSecureStorage.getConfirmPassword() == "" || await UserSecureStorage.getConfirmPassword() == null) {
+                            }
+                            // else if (await UserSecureStorage.getPassword() == "" || await UserSecureStorage.getPassword()== null) {
+                            //   alert("Please Enter Your Password!", context);
+                            // }
+                            else if (await UserSecureStorage.getConfirmPassword() == "" || await UserSecureStorage.getConfirmPassword() == null) {
                               alert("Please Confirm Your Password!", context);
-                            } else if (await UserSecureStorage.getConfirmPassword()!= await UserSecureStorage.getPassword()) {
+                            } else if (await UserSecureStorage.getConfirmPassword() != await UserSecureStorage.getConfirmPassword() ) {
                               alert("Passwords Did Not Match!", context);
                             } else {
                               savePatient(context);

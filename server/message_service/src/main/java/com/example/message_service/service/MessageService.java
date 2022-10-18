@@ -60,6 +60,12 @@ public class MessageService{
         }
         return null;
     }
+
+    public void deleteUser(int id){
+        List<Message> messages = messageRepo.findAllByReceiverID(id);
+        messages.addAll(messageRepo.findAllBySenderID(id));
+        messageRepo.deleteAll(messages);
+    }
 }
 
 

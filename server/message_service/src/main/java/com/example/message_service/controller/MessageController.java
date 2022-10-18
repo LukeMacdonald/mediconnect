@@ -55,6 +55,9 @@ public class MessageController {
         else{
             return ResponseEntity.badRequest().body("Error");
         }
-
+    }
+    @DeleteMapping(value = "/delete/user/{id}")
+    public void deleteUserMessages(@PathVariable("id") int id){
+        messageService.deleteUser(id);
     }
 }

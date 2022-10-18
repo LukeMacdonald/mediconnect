@@ -18,19 +18,13 @@ public class HealthInformation{
     @Column
     private Boolean drink;
 
-    @Column
-    private Boolean medication;
-
-
-
     public HealthInformation() {
     }
 
-    public HealthInformation(int id, Boolean smoke, Boolean drink, Boolean medication) {
+    public HealthInformation(int id, Boolean smoke, Boolean drink) {
         this.id = id;
         this.smoke = smoke;
         this.drink = drink;
-        this.medication = medication;
     }
 
     public int getId() {
@@ -65,18 +59,6 @@ public class HealthInformation{
         this.drink = drink;
     }
 
-    public Boolean isMedication() {
-        return this.medication;
-    }
-
-    public Boolean getMedication() {
-        return this.medication;
-    }
-
-    public void setMedication(Boolean medication) {
-        this.medication = medication;
-    }
-
     public HealthInformation id(int id) {
         setId(id);
         return this;
@@ -92,11 +74,6 @@ public class HealthInformation{
         return this;
     }
 
-    public HealthInformation medication(Boolean medication) {
-        setMedication(medication);
-        return this;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (o == this)
@@ -105,12 +82,12 @@ public class HealthInformation{
             return false;
         }
         HealthInformation healthInformation = (HealthInformation) o;
-        return id == healthInformation.id && Objects.equals(smoke, healthInformation.smoke) && Objects.equals(drink, healthInformation.drink) && Objects.equals(medication, healthInformation.medication);
+        return id == healthInformation.id && Objects.equals(smoke, healthInformation.smoke) && Objects.equals(drink, healthInformation.drink);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, smoke, drink, medication);
+        return Objects.hash(id, smoke, drink);
     }
 
     @Override
@@ -119,7 +96,6 @@ public class HealthInformation{
             " id='" + getId() + "'" +
             ", smoke='" + isSmoke() + "'" +
             ", drink='" + isDrink() + "'" +
-            ", medication='" + isMedication() + "'" +
             "}";
     }
 

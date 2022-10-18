@@ -101,32 +101,14 @@ public class AppointmentController {
         return ResponseEntity.ok().body("Appointment Updated!");
     }
 
-    // // Get list of appointments by the current date
-    // @GetMapping(value="/search/appointment/date")
-    // public List<Appointment> getUpcomingAppointments() {
-
-    //     // Parse date to just dd/mm/YYYY
-    //     Date in = new Date();
-    //     LocalDateTime ldt = LocalDateTime.ofInstant(in.toInstant(), ZoneId.systemDefault());
-    //     Date out = Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant());
-        
-    //     List<Appointment> upcomingAppointments = appointRepo.findAppointmentByDate(out);
-
-    //     for (int i = 0; i < upcomingAppointments.size(); i++) {
-    //         System.out.println(upcomingAppointments.get(i));
-    //     }
-
-    //     return upcomingAppointments;
-    // }
-
-    // // On every day at midnight perform this task:
-    // // Get appointments by the current date
-    // // For all appointments at the current date, send an email to the patient
-    // @GetMapping(value="/search/user/{id}")
-    // public UserProjection notifyPatientBooking(@PathVariable int id) {
-
-    //     List<Appointment> upcomingAppointments = getUpcomingAppointments();
-
-    //     return userRepo.findUserById(id);
-    // }
+    @DeleteMapping(value = "/delete/patient/{patientID}")
+    public void deleteAppointmentByPatient(@PathVariable("patientID") int id){
+        List<Appointment> appointments = appointRepo.findAppointmentByPatient(id);
+        appointRepo.deleteAll(appointments);
+    }
+    @DeleteMapping(value = "/delete/doctor/{doctorID}")
+    public void deleteAppointmentByDoctor(@PathVariable("doctorID") int id){
+        List<Appointment> appointments = appointRepo.findAppointmentByDoctor(id);
+        appointRepo.deleteAll(appointments);
+    }
 }

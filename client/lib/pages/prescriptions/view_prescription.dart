@@ -1,16 +1,9 @@
-import 'dart:convert';
 import 'package:flutter/cupertino.dart';
-import 'package:nd_telemedicine/widgets/prescription_tile.dart';
-import 'package:page_transition/page_transition.dart';
-import '../../models/prescription.dart';
 import '../../utilities/imports.dart';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class PrescriptionList extends StatefulWidget {
-  final String role;
-  const PrescriptionList({Key? key, required this.role}) : super(key: key);
-  // const PrescriptionList({Key? key}) : super(key: key);
+  const PrescriptionList({Key? key}) : super(key: key);
   @override
   State<PrescriptionList> createState() => _PrescriptionList();
 }
@@ -18,16 +11,7 @@ class PrescriptionList extends StatefulWidget {
 class _PrescriptionList extends State<PrescriptionList> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  Widget bottom = const PatientBottomNavigationBar(
-    pageIndex: 2,
-  );
-
-  // String token = "";
-
   String id = "";
-
-  bool _visibility = true;
-
   late List<Widget> prescriptions;
 
   Future getDetails() async {
@@ -35,39 +19,25 @@ class _PrescriptionList extends State<PrescriptionList> {
     getPrescriptions();
   }
 
-  @override
-  void initState() {
-    prescriptions = [];
-
-    getDetails();
-    super.initState();
-  }
-
   Future getPrescriptions() async {
     http.Response response;
     try {
-      response = await http.get(Uri.parse("/search/prescriptions/$id"));
-
+      response = await http.get(Uri.parse("${prescriptionIP}search/prescriptions/${int.parse(id)}"));
       switch (response.statusCode) {
         case 200:
           var responseData = json.decode(response.body);
           for (var data in responseData) {
             Prescription prescription = Prescription();
             prescription.setDetails(data);
-
             prescriptions.add(PrescriptionTile(
               prescription: prescription,
             ));
             setState(() {});
           }
-
           break;
         case 400:
-          prescriptions.add(Center(
-              child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Text(response.body),
-          )));
+          var responseData = json.decode(response.body);
+          prescriptions.add(Center(child: Padding(padding: const EdgeInsets.all(20.0), child: Text(responseData['message'],))));
           setState(() {});
           break;
         default:
@@ -107,6 +77,21 @@ class _PrescriptionList extends State<PrescriptionList> {
     ]));
   }
 
+  Widget _createListView() {
+    return ListView.builder(
+        itemCount: prescriptions.length,
+        itemBuilder: (context, index) {
+          return prescriptions[index];
+        });
+  }
+
+  @override
+  void initState() {
+    prescriptions = [];
+    getDetails();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -123,23 +108,8 @@ class _PrescriptionList extends State<PrescriptionList> {
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
               )),
-          actions: <Widget>[
-            Visibility(
-              visible: _visibility,
-              child: Padding(
-                padding: const EdgeInsets.only(right: 5),
-                // child: IconButton(
-                //     onPressed: () {
-                //       Navigator.push(
-                //           context,
-                //           PageTransition(
-                //               type: PageTransitionType.fade,
-                //               child: const HeathStatusPage()));
-                //     },
-                //     icon: const Icon(CupertinoIcons.plus)),
-              ),
-            ),
-            const AppDropDown(),
+          actions: const <Widget>[
+            AppDropDown(),
           ],
         ),
         body: SingleChildScrollView(
@@ -161,14 +131,8 @@ class _PrescriptionList extends State<PrescriptionList> {
             ),
           ],
         )),
-        bottomNavigationBar: bottom);
+        bottomNavigationBar: const PatientBottomNavigationBar(pageIndex: 2));
   }
 
-  Widget _createListView() {
-    return ListView.builder(
-        itemCount: prescriptions.length,
-        itemBuilder: (context, index) {
-          return prescriptions[index];
-        });
-  }
+
 }

@@ -1,5 +1,3 @@
-import 'package:page_transition/page_transition.dart';
-import 'package:flutter/material.dart';
 import '../../utilities/imports.dart';
 
 class AppBarTitle extends StatelessWidget {

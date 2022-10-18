@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
+import '../../utilities/imports.dart';
 
 Widget menuOption(Color color, Icon icon,Widget page,String message,BuildContext context){
   return Padding(

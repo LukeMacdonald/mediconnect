@@ -1,9 +1,6 @@
 import '../../utilities/imports.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'dart:io';
 
 class AddDoctor extends StatefulWidget {
 
@@ -17,6 +14,8 @@ class _AddDoctor extends State<AddDoctor> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   bool _changeEmail = false;
+  bool done = true;
+
   String? email;
 
   changeEmailValue(String? newText) {
@@ -27,9 +26,11 @@ class _AddDoctor extends State<AddDoctor> {
   }
 
   Future saveDoctor(String email) async {
+    done = false;
     String token = "";
     await UserSecureStorage.getJWTToken().then((value) => token = value!);
     try {
+
       final response = await http.get(
         Uri.parse("${authenticationIP}admin/add/doctor/verification/$email"),
         headers: {
@@ -40,6 +41,7 @@ class _AddDoctor extends State<AddDoctor> {
       switch (response.statusCode) {
         case 201:
           dynamic responseData = json.decode(response.body);
+          done = false;
           sendVerificationEmail(responseData['email'], responseData['code']);
           break;
         default:
@@ -62,6 +64,7 @@ class _AddDoctor extends State<AddDoctor> {
         case 202:
           dynamic responseData = json.decode(response.body);
           if(!mounted)return;
+          done = true;
           alert(responseData['message'], context);
           break;
         default:
@@ -93,7 +96,12 @@ class _AddDoctor extends State<AddDoctor> {
             child: IconBackground(
               icon: CupertinoIcons.back,
               onTap: () {
-                Navigator.of(context).pop();
+                if(done) {
+                  Navigator.of(context).pop();
+                }
+                else{
+                  alert("Request still processing", context);
+                }
               },
             ),
           ),
