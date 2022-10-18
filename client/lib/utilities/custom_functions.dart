@@ -1,9 +1,5 @@
-import 'package:page_transition/page_transition.dart';
-import '../security/storage_service.dart';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import '../main.dart';
-import 'dart:io';
+import '../../utilities/imports.dart';
 
 
 String getDayStringFrontDayInt(int day) {

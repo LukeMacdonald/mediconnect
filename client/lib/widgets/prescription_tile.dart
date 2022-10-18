@@ -1,8 +1,4 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:nd_telemedicine/models/prescription.dart';
 import '../../utilities/imports.dart';
-import 'package:page_transition/page_transition.dart';
 
 class PrescriptionTile extends StatefulWidget {
   final Prescription prescription;

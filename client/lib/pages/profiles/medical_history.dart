@@ -1,10 +1,4 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
-import 'package:nd_telemedicine/pages/profiles/view_medical_history.dart';
-import 'package:page_transition/page_transition.dart';
 import '../../utilities/imports.dart';
 import 'package:http/http.dart' as http;
 

@@ -1,10 +1,5 @@
-import 'dart:convert';
 import 'package:flutter/cupertino.dart';
-import 'package:nd_telemedicine/widgets/prescription_tile.dart';
-import 'package:page_transition/page_transition.dart';
-import '../../models/prescription.dart';
 import '../../utilities/imports.dart';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class PrescriptionList extends StatefulWidget {

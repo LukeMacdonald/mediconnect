@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart';
-import '../styles/theme.dart';
+import '../../utilities/imports.dart';
 
 class SubmitButton extends StatelessWidget {
 

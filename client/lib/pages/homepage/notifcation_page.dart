@@ -1,10 +1,7 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import '../../utilities/imports.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'package:nd_telemedicine/widgets/notification_tile.dart';
-import '../../models/prescription.dart';
 
 class Notifications extends StatefulWidget {
   const Notifications({Key? key}) : super(key: key);

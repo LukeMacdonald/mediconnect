@@ -1,10 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:nd_telemedicine/pages/profiles/view_medical_history.dart';
 import '../../utilities/imports.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'dart:io';
 
 class ViewProfile extends StatefulWidget {
   const ViewProfile({Key? key}) : super(key: key);

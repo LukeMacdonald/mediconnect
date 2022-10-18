@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:nd_telemedicine/utilities/imports.dart';
 import 'dart:io' show Platform;
 

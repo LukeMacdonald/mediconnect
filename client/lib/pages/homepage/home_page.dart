@@ -1,7 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:nd_telemedicine/pages/prescriptions/view_prescription.dart';
-import 'package:page_transition/page_transition.dart';
 import '../../utilities/imports.dart';
 import 'notifcation_page.dart';
 

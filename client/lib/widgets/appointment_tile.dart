@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import '../../utilities/imports.dart';
-import 'package:page_transition/page_transition.dart';
 
 class AppointmentPatientTile extends StatefulWidget {
   final Appointment appointment;

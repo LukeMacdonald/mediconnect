@@ -1,6 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:nd_telemedicine/pages/profiles/view_medical_history.dart';
 import 'package:nd_telemedicine/utilities/imports.dart';
 
 class ProfileTile extends StatefulWidget {
