@@ -45,7 +45,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(classes = MedicationServiceApplication.class)
 @AutoConfigureMockMvc
 public class MedicalHistoryTests {
 
@@ -218,7 +218,7 @@ public class MedicalHistoryTests {
         ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
 
         ResponseEntity responseEntity = ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(expectedResponse);
-        Mockito.doReturn(responseEntity).when(medicationController).getMedication(1);
+        Mockito.doReturn(responseEntity).when(medicationController).getMedications(1);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/get/medications/{userId}", mockMedication.getUserId())
         .contentType(MediaType.APPLICATION_JSON))
