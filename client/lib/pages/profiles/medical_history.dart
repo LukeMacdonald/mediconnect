@@ -17,16 +17,12 @@ class _MedicalHistory extends State<MedicalHistory> {
   TextEditingController ill = TextEditingController();
   TextEditingController med = TextEditingController();
   TextEditingController dis = TextEditingController();
-  TextEditingController textFieldController = TextEditingController();
-  TextEditingController textFieldController2 = TextEditingController();
-  TextEditingController textFieldController3 = TextEditingController();
+
 
   UserMedicalHistory userHistory = UserMedicalHistory();
 
   SingingCharacter? _smokes = SingingCharacter.no;
   SingingCharacter? _drinks = SingingCharacter.no;
-
-  bool? _disabled = true;
 
   List<String> presetIllnesses = [
     'Cancer',
@@ -44,7 +40,6 @@ class _MedicalHistory extends State<MedicalHistory> {
     'Mobility Disability ',
     'Cerebral Palsy'
   ];
-
 
 
   Future save() async {
@@ -82,24 +77,31 @@ class _MedicalHistory extends State<MedicalHistory> {
   }
 
   Widget illnesses() {
-    return Wrap(
-        spacing: 30,
-        crossAxisAlignment: WrapCrossAlignment.start,
+    return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CustomCheckBoxGroup(
-            buttonLables: presetIllnesses,
-            buttonValuesList: presetIllnesses,
-            checkBoxButtonValues: (values) {
-              userHistory.userIllnesses = values;
-            },
-            elevation: 5,
-            autoWidth: true,
-            enableShape: true,
-            unSelectedBorderColor: const Color.fromARGB(255, 245, 245, 245),
-            selectedBorderColor: const Color(0xFF2190E5),
-            unSelectedColor: const Color.fromARGB(255, 245, 245, 245),
-            selectedColor: const Color(0xFF2190E5),
-            padding: 5,
+          SizedBox(
+            width: 300,
+            height: 200,
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: CustomCheckBoxGroup(
+                horizontal: true,
+                buttonLables: presetIllnesses,
+                buttonValuesList: presetIllnesses,
+                checkBoxButtonValues: (values) {
+                  userHistory.userIllnesses = values;
+                },
+                elevation: 5,
+                //autoWidth: true,
+                enableShape: true,
+                unSelectedBorderColor: const Color.fromARGB(255, 245, 245, 245),
+                selectedBorderColor: const Color(0xFF2190E5),
+                unSelectedColor: const Color.fromARGB(255, 245, 245, 245),
+                selectedColor: const Color(0xFF2190E5),
+                padding: 5,
+              ),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 20.0),
@@ -117,6 +119,7 @@ class _MedicalHistory extends State<MedicalHistory> {
                       child: TextFormField(
                         controller: ill,
                         decoration: const InputDecoration(
+                          border: InputBorder.none,
                           labelText: 'Any Other not on list?',
                           labelStyle: TextStyle(fontSize: 16),
                           hintText: 'Enter Name of Illness..',
@@ -129,7 +132,7 @@ class _MedicalHistory extends State<MedicalHistory> {
                 ),
               ),
               GlowingActionButton(
-                color: Colors.teal,
+                color: AppColors.secondary,
                 icon: CupertinoIcons.add,
                 onPressed: () {
                   if (ill.text != "Any Other not on list?" &&
@@ -147,29 +150,39 @@ class _MedicalHistory extends State<MedicalHistory> {
   }
 
   Widget disabilities() {
-    return Wrap(spacing: 30, alignment: WrapAlignment.start, children: [
-      CustomCheckBoxGroup(
-        buttonLables: presetDisabilities,
-        buttonValuesList: presetDisabilities,
-        checkBoxButtonValues: (values) {
-          userHistory.userDisabilities = values;
-        },
-        enableButtonWrap: false,
-        elevation: 5,
-        autoWidth: true,
-        enableShape: true,
-        unSelectedBorderColor: const Color.fromARGB(255, 245, 245, 245),
-        selectedBorderColor: const Color(0xFF2190E5),
-        unSelectedColor: const Color.fromARGB(255, 245, 245, 245),
-        selectedColor: const Color(0xFF2190E5),
-        padding: 5,
+    return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+      SizedBox(
+        height: 200,
+        width: 300,
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: CustomCheckBoxGroup(
+            buttonLables: presetDisabilities,
+            buttonValuesList: presetDisabilities,
+            checkBoxButtonValues: (values) {
+              userHistory.userDisabilities = values;
+            },
+            enableButtonWrap: false,
+            horizontal: true,
+            elevation: 5,
+            autoWidth: true,
+            enableShape: true,
+            unSelectedBorderColor: const Color.fromARGB(255, 245, 245, 245),
+            selectedBorderColor: const Color(0xFF2190E5),
+            unSelectedColor: const Color.fromARGB(255, 245, 245, 245),
+            selectedColor: const Color(0xFF2190E5),
+            padding: 5,
+          ),
+        ),
       ),
       Padding(
         padding: const EdgeInsets.only(top: 20),
         child: Row(mainAxisSize: MainAxisSize.max, children: [
           Expanded(
             child: Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
+                padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
                 child: Material(
                     elevation: 5,
                     color: Theme.of(context).dividerColor,
@@ -180,6 +193,7 @@ class _MedicalHistory extends State<MedicalHistory> {
                       child: TextFormField(
                         controller: dis,
                         decoration: const InputDecoration(
+                          border: InputBorder.none,
                           labelText: 'Any Other not on list?',
                           labelStyle: TextStyle(fontSize: 16),
                           hintText: 'Enter Name of Disability...',
@@ -190,7 +204,7 @@ class _MedicalHistory extends State<MedicalHistory> {
                     ))),
           ),
           GlowingActionButton(
-            color: Colors.teal,
+            color: AppColors.secondary,
             icon: CupertinoIcons.add,
             onPressed: () {
               if (dis.text != "Any Other not on list?" &&
@@ -213,7 +227,6 @@ class _MedicalHistory extends State<MedicalHistory> {
         onTap: () => FocusScope.of(context).unfocus(),
         child: Scaffold(
             key: scaffoldKey,
-            //extendBodyBehindAppBar: true,
             resizeToAvoidBottomInset: true,
             appBar: AppBar(
               iconTheme: Theme.of(context).iconTheme,
@@ -353,19 +366,21 @@ class _MedicalHistory extends State<MedicalHistory> {
                   const Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 10),
                   ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 30,horizontal:50),
+                    child: SubmitButton(
+                        color: Colors.teal,
+                        message: "Submit",
+                        width: 250,
+                        height: 50,
+                        onPressed: () {
+                          save();
+                        }),
+                  )
                 ]),
+
               )),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 30),
-                child: SubmitButton(
-                    color: Colors.teal,
-                    message: "Submit",
-                    width: 250,
-                    height: 50,
-                    onPressed: () {
-                      save();
-                    }),
-              )
+
             ]))));
   }
 }
@@ -386,17 +401,13 @@ class _UpdateMedicalHistory extends State<UpdateMedicalHistory> {
   TextEditingController ill = TextEditingController();
   TextEditingController med = TextEditingController();
   TextEditingController dis = TextEditingController();
-  TextEditingController textFieldController = TextEditingController();
-  TextEditingController textFieldController2 = TextEditingController();
-  TextEditingController textFieldController3 = TextEditingController();
+
 
   UserMedicalHistory userHistory = UserMedicalHistory();
 
   SingingCharacter? _smokes = SingingCharacter.no;
-  SingingCharacter? _medications = SingingCharacter.no;
   SingingCharacter? _drinks = SingingCharacter.no;
 
-  bool? _disabled = true;
 
   List<String> presetIllnesses = [
     'Cancer',
@@ -453,24 +464,31 @@ class _UpdateMedicalHistory extends State<UpdateMedicalHistory> {
   }
 
   Widget illnesses() {
-    return Wrap(
-        spacing: 30,
-        crossAxisAlignment: WrapCrossAlignment.start,
+    return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CustomCheckBoxGroup(
-            buttonLables: presetIllnesses,
-            buttonValuesList: presetIllnesses,
-            checkBoxButtonValues: (values) {
-              userHistory.userIllnesses = values;
-            },
-            elevation: 5,
-            autoWidth: true,
-            enableShape: true,
-            unSelectedBorderColor: const Color.fromARGB(255, 245, 245, 245),
-            selectedBorderColor: const Color(0xFF2190E5),
-            unSelectedColor: const Color.fromARGB(255, 245, 245, 245),
-            selectedColor: const Color(0xFF2190E5),
-            padding: 5,
+          SizedBox(
+            width: 300,
+            height: 200,
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: CustomCheckBoxGroup(
+                horizontal: true,
+                buttonLables: presetIllnesses,
+                buttonValuesList: presetIllnesses,
+                checkBoxButtonValues: (values) {
+                  userHistory.userIllnesses = values;
+                },
+                elevation: 5,
+                //autoWidth: true,
+                enableShape: true,
+                unSelectedBorderColor: const Color.fromARGB(255, 245, 245, 245),
+                selectedBorderColor: const Color(0xFF2190E5),
+                unSelectedColor: const Color.fromARGB(255, 245, 245, 245),
+                selectedColor: const Color(0xFF2190E5),
+                padding: 5,
+              ),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 20.0),
@@ -488,6 +506,7 @@ class _UpdateMedicalHistory extends State<UpdateMedicalHistory> {
                       child: TextFormField(
                         controller: ill,
                         decoration: const InputDecoration(
+                          border: InputBorder.none,
                           labelText: 'Any Other not on list?',
                           labelStyle: TextStyle(fontSize: 16),
                           hintText: 'Enter Name of Illness..',
@@ -500,7 +519,7 @@ class _UpdateMedicalHistory extends State<UpdateMedicalHistory> {
                 ),
               ),
               GlowingActionButton(
-                color: Colors.teal,
+                color: AppColors.secondary,
                 icon: CupertinoIcons.add,
                 onPressed: () {
                   if (ill.text != "Any Other not on list?" &&
@@ -518,64 +537,75 @@ class _UpdateMedicalHistory extends State<UpdateMedicalHistory> {
   }
 
   Widget disabilities() {
-    return Wrap(spacing: 30, alignment: WrapAlignment.start, children: [
-      CustomCheckBoxGroup(
-        buttonLables: presetDisabilities,
-        buttonValuesList: presetDisabilities,
-        checkBoxButtonValues: (values) {
-          userHistory.userDisabilities = values;
-        },
-        enableButtonWrap: false,
-        elevation: 5,
-        autoWidth: true,
-        enableShape: true,
-        unSelectedBorderColor: const Color.fromARGB(255, 245, 245, 245),
-        selectedBorderColor: const Color(0xFF2190E5),
-        unSelectedColor: const Color.fromARGB(255, 245, 245, 245),
-        selectedColor: const Color(0xFF2190E5),
-        padding: 5,
-      ),
-      Padding(
-        padding: const EdgeInsets.only(top: 20),
-        child: Row(mainAxisSize: MainAxisSize.max, children: [
-          Expanded(
+    return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+            height: 200,
+            width: 300,
             child: Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
-                child: Material(
-                    elevation: 5,
-                    color: Theme.of(context).dividerColor,
-                    borderRadius: const BorderRadius.all(Radius.circular(8)),
-                    child: Padding(
-                      padding:
-                      const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
-                      child: TextFormField(
-                        controller: dis,
-                        decoration: const InputDecoration(
-                          labelText: 'Any Other not on list?',
-                          labelStyle: TextStyle(fontSize: 16),
-                          hintText: 'Enter Name of Disability...',
-                          hintStyle: TextStyle(fontSize: 16),
-                        ),
-                        style: const TextStyle(fontSize: 16),
-                      ),
-                    ))),
+              padding: const EdgeInsets.all(10.0),
+              child: CustomCheckBoxGroup(
+                buttonLables: presetDisabilities,
+                buttonValuesList: presetDisabilities,
+                checkBoxButtonValues: (values) {
+                  userHistory.userDisabilities = values;
+                },
+                enableButtonWrap: false,
+                horizontal: true,
+                elevation: 5,
+                autoWidth: true,
+                enableShape: true,
+                unSelectedBorderColor: const Color.fromARGB(255, 245, 245, 245),
+                selectedBorderColor: const Color(0xFF2190E5),
+                unSelectedColor: const Color.fromARGB(255, 245, 245, 245),
+                selectedColor: const Color(0xFF2190E5),
+                padding: 5,
+              ),
+            ),
           ),
-          GlowingActionButton(
-            color: Colors.teal,
-            icon: CupertinoIcons.add,
-            onPressed: () {
-              if (dis.text != "Any Other not on list?" &&
-                  !presetDisabilities.contains(dis.text)) {
-                setState(() {
-                  presetDisabilities.add(dis.text);
-                  dis.clear();
-                });
-              }
-            },
-          )
-        ]),
-      ),
-    ]);
+          Padding(
+            padding: const EdgeInsets.only(top: 20),
+            child: Row(mainAxisSize: MainAxisSize.max, children: [
+              Expanded(
+                child: Padding(
+                    padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
+                    child: Material(
+                        elevation: 5,
+                        color: Theme.of(context).dividerColor,
+                        borderRadius: const BorderRadius.all(Radius.circular(8)),
+                        child: Padding(
+                          padding:
+                          const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
+                          child: TextFormField(
+                            controller: dis,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              labelText: 'Any Other not on list?',
+                              labelStyle: TextStyle(fontSize: 16),
+                              hintText: 'Enter Name of Disability...',
+                              hintStyle: TextStyle(fontSize: 16),
+                            ),
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                        ))),
+              ),
+              GlowingActionButton(
+                color: AppColors.secondary,
+                icon: CupertinoIcons.add,
+                onPressed: () {
+                  if (dis.text != "Any Other not on list?" &&
+                      !presetDisabilities.contains(dis.text)) {
+                    setState(() {
+                      presetDisabilities.add(dis.text);
+                      dis.clear();
+                    });
+                  }
+                },
+              )
+            ]),
+          ),
+        ]);
   }
 
   @override
@@ -705,19 +735,20 @@ class _UpdateMedicalHistory extends State<UpdateMedicalHistory> {
                           const Padding(
                             padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 10),
                           ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 30,horizontal: 50),
+                            child: SubmitButton(
+                                color: Colors.teal,
+                                message: "Update",
+                                width: 250,
+                                height: 50,
+                                onPressed: () {
+                                  save();
+                                }),
+                          )
                         ]),
                       )),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 30),
-                    child: SubmitButton(
-                        color: Colors.teal,
-                        message: "Update",
-                        width: 250,
-                        height: 50,
-                        onPressed: () {
-                          save();
-                        }),
-                  )
+
                 ]))));
   }
 }

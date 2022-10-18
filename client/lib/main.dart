@@ -1,5 +1,8 @@
-import 'package:nd_telemedicine/utilities/imports.dart';
+// import 'package:nd_telemedicine/utilities/imports.dart';
 import 'dart:io' show Platform;
+import 'package:flutter/material.dart';
+import 'package:nd_telemedicine/pages/landing.dart';
+import 'package:nd_telemedicine/styles/theme.dart';
 
 String? authenticationIP;
 String? availabilityIP;
