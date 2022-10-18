@@ -7,11 +7,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="availability_service" />
-        <module name="communication_service" />
         <module name="message_service" />
-        <module name="profile_service" />
+        <module name="availability_service" />
+        <module name="medication_service" />
         <module name="prescription_service" />
+        <module name="communication_service" />
+        <module name="profile_service" />
         <module name="booking_service" />
       </profile>
     </annotationProcessing>
@@ -21,6 +22,7 @@
       <module name="availability_service" options="-parameters" />
       <module name="booking_service" options="-parameters" />
       <module name="communication_service" options="-parameters" />
+      <module name="medication_service" options="-parameters" />
       <module name="message_service" options="-parameters" />
       <module name="prescription_service" options="-parameters" />
       <module name="profile_service" options="-parameters" />
