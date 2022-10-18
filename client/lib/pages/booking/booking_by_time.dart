@@ -26,6 +26,8 @@ class _BookingByTime extends State<BookingByTime> {
   int? doctorId;
   String day = "";
 
+
+
   final List<String> _hours = [
     'Hour',
     '09:00 - 10:00',
@@ -51,6 +53,7 @@ class _BookingByTime extends State<BookingByTime> {
   Future getAvailability() async {
     User user = User();
     await user.transferDetails();
+
 
     final response = await http.get(
       Uri.parse("${availabilityIP}get/all/availabilities"),
@@ -97,6 +100,8 @@ class _BookingByTime extends State<BookingByTime> {
   }
 
   Future saveAppointment(int doctorId, String date, String startTime) async {
+    User user = User();
+    await user.transferDetails();
     var response = await http.post(Uri.parse("${appointmentIP}set/appointment"),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
@@ -104,7 +109,8 @@ class _BookingByTime extends State<BookingByTime> {
           'doctor': doctorId,
           'date': date,
           'time': startTime,
-          'today': DateFormat("HH:mm:ss").format(DateTime.now()).toString()
+          'today': DateFormat("HH:mm:ss").format(DateTime.now()).toString(),
+          'email': user.email
         }));
     if(!mounted)return;
     var responseData = response.body.toString();

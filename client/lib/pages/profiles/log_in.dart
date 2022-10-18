@@ -82,6 +82,7 @@ class _LogIn extends State<LogIn> {
       child: Scaffold(
         key: scaffoldKey,
         extendBodyBehindAppBar: true,
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.transparent,
         body: Stack(
           children: [
