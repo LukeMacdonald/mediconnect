@@ -19,11 +19,20 @@
 * Google Docs : https://drive.google.com/drive/folders/185IAOrQImEoBMZPBEjyWyC5Q_VbY7f01?usp=sharing
 
 	
-## Code documentation - Release 0.1.0 - date
+## Code documentation - Release 0.2.0 - date
 * User signup/login
 * User profile creation
 * Doctor set availabilities
-* User book appointment with doctor
+* Patient book appointment with doctor
+* Doctor remove availabilities
+* Patient cancelling/rescheduling appointment
+* Patient chat with the doctor 
+* Doctor prescribe medicines for patient
+* Patient view prescription
+* Patient receive notification for their appointment/medication
+* Doctor viewing patient medical history
+
+
 
 ## Running the application
 In order to run the application, there are certain prerequisites required:
