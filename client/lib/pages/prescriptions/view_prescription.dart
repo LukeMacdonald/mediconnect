@@ -3,9 +3,7 @@ import '../../utilities/imports.dart';
 import 'package:http/http.dart' as http;
 
 class PrescriptionList extends StatefulWidget {
-  final String role;
-  const PrescriptionList({Key? key, required this.role}) : super(key: key);
-  // const PrescriptionList({Key? key}) : super(key: key);
+  const PrescriptionList({Key? key}) : super(key: key);
   @override
   State<PrescriptionList> createState() => _PrescriptionList();
 }
@@ -41,28 +39,26 @@ class _PrescriptionList extends State<PrescriptionList> {
   Future getPrescriptions() async {
     http.Response response;
     try {
-      response = await http.get(Uri.parse("/search/prescriptions/$id"));
+      response = await http.get(Uri.parse("${prescriptionIP}search/prescriptions/${int.parse(id)}"));
+      print(response.body);
 
       switch (response.statusCode) {
         case 200:
           var responseData = json.decode(response.body);
           for (var data in responseData) {
             Prescription prescription = Prescription();
+            print(data);
             prescription.setDetails(data);
-
             prescriptions.add(PrescriptionTile(
               prescription: prescription,
             ));
             setState(() {});
           }
-
           break;
         case 400:
-          prescriptions.add(Center(
-              child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Text(response.body),
-          )));
+          var responseData = json.decode(response.body);
+          print(responseData);
+          prescriptions.add(Center(child: Padding(padding: const EdgeInsets.all(20.0), child: Text(responseData['message'],))));
           setState(() {});
           break;
         default:

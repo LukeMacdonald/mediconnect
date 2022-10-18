@@ -16,7 +16,6 @@ class _PrescriptionTile extends State<PrescriptionTile> {
       padding: const EdgeInsets.symmetric(vertical: 5.0),
       child: Card(
         color: AppColors.buttonOption1Dark,
-        // color: Theme.of(context).cardColor,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 15.0),
           child: ListTile(
