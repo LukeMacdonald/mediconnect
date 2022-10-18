@@ -33,10 +33,10 @@ class _Notifications extends State<Notifications> {
 
           break;
         case 400:
-          prescriptions.add(Center(
+          prescriptions.add(const Center(
               child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Text(response.body),
+            padding: EdgeInsets.all(20.0),
+            child: Text("No Appointments Found!"),
           )));
           setState(() {});
           break;
@@ -75,10 +75,10 @@ class _Notifications extends State<Notifications> {
 
           break;
         case 400:
-          prescriptions.add(Center(
+          prescriptions.add(const Center(
               child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Text(response.body),
+            padding: EdgeInsets.all(20.0),
+            child: Text("No Prescriptions Found!"),
           )));
           setState(() {});
           break;
