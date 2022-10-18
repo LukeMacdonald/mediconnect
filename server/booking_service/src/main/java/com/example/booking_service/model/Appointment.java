@@ -16,6 +16,10 @@ public class Appointment{
 
     @Column(name="patient")
     private int  patient;
+
+    @Column(name="email")
+    private String email;
+
     @Column(name="doctor")
     private int doctor;
     @Column(name="date")
@@ -41,6 +45,12 @@ public class Appointment{
     }
     public void setToday(String today){
         this.today = today;
+    }
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    public String getEmail() {
+        return this.email;
     }
 
     public int getId(){

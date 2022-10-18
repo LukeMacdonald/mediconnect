@@ -45,32 +45,7 @@ public class NotificationService {
 
         for (int i = 0; i < upcomingAppointments.size(); i++) {
 
-            Appointment currentAppointment = upcomingAppointments.get(i);
-
-            System.out.println(currentAppointment);
-
-            // Send notification emails
-            String userEmail = "";
-            try {
-                userEmail = userRepo.findUserById(currentAppointment.getPatient()).getEmail();
-            } catch (Exception e) {
-                // This should never occur in the first place, but as a safety measure anyway:
-                System.out.println("User with ID: " + currentAppointment.getPatient() + " could not be found. Skipping...");
-                continue;
-            }
-            String emailSubj = "Reminder: Appointment scheduled at " + currentAppointment.getTime() + " today";
-            String emailBody = "This email is a reminder that you have an appointment on " + currentAppointment.getDate() + " at " + 
-                currentAppointment.getTime() + " If you wish to update the appointment details, please do so in the app.";
-
-
-            System.out.println(userEmail);
-            mailMessage.setTo(userEmail);
-            mailMessage.setSubject(emailSubj);
-            mailMessage.setText(emailBody);
-
-            javaMailSender.send(mailMessage);
-            System.out.println("Mail sent to " + currentAppointment.getPatient());
-            System.out.println("\n\n");
+            alertSinglePatient(upcomingAppointments.get(i));
         }
 
         SimpleDateFormat formDate = new SimpleDateFormat("dd-MM-yyyy");
@@ -92,7 +67,7 @@ public class NotificationService {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setFrom(sender);
 
-        String userEmail = userRepo.findUserById(appointment.getPatient()).getEmail();
+        String userEmail = appointment.getEmail();
         String emailSubj = "Reminder: Appointment scheduled at " + appointment.getTime() + " today";
         String emailBody = "This email is a reminder that you have an appointment on " + appointment.getDate() + 
         " at " + appointment.getTime() + " If you wish to update the appointment details, please do so in the app.";
@@ -102,5 +77,26 @@ public class NotificationService {
         mailMessage.setText(emailBody);
 
         javaMailSender.send(mailMessage);
+    }
+
+    public void alertSinglePatient(Appointment appointment) {
+        Appointment currentAppointment = appointment;
+
+        // Setup email details
+        String userEmail = appointment.getEmail();
+
+        String emailSubj = "Reminder: Appointment scheduled at " + currentAppointment.getTime() + " today";
+        String emailBody = "This email is a reminder that you have an appointment on " + currentAppointment.getDate() + " at " + 
+        currentAppointment.getTime() + " If you wish to update the appointment details, please do so in the app.";
+
+        // Send email
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setFrom(sender);
+
+        mailMessage.setTo(userEmail);
+        mailMessage.setSubject(emailSubj);
+        mailMessage.setText(emailBody);
+        javaMailSender.send(mailMessage);
+
     }
 }
