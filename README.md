@@ -6,7 +6,7 @@
 # Group 1
 
 ## Members
-* s3906344 (Anton Angelo)
+* s3906344 (Anton Angelo Carasig)
 * s3902121 (Jeffrey Siaw)
 * s3897951 (Stefan Stevanovski)
 * s3888490 (Luke Macdonald)
