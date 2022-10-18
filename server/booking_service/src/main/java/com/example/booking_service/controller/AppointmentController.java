@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.example.booking_service.model.Appointment;
 import com.example.booking_service.repository.AppointmentRepo;
+import com.example.booking_service.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class AppointmentController {
 
     private final AppointmentRepo appointRepo;
+    private final NotificationService notificationService;
 
     // Search for appointment based off the doctors ID, the date of the appointment and time, determine if it's valid or not
     @GetMapping(value="/search/appointment/{id}/{date}/{start_time}")
@@ -28,6 +30,7 @@ public class AppointmentController {
     @PostMapping(value="/set/appointment")
     public ResponseEntity<?> saveAppointment(@RequestBody Appointment appoint){
         appointRepo.save(appoint);
+        notificationService.sendAppointmentNotification(appoint);
         return ResponseEntity.ok().body(appoint.getId());
     }
 
@@ -98,6 +101,7 @@ public class AppointmentController {
         }
 
         appointRepo.save(availabilityToUpdate);
+        notificationService.sendAppointmentNotification(appointment);
         return ResponseEntity.ok().body("Appointment Updated!");
     }
 
