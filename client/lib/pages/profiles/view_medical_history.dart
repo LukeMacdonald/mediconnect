@@ -223,7 +223,7 @@ class _ViewMedicalHistoryState extends State<ViewMedicalHistory> {
                 child: IconBackground(
                   icon: CupertinoIcons.back,
                   onTap: () {
-                    Navigator.of(context).pop();
+                    navigate(const ViewProfile(), context);
                   },
                 ),
               ),

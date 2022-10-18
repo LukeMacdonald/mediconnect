@@ -16,7 +16,7 @@ class _Notifications extends State<Notifications> {
   Future getAppointment() async {
     http.Response response;
     try {
-      response = await http.get(Uri.parse("/search/patient/appointments/$id"));
+      response = await http.get(Uri.parse("${appointmentIP}search/patient/appointments/$id"));
 
       switch (response.statusCode) {
         case 200:
@@ -58,7 +58,7 @@ class _Notifications extends State<Notifications> {
   Future getPrescription() async {
     http.Response response;
     try {
-      response = await http.get(Uri.parse("/search/prescriptions/$id"));
+      response = await http.get(Uri.parse("${prescriptionIP}search/prescriptions/$id"));
 
       switch (response.statusCode) {
         case 200:

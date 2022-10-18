@@ -185,8 +185,7 @@ class HeathStatusPage extends StatefulWidget {
                         height: 50,
                         onPressed: (){
                           symptoms.description = description.text;
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => BookingByTime(symptoms: symptoms,)));
+                          navigate(BookingByTime(symptoms: symptoms,), context);
                         }
                         ,
                       ),

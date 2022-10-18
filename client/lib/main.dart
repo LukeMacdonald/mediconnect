@@ -7,6 +7,7 @@ String? communicationIP;
 String? appointmentIP;
 String? medicationIP;
 String? messageIP;
+String? prescriptionIP;
 
 void main() {
   runApp(const MyApp());
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
       appointmentIP = "http://10.0.2.2:8083/";
       medicationIP = "http://10.0.2.2:8084/";
       messageIP = "http://10.0.2.2:8085/";
+      prescriptionIP = "http://10.0.2.2:8086/";
     }
     else{
       authenticationIP = "http://localhost:8080/";
@@ -31,6 +33,7 @@ class MyApp extends StatelessWidget {
       appointmentIP = "http://localhost:8083/";
       medicationIP = "http://localhost:8084/";
       messageIP = "http://localhost:8085/";
+      prescriptionIP ="http://localhost:8086/";
     }
 
     return GestureDetector(

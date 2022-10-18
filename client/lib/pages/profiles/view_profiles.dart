@@ -87,7 +87,7 @@ class _ViewProfileState extends State<ViewProfile> {
                 child: IconBackground(
                   icon: CupertinoIcons.back,
                   onTap: () {
-                    Navigator.of(context).pop();
+                    navigate(const HomePage(), context);
                   },
                 ),
               ),

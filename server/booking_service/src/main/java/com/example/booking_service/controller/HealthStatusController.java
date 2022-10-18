@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.example.booking_service.model.Appointment;
 import com.example.booking_service.model.HealthStatus;
 import com.example.booking_service.repository.HealthStatusRepo;
 import com.example.booking_service.repository.UserRepo;

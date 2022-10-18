@@ -15,4 +15,10 @@ public interface MessageRepo extends JpaRepository<Message, Long> {
     Message         findByMessageID(int messageID);
     List<Message>   findBySenderIDAndReceiverIDAndViewedOrderByTimestampAsc(int senderID, int receiverID,boolean viewed);
 
+    List<Message> findAllBySenderID(int senderID);
+
+    List<Message> findAllByReceiverID(int receiverID);
+
+
+
 }

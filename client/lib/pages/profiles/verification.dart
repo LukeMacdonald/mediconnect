@@ -41,7 +41,7 @@ class _Verification extends State<Verification> {
         switch (response.statusCode) {
           case 201:
             var responseData = json.decode(response.body);
-            UserSecureStorage.setID(responseData['id']);
+            UserSecureStorage.setID(responseData['id'].toString());
             if(!mounted)return;
             Navigator.push(
                 context,

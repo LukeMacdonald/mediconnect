@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:nd_telemedicine/pages/prescriptions/view_prescription.dart';
 import '../../utilities/imports.dart';
 
 class AppBarItem extends StatefulWidget {
@@ -27,13 +28,13 @@ class _AppBarItem extends State<AppBarItem> {
   }
 
   Widget getHomePage(String role){
-    if (role == "patient"){
+    if (role == "patient" || role == "Patient"){
       return const HomePage();
     }
-    else if(role == "doctor"){
+    else if(role == "doctor"|| role == "Doctor"){
       return const DoctorHomePage();
     }
-    else if(role == "superuser"){
+    else if(role == "superuser"|| role == "Superuser"){
       return const AdminHomePage();
     }
     else {
@@ -107,7 +108,7 @@ class _PatientBottomNavigationBar extends State<PatientBottomNavigationBar> {
                 label: "prescriptions",
                 icon: Icons.medication,
                 isSelected: (widget.pageIndex==2),
-                page:const HomePage(),
+                page:const PrescriptionList(),
               ),
               NavigationBarItem(
                   label: "appointments",

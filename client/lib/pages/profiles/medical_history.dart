@@ -24,7 +24,6 @@ class _MedicalHistory extends State<MedicalHistory> {
   UserMedicalHistory userHistory = UserMedicalHistory();
 
   SingingCharacter? _smokes = SingingCharacter.no;
-  SingingCharacter? _medications = SingingCharacter.no;
   SingingCharacter? _drinks = SingingCharacter.no;
 
   bool? _disabled = true;
@@ -38,7 +37,6 @@ class _MedicalHistory extends State<MedicalHistory> {
     'Depression',
   ];
 
-  List<String> medications = [];
   List<String> presetDisabilities = [
     'Hearing Impairment',
     'Vision Impairment',
@@ -47,58 +45,7 @@ class _MedicalHistory extends State<MedicalHistory> {
     'Cerebral Palsy'
   ];
 
-  List<Object?> selectedMeds = [];
 
-  Future<void> _displayTextInputDialog(BuildContext context) async {
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-              title: const Text(
-                'Add Medication',
-                style: TextStyle(fontSize: 30),
-              ),
-              content: SizedBox(
-                  height: 300,
-                  child: Column(children: [
-                    TextField(
-                      onChanged: (value) {},
-                      controller: textFieldController,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20.0),
-                      child: TextField(
-                        onChanged: (value) {},
-                        controller: textFieldController2,
-                        keyboardType: TextInputType.number,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20.0),
-                      child: TextField(
-                        onChanged: (value) {},
-                        controller: textFieldController3,
-                        keyboardType: TextInputType.number,
-                        style: const TextStyle(fontSize: 16),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20.0),
-                      child: TextButton(
-                        onPressed: () {
-                          textFieldController.clear();
-                          textFieldController2.clear();
-                          textFieldController3.clear();
-                          Navigator.pop(context, 'OK');
-                        },
-                        child: const Text('OK',
-                            style: TextStyle(
-                                fontSize: 16, color: AppColors.secondary)),
-                      ),
-                    ),
-                  ])));
-        });
-  }
 
   Future save() async {
     bool smokes = _smokes == SingingCharacter.yes;
@@ -109,7 +56,7 @@ class _MedicalHistory extends State<MedicalHistory> {
     await http.post(Uri.parse("${medicationIP}set/healthinformation"),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({'id': id, 'smoke': smokes, 'drink': drink}));
-
+    if(userHistory.userIllnesses.isNotEmpty) {
     for (int i = 0; i < userHistory.userIllnesses.length; ++i) {
       await http.post(Uri.parse("${medicationIP}set/illness"),
           headers: {'Content-Type': 'application/json'},
@@ -117,87 +64,21 @@ class _MedicalHistory extends State<MedicalHistory> {
             'userId': id,
             'illness': userHistory.userIllnesses[i],
           }));
+    }
 
     }
-    for (int i = 0; i < userHistory.userDisabilities.length; ++i) {
-      await http.post(Uri.parse("${medicationIP}set/disability"),
-          headers: {'Content-Type': 'application/json'},
-          body: json.encode({
-            'userId': id,
-            'disability': userHistory.userDisabilities[i],
-          }));
-
+    if(userHistory.userDisabilities.isNotEmpty) {
+      for (int i = 0; i < userHistory.userDisabilities.length; ++i) {
+        await http.post(Uri.parse("${medicationIP}set/disability"),
+            headers: {'Content-Type': 'application/json'},
+            body: json.encode({
+              'userId': id,
+              'disability': userHistory.userDisabilities[i],
+            }));
+      }
+    }
       if(!mounted)return;
       navigate(const HomePage(), context);
-
-    }
-  }
-
-  Widget meds() {
-    return Wrap(children: [
-      Wrap(spacing: 30, children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 20.0),
-          child: Row(mainAxisSize: MainAxisSize.max, children: [
-            Expanded(
-              child: Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
-                  child: Material(
-                      elevation: 5,
-                      color: Theme.of(context).dividerColor,
-                      borderRadius: const BorderRadius.all(Radius.circular(8)),
-                      child: Padding(
-                        padding:
-                            const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
-                        child: TextFormField(
-                          enabled: !_disabled!,
-                          controller: med,
-                          decoration: const InputDecoration(
-                            labelText: 'Enter Medication',
-                            labelStyle: TextStyle(fontSize: 16),
-                            hintText: 'Enter Name of Medication...',
-                            hintStyle: TextStyle(fontSize: 16),
-                          ),
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                      ))),
-            ),
-            GlowingActionButton(
-              color: Colors.teal,
-              icon: CupertinoIcons.add,
-              onPressed: () {
-                _displayTextInputDialog(context);
-                if (med.text != "What Medications Do You Take?" &&
-                    med.text != "" &&
-                    !userHistory.medications.contains(ill.text)) {
-                  setState(() {
-                    medications.add(med.text);
-                    med.clear();
-                  });
-                }
-              },
-            )
-          ]),
-        ),
-        const Padding(padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 20)),
-        CustomCheckBoxGroup(
-          buttonLables: medications,
-          buttonValuesList: medications,
-          checkBoxButtonValues: (values) {
-            userHistory.medications = values;
-          },
-          enableButtonWrap: true,
-          elevation: 5,
-          width: 150,
-          enableShape: true,
-          unSelectedBorderColor: const Color.fromARGB(255, 245, 245, 245),
-          selectedBorderColor: const Color(0xFF2190E5),
-          unSelectedColor: const Color.fromARGB(255, 245, 245, 245),
-          selectedColor: const Color(0xFF2190E5),
-          padding: 5,
-        ),
-      ])
-    ]);
   }
 
   Widget illnesses() {
@@ -394,7 +275,7 @@ class _MedicalHistory extends State<MedicalHistory> {
                   const Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 10),
                     child: Text(
-                      'Do you smoke?',
+                      'Do you smoke regularly?',
                       style: TextStyle(fontSize: 16),
                     ),
                   ),
@@ -425,7 +306,7 @@ class _MedicalHistory extends State<MedicalHistory> {
                   const Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 10),
                     child: Text(
-                      'Do you drink?',
+                      'Do you drink alcohol regularly?',
                       style: TextStyle(fontSize: 16),
                     ),
                   ),
@@ -453,48 +334,6 @@ class _MedicalHistory extends State<MedicalHistory> {
                       },
                     ),
                   ),
-                  const Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 10),
-                    child: Text(
-                      'Do you take any medication?',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  ),
-                  ListTile(
-                    title: const Text('Yes'),
-                    leading: Radio<SingingCharacter>(
-                      value: SingingCharacter.yes,
-                      groupValue: _medications,
-                      onChanged: (SingingCharacter? value) {
-                        setState(() {
-                          userHistory.medication = true;
-                          setState(() {
-                            _disabled = false;
-                          });
-                          _medications = value;
-                        });
-                      },
-                    ),
-                  ),
-                  ListTile(
-                    title: const Text('No'),
-                    leading: Radio<SingingCharacter>(
-                      value: SingingCharacter.no,
-                      groupValue: _medications,
-                      onChanged: (SingingCharacter? value) {
-                        setState(() {
-                          userHistory.medications.clear();
-                          medications.clear();
-                          userHistory.medication = false;
-                          setState(() {
-                            _disabled = true;
-                          });
-                          _medications = value;
-                        });
-                      },
-                    ),
-                  ),
-                  meds(),
                   const Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 10),
                     child: Text(
@@ -577,129 +416,40 @@ class _UpdateMedicalHistory extends State<UpdateMedicalHistory> {
     'Cerebral Palsy'
   ];
 
-  List<Object?> selectedMeds = [];
-
-  Future<void> _displayTextInputDialog(BuildContext context) async {
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-              title: const Text(
-                'Add Medication',
-                style: TextStyle(fontSize: 30),
-              ),
-              content: SizedBox(
-                  height: 300,
-                  child: Column(children: [
-                    TextField(
-                      onChanged: (value) {},
-                      controller: textFieldController,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20.0),
-                      child: TextField(
-                        onChanged: (value) {},
-                        controller: textFieldController2,
-                        keyboardType: TextInputType.number,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20.0),
-                      child: TextField(
-                        onChanged: (value) {},
-                        controller: textFieldController3,
-                        keyboardType: TextInputType.number,
-                        style: const TextStyle(fontSize: 16),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20.0),
-                      child: TextButton(
-                        onPressed: () {
-                          textFieldController.clear();
-                          textFieldController2.clear();
-                          textFieldController3.clear();
-                          Navigator.pop(context, 'OK');
-                        },
-                        child: const Text('OK',
-                            style: TextStyle(
-                                fontSize: 16, color: AppColors.secondary)),
-                      ),
-                    ),
-                  ])));
-        });
-  }
-
   Future save() async {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => const HomePage()));
-  }
+    bool smokes = _smokes == SingingCharacter.yes;
+    bool drink = _drinks == SingingCharacter.yes;
+    String id = "";
+    await UserSecureStorage.getID().then(((value) => id = value!));
+    await http.delete(Uri.parse("${medicationIP}delete/history/${int.parse(id)}"));
+    await http.post(Uri.parse("${medicationIP}set/healthinformation"),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({'id': id, 'smoke': smokes, 'drink': drink}));
 
-  Widget meds() {
-    return Wrap(children: [
-      Wrap(spacing: 30, children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 20.0),
-          child: Row(mainAxisSize: MainAxisSize.max, children: [
-            Expanded(
-              child: Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
-                  child: Material(
-                      elevation: 5,
-                      color: Theme.of(context).dividerColor,
-                      borderRadius: const BorderRadius.all(Radius.circular(8)),
-                      child: Padding(
-                        padding:
-                        const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
-                        child: TextFormField(
-                          enabled: !_disabled!,
-                          controller: med,
-                          decoration: const InputDecoration(
-                            labelText: 'Enter Medication',
-                            labelStyle: TextStyle(fontSize: 16),
-                            hintText: 'Enter Name of Medication...',
-                            hintStyle: TextStyle(fontSize: 16),
-                          ),
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                      ))),
-            ),
-            GlowingActionButton(
-              color: Colors.teal,
-              icon: CupertinoIcons.add,
-              onPressed: () {
-                _displayTextInputDialog(context);
-                if (med.text != "What Medications Do You Take?" &&
-                    med.text != "" &&
-                    !userHistory.medications.contains(ill.text)) {
-                  setState(() {
-                    medications.add(med.text);
-                    med.clear();
-                  });
-                }
-              },
-            )
-          ]),
-        ),
-        const Padding(padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 20)),
-        CustomCheckBoxGroup(
-          buttonLables: medications,
-          buttonValuesList: medications,
-          checkBoxButtonValues: (values) {
-            userHistory.medications = values;
-          },
-          enableButtonWrap: true,
-          elevation: 5,
-          width: 150,
-          enableShape: true,
-          unSelectedBorderColor: const Color.fromARGB(255, 245, 245, 245),
-          selectedBorderColor: const Color(0xFF2190E5),
-          unSelectedColor: const Color.fromARGB(255, 245, 245, 245),
-          selectedColor: const Color(0xFF2190E5),
-          padding: 5,
-        ),
-      ])
-    ]);
+    if(userHistory.userIllnesses.isNotEmpty){
+    for (int i = 0; i < userHistory.userIllnesses.length; ++i) {
+      await http.post(Uri.parse("${medicationIP}set/illness"),
+          headers: {'Content-Type': 'application/json'},
+          body: json.encode({
+            'userId': id,
+            'illness': userHistory.userIllnesses[i],
+          }));
+    }
+    }
+    if(userHistory.userDisabilities.isNotEmpty) {
+      for (int i = 0; i < userHistory.userDisabilities.length; ++i) {
+        await http.post(Uri.parse("${medicationIP}set/disability"),
+            headers: {'Content-Type': 'application/json'},
+            body: json.encode({
+              'userId': id,
+              'disability': userHistory.userDisabilities[i],
+            }));
+
+
+      }
+    }
+    if (!mounted) return;
+    navigate( ViewMedicalHistory(id: int.parse(id)), context);
   }
 
   Widget illnesses() {
@@ -877,7 +627,7 @@ class _UpdateMedicalHistory extends State<UpdateMedicalHistory> {
                           const Padding(
                             padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 10),
                             child: Text(
-                              'Do you smoke?',
+                              'Do you smoke regularly?',
                               style: TextStyle(fontSize: 16),
                             ),
                           ),
@@ -908,7 +658,7 @@ class _UpdateMedicalHistory extends State<UpdateMedicalHistory> {
                           const Padding(
                             padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 10),
                             child: Text(
-                              'Do you drink?',
+                              'Do you drink alcohol regularly?',
                               style: TextStyle(fontSize: 16),
                             ),
                           ),
@@ -936,48 +686,6 @@ class _UpdateMedicalHistory extends State<UpdateMedicalHistory> {
                               },
                             ),
                           ),
-                          const Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 10),
-                            child: Text(
-                              'Do you take any medication?',
-                              style: TextStyle(fontSize: 16),
-                            ),
-                          ),
-                          ListTile(
-                            title: const Text('Yes'),
-                            leading: Radio<SingingCharacter>(
-                              value: SingingCharacter.yes,
-                              groupValue: _medications,
-                              onChanged: (SingingCharacter? value) {
-                                setState(() {
-                                  userHistory.medication = true;
-                                  setState(() {
-                                    _disabled = false;
-                                  });
-                                  _medications = value;
-                                });
-                              },
-                            ),
-                          ),
-                          ListTile(
-                            title: const Text('No'),
-                            leading: Radio<SingingCharacter>(
-                              value: SingingCharacter.no,
-                              groupValue: _medications,
-                              onChanged: (SingingCharacter? value) {
-                                setState(() {
-                                  userHistory.medications.clear();
-                                  medications.clear();
-                                  userHistory.medication = false;
-                                  setState(() {
-                                    _disabled = true;
-                                  });
-                                  _medications = value;
-                                });
-                              },
-                            ),
-                          ),
-                          meds(),
                           const Padding(
                             padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 10),
                             child: Text(
@@ -1007,11 +715,7 @@ class _UpdateMedicalHistory extends State<UpdateMedicalHistory> {
                         width: 250,
                         height: 50,
                         onPressed: () {
-                          Navigator.push(
-                              context,
-                              PageTransition(
-                                  type: PageTransitionType.fade,
-                                  child: ViewMedicalHistory(id: widget.id)));
+                          save();
                         }),
                   )
                 ]))));
