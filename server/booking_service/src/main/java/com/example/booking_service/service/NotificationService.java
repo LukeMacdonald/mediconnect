@@ -87,4 +87,20 @@ public class NotificationService {
         String today = formDate.format(new Date());
         return appointRepo.findAppointmentByDate(java.sql.Date.valueOf(today));
     }
+
+    public void sendAppointmentNotification(Appointment appointment){
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setFrom(sender);
+
+        String userEmail = userRepo.findUserById(appointment.getPatient()).getEmail();
+        String emailSubj = "Reminder: Appointment scheduled at " + appointment.getTime() + " today";
+        String emailBody = "This email is a reminder that you have an appointment on " + appointment.getDate() + 
+        " at " + appointment.getTime() + " If you wish to update the appointment details, please do so in the app.";
+
+        mailMessage.setTo(userEmail);
+        mailMessage.setSubject(emailSubj);
+        mailMessage.setText(emailBody);
+
+        javaMailSender.send(mailMessage);
+    }
 }

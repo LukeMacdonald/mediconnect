@@ -3,9 +3,12 @@ package com.example.medication_service.controller;
 import com.example.medication_service.repository.DisabilityRepo;
 import com.example.medication_service.repository.HealthInformationRepo;
 import com.example.medication_service.repository.IllnessRepo;
+import com.example.medication_service.repository.MedicationRepo;
 import com.example.medication_service.model.HealthInformation;
 import com.example.medication_service.model.Disability;
 import com.example.medication_service.model.Illness;
+import com.example.medication_service.model.Medication;
+
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -23,6 +26,7 @@ public class MedicationController {
     final private HealthInformationRepo healthInformationRepo;
     final private DisabilityRepo disabilityRepo;
     final private IllnessRepo illnessRepo;
+    final private MedicationRepo medicationRepo;
 
     @PostMapping(value = "/set/healthinformation") 
     public ResponseEntity<HealthInformation> setHealthInformation(@RequestBody HealthInformation healthInformation) {
@@ -45,6 +49,13 @@ public class MedicationController {
         return ResponseEntity.ok().body(illness);
     }
 
+    @PostMapping(value = "/set/medication") 
+    public ResponseEntity<Medication> setMedication(@RequestBody Medication medication) {
+        medicationRepo.save(medication);
+
+        return ResponseEntity.ok().body(medication);
+    }
+
     @GetMapping(value = "/get/healthinformation/{userId}")
     public ResponseEntity<HealthInformation> getHealthInformation(@PathVariable("userId") int userId){
 
@@ -63,6 +74,11 @@ public class MedicationController {
         return ResponseEntity.ok().body(illnessRepo.findAllByUserId(userId));
     }
 
+    @GetMapping(value = "/get/medications/{userId}")
+    public ResponseEntity<List<Medication>> getMedications(@PathVariable("userId") int userId){
+
+        return ResponseEntity.ok().body(medicationRepo.findAllByUserId(userId));
+    }
 
     @DeleteMapping(value="/delete/healthinformation")
     public ResponseEntity<?> removeHealthInformation(@RequestBody HealthInformation healthInformation) {
@@ -102,7 +118,11 @@ public class MedicationController {
         if(!disabilities.isEmpty()) {
             disabilityRepo.deleteAll(disabilities);
         }
-        if(information ==null && illnesses.isEmpty() && disabilities.isEmpty()){
+        List<Medication> medications = medicationRepo.findAllByUserId(id);
+        if (!medications.isEmpty()) {
+            medicationRepo.deleteAll(medications);
+        }
+        if(information ==null && illnesses.isEmpty() && disabilities.isEmpty() && medications.isEmpty()){
             return new ResponseEntity<>("Nothing to Delete", HttpStatus.BAD_REQUEST);
         }
         else {
