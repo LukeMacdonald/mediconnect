@@ -39,6 +39,7 @@ In order to run the application, there are certain prerequisites required:
 
 ### To run this application with Docker:
 1) Run the given batch file or bash script depending on which OS you have to build each microservice.
+* To run the bash script run "./docker/build_services.sh from the root directory"
 2) Compose the docker-compose.yml file to initialize all microservices inside a Docker container.
 3) Each microservice's Docker port is reflective to their port inside each services application.properties file.
 
