@@ -24,13 +24,23 @@
 * User profile creation
 * Doctor set availabilities
 * User book appointment with doctor
-  
 
-To run the application locally : 
+## Running the application
+In order to run the application, there are certain prerequisites required:
+1) Java Development Kit 11 or Higher is required.
+2) Flutter must be installed on the system and any extensions that are used by your chosen code editor is also required.
+3) (In the case of using Docker): Docker Desktop needs to be installed.
+
+### To run the application locally : 
 1) mvn -f server/ND-Telemedecine -B package --f pom.xml
 2) press the start icon on the NdTelemedecineApplication.java file inside server
 3) cd into client and run "flutter pub get"
 4) press the start icon on the main.dart file inside client/lib
+
+### To run this application with Docker:
+1) Run the given batch file or bash script depending on which OS you have to build each microservice.
+2) Compose the docker-compose.yml file to initialize all microservices inside a Docker container.
+3) Each microservice's Docker port is reflective to their port inside each services application.properties file.
 
 ## Application Feature Details
 ### Adding a Doctor:
@@ -45,3 +55,7 @@ To run the application locally :
 * For the deployment for the frontend part of our application we would use the CodeMagic website as it allows for CI/CD for flutter applications
 * Codemagic is connected to our GitHub repository so whenever a new push is made to the repo Codemagic automatically updates the deployed build.
 * Deploying with this website requires a payment to both Apple Store and Google Play Store in order to get the key signing the app requires to be deployed on these services which is why we havent officially deployed it.
+### Back End:
+* Dockerization was implemented, allowing each microservice to be contained inside a single Docker container for an isolated testing environment.
+* In order to deploy the application however, the initial attempt was in deploying such a container to Heroku, but in doing so, requires for each microservice to be deployed to a seperate application.
+* As each microservice communicates to a single h2 database, the main issue is the innability to communicate certain entity variables such as a given user's ID to other services.
