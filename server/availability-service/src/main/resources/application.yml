@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: availability-service
+  config:
+    import: "optional:configserver:http://localhost:8088"

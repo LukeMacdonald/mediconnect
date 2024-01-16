@@ -1,0 +1,33 @@
+server:
+  port: 8081
+
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:8761/eureka
+    register-with-eureka: true
+    fetch-registry: true
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+
+spring:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+  datasource:
+    url: jdbc:postgresql://localhost:5432/mediconnect
+    username: luke
+    password: abc123
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
