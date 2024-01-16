@@ -32,7 +32,7 @@ class _NewChatState extends State<NewChat> {
         await UserSecureStorage.getID().then((value) => id = value!);
         var response = await http.get(
             Uri.parse(
-                "${appointmentIP}search/appointment_doctors/${int.parse(id)}"),
+                "$SERVERDOMAIN/appointment/patient/find-doctors/${int.parse(id)}"),
             headers: {'Content-Type': 'application/json'});
         switch (response.statusCode) {
           case 200:
@@ -41,7 +41,7 @@ class _NewChatState extends State<NewChat> {
               _messages.add(MessageData(
                   null, int.parse(id), _doctors[i], DateTime.now(), "", false));
               response = await http.get(
-                  Uri.parse("${authenticationIP}get/name/${_doctors[i]}"),
+                  Uri.parse("$SERVERDOMAIN/user/get/name/${_doctors[i]}"),
                   headers: {'Content-Type': 'application/json'});
               _names.add(response.body);
             }

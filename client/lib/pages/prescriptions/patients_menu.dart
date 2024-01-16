@@ -10,7 +10,6 @@ class PatientsMenu extends StatefulWidget {
 }
 
 class _PatientsMenu extends State<PatientsMenu> {
-
   late List<User> patients;
   late User user;
 
@@ -19,14 +18,14 @@ class _PatientsMenu extends State<PatientsMenu> {
     await user.transferDetails();
     // Http request to get all patient ids of doctor
     var response = await http.get(
-        Uri.parse("${appointmentIP}search/appointment_patients/${user.id}"),
+        Uri.parse("$SERVERDOMAIN/appointment/doctor/find-patients/${user.id}"),
         headers: {'Content-Type': 'application/json'});
 
     var responseData = json.decode(response.body);
 
     for (var id in responseData) {
       // Http request to get user details from id
-      response = await http.get(Uri.parse("${authenticationIP}get/id/$id"),
+      response = await http.get(Uri.parse("$SERVERDOMAIN/user/get/id/$id"),
           headers: {'Content-Type': 'application/json'});
       User patient = User();
       var userData = json.decode(response.body);
@@ -76,6 +75,7 @@ class _PatientsMenu extends State<PatientsMenu> {
                 itemBuilder: (BuildContext context, int index) {
                   return PatientTile(user: patients[index], id: user.id!);
                 }),
-            bottomNavigationBar: const DoctorBottomNavigationBar(pageIndex: 2)));
+            bottomNavigationBar:
+                const DoctorBottomNavigationBar(pageIndex: 2)));
   }
 }

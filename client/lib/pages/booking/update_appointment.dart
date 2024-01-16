@@ -10,7 +10,8 @@ import 'package:flutter/foundation.dart';
 class UpdateAppointment extends StatefulWidget {
   final Appointment appointmentDetails;
   final String doctorName;
-  const UpdateAppointment({Key? key, required this.appointmentDetails,required this.doctorName})
+  const UpdateAppointment(
+      {Key? key, required this.appointmentDetails, required this.doctorName})
       : super(key: key);
 
   @override
@@ -57,7 +58,7 @@ class _UpdateAppointment extends State<UpdateAppointment> {
 
   Future getAvailability() async {
     final response = await http.get(
-      Uri.parse("${availabilityIP}get/all/availabilities"),
+      Uri.parse("$SERVERDOMAIN/availability/all"),
       headers: {
         'Content-Type': 'application/json',
         HttpHeaders.authorizationHeader: "Bearer $token"
@@ -67,13 +68,12 @@ class _UpdateAppointment extends State<UpdateAppointment> {
     String day = "";
 
     for (var availability in responseData) {
-      day = getDayStringFrontDayInt(availability["day_of_week"]);
+      day = getDayStringFrontDayInt(availability["dayOfWeek"]);
       // Provided the doctor has gone through the dashboard, we simply take the doctor_id from their current availabilities
-      doctorId = availability["_doctor_id"];
-      String time =
-          availability["_start_time"] + " - " + availability["_end_time"];
+      doctorId = availability["doctorId"];
+      String time = availability["startTime"] + " - " + availability["endTime"];
       final responseName =
-          await http.get(Uri.parse("${authenticationIP}get/name/$doctorId"));
+          await http.get(Uri.parse("$SERVERDOMAIN/user/get/name/$doctorId"));
       var responseDataName = responseName.body;
 
       _booking.add(
@@ -90,7 +90,7 @@ class _UpdateAppointment extends State<UpdateAppointment> {
   }
 
   Future save(int doctorId, String date, String startTime) async {
-    await http.put(Uri.parse("${appointmentIP}update/appointment"),
+    await http.put(Uri.parse("$SERVERDOMAIN/appointment/update"),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
           'id': widget.appointmentDetails.id,
@@ -106,8 +106,8 @@ class _UpdateAppointment extends State<UpdateAppointment> {
   }
 
   Future checkAppointment(int id, String date, String startTime) async {
-    final response = await http.get(
-        Uri.parse("${appointmentIP}search/appointment/$id/$date/$startTime"));
+    final response = await http
+        .get(Uri.parse("$SERVERDOMAIN/appointment/get/$id/$date/$startTime"));
     var responseData = response.body;
     if (responseData == 'false') {
       alert("Succesfully Updated the Appointment!!");
@@ -255,11 +255,13 @@ class _UpdateAppointment extends State<UpdateAppointment> {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
-                          child: Text("Date: ${widget.appointmentDetails.date}"),
+                          child:
+                              Text("Date: ${widget.appointmentDetails.date}"),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
-                          child: Text("Time: ${widget.appointmentDetails.time}"),
+                          child:
+                              Text("Time: ${widget.appointmentDetails.time}"),
                         ),
                       ],
                     ),
@@ -302,9 +304,9 @@ class _UpdateAppointment extends State<UpdateAppointment> {
                               controller: dateInput,
                               decoration: InputDecoration(
                                   border: InputBorder.none,
-                                  prefixIcon: const Icon(
+                                  prefixIcon: Icon(
                                     Icons.calendar_today,
-                                    color: Colors.white,
+                                    color: Theme.of(context).cardColor,
                                   ),
                                   hintText: 'Date of Appointment',
                                   hintStyle:
@@ -338,7 +340,6 @@ class _UpdateAppointment extends State<UpdateAppointment> {
                                     // Will be converted in backend
                                   });
                                   // user.dob = dateInput.text;
-
                                 }
                               }),
                         ))),
@@ -383,7 +384,7 @@ class _UpdateAppointment extends State<UpdateAppointment> {
                       ),
                     ),
                     SubmitButton(
-                        color: Colors.teal,
+                        color: AppColors.secondary,
                         message: "Submit",
                         width: 225,
                         height: 50,
@@ -405,7 +406,8 @@ class _UpdateAppointment extends State<UpdateAppointment> {
                               // Else, place an alert about appointment is already filled by the doctor
                               int id = 0;
                               for (var element in doctorIdToNames) {
-                                if (element['Doctor_Name'] == widget.doctorName) {
+                                if (element['Doctor_Name'] ==
+                                    widget.doctorName) {
                                   id = element['doctor_id'];
                                 }
                               }

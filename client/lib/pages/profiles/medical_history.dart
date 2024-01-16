@@ -18,7 +18,6 @@ class _MedicalHistory extends State<MedicalHistory> {
   TextEditingController med = TextEditingController();
   TextEditingController dis = TextEditingController();
 
-
   UserMedicalHistory userHistory = UserMedicalHistory();
 
   SingingCharacter? _smokes = SingingCharacter.no;
@@ -41,30 +40,37 @@ class _MedicalHistory extends State<MedicalHistory> {
     'Cerebral Palsy'
   ];
 
-
   Future save() async {
     bool smokes = _smokes == SingingCharacter.yes;
     bool drink = _drinks == SingingCharacter.yes;
+
     String id = "";
+
     await UserSecureStorage.getID().then(((value) => id = value!));
 
-    await http.post(Uri.parse("${medicationIP}set/healthinformation"),
+    var data = {
+      'illnesses': userHistory.userIllnesses,
+      'disabilities': userHistory.userDisabilities,
+      'medications': userHistory.userMedications
+    };
+
+    await http.post(Uri.parse("$SERVERDOMAIN/medical/save/history"),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({'id': id, 'smoke': smokes, 'drink': drink}));
-    if(userHistory.userIllnesses.isNotEmpty) {
-    for (int i = 0; i < userHistory.userIllnesses.length; ++i) {
-      await http.post(Uri.parse("${medicationIP}set/illness"),
-          headers: {'Content-Type': 'application/json'},
-          body: json.encode({
-            'userId': id,
-            'illness': userHistory.userIllnesses[i],
-          }));
-    }
 
+    if (userHistory.userIllnesses.isNotEmpty) {
+      for (int i = 0; i < userHistory.userIllnesses.length; ++i) {
+        await http.post(Uri.parse("$SERVERDOMAIN/medical/save/illness"),
+            headers: {'Content-Type': 'application/json'},
+            body: json.encode({
+              'userId': id,
+              'illness': userHistory.userIllnesses[i],
+            }));
+      }
     }
-    if(userHistory.userDisabilities.isNotEmpty) {
+    if (userHistory.userDisabilities.isNotEmpty) {
       for (int i = 0; i < userHistory.userDisabilities.length; ++i) {
-        await http.post(Uri.parse("${medicationIP}set/disability"),
+        await http.post(Uri.parse("$SERVERDOMAIN/medical/save/disability"),
             headers: {'Content-Type': 'application/json'},
             body: json.encode({
               'userId': id,
@@ -72,87 +78,82 @@ class _MedicalHistory extends State<MedicalHistory> {
             }));
       }
     }
-      if(!mounted)return;
-      navigate(const HomePage(), context);
+    if (!mounted) return;
+    navigate(const HomePage(), context);
   }
 
   Widget illnesses() {
-    return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            width: 300,
-            height: 200,
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: CustomCheckBoxGroup(
-                horizontal: true,
-                buttonLables: presetIllnesses,
-                buttonValuesList: presetIllnesses,
-                checkBoxButtonValues: (values) {
-                  userHistory.userIllnesses = values;
-                },
-                elevation: 5,
-                //autoWidth: true,
-                enableShape: true,
-                unSelectedBorderColor: const Color.fromARGB(255, 245, 245, 245),
-                selectedBorderColor: const Color(0xFF2190E5),
-                unSelectedColor: const Color.fromARGB(255, 245, 245, 245),
-                selectedColor: const Color(0xFF2190E5),
-                padding: 5,
-              ),
-            ),
+    return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+      SizedBox(
+        width: 300,
+        height: 200,
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: CustomCheckBoxGroup(
+            horizontal: true,
+            buttonLables: presetIllnesses,
+            buttonValuesList: presetIllnesses,
+            checkBoxButtonValues: (values) {
+              userHistory.userIllnesses = values;
+            },
+            elevation: 5,
+            //autoWidth: true,
+            enableShape: true,
+            unSelectedBorderColor: const Color.fromARGB(255, 245, 245, 245),
+            selectedBorderColor: const Color(0xFF2190E5),
+            unSelectedColor: const Color.fromARGB(255, 245, 245, 245),
+            selectedColor: const Color(0xFF2190E5),
+            padding: 5,
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 20.0),
-            child: Row(mainAxisSize: MainAxisSize.max, children: [
-              Expanded(
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.only(top: 20.0),
+        child: Row(mainAxisSize: MainAxisSize.max, children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
+              child: Material(
+                elevation: 5,
+                color: Theme.of(context).dividerColor,
+                borderRadius: const BorderRadius.all(Radius.circular(8)),
                 child: Padding(
                   padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
-                  child: Material(
-                    elevation: 5,
-                    color: Theme.of(context).dividerColor,
-                    borderRadius: const BorderRadius.all(Radius.circular(8)),
-                    child: Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
-                      child: TextFormField(
-                        controller: ill,
-                        decoration: const InputDecoration(
-                          border: InputBorder.none,
-                          labelText: 'Any Other not on list?',
-                          labelStyle: TextStyle(fontSize: 16),
-                          hintText: 'Enter Name of Illness..',
-                          hintStyle: TextStyle(fontSize: 16),
-                        ),
-                        style: const TextStyle(fontSize: 16),
-                      ),
+                  child: TextFormField(
+                    controller: ill,
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                      labelText: 'Any Other not on list?',
+                      labelStyle: TextStyle(fontSize: 16),
+                      hintText: 'Enter Name of Illness..',
+                      hintStyle: TextStyle(fontSize: 16),
                     ),
+                    style: const TextStyle(fontSize: 16),
                   ),
                 ),
               ),
-              GlowingActionButton(
-                color: AppColors.secondary,
-                icon: CupertinoIcons.add,
-                onPressed: () {
-                  if (ill.text != "Any Other not on list?" &&
-                      !presetIllnesses.contains(ill.text)) {
-                    setState(() {
-                      presetIllnesses.add(ill.text);
-                      ill.clear();
-                    });
-                  }
-                },
-              )
-            ]),
+            ),
           ),
-        ]);
+          GlowingActionButton(
+            color: AppColors.secondary,
+            icon: CupertinoIcons.add,
+            onPressed: () {
+              if (ill.text != "Any Other not on list?" &&
+                  !presetIllnesses.contains(ill.text)) {
+                setState(() {
+                  presetIllnesses.add(ill.text);
+                  ill.clear();
+                });
+              }
+            },
+          )
+        ]),
+      ),
+    ]);
   }
 
   Widget disabilities() {
-    return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
+    return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
       SizedBox(
         height: 200,
         width: 300,
@@ -367,9 +368,10 @@ class _MedicalHistory extends State<MedicalHistory> {
                     padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 10),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 30,horizontal:50),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 30, horizontal: 50),
                     child: SubmitButton(
-                        color: Colors.teal,
+                        color: AppColors.secondary,
                         message: "Submit",
                         width: 250,
                         height: 50,
@@ -378,14 +380,10 @@ class _MedicalHistory extends State<MedicalHistory> {
                         }),
                   )
                 ]),
-
               )),
-
             ]))));
   }
 }
-
-
 
 class UpdateMedicalHistory extends StatefulWidget {
   final int id;
@@ -402,12 +400,10 @@ class _UpdateMedicalHistory extends State<UpdateMedicalHistory> {
   TextEditingController med = TextEditingController();
   TextEditingController dis = TextEditingController();
 
-
   UserMedicalHistory userHistory = UserMedicalHistory();
 
   SingingCharacter? _smokes = SingingCharacter.no;
   SingingCharacter? _drinks = SingingCharacter.no;
-
 
   List<String> presetIllnesses = [
     'Cancer',
@@ -432,22 +428,23 @@ class _UpdateMedicalHistory extends State<UpdateMedicalHistory> {
     bool drink = _drinks == SingingCharacter.yes;
     String id = "";
     await UserSecureStorage.getID().then(((value) => id = value!));
-    await http.delete(Uri.parse("${medicationIP}delete/history/${int.parse(id)}"));
+    await http
+        .delete(Uri.parse("${medicationIP}delete/history/${int.parse(id)}"));
     await http.post(Uri.parse("${medicationIP}set/healthinformation"),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({'id': id, 'smoke': smokes, 'drink': drink}));
 
-    if(userHistory.userIllnesses.isNotEmpty){
-    for (int i = 0; i < userHistory.userIllnesses.length; ++i) {
-      await http.post(Uri.parse("${medicationIP}set/illness"),
-          headers: {'Content-Type': 'application/json'},
-          body: json.encode({
-            'userId': id,
-            'illness': userHistory.userIllnesses[i],
-          }));
+    if (userHistory.userIllnesses.isNotEmpty) {
+      for (int i = 0; i < userHistory.userIllnesses.length; ++i) {
+        await http.post(Uri.parse("${medicationIP}set/illness"),
+            headers: {'Content-Type': 'application/json'},
+            body: json.encode({
+              'userId': id,
+              'illness': userHistory.userIllnesses[i],
+            }));
+      }
     }
-    }
-    if(userHistory.userDisabilities.isNotEmpty) {
+    if (userHistory.userDisabilities.isNotEmpty) {
       for (int i = 0; i < userHistory.userDisabilities.length; ++i) {
         await http.post(Uri.parse("${medicationIP}set/disability"),
             headers: {'Content-Type': 'application/json'},
@@ -455,157 +452,150 @@ class _UpdateMedicalHistory extends State<UpdateMedicalHistory> {
               'userId': id,
               'disability': userHistory.userDisabilities[i],
             }));
-
-
       }
     }
     if (!mounted) return;
-    navigate( ViewMedicalHistory(id: int.parse(id)), context);
+    navigate(ViewMedicalHistory(id: int.parse(id)), context);
   }
 
   Widget illnesses() {
-    return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            width: 300,
-            height: 200,
+    return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+      SizedBox(
+        width: 300,
+        height: 200,
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: CustomCheckBoxGroup(
+            horizontal: true,
+            buttonLables: presetIllnesses,
+            buttonValuesList: presetIllnesses,
+            checkBoxButtonValues: (values) {
+              userHistory.userIllnesses = values;
+            },
+            elevation: 5,
+            //autoWidth: true,
+            enableShape: true,
+            unSelectedBorderColor: const Color.fromARGB(255, 245, 245, 245),
+            selectedBorderColor: const Color(0xFF2190E5),
+            unSelectedColor: const Color.fromARGB(255, 245, 245, 245),
+            selectedColor: const Color(0xFF2190E5),
+            padding: 5,
+          ),
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.only(top: 20.0),
+        child: Row(mainAxisSize: MainAxisSize.max, children: [
+          Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: CustomCheckBoxGroup(
-                horizontal: true,
-                buttonLables: presetIllnesses,
-                buttonValuesList: presetIllnesses,
-                checkBoxButtonValues: (values) {
-                  userHistory.userIllnesses = values;
-                },
+              padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
+              child: Material(
                 elevation: 5,
-                //autoWidth: true,
-                enableShape: true,
-                unSelectedBorderColor: const Color.fromARGB(255, 245, 245, 245),
-                selectedBorderColor: const Color(0xFF2190E5),
-                unSelectedColor: const Color.fromARGB(255, 245, 245, 245),
-                selectedColor: const Color(0xFF2190E5),
-                padding: 5,
+                color: Theme.of(context).dividerColor,
+                borderRadius: const BorderRadius.all(Radius.circular(8)),
+                child: Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
+                  child: TextFormField(
+                    controller: ill,
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                      labelText: 'Any Other not on list?',
+                      labelStyle: TextStyle(fontSize: 16),
+                      hintText: 'Enter Name of Illness..',
+                      hintStyle: TextStyle(fontSize: 16),
+                    ),
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                ),
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 20.0),
-            child: Row(mainAxisSize: MainAxisSize.max, children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
-                  child: Material(
+          GlowingActionButton(
+            color: AppColors.secondary,
+            icon: CupertinoIcons.add,
+            onPressed: () {
+              if (ill.text != "Any Other not on list?" &&
+                  !presetIllnesses.contains(ill.text)) {
+                setState(() {
+                  presetIllnesses.add(ill.text);
+                  ill.clear();
+                });
+              }
+            },
+          )
+        ]),
+      ),
+    ]);
+  }
+
+  Widget disabilities() {
+    return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+      SizedBox(
+        height: 200,
+        width: 300,
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: CustomCheckBoxGroup(
+            buttonLables: presetDisabilities,
+            buttonValuesList: presetDisabilities,
+            checkBoxButtonValues: (values) {
+              userHistory.userDisabilities = values;
+            },
+            enableButtonWrap: false,
+            horizontal: true,
+            elevation: 5,
+            autoWidth: true,
+            enableShape: true,
+            unSelectedBorderColor: const Color.fromARGB(255, 245, 245, 245),
+            selectedBorderColor: const Color(0xFF2190E5),
+            unSelectedColor: const Color.fromARGB(255, 245, 245, 245),
+            selectedColor: const Color(0xFF2190E5),
+            padding: 5,
+          ),
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.only(top: 20),
+        child: Row(mainAxisSize: MainAxisSize.max, children: [
+          Expanded(
+            child: Padding(
+                padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
+                child: Material(
                     elevation: 5,
                     color: Theme.of(context).dividerColor,
                     borderRadius: const BorderRadius.all(Radius.circular(8)),
                     child: Padding(
                       padding:
-                      const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
+                          const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
                       child: TextFormField(
-                        controller: ill,
+                        controller: dis,
                         decoration: const InputDecoration(
                           border: InputBorder.none,
                           labelText: 'Any Other not on list?',
                           labelStyle: TextStyle(fontSize: 16),
-                          hintText: 'Enter Name of Illness..',
+                          hintText: 'Enter Name of Disability...',
                           hintStyle: TextStyle(fontSize: 16),
                         ),
                         style: const TextStyle(fontSize: 16),
                       ),
-                    ),
-                  ),
-                ),
-              ),
-              GlowingActionButton(
-                color: AppColors.secondary,
-                icon: CupertinoIcons.add,
-                onPressed: () {
-                  if (ill.text != "Any Other not on list?" &&
-                      !presetIllnesses.contains(ill.text)) {
-                    setState(() {
-                      presetIllnesses.add(ill.text);
-                      ill.clear();
-                    });
-                  }
-                },
-              )
-            ]),
+                    ))),
           ),
-        ]);
-  }
-
-  Widget disabilities() {
-    return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            height: 200,
-            width: 300,
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: CustomCheckBoxGroup(
-                buttonLables: presetDisabilities,
-                buttonValuesList: presetDisabilities,
-                checkBoxButtonValues: (values) {
-                  userHistory.userDisabilities = values;
-                },
-                enableButtonWrap: false,
-                horizontal: true,
-                elevation: 5,
-                autoWidth: true,
-                enableShape: true,
-                unSelectedBorderColor: const Color.fromARGB(255, 245, 245, 245),
-                selectedBorderColor: const Color(0xFF2190E5),
-                unSelectedColor: const Color.fromARGB(255, 245, 245, 245),
-                selectedColor: const Color(0xFF2190E5),
-                padding: 5,
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 20),
-            child: Row(mainAxisSize: MainAxisSize.max, children: [
-              Expanded(
-                child: Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
-                    child: Material(
-                        elevation: 5,
-                        color: Theme.of(context).dividerColor,
-                        borderRadius: const BorderRadius.all(Radius.circular(8)),
-                        child: Padding(
-                          padding:
-                          const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
-                          child: TextFormField(
-                            controller: dis,
-                            decoration: const InputDecoration(
-                              border: InputBorder.none,
-                              labelText: 'Any Other not on list?',
-                              labelStyle: TextStyle(fontSize: 16),
-                              hintText: 'Enter Name of Disability...',
-                              hintStyle: TextStyle(fontSize: 16),
-                            ),
-                            style: const TextStyle(fontSize: 16),
-                          ),
-                        ))),
-              ),
-              GlowingActionButton(
-                color: AppColors.secondary,
-                icon: CupertinoIcons.add,
-                onPressed: () {
-                  if (dis.text != "Any Other not on list?" &&
-                      !presetDisabilities.contains(dis.text)) {
-                    setState(() {
-                      presetDisabilities.add(dis.text);
-                      dis.clear();
-                    });
-                  }
-                },
-              )
-            ]),
-          ),
-        ]);
+          GlowingActionButton(
+            color: AppColors.secondary,
+            icon: CupertinoIcons.add,
+            onPressed: () {
+              if (dis.text != "Any Other not on list?" &&
+                  !presetDisabilities.contains(dis.text)) {
+                setState(() {
+                  presetDisabilities.add(dis.text);
+                  dis.clear();
+                });
+              }
+            },
+          )
+        ]),
+      ),
+    ]);
   }
 
   @override
@@ -614,141 +604,142 @@ class _UpdateMedicalHistory extends State<UpdateMedicalHistory> {
         onTap: () => FocusScope.of(context).unfocus(),
         child: Scaffold(
             appBar: AppBar(
-                iconTheme: Theme.of(context).iconTheme,
-                centerTitle: false,
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                leadingWidth: 54,
-                leading: Align(
-                  alignment: Alignment.centerRight,
-                  child: IconBackground(
-                    icon: CupertinoIcons.back,
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                  ),
+              iconTheme: Theme.of(context).iconTheme,
+              centerTitle: false,
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              leadingWidth: 54,
+              leading: Align(
+                alignment: Alignment.centerRight,
+                child: IconBackground(
+                  icon: CupertinoIcons.back,
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
                 ),
-                title: const Text("Update Medical History"),
-                ),
+              ),
+              title: const Text("Update Medical History"),
+            ),
             body: SizedBox(
                 child: Column(children: [
-                  Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 20),
-                        child: ListView(children: [
-                          Padding(
-                            padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: const [
-                                Expanded(
-                                  child: Padding(
-                                      padding:
-                                      EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-                                      child: Text(
-                                        'Please enter your Medical History details below:',
-                                        style: TextStyle(
-                                            fontSize: 18, fontWeight: FontWeight.w500),
-                                      )),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 10),
-                            child: Text(
-                              'Do you smoke regularly?',
-                              style: TextStyle(fontSize: 16),
-                            ),
-                          ),
-                          ListTile(
-                            title: const Text('Yes'),
-                            leading: Radio<SingingCharacter>(
-                              value: SingingCharacter.yes,
-                              groupValue: _smokes,
-                              onChanged: (SingingCharacter? value) {
-                                setState(() {
-                                  _smokes = value;
-                                });
-                              },
-                            ),
-                          ),
-                          ListTile(
-                            title: const Text('No'),
-                            leading: Radio<SingingCharacter>(
-                              value: SingingCharacter.no,
-                              groupValue: _smokes,
-                              onChanged: (SingingCharacter? value) {
-                                setState(() {
-                                  _smokes = value;
-                                });
-                              },
-                            ),
-                          ),
-                          const Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 10),
-                            child: Text(
-                              'Do you drink alcohol regularly?',
-                              style: TextStyle(fontSize: 16),
-                            ),
-                          ),
-                          ListTile(
-                            title: const Text('Yes'),
-                            leading: Radio<SingingCharacter>(
-                              value: SingingCharacter.yes,
-                              groupValue: _drinks,
-                              onChanged: (SingingCharacter? value) {
-                                setState(() {
-                                  _drinks = value;
-                                });
-                              },
-                            ),
-                          ),
-                          ListTile(
-                            title: const Text('No'),
-                            leading: Radio<SingingCharacter>(
-                              value: SingingCharacter.no,
-                              groupValue: _drinks,
-                              onChanged: (SingingCharacter? value) {
-                                setState(() {
-                                  _drinks = value;
-                                });
-                              },
-                            ),
-                          ),
-                          const Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 10),
-                            child: Text(
-                              'Do you have any Illnesses?',
-                              style: TextStyle(fontSize: 16),
-                            ),
-                          ),
-                          illnesses(),
-                          const Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 10),
-                            child: Text(
-                              'Do you have any Disabilities?',
-                              style: TextStyle(fontSize: 16),
-                            ),
-                          ),
-                          disabilities(),
-                          const Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 10),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 30,horizontal: 50),
-                            child: SubmitButton(
-                                color: Colors.teal,
-                                message: "Update",
-                                width: 250,
-                                height: 50,
-                                onPressed: () {
-                                  save();
-                                }),
-                          )
-                        ]),
-                      )),
-
-                ]))));
+              Expanded(
+                  child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),
+                child: ListView(children: [
+                  Padding(
+                    padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: const [
+                        Expanded(
+                          child: Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                              child: Text(
+                                'Please enter your Medical History details below:',
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.w500),
+                              )),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 10),
+                    child: Text(
+                      'Do you smoke regularly?',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ),
+                  ListTile(
+                    title: const Text('Yes'),
+                    leading: Radio<SingingCharacter>(
+                      value: SingingCharacter.yes,
+                      groupValue: _smokes,
+                      onChanged: (SingingCharacter? value) {
+                        setState(() {
+                          _smokes = value;
+                        });
+                      },
+                    ),
+                  ),
+                  ListTile(
+                    title: const Text('No'),
+                    leading: Radio<SingingCharacter>(
+                      value: SingingCharacter.no,
+                      groupValue: _smokes,
+                      onChanged: (SingingCharacter? value) {
+                        setState(() {
+                          _smokes = value;
+                        });
+                      },
+                    ),
+                  ),
+                  const Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 10),
+                    child: Text(
+                      'Do you drink alcohol regularly?',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ),
+                  ListTile(
+                    title: const Text('Yes'),
+                    leading: Radio<SingingCharacter>(
+                      value: SingingCharacter.yes,
+                      groupValue: _drinks,
+                      onChanged: (SingingCharacter? value) {
+                        setState(() {
+                          _drinks = value;
+                        });
+                      },
+                    ),
+                  ),
+                  ListTile(
+                    title: const Text('No'),
+                    leading: Radio<SingingCharacter>(
+                      value: SingingCharacter.no,
+                      groupValue: _drinks,
+                      onChanged: (SingingCharacter? value) {
+                        setState(() {
+                          _drinks = value;
+                        });
+                      },
+                    ),
+                  ),
+                  const Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 10),
+                    child: Text(
+                      'Do you have any Illnesses?',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ),
+                  illnesses(),
+                  const Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 10),
+                    child: Text(
+                      'Do you have any Disabilities?',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ),
+                  disabilities(),
+                  const Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 10),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 30, horizontal: 50),
+                    child: SubmitButton(
+                        color: AppColors.secondary,
+                        message: "Update",
+                        width: 250,
+                        height: 50,
+                        onPressed: () {
+                          save();
+                        }),
+                  )
+                ]),
+              )),
+            ]))));
   }
 }

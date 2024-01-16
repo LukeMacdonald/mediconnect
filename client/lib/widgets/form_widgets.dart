@@ -17,6 +17,7 @@ class _UserEmail extends State<UserEmail> {
 
   @override
   Widget build(BuildContext context) {
+
     return Padding(
         padding: const EdgeInsets.symmetric(vertical: 10),
     child: Row(mainAxisSize: MainAxisSize.max, children: [
@@ -24,7 +25,7 @@ class _UserEmail extends State<UserEmail> {
     child: Padding(
     padding: const EdgeInsets.symmetric(horizontal: 15),
     child: Material(
-    color: Theme.of(context).dividerColor,
+    color: Theme.of(context).cardColor,
     borderRadius: const BorderRadius.all(Radius.circular(8)),
     child: Padding(
     padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -39,20 +40,11 @@ class _UserEmail extends State<UserEmail> {
                 decoration: const InputDecoration(
                   border: InputBorder.none,
                   labelText: 'Email Address',
-                  labelStyle: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  labelStyle: CustomTextStyles.formInputStyle,
                   hintText: 'Enter your email address...',
-                  hintStyle: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  hintStyle: CustomTextStyles.formInputStyle,
                 ),
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
+                style: CustomTextStyles.formInputStyle,
                 keyboardType: TextInputType.emailAddress,
               ),
             ),
@@ -84,7 +76,7 @@ class _UserGivenFirstName extends State<UserGivenFirstName> {
             child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Material(
-                    color: Theme.of(context).dividerColor,
+                    color: Theme.of(context).cardColor,
                     borderRadius: const BorderRadius.all(Radius.circular(8)),
                     child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -97,20 +89,11 @@ class _UserGivenFirstName extends State<UserGivenFirstName> {
                           decoration: const InputDecoration(
                             border: InputBorder.none,
                             labelText: 'First Name',
-                            labelStyle: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            ),
+                            labelStyle: CustomTextStyles.formInputStyle,
                             hintText: 'Enter your first name...',
-                            hintStyle: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            ),
+                            hintStyle: CustomTextStyles.formInputStyle,
                           ),
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
+                          style: CustomTextStyles.formInputStyle,
                           keyboardType: TextInputType.name,
                         )))))
       ]),
@@ -139,7 +122,7 @@ class _UserGivenLastName extends State<UserGivenLastName> {
             child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Material(
-                    color: Theme.of(context).dividerColor,
+                    color: Theme.of(context).cardColor,
                     borderRadius: const BorderRadius.all(Radius.circular(8)),
                     child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -152,20 +135,11 @@ class _UserGivenLastName extends State<UserGivenLastName> {
                           decoration: const InputDecoration(
                             border: InputBorder.none,
                             labelText: 'Last Name',
-                            labelStyle: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            ),
+                            labelStyle: CustomTextStyles.formInputStyle,
                             hintText: 'Enter your last name...',
-                            hintStyle: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            ),
+                            hintStyle: CustomTextStyles.formInputStyle,
                           ),
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
+                          style: CustomTextStyles.formInputStyle,
                           keyboardType: TextInputType.name,
                         )))))
       ]),
@@ -197,7 +171,7 @@ class _UserGivenPassword extends State<UserGivenPassword> {
                 child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
                     child: Material(
-                        color: Theme.of(context).dividerColor,
+                        color: Theme.of(context).cardColor,
                         borderRadius:
                             const BorderRadius.all(Radius.circular(8)),
                         child: Padding(
@@ -218,15 +192,9 @@ class _UserGivenPassword extends State<UserGivenPassword> {
                               decoration: InputDecoration(
                                   border: InputBorder.none,
                                   labelText: 'Password',
-                                  labelStyle: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                                  labelStyle: CustomTextStyles.formInputStyle,
                                   //hintText: 'Enter Password',
-                                  hintStyle: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                                  hintStyle: CustomTextStyles.formInputStyle,
                                   suffixIcon: InkWell(
                                     onTap: () => setState(
                                       () => passwordVisibility =
@@ -240,10 +208,7 @@ class _UserGivenPassword extends State<UserGivenPassword> {
                                       size: 20,
                                     ),
                                   )),
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                              ),
+                              style: CustomTextStyles.formInputStyle,
                             )))))
           ],
         ));
@@ -274,7 +239,7 @@ class _UserGivenConfirmPassword extends State<UserGivenConfirmPassword> {
                 child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
                     child: Material(
-                        color: Theme.of(context).dividerColor,
+                        color: Theme.of(context).cardColor,
                         borderRadius:
                             const BorderRadius.all(Radius.circular(8)),
                         child: Padding(
@@ -295,15 +260,9 @@ class _UserGivenConfirmPassword extends State<UserGivenConfirmPassword> {
                               decoration: InputDecoration(
                                   border: InputBorder.none,
                                   labelText: 'Confirm Password',
-                                  labelStyle: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                                  labelStyle: CustomTextStyles.formInputStyle,
                                   hintText: 'Enter Password',
-                                  hintStyle: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                                  hintStyle: CustomTextStyles.formInputStyle,
                                   suffixIcon: InkWell(
                                     onTap: () => setState(
                                       () => passwordVisibility =
@@ -317,10 +276,7 @@ class _UserGivenConfirmPassword extends State<UserGivenConfirmPassword> {
                                       size: 20,
                                     ),
                                   )),
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                              ),
+                              style: CustomTextStyles.formInputStyle,
                             )))))
           ],
         ));
@@ -350,7 +306,7 @@ class _UserGivenPhoneNumber extends State<UserGivenPhoneNumber> {
                 child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
                     child: Material(
-                        color: Theme.of(context).dividerColor,
+                        color: Theme.of(context).cardColor,
                         borderRadius:
                             const BorderRadius.all(Radius.circular(8)),
                         child: Padding(
@@ -365,20 +321,11 @@ class _UserGivenPhoneNumber extends State<UserGivenPhoneNumber> {
                               decoration: const InputDecoration(
                                 border: InputBorder.none,
                                 labelText: 'Phone Number ',
-                                labelStyle: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                                labelStyle: CustomTextStyles.formInputStyle,
                                 hintText: '1800160401',
-                                hintStyle: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                                hintStyle: CustomTextStyles.formInputStyle,
                               ),
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                              ),
+                              style: CustomTextStyles.formInputStyle,
                               keyboardType: TextInputType.phone,
                             )))))
           ],
@@ -409,7 +356,7 @@ class _UserDOB extends State<UserDOB> {
                 child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
                     child: Material(
-                        color: Theme.of(context).dividerColor,
+                        color: Theme.of(context).cardColor,
                         borderRadius:
                             const BorderRadius.all(Radius.circular(8)),
                         child: Padding(
@@ -420,15 +367,9 @@ class _UserDOB extends State<UserDOB> {
                               decoration: const InputDecoration(
                                 border: InputBorder.none,
                                 labelText: 'DOB',
-                                labelStyle: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                                labelStyle: CustomTextStyles.formInputStyle,
                                 hintText: 'Enter your date of birth...',
-                                hintStyle: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                                hintStyle: CustomTextStyles.formInputStyle,
                                 suffixIcon: Icon(Icons.calendar_today),
                               ),
                               readOnly: true,
@@ -452,10 +393,7 @@ class _UserDOB extends State<UserDOB> {
                                   UserSecureStorage.setDOB(textController.text);
                                 }
                               },
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                              ),
+                              style: CustomTextStyles.formInputStyle,
                             )))))
           ],
         ));
@@ -485,7 +423,7 @@ class _DoctorCode extends State<DoctorCode> {
                 child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
                     child: Material(
-                        color: Theme.of(context).dividerColor,
+                        color: Theme.of(context).cardColor,
                         borderRadius:
                             const BorderRadius.all(Radius.circular(8)),
                         child: Padding(
@@ -499,23 +437,23 @@ class _DoctorCode extends State<DoctorCode> {
                               decoration: const InputDecoration(
                                 border: InputBorder.none,
                                 labelText: 'Enter Code ',
-                                labelStyle: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                                labelStyle: CustomTextStyles.formInputStyle,
                                 hintText: '0000000',
-                                hintStyle: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                                hintStyle: CustomTextStyles.formInputStyle,
                               ),
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                              ),
+                              style: CustomTextStyles.formInputStyle,
                               keyboardType: TextInputType.number,
                             )))))
           ],
         ));
   }
 }
+
+class CustomTextStyles {
+  static const TextStyle formInputStyle = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w500,
+  );
+}
+
+

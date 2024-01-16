@@ -2,8 +2,18 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:interval_time_picker/interval_time_picker.dart';
+import 'package:nd_telemedicine/api/availability-api.dart';
 import '../../utilities/imports.dart';
 import 'dart:convert';
+
+extension TimeOfDayConverter on TimeOfDay {
+  String to24hours() {
+    final hour = this.hour.toString().padLeft(2, "0");
+    final min = this.minute.toString().padLeft(2, "0");
+    return "$hour:$min";
+  }
+}
 
 class SetAvailability extends StatefulWidget {
   const SetAvailability({
@@ -26,37 +36,39 @@ class _SetAvailability extends State<SetAvailability> {
 
   Future save() async {
     int day = getDayIntFromDayString(dayValue);
-    await http.post(Uri.parse("${availabilityIP}doctor/set/availability"),
+
+    var response = await http.post(Uri.parse("$SERVERDOMAIN/availability/save"),
         headers: {
           'Content-Type': 'application/json',
           HttpHeaders.authorizationHeader: "Bearer $token"
         },
         body: json.encode({
-          'doctor_id': int.parse(id),
-          'day_of_week': day,
-          'start_time': hourValue.substring(0, 5),
-          'end_time': hourValue.substring(
-            8,
-          )
+          'doctorId': int.parse(id),
+          'dayOfWeek': day,
+          'startTime': _time.to24hours(),
+          'endTime': _endTime.to24hours()
         }));
   }
 
   Future deleteAvailability(int index) async {
-    List availabilityTarget = _availability.elementAt(index).split(' ');
-    await http.delete(Uri.parse("${availabilityIP}remove/availability"),
-        headers: {
-          'Content-Type': 'application/json',
-          HttpHeaders.authorizationHeader: "Bearer $token"
-        },
-        body: json.encode({
-          'doctor_id': int.parse(id),
-          'day_of_week': getDayIntFromDayString(availabilityTarget[0]),
-          'start_time': availabilityTarget[4] + ":00",
-          'end_time': availabilityTarget[6] + ":00",
-        }));
+    List<String> availabilityTarget =
+        _availability.elementAt(index).split(RegExp(r'\s*[|\\-]\s*'));
+
+    var response =
+        await http.delete(Uri.parse("$SERVERDOMAIN/availability/delete"),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: json.encode({
+              'doctorId': int.parse(id),
+              'dayOfWeek': getDayIntFromDayString(availabilityTarget[0]),
+              'startTime': availabilityTarget[1],
+              'endTime': availabilityTarget[2],
+            }));
   }
 
   late List<String> _availability;
+
   @override
   void initState() {
     _availability = [];
@@ -65,32 +77,26 @@ class _SetAvailability extends State<SetAvailability> {
   }
 
   Future getAvailability() async {
-    final response = await http.get(
-      Uri.parse("${availabilityIP}get/availabilities/${int.parse(id)}"),
-      headers: {
-        'Content-Type': 'application/json',
-        HttpHeaders.authorizationHeader: "Bearer $token"
-      },
-    );
-    var responseData = json.decode(response.body);
+    var responseData = await AvailabilityAPI.getAvailability(int.parse(id));
+
     String day = "";
     if (responseData != "" || responseData != null) {
       for (var availability in responseData) {
-        day = getDayStringFrontDayInt(availability["day_of_week"]);
-// Provided the doctor has gone through the dashboard, we simply take the doctor_id from their current availabilities
-        String time = availability["_start_time"]
-                .substring(0, availability["_start_time"].length) +
+        day = getDayStringFrontDayInt(availability["dayOfWeek"]);
+        String time = availability["startTime"]
+                .substring(0, availability["startTime"].length) +
             " - " +
-            availability["_end_time"]
-                .substring(0, availability["_end_time"].length);
+            availability["endTime"]
+                .substring(0, availability["endTime"].length);
+
         _availability.add("$day  |  $time");
+
         setState(() {});
       }
     }
   }
 
   String dayValue = 'Day';
-  String hourValue = 'Hour';
 
   final _days = [
     'Day',
@@ -100,18 +106,6 @@ class _SetAvailability extends State<SetAvailability> {
     'Thursday',
     'Friday',
     'Saturday',
-  ];
-// Change the type if necessary
-  final _hours = [
-    'Hour',
-    '09:00 - 10:00',
-    '10:00 - 11:00',
-    '11:00 - 12:00',
-    '12:00 - 13:00',
-    '13:00 - 14:00',
-    '14:00 - 15:00',
-    '15:00 - 16:00',
-    '16:00 - 17:00'
   ];
 
   Future<String?> alert(String message) {
@@ -129,6 +123,39 @@ class _SetAvailability extends State<SetAvailability> {
   }
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  TimeOfDay _time = const TimeOfDay(hour: 9, minute: 0);
+  TimeOfDay _endTime = const TimeOfDay(hour: 9, minute: 0);
+  final int _interval = 30;
+  final VisibleStep _visibleStep = VisibleStep.thirtieths;
+
+  void _selectStartTime() async {
+    final TimeOfDay? newTime = await showIntervalTimePicker(
+      context: context,
+      initialTime: _time,
+      interval: _interval,
+      visibleStep: _visibleStep,
+    );
+    if (newTime != null) {
+      setState(() {
+        _time = newTime;
+      });
+    }
+  }
+
+  void _selectEndTime() async {
+    final TimeOfDay? newTime = await showIntervalTimePicker(
+      context: context,
+      initialTime: _endTime,
+      interval: _interval,
+      visibleStep: _visibleStep,
+    );
+    if (newTime != null) {
+      setState(() {
+        _endTime = newTime;
+      });
+    }
+  }
 
   Widget availabilityList() {
     return Column(
@@ -148,10 +175,10 @@ class _SetAvailability extends State<SetAvailability> {
                         offset: Offset(0, 2))
                   ]),
               height: 60,
-// LISTVIEW
               child: SizedBox(height: 200, child: _createListView()))
         ]);
   }
+
   Widget availability() {
     return SingleChildScrollView(
         physics: const NeverScrollableScrollPhysics(),
@@ -216,21 +243,14 @@ class _SetAvailability extends State<SetAvailability> {
                                   border: InputBorder.none,
                                   contentPadding: EdgeInsets.only(top: 15),
                                 ),
-// Initial Value
                                 value: dayValue,
-
-// Down Arrow Icon
                                 icon: const Icon(Icons.keyboard_arrow_down),
-
-// Array list of items
                                 items: _days.map((String days) {
                                   return DropdownMenuItem(
                                     value: days,
                                     child: Text(days),
                                   );
                                 }).toList(),
-// After selecting the desired option,it will
-// change button value to selected value
                                 onChanged: (value) {
                                   dayValue = value.toString();
                                 },
@@ -239,49 +259,46 @@ class _SetAvailability extends State<SetAvailability> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Container(
-                            constraints: const BoxConstraints(
-                                minWidth: 100, maxWidth: 250),
-                            alignment: Alignment.centerLeft,
-                            decoration: BoxDecoration(
-                                color: AppColors.secondary,
-                                borderRadius: BorderRadius.circular(10),
-                                boxShadow: const [
-                                  BoxShadow(
-                                      color: Colors.black26,
-                                      blurRadius: 6,
-                                      offset: Offset(0, 1))
-                                ]),
-                            height: 60,
-                            child: Padding(
-                              padding: const EdgeInsets.fromLTRB(20, 0, 0, 20),
-                              child: DropdownButtonFormField(
-                                decoration: const InputDecoration(
-                                  border: InputBorder.none,
-                                  contentPadding: EdgeInsets.only(top: 10),
-                                ),
-// Initial Value
-                                value: hourValue,
-
-// Down Arrow Icon
-                                icon: const Icon(Icons.keyboard_arrow_down),
-
-// Array list of items
-                                items: _hours.map((String hours) {
-                                  return DropdownMenuItem(
-                                    value: hours,
-                                    child: Text(hours),
-                                  );
-                                }).toList(),
-// After selecting the desired option,it will
-// change button value to selected value
-                                onChanged: (value) {
-                                  hourValue = value.toString();
-                                },
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 50, vertical: 10),
+                          child: ElevatedButton(
+                            onPressed: _selectStartTime,
+                            style: ElevatedButton.styleFrom(
+                              fixedSize: Size(
+                                  MediaQuery.of(context).size.width * 0.6, 50),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 50, vertical: 10),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5.0),
                               ),
                             ),
+                            child: const Text('Select Start Time'),
                           ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 50, vertical: 10),
+                          child: ElevatedButton(
+                            onPressed: _selectEndTime,
+                            style: ElevatedButton.styleFrom(
+                              fixedSize: Size(
+                                  MediaQuery.of(context).size.width * 0.6, 50),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 50, vertical: 10),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5.0),
+                              ),
+                            ),
+                            child: const Text('Select End Time'),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Start time: ${_time.format(context)}',
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'End time: ${_endTime.format(context)}',
                         ),
                         Padding(
                           padding: const EdgeInsetsDirectional.fromSTEB(
@@ -294,19 +311,16 @@ class _SetAvailability extends State<SetAvailability> {
                                 {
                                   alert('Please Enter A Day');
                                 }
-                              } else if (hourValue == 'Hour') {
-                                {
-                                  alert('Please Enter A Time');
-                                }
                               } else {
                                 {
+                                  var time =
+                                      "${_time.to24hours()} - ${_endTime.to24hours()}";
                                   if (_availability
-                                      .contains('$dayValue  -  $hourValue')) {
+                                      .contains('$dayValue  |  $time')) {
                                     alert('Availability Already Set');
                                   } else {
                                     setState(() {
-                                      _availability
-                                          .add('$dayValue  -  $hourValue');
+                                      _availability.add('$dayValue  |  $time');
                                       save();
                                     });
                                   }
@@ -323,6 +337,7 @@ class _SetAvailability extends State<SetAvailability> {
           )
         ]));
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -355,11 +370,11 @@ class _SetAvailability extends State<SetAvailability> {
           Padding(
             padding: const EdgeInsets.only(top: 20),
             child: SubmitButton(
-              color: Colors.teal,
+              color: AppColors.secondary,
               message: "Done",
               width: 225,
               height: 50,
-              onPressed: () {
+              onPressed: () async {
                 Navigator.pop(context);
               },
             ),
@@ -374,7 +389,7 @@ class _SetAvailability extends State<SetAvailability> {
         itemCount: _availability.length,
         itemBuilder: (context, index) {
           return Card(
-            color: AppColors.accent,
+            color: AppColors.secondary,
             child: ListTile(
               contentPadding: const EdgeInsets.all(10),
               title: Text(_availability[index]),
@@ -383,7 +398,7 @@ class _SetAvailability extends State<SetAvailability> {
                   Icons.delete,
                   color: Colors.black,
                 ),
-                onPressed: () {
+                onPressed: () async {
                   deleteAvailability(index);
                   SnackBar snackBar = SnackBar(
                     content:

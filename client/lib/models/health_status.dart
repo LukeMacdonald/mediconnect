@@ -9,7 +9,7 @@ class HealthStatus {
   String description = "";
 
   setDetails(var details){
-    id = details['id'];
+    id = details['appointmentId'];
     fever = details['feverOrChills'];
     cough= details['coughing'];
     headache = details ['headaches'];

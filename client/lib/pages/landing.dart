@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../utilities/imports.dart';
 
-
 class Landing extends StatefulWidget {
   const Landing({Key? key}) : super(key: key);
 
@@ -58,13 +57,12 @@ class _Landing extends State<Landing> {
                         width: double.infinity,
                         height: 350,
                         decoration: BoxDecoration(
-                          color: Theme.of(context).cardColor,
+                          color: Color.fromRGBO(238, 238, 238, 1),
                           borderRadius: const BorderRadius.only(
-                            bottomLeft: Radius.circular(0),
-                            bottomRight: Radius.circular(0),
+                              bottomLeft: Radius.circular(0),
+                              bottomRight: Radius.circular(0),
                               topLeft: Radius.elliptical(90, 100),
-                              topRight: Radius.elliptical(90, 100)
-                          ),
+                              topRight: Radius.elliptical(90, 100)),
                         ),
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
@@ -110,7 +108,7 @@ class _Landing extends State<Landing> {
                             const Padding(
                                 padding: EdgeInsets.fromLTRB(0, 10, 0, 0)),
                             SubmitButton(
-                                color: Colors.teal,
+                                color: AppColors.secondary,
                                 message: "Create Account",
                                 width: 225,
                                 height: 50,

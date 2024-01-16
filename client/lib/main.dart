@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:nd_telemedicine/pages/landing.dart';
 import 'package:nd_telemedicine/styles/theme.dart';
 
-String? authenticationIP;
+String? SERVERDOMAIN;
 String? availabilityIP;
 String? communicationIP;
 String? appointmentIP;
@@ -21,23 +21,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    if (Platform.isAndroid) {
-      availabilityIP = "http://10.0.2.2:8081/";
-      communicationIP = "http://10.0.2.2:8082/";
-      appointmentIP = "http://10.0.2.2:8083/";
-      medicationIP = "http://10.0.2.2:8084/";
-      messageIP = "http://10.0.2.2:8085/";
-      prescriptionIP = "http://10.0.2.2:8086/";
-    }
-    else{
-      authenticationIP = "http://localhost:8080/";
-      availabilityIP = "http://localhost:8081/";
-      communicationIP = "http://localhost:8082/";
-      appointmentIP = "http://localhost:8083/";
-      medicationIP = "http://localhost:8084/";
-      messageIP = "http://localhost:8085/";
-      prescriptionIP ="http://localhost:8086/";
-    }
+
+    SERVERDOMAIN = Platform.isAndroid ? "http://10.0.2.2:8060" : "http://localhost:8060";
 
     return GestureDetector(
         onTap: () {
@@ -47,8 +32,9 @@ class MyApp extends StatelessWidget {
           }
         },
         child: MaterialApp(
-          theme: AppTheme().dark,
-          themeMode: ThemeMode.dark,
+          theme: AppTheme().light,
+          darkTheme: AppTheme().dark,
+          themeMode: ThemeMode.light,
           title: 'ND Telemedicine',
           debugShowCheckedModeBanner: false,
           home: const Landing(),

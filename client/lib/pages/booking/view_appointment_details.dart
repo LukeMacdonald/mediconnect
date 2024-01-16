@@ -5,24 +5,24 @@ import 'package:http/http.dart' as http;
 
 class ViewAppointmentDetails extends StatefulWidget {
   final Appointment appointment;
-  const ViewAppointmentDetails({Key? key, required this.appointment}) : super(key: key);
+  const ViewAppointmentDetails({Key? key, required this.appointment})
+      : super(key: key);
   @override
   State<ViewAppointmentDetails> createState() => _ViewAppointmentDetails();
 }
 
 class _ViewAppointmentDetails extends State<ViewAppointmentDetails> {
-
   late String patient = "";
   late String doctor = "";
 
   Future getNames() async {
     var response = await http.get(
-        Uri.parse("${authenticationIP}get/name/${widget.appointment.doctor}"));
+        Uri.parse("$SERVERDOMAIN/user/get/name/${widget.appointment.doctor}"));
 
     doctor = response.body;
 
     response = await http.get(
-        Uri.parse("${authenticationIP}get/name/${widget.appointment.patient}"));
+        Uri.parse("$SERVERDOMAIN/user/get/name/${widget.appointment.patient}"));
 
     patient = response.body;
 
@@ -73,55 +73,94 @@ class _ViewAppointmentDetails extends State<ViewAppointmentDetails> {
                       ),
                       const Padding(
                         padding: EdgeInsets.symmetric(vertical: 8.0),
-                        child: Text("Appointment Details",style: TextStyle(fontSize: 24),),
+                        child: Text(
+                          "Appointment Details",
+                          style: TextStyle(fontSize: 24),
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(10.0),
-                        child: Text("Doctor: $doctor",style: const TextStyle(fontSize: 18),),
+                        child: Text(
+                          "Doctor: $doctor",
+                          style: const TextStyle(fontSize: 18),
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(10.0),
-                        child: Text("Patient: $patient",style: const TextStyle(fontSize: 18),),
+                        child: Text(
+                          "Patient: $patient",
+                          style: const TextStyle(fontSize: 18),
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(10.0),
-                        child: Text("Date: ${widget.appointment.date}",style: const TextStyle(fontSize: 18),),
+                        child: Text(
+                          "Date: ${widget.appointment.dateString}",
+                          style: const TextStyle(fontSize: 18),
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(10.0),
-                        child: Text("Time: ${widget.appointment.time}",style: const TextStyle(fontSize: 18),),
+                        child: Text(
+                          "Time: ${widget.appointment.time}",
+                          style: const TextStyle(fontSize: 18),
+                        ),
                       ),
                       const Padding(
                         padding: EdgeInsets.symmetric(vertical: 10.0),
-                        child: Text("Patient Symptoms",style: TextStyle(fontSize: 22),),
+                        child: Text(
+                          "Patient Symptoms",
+                          style: TextStyle(fontSize: 22),
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(10.0),
-                        child: Text("Faint: ${widget.appointment.healthStatus.faint? "Yes" : "No"}",style: const TextStyle(fontSize: 18),),
+                        child: Text(
+                          "Faint: ${widget.appointment.healthStatus.faint ? "Yes" : "No"}",
+                          style: const TextStyle(fontSize: 18),
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(10.0),
-                        child: Text("Fever: ${widget.appointment.healthStatus.fever? "Yes" : "No"}",style: const TextStyle(fontSize: 18),),
+                        child: Text(
+                          "Fever: ${widget.appointment.healthStatus.fever ? "Yes" : "No"}",
+                          style: const TextStyle(fontSize: 18),
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(10.0),
-                        child: Text("Headaches: ${widget.appointment.healthStatus.headache? "Yes" : "No"}",style: const TextStyle(fontSize: 18),),
+                        child: Text(
+                          "Headaches: ${widget.appointment.healthStatus.headache ? "Yes" : "No"}",
+                          style: const TextStyle(fontSize: 18),
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(10.0),
-                        child: Text("Vomiting: ${widget.appointment.healthStatus.vomiting? "Yes" : "No"}",style: const TextStyle(fontSize: 18),),
+                        child: Text(
+                          "Vomiting: ${widget.appointment.healthStatus.vomiting ? "Yes" : "No"}",
+                          style: const TextStyle(fontSize: 18),
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(10.0),
-                        child: Text("Cough: ${widget.appointment.healthStatus.cough? "Yes" : "No"}",style: const TextStyle(fontSize: 18),),
+                        child: Text(
+                          "Cough: ${widget.appointment.healthStatus.cough ? "Yes" : "No"}",
+                          style: const TextStyle(fontSize: 18),
+                        ),
                       ),
                       const Padding(
                         padding: EdgeInsets.symmetric(vertical: 10.0),
-                        child: Text("Reason for Appointment",style: TextStyle(fontSize: 22),),
+                        child: Text(
+                          "Reason for Appointment",
+                          style: TextStyle(fontSize: 22),
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(10.0),
-                        child: Text(widget.appointment.healthStatus.description,style: const TextStyle(fontSize: 18),),
+                        child: Text(
+                          widget.appointment.healthStatus.description,
+                          style: const TextStyle(fontSize: 18),
+                        ),
                       ),
                     ],
                   ),

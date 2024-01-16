@@ -36,11 +36,13 @@ class _ViewProfileState extends State<ViewProfile> {
       UserSecureStorage.setLastName(user.lastName);
       UserSecureStorage.setPhoneNumber(user.phoneNumber);
       UserSecureStorage.setDOB(user.dob);
-      var response = await http.put(Uri.parse("${authenticationIP}update"),
+
+      var response = await http.put(Uri.parse("$SERVERDOMAIN/update"),
           headers: {
             'Content-Type': 'application/json',
             HttpHeaders.authorizationHeader: user.accessToken
           },
+
           body: json.encode({
             'email': await UserSecureStorage.getEmail(),
             'password': await UserSecureStorage.getPassword(),
@@ -218,7 +220,7 @@ class _ViewProfileState extends State<ViewProfile> {
                           },
                         ),
                       ),
-                      isTextFieldDisabled && user.role == "patient"
+                      isTextFieldDisabled
                           ? SizedBox(
                               width: 20,
                               child: Padding(
@@ -257,7 +259,7 @@ class _ViewOtherProfileState extends State<ViewOtherProfile> {
     String token = "";
     await UserSecureStorage.getJWTToken().then((value) => token = value!);
     var response = await http
-        .get(Uri.parse("${authenticationIP}get/id/${widget.id}"), headers: {
+        .get(Uri.parse("$SERVERDOMAIN/user/get/id/${widget.id}"), headers: {
       'Content-Type': 'application/json',
       HttpHeaders.authorizationHeader: token,
     });

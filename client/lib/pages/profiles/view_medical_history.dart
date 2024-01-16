@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:nd_telemedicine/utilities/imports.dart';
 import 'package:http/http.dart' as http;
 
-
 class ViewOtherMedicalHistory extends StatefulWidget {
   final int id;
   const ViewOtherMedicalHistory({Key? key, required this.id}) : super(key: key);
@@ -13,31 +12,28 @@ class ViewOtherMedicalHistory extends StatefulWidget {
 }
 
 class _ViewOtherMedicalHistoryState extends State<ViewOtherMedicalHistory> {
-
   UserMedicalHistory history = UserMedicalHistory();
 
   Future getMedicalHistory() async {
-
-    var response = await http.get(Uri.parse(
-        "${medicationIP}get/healthinformation/${widget.id}"));
+    var response =
+        await http.get(Uri.parse("$SERVERDOMAIN/medical/get/${widget.id}"));
 
     var responseData = json.decode(response.body);
-    history.smoke = responseData['smoke'];
-    history.drink = responseData['drink'];
 
-    response = await http.get(
-        Uri.parse("${medicationIP}get/illnesses/${widget.id}"));
-    responseData = json.decode(response.body);
-    for(dynamic element in responseData){
-      history.userIllnesses.add(element['illness']);
-    }
+    history.smoke = responseData['history']['smoke'];
+    history.drink = responseData['history']['drink'];
 
-    response = await http.get(Uri.parse(
-        "${medicationIP}get/disabilities/${widget.id}"));
-    responseData = json.decode(response.body);
-    for(dynamic element in responseData){
-      history.userDisabilities.add(element['disability']);
-    }
+    List<String> illnesses = responseData["illnesses"]
+        .map<String>((illness) => illness["illness"].toString())
+        .toList();
+
+    history.userIllnesses.addAll(illnesses);
+
+    List<String> disabilities = responseData["disabilities"]
+        .map<String>((disability) => disability["disability"].toString())
+        .toList();
+
+    history.userDisabilities.addAll(disabilities);
 
     setState(() {});
   }
@@ -113,19 +109,25 @@ class _ViewOtherMedicalHistoryState extends State<ViewOtherMedicalHistory> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(left: 10.0,right:10,bottom:10),
+                        padding: const EdgeInsets.only(
+                            left: 10.0, right: 10, bottom: 10),
                         child: SizedBox(
-                          height:120,
-                          child:Material(
+                          height: 120,
+                          child: Material(
                             elevation: 2,
                             color: Theme.of(context).cardColor,
-                            borderRadius: const BorderRadius.all(Radius.circular(5)),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(5)),
                             child: Padding(
                               padding: const EdgeInsets.all(20.0),
                               child: ListView.builder(
                                   itemCount: history.userIllnesses.length,
-                                  itemBuilder: (BuildContext context, int index) {
-                                    return Text("- ${history.userIllnesses[index]}",style: const TextStyle(fontSize: 14),);
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return Text(
+                                      "- ${history.userIllnesses[index]}",
+                                      style: const TextStyle(fontSize: 14),
+                                    );
                                   }),
                             ),
                           ),
@@ -139,19 +141,25 @@ class _ViewOtherMedicalHistoryState extends State<ViewOtherMedicalHistory> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(left: 10.0,right:10,bottom:10),
+                        padding: const EdgeInsets.only(
+                            left: 10.0, right: 10, bottom: 10),
                         child: SizedBox(
-                          height:120,
-                          child:Material(
+                          height: 120,
+                          child: Material(
                             elevation: 2,
                             color: Theme.of(context).cardColor,
-                            borderRadius: const BorderRadius.all(Radius.circular(5)),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(5)),
                             child: Padding(
                               padding: const EdgeInsets.all(20.0),
                               child: ListView.builder(
                                   itemCount: history.userDisabilities.length,
-                                  itemBuilder: (BuildContext context, int index) {
-                                    return Text("- ${history.userDisabilities[index]}",style: const TextStyle(fontSize: 14),);
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return Text(
+                                      "- ${history.userDisabilities[index]}",
+                                      style: const TextStyle(fontSize: 14),
+                                    );
                                   }),
                             ),
                           ),
@@ -178,35 +186,35 @@ class _ViewMedicalHistoryState extends State<ViewMedicalHistory> {
   String id = "";
 
   Future getMedicalHistory() async {
-    
     await UserSecureStorage.getID().then(((value) => id = value!));
-    var response = await http.get(Uri.parse(
-        "${medicationIP}get/healthinformation/${int.parse(id)}"));
 
+    var response = await http.get(Uri.parse("$SERVERDOMAIN/medical/get/$id"));
 
-    var responseData = json.decode(response.body);
-    history.smoke = responseData['smoke'];
-    history.drink = responseData['drink'];
-    response = await http.get(
-        Uri.parse("${medicationIP}get/illnesses/${int.parse(id)}"));
-    responseData = json.decode(response.body);
-    for(dynamic element in responseData){
-      history.userIllnesses.add(element['illness']);
-    }
-    response = await http.get(Uri.parse(
-        "${medicationIP}get/disabilities/${int.parse(id)}"));
-    responseData = json.decode(response.body);
+    var responseData = jsonDecode(response.body);
 
-    for(dynamic element in responseData){
-      history.userDisabilities.add(element['disability']);
-    }
+    history.smoke = responseData['history']['smoke'];
+    history.drink = responseData['history']['drink'];
+
+    List<String> illnesses = responseData["illnesses"]
+        .map<String>((illness) => illness["illness"].toString())
+        .toList();
+
+    history.userIllnesses.addAll(illnesses);
+
+    List<String> disabilities = responseData["disabilities"]
+        .map<String>((disability) => disability["disability"].toString())
+        .toList();
+
+    history.userDisabilities.addAll(disabilities);
     setState(() {});
   }
+
   @override
   void initState() {
     getMedicalHistory();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -272,22 +280,28 @@ class _ViewMedicalHistoryState extends State<ViewMedicalHistory> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(left: 10.0,right:10,bottom:10),
+                        padding: const EdgeInsets.only(
+                            left: 10.0, right: 10, bottom: 10),
                         child: SizedBox(
-                          height:120,
-                          child:Material(
+                          height: 120,
+                          child: Material(
                             elevation: 2,
-                          color: Theme.of(context).cardColor,
-                          borderRadius: const BorderRadius.all(Radius.circular(5)),
-                          child: Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: ListView.builder(
-                                itemCount: history.userIllnesses.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return Text("- ${history.userIllnesses[index]}",style: const TextStyle(fontSize: 14),);
-                                }),
+                            color: Theme.of(context).cardColor,
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(5)),
+                            child: Padding(
+                              padding: const EdgeInsets.all(20.0),
+                              child: ListView.builder(
+                                  itemCount: history.userIllnesses.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return Text(
+                                      "- ${history.userIllnesses[index]}",
+                                      style: const TextStyle(fontSize: 14),
+                                    );
+                                  }),
+                            ),
                           ),
-                        ),
                         ),
                       ),
                       const Padding(
@@ -298,19 +312,25 @@ class _ViewMedicalHistoryState extends State<ViewMedicalHistory> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(left: 10.0,right:10,bottom:10),
+                        padding: const EdgeInsets.only(
+                            left: 10.0, right: 10, bottom: 10),
                         child: SizedBox(
-                          height:120,
-                          child:Material(
+                          height: 120,
+                          child: Material(
                             elevation: 2,
                             color: Theme.of(context).cardColor,
-                            borderRadius: const BorderRadius.all(Radius.circular(5)),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(5)),
                             child: Padding(
                               padding: const EdgeInsets.all(20.0),
                               child: ListView.builder(
                                   itemCount: history.userDisabilities.length,
-                                  itemBuilder: (BuildContext context, int index) {
-                                    return Text("- ${history.userDisabilities[index]}",style: const TextStyle(fontSize: 14),);
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return Text(
+                                      "- ${history.userDisabilities[index]}",
+                                      style: const TextStyle(fontSize: 14),
+                                    );
                                   }),
                             ),
                           ),
@@ -319,12 +339,13 @@ class _ViewMedicalHistoryState extends State<ViewMedicalHistory> {
                       Padding(
                         padding: const EdgeInsets.all(20.0),
                         child: SubmitButton(
-                          color: Colors.teal,
+                          color: AppColors.secondary,
                           message: "Update Medical History",
                           width: 50,
                           height: 50,
                           onPressed: () {
-                            navigate(UpdateMedicalHistory(id: int.parse(id)), context);
+                            navigate(UpdateMedicalHistory(id: int.parse(id)),
+                                context);
                           },
                         ),
                       ),

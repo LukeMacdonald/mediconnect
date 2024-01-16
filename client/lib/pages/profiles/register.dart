@@ -70,7 +70,7 @@ class _Register extends State<Register> {
       } else {
         try {
           final response =
-              await http.post(Uri.parse("${authenticationIP}register"),
+              await http.post(Uri.parse("$SERVERDOMAIN/user/register"),
                   headers: {'Content-Type': 'application/json'},
                   body: json.encode({
                     'email': await UserSecureStorage.getEmail(),
@@ -127,11 +127,11 @@ class _Register extends State<Register> {
           ),
           body: SizedBox(
             child: Column(mainAxisSize: MainAxisSize.max, children: [
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 0, 0),
+              const Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(20, 20, 0, 0),
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
-                  children: const [
+                  children: [
                     Text(
                       'Register',
                       style: TextStyle(
@@ -160,12 +160,12 @@ class _Register extends State<Register> {
                 child: Container(
                   width: double.infinity,
                   decoration: const BoxDecoration(),
-                  child: Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
+                  child: const Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
                     child: Column(
                         mainAxisSize: MainAxisSize.max,
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
+                        children: [
                           Text(
                             'What Are You Registering as:',
                             style: TextStyle(
@@ -179,11 +179,11 @@ class _Register extends State<Register> {
               ),
               //padding(20, 0, 0, 15),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20),
+                padding: const EdgeInsets.fromLTRB(0, 20, 0, 40),
                 child: userRole(),
               ),
               SubmitButton(
-                  color: Colors.teal,
+                  color: AppColors.secondary,
                   message: "Continue",
                   width: 235,
                   height: 50,

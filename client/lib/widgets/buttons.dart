@@ -1,7 +1,6 @@
 import '../../utilities/imports.dart';
 
 class SubmitButton extends StatelessWidget {
-
   const SubmitButton({
     Key? key,
     required this.color,
@@ -11,9 +10,8 @@ class SubmitButton extends StatelessWidget {
     required this.onPressed,
   }) : super(key: key);
 
-
   final Color color;
-  final String message ;
+  final String message;
   final double width;
   final double height;
   final VoidCallback onPressed;
@@ -21,33 +19,28 @@ class SubmitButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-          color: color,
-          elevation: 2,
-          child: InkWell(
-
-            splashColor: AppColors.cardLight,
-            onTap: onPressed,
-            child: SizedBox(
-              width: width,
-              height: height,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                  message,
+      borderRadius: const BorderRadius.all(Radius.circular(10)),
+      color: color,
+      elevation: 2,
+      child: InkWell(
+        splashColor: AppColors.cardLight,
+        onTap: onPressed,
+        child: SizedBox(
+          width: width,
+          height: height,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(message,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
+                  style: TextStyle(
                       fontWeight: FontWeight.w900,
-                      fontSize: 17)
-                  ),
+                      color: Theme.of(context).cardColor,
+                      fontSize: 20)),
             ],
           ),
-            ),
-          ),
-
-
-
+        ),
+      ),
     );
   }
 }
@@ -92,7 +85,7 @@ class GlowingActionButton extends StatelessWidget {
               child: Icon(
                 icon,
                 size: 26,
-                color: Colors.white,
+                color: Theme.of(context).cardColor,
               ),
             ),
           ),

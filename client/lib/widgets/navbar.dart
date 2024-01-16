@@ -163,7 +163,7 @@ class NavigationBarItem extends StatelessWidget {
             Icon(
               icon,
               size:20,
-              color: isSelected ?AppColors.secondary : null,
+              color: isSelected ?AppColors.secondary : AppColors.textDark,
             ),
             const SizedBox(
                 height: 8),
@@ -173,7 +173,7 @@ class NavigationBarItem extends StatelessWidget {
                 const TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.bold,
-                  color:AppColors.secondary,
+                  color:AppColors.textDark,
                 ) : const TextStyle(fontSize: 11)),
           ],
         ),

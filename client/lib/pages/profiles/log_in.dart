@@ -23,53 +23,54 @@ class _LogIn extends State<LogIn> {
   }
 
   Future login() async {
-    var response = await http.post(Uri.parse("${authenticationIP}login"),
+    var response = await http.post(Uri.parse("$SERVERDOMAIN/user/authenticate"),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
           'email': await UserSecureStorage.getEmail(),
           'password': await UserSecureStorage.getPassword()
         }));
 
-    var responseData = json.decode(response.body);
+    var token = response.body;
 
-    if (responseData['status'] == 401) {
-      if (!mounted)return;
+    if (response.statusCode == 400) {
+      if (!mounted) return;
       alert("User does not exist", context);
     } else {
-      UserSecureStorage.setJWTToken(responseData['access_token']);
+      UserSecureStorage.setJWTToken('Bearer ${response.body}');
 
-      String token = "";
-      await UserSecureStorage.getJWTToken().then((value) => token = value!);
+      // await UserSecureStorage.getJWTToken().then((value) => token = value!);
+      //
 
       response = await http.get(
           Uri.parse(
-              "${authenticationIP}get/${await UserSecureStorage.getEmail()}"),
+              "$SERVERDOMAIN/user/get/email/${await UserSecureStorage.getEmail()}"),
           headers: {
             'Content-Type': 'application/json',
-            HttpHeaders.authorizationHeader: token,
+            // HttpHeaders.authorizationHeader: 'Bearer ${response.body}',
           });
-      responseData = json.decode(response.body);
+
+      var responseData = json.decode(response.body);
 
       await UserSecureStorage.setID(responseData['id'].toString());
       await UserSecureStorage.setRole(responseData['role']);
 
       if (responseData['firstName'] == null) {
-        if (!mounted)return;
+        if (!mounted) return;
         navigate(const ProfileCreation(), context);
       } else if (responseData['role'] == "patient") {
         await UserSecureStorage().setDetails(responseData);
-        if (!mounted)return;
+        if (!mounted) return;
         navigate(const HomePage(), context);
       } else if (responseData['role'] == "doctor") {
         await UserSecureStorage().setDetails(responseData);
-        if (!mounted)return;
+        if (!mounted) return;
         navigate(const DoctorHomePage(), context);
-      } else if (responseData['role'] == "superuser") {
+      } else if (responseData['role'] == "admin") {
         await UserSecureStorage().setDetails(responseData);
-        if (!mounted)return;
+        if (!mounted) return;
         navigate(const AdminHomePage(), context);
       } else {
-        if (!mounted)return;
+        if (!mounted) return;
         alert("Error Logging In", context);
       }
     }
@@ -78,7 +79,7 @@ class _LogIn extends State<LogIn> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: ()=>FocusScope.of(context).unfocus(),
+      onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
         extendBodyBehindAppBar: true,
@@ -101,9 +102,9 @@ class _LogIn extends State<LogIn> {
                   Container(
                     //height: MediaQuery.of(context).size.height * 0.5,
                     width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).cardColor,
-                      borderRadius: const BorderRadius.only(
+                    decoration: const BoxDecoration(
+                      color: Color.fromRGBO(238, 238, 238, 1),
+                      borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(0),
                         bottomRight: Radius.circular(0),
                         topLeft: Radius.circular(0),

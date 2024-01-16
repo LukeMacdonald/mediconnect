@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import '../../utilities/imports.dart';
 
-
 class ChatScreen extends StatefulWidget {
   final MessageData messageData;
   final String name;
@@ -28,7 +27,7 @@ class _ChatScreen extends State<ChatScreen> {
   Future<void> getMessages() async {
     try {
       var response = await http.get(
-          Uri.parse("${messageIP}get/messages/"
+          Uri.parse("$SERVERDOMAIN/message/get/"
               "${messageData.senderID}/"
               "${messageData.receiverID}"),
           headers: {'Content-Type': 'application/json'});
@@ -62,15 +61,12 @@ class _ChatScreen extends State<ChatScreen> {
           }
           break;
         case 204:
-          print("No New Messages");
           break;
         default:
           var list = json.decode(response.body).values.toList();
           throw Exception(list.join("\n\n"));
       }
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 
   Future<void> sendMessage(String message) async {
@@ -79,16 +75,14 @@ class _ChatScreen extends State<ChatScreen> {
       var formatter = DateFormat('yyyy-MM-dd HH:mm:ss');
       String formattedDate = formatter.format(now);
       await UserSecureStorage.getID().then((value) => id = value!);
-      if(otherID == -1){
+      if (otherID == -1) {
         if (messageData.receiverID != int.parse(id)) {
           otherID = messageData.receiverID;
-        }
-        else{
+        } else {
           otherID = messageData.senderID;
-
         }
       }
-      await http.post(Uri.parse("${messageIP}post/message"),
+      await http.post(Uri.parse("$SERVERDOMAIN/message/post"),
           headers: {'Content-Type': 'application/json'},
           body: json.encode({
             'senderID': int.parse(id),
@@ -101,12 +95,13 @@ class _ChatScreen extends State<ChatScreen> {
       alert(e.toString().substring(11), context);
     }
   }
+
   Future getUnreadMessages() async {
     MessageData message;
     while (true) {
       try {
         var response = await http.get(
-            Uri.parse("${messageIP}get/unread/message/"
+            Uri.parse("$SERVERDOMAIN/unread/"
                 "${messageData.senderID}/"
                 "${messageData.receiverID}"),
             headers: {'Content-Type': 'application/json'});
@@ -122,27 +117,29 @@ class _ChatScreen extends State<ChatScreen> {
                 element['message'],
                 element['viewed'] as bool);
             await UserSecureStorage.getID().then((value) => id = value!);
-              if (message.senderID == int.parse(id)) {
-                items.add(MessageOwnTile(
-                    message: message.message, messageDate: ""));
-              } else {
-                items.add(
-                    MessageTile(message: message.message, messageDate: ""));
-              }
-              if (!mounted) {print("mounted");return;}
-              setState(() {items = items;});
+            if (message.senderID == int.parse(id)) {
+              items.add(
+                  MessageOwnTile(message: message.message, messageDate: ""));
+            } else {
+              items.add(MessageTile(message: message.message, messageDate: ""));
+            }
+            if (!mounted) {
+              return;
+            }
+            setState(() {
+              items = items;
+            });
             break;
           case 400:
             break;
           default:
-            var list = json
-                .decode(response.body)
-                .values
-                .toList();
+            var list = json.decode(response.body).values.toList();
             throw Exception(list.join("\n\n"));
         }
       } catch (e) {
-        if (!mounted) {return;}
+        if (!mounted) {
+          return;
+        }
         setState(() {});
         //alert(e.toString().substring(11), context);
       }
@@ -182,12 +179,12 @@ class _ChatScreen extends State<ChatScreen> {
                   icon: CupertinoIcons.back,
                   onTap: () async {
                     String role = "";
-                    await UserSecureStorage.getRole().then((value) => role = value!);
-                    if(!mounted)return;
-                    if(role == "doctor"){
+                    await UserSecureStorage.getRole()
+                        .then((value) => role = value!);
+                    if (!mounted) return;
+                    if (role == "doctor") {
                       navigate(const ChatMenuDoctor(), context);
-                    }
-                    else{
+                    } else {
                       navigate(const ChatMenuPatient(), context);
                     }
                   },
@@ -199,22 +196,22 @@ class _ChatScreen extends State<ChatScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: Center(
                         child: IconBorder(
-                          icon: CupertinoIcons.person,
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                PageTransition(
-                                    type: PageTransitionType.fade,
-                                    child: ViewOtherProfile(id: otherID)));
-                          },
-                        )))
+                      icon: CupertinoIcons.person,
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            PageTransition(
+                                type: PageTransitionType.fade,
+                                child: ViewOtherProfile(id: otherID)));
+                      },
+                    )))
               ]),
           //_
           body: Column(
             children: [
               Expanded(
                   child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
                       child: ListView.builder(
                         controller: _scrollController,
                         itemCount: items.length,
@@ -222,60 +219,69 @@ class _ChatScreen extends State<ChatScreen> {
                           return items[index];
                         },
                       ))),
-              SafeArea(
-                  bottom: true,
-                  top: false,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: Card(
-                            color: Theme.of(context).cardColor,
-                            child: Padding(
-                            padding: const EdgeInsets.only(
-                                left: 16, bottom: 10, top: 10),
-                            child: TextFormField(
-                              autofocus: true,
-                              controller: textEditingController,
-                              style: const TextStyle(fontSize: 16.0),
-                              decoration: const InputDecoration(
-                                hintText: "Enter Message Here",
-                                border: InputBorder.none,
-                              ),
-                              keyboardType: TextInputType.multiline,
-                              maxLines: 2,
-                            ),
-
-                            ),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                          padding: const EdgeInsets.only(
-                              left: 12, right: 24, bottom: 10, top: 10),
-                          child: GlowingActionButton(
-                            color: AppColors.accent,
-                            icon: Icons.send_rounded,
-                            onPressed: () {
-                              setState(() {
-                                sendMessage(textEditingController.text);
-                                items.add(MessageOwnTile(
-                                    message: textEditingController.text,
-                                    messageDate: ""));
-                                textEditingController.clear();
-                                _scrollController.animateTo(
-                                    _scrollController.position.maxScrollExtent,
-                                    duration: const Duration(milliseconds: 500),
-                                    curve: Curves.easeOut);
-                                name = name;
-                                getUnreadMessages();
-                              });
-                            },
-                          ))
-                    ],
-                  )),
+              // SafeArea(
+              //   bottom: true,
+              //   top: false,
+              //   child: Row(
+              //     children: [
+              //       Expanded(
+              //         child: Padding(
+              //           padding: const EdgeInsets.all(1.0),
+              //           child:
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // )
             ],
+          ),
+          bottomNavigationBar: Card(
+            margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+            color: Theme.of(context).cardColor,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 15, bottom: 30, top: 10),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      autofocus: true,
+                      controller: textEditingController,
+                      style: const TextStyle(fontSize: 16.0),
+                      decoration: const InputDecoration(
+                        hintText: "Enter Message Here",
+                        border: InputBorder.none,
+                      ),
+                      keyboardType: TextInputType.multiline,
+                      maxLines: 2,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        left: 0, right: 24, bottom: 10, top: 0),
+                    child: GlowingActionButton(
+                      color: AppColors.secondary,
+                      icon: Icons.send_rounded,
+                      onPressed: () {
+                        setState(() {
+                          sendMessage(textEditingController.text);
+                          items.add(MessageOwnTile(
+                              message: textEditingController.text,
+                              messageDate: ""));
+                          textEditingController.clear();
+                          _scrollController.animateTo(
+                            _scrollController.position.maxScrollExtent,
+                            duration: const Duration(milliseconds: 500),
+                            curve: Curves.easeOut,
+                          );
+                          name = name;
+                          getUnreadMessages();
+                        });
+                      },
+                    ),
+                  )
+                ],
+              ),
+            ),
           ),
         ));
   }

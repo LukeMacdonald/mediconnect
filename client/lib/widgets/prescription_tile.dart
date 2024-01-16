@@ -15,20 +15,20 @@ class _PrescriptionTile extends State<PrescriptionTile> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5.0),
       child: Card(
-        color: AppColors.buttonOption1Dark,
+        color: AppColors.cardLight,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 15.0),
           child: ListTile(
-            leading: const Icon(
+            leading: Icon(
               Icons.medication,
               size: 60,
-              color: Colors.white,
+              color: AppColors.secondary,
             ),
             contentPadding: const EdgeInsets.all(10),
             title: Text(
-                "Name: ${widget.prescription.name}\nDosage: ${widget.prescription.dosage}\nRepeats: ${widget.prescription.repeats}",
+                "Name: ${widget.prescription.name} (${widget.prescription.dosage} mg)\nRepeats: ${widget.prescription.repeats}",
                 style:
-                    const TextStyle(fontSize: 18)), //Text(_appointment[index]),
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)), //Text(_appointment[index]),
           ),
         ),
       ),

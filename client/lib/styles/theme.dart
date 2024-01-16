@@ -3,7 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 abstract class AppColors {
-  static const secondary = Color(0xFF2190E5);
+  static const secondary = Colors.teal;
+  static const secondaryAccent = Colors.tealAccent;
   static const accent = Color(0xFFD6755B);
   static const textDark = Color(0xFF000000);
   static const textLight = Color(0xFFF5F5F5);
@@ -11,7 +12,7 @@ abstract class AppColors {
   static const iconLight = Color(0xFFB1B4C0);
   static const iconDark = Color(0xFFB1B3C1);
   static const textHighlight = secondary;
-  static const cardLight = Color(0xFFF4F4F4);
+  static const cardLight = Colors.white;
   static const cardDark = Color(0xFF303334);
   static const buttonSelected = Colors.lightBlueAccent;
   static const buttonOption1Dark = secondary;
@@ -21,7 +22,7 @@ abstract class AppColors {
 }
 
 abstract class _LightColors {
-  static const background = Colors.white;
+  static const background = Color.fromRGBO(238, 238, 238, 1);
   static const card = AppColors.cardLight;
 }
 
@@ -43,8 +44,8 @@ class AppTheme {
     brightness: Brightness.light,
     colorScheme: lightBase.colorScheme.copyWith(secondary: accentColor),
     visualDensity: visualDensity,
-    textTheme:
-    GoogleFonts.mulishTextTheme().apply(bodyColor: AppColors.textDark),
+    textTheme: GoogleFonts.mulishTextTheme().apply(bodyColor: AppColors.textDark),
+
     backgroundColor: _LightColors.background,
     appBarTheme: lightBase.appBarTheme.copyWith(
       iconTheme: lightBase.iconTheme,

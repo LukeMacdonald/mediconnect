@@ -2,27 +2,28 @@ import 'package:flutter/cupertino.dart';
 import '../../utilities/imports.dart';
 
 class AdminHomePage extends StatefulWidget {
-
   const AdminHomePage({Key? key}) : super(key: key);
 
   @override
   State<AdminHomePage> createState() => _AdminHomePage();
-
 }
+
 class _AdminHomePage extends State<AdminHomePage> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   String name = "";
 
   Future setName() async {
-    await UserSecureStorage.getLastName().then((value) => name = value!);
+    await UserSecureStorage.getFirstName().then((value) => name = value!);
   }
+
   @override
-  void initState(){
-    setName();
+  void initState() {
     super.initState();
+    setName();
   }
+
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.transparent,
@@ -42,19 +43,41 @@ class _AdminHomePage extends State<AdminHomePage> {
               index: 5,
             ),
             AppDropDown(),
-
           ],
         ),
         body: Column(
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Container(
+                  width: MediaQuery.of(context).size.width,
+                  // height: 100,
+                  color: AppColors.secondary,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            left: 20, bottom: 20, top: 20),
+                        child: Text("Welcome $name",
+                            style: TextStyle(
+                                fontSize: 30,
+                                color: Theme.of(context).cardColor,
+                                fontWeight: FontWeight.bold)),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20, bottom: 30),
+                        child: Text("System Management",
+                            style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).cardColor)),
+                      ),
+                    ],
+                  )),
               const SizedBox(
                 height: 20,
-              ),
-              const Padding(
-                padding: EdgeInsets.only(left: 20,bottom: 30),
-                child: Text("Welcome Administrator",style:TextStyle(fontSize: 30)),
               ),
               SingleChildScrollView(
                 child: Column(
@@ -66,26 +89,42 @@ class _AdminHomePage extends State<AdminHomePage> {
                       children: [
                         Padding(
                           padding: const EdgeInsetsDirectional.fromSTEB(
-                              20, 0, 20, 0),
+                              20, 10, 20, 10),
                           child: Row(
                             mainAxisSize: MainAxisSize.max,
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               menuOption(
-                                  Colors.green,
+                                  AppColors.secondary,
                                   const Icon(
                                     CupertinoIcons.person_add,
-                                    color: Colors.white,
+                                    color: Colors.green,
                                     size: 50,
                                   ),
                                   const AddDoctor(),
                                   'Add Doctor',
                                   context),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsetsDirectional.fromSTEB(
+                              20, 10, 20, 10),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
                               menuOption(
-                                  Colors.orangeAccent,
+                                  AppColors.secondary,
                                   const Icon(
                                     CupertinoIcons.person_badge_minus,
-                                    color: Colors.white,
+                                    color: Colors.redAccent,
                                     size: 50,
                                   ),
                                   const RemoveProfile(role: "doctor"),
@@ -102,16 +141,16 @@ class _AdminHomePage extends State<AdminHomePage> {
                       children: [
                         Padding(
                           padding: const EdgeInsetsDirectional.fromSTEB(
-                              20, 40, 20, 0),
+                              20, 10, 20, 10),
                           child: Row(
                             mainAxisSize: MainAxisSize.max,
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               menuOption(
-                                  Colors.redAccent,
+                                  AppColors.secondary,
                                   const Icon(
                                     CupertinoIcons.person_badge_minus,
-                                    color: Colors.white,
+                                    color: Colors.orangeAccent,
                                     size: 50,
                                   ),
                                   const RemoveProfile(role: "patient"),

@@ -16,7 +16,9 @@ class UpcomingAppointment extends StatefulWidget {
 class _UpcomingAppointment extends State<UpcomingAppointment> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  Widget bottom = const PatientBottomNavigationBar(pageIndex: 3,);
+  Widget bottom = const PatientBottomNavigationBar(
+    pageIndex: 3,
+  );
 
   String token = "";
 
@@ -34,8 +36,10 @@ class _UpcomingAppointment extends State<UpcomingAppointment> {
   @override
   void initState() {
     appointments = [];
-    if(widget.role=='doctor'){
-      bottom = const DoctorBottomNavigationBar(pageIndex: 3,);
+    if (widget.role == 'doctor') {
+      bottom = const DoctorBottomNavigationBar(
+        pageIndex: 3,
+      );
       _visibility = false;
     }
     getDetails();
@@ -46,12 +50,13 @@ class _UpcomingAppointment extends State<UpcomingAppointment> {
     http.Response response;
     try {
       if (widget.role == "patient") {
-        response = await http
-            .get(Uri.parse("${appointmentIP}search/patient/appointments/$id"));
+        response = await http.get(
+            Uri.parse("$SERVERDOMAIN/appointment/patient/appointments/$id"));
       } else {
-        response = await http
-            .get(Uri.parse("${appointmentIP}search/doctor/appointments/$id"));
+        response = await http.get(
+            Uri.parse("$SERVERDOMAIN/appointment/doctor/appointments/$id"));
       }
+
       switch (response.statusCode) {
         case 200:
           var responseData = json.decode(response.body);
@@ -61,33 +66,32 @@ class _UpcomingAppointment extends State<UpcomingAppointment> {
 
             HealthStatus symptoms = HealthStatus();
             final responseSymptoms = await http.get(Uri.parse(
-                "${appointmentIP}search/healthstatus/${appointment.id}"));
+                "$SERVERDOMAIN/appointment/health-status/${appointment.id}"));
 
             symptoms.setDetails(json.decode(responseSymptoms.body));
             appointment.healthStatus = symptoms;
             if (widget.role == "patient") {
               var responseName = await http.get(Uri.parse(
-                  "${authenticationIP}get/name/${appointment.doctor}"));
+                  "$SERVERDOMAIN/user/get/name/${appointment.doctor}"));
               String name = responseName.body;
               appointments.add(AppointmentPatientTile(
                   appointment: appointment, doctor: name));
-            }
-            else {
+            } else {
               var responseName = await http.get(Uri.parse(
-                  "${authenticationIP}get/name/${appointment.patient}"));
+                  "$SERVERDOMAIN/user/get/name/${appointment.patient}"));
               String name = responseName.body;
               appointments.add(AppointmentDoctorTile(
                 appointment: appointment,
                 patient: name,
               ));
-
             }
             setState(() {});
           }
 
           break;
         case 400:
-          appointments.add(Center(child:Padding(
+          appointments.add(Center(
+              child: Padding(
             padding: const EdgeInsets.all(20.0),
             child: Text(response.body),
           )));

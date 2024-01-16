@@ -35,8 +35,10 @@ class AppBarTitle extends StatelessWidget {
     );
   }
 }
+
 class ChatTile extends StatelessWidget {
-  const ChatTile({Key? key, required this.messageData,required this.name}) : super(key: key);
+  const ChatTile({Key? key, required this.messageData, required this.name})
+      : super(key: key);
 
   final MessageData messageData;
   final String name;
@@ -51,17 +53,18 @@ class ChatTile extends StatelessWidget {
                 type: PageTransitionType.fade,
                 child: ChatScreen(
                   messageData: messageData,
-                  name: name,)));
+                  name: name,
+                )));
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 5.0),
         child: Container(
             height: 100,
             margin: const EdgeInsets.symmetric(horizontal: 8),
-
             decoration: BoxDecoration(
-                borderRadius: const BorderRadius.all(Radius.circular(15)),
-                color: Theme.of(context).cardColor,),
+              borderRadius: const BorderRadius.all(Radius.circular(15)),
+              color: Theme.of(context).cardColor,
+            ),
             child: Padding(
               padding: const EdgeInsets.all(4.0),
               child: Row(children: [
@@ -74,30 +77,31 @@ class ChatTile extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.0),
-                            child: Text(name,
-                                style: const TextStyle(
-                                  letterSpacing: 0.2,
-                                  wordSpacing: 1.5,
-                                  fontWeight: FontWeight.w900,
-                                )),
-                          ),
-                          SizedBox(
-                              height: 20,
-                              child: Text(messageData.message,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    color: AppColors.textFaded,
-                                  )))
-                        ]))
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Text(name,
+                            style: const TextStyle(
+                              letterSpacing: 0.2,
+                              wordSpacing: 1.5,
+                              fontWeight: FontWeight.w900,
+                            )),
+                      ),
+                      SizedBox(
+                          height: 20,
+                          child: Text(messageData.message,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: AppColors.textFaded,
+                              )))
+                    ]))
               ]),
             )),
       ),
     );
   }
 }
+
 class MessageOwnTile extends StatelessWidget {
   const MessageOwnTile(
       {Key? key, required this.message, required this.messageDate})
@@ -118,7 +122,7 @@ class MessageOwnTile extends StatelessWidget {
           children: [
             Container(
                 decoration: const BoxDecoration(
-                  color: AppColors.accent,
+                  color: AppColors.secondary,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(_borderRadius),
                     bottomRight: Radius.circular(_borderRadius),
@@ -128,7 +132,12 @@ class MessageOwnTile extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
                       horizontal: 10.0, vertical: 15),
-                  child: Text(message!),
+                  child: Text(
+                    message!,
+                    style: TextStyle(
+                        color: Theme.of(context).cardColor,
+                        fontWeight: FontWeight.w600),
+                  ),
                 )),
             Padding(
                 padding: const EdgeInsets.only(top: 8.0),
@@ -146,6 +155,7 @@ class MessageOwnTile extends StatelessWidget {
     );
   }
 }
+
 class MessageTile extends StatelessWidget {
   const MessageTile(
       {Key? key, required this.message, required this.messageDate})

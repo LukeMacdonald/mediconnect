@@ -32,7 +32,7 @@ class _AddDoctor extends State<AddDoctor> {
     try {
 
       final response = await http.get(
-        Uri.parse("${authenticationIP}admin/add/doctor/verification/$email"),
+        Uri.parse("${SERVERDOMAIN}/admin/add/doctor/verification/$email"),
         headers: {
           'Content-Type': 'application/json',
           HttpHeaders.authorizationHeader: "Bearer $token"

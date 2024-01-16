@@ -22,10 +22,12 @@ class _PrescriptionList extends State<PrescriptionList> {
   Future getPrescriptions() async {
     http.Response response;
     try {
-      response = await http.get(Uri.parse("${prescriptionIP}search/prescriptions/${int.parse(id)}"));
+      response = await http.get(Uri.parse("$SERVERDOMAIN/medical/prescriptions/${int.parse(id)}"));
+
       switch (response.statusCode) {
         case 200:
           var responseData = json.decode(response.body);
+
           for (var data in responseData) {
             Prescription prescription = Prescription();
             prescription.setDetails(data);
@@ -36,8 +38,8 @@ class _PrescriptionList extends State<PrescriptionList> {
           }
           break;
         case 400:
-          var responseData = json.decode(response.body);
-          prescriptions.add(Center(child: Padding(padding: const EdgeInsets.all(20.0), child: Text(responseData['message'],))));
+          var responseData = response.body;
+          prescriptions.add(Center(child: Padding(padding: const EdgeInsets.all(20.0), child: Text(responseData))));
           setState(() {});
           break;
         default:

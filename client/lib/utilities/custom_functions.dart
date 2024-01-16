@@ -1,7 +1,6 @@
 import 'package:http/http.dart' as http;
 import '../../utilities/imports.dart';
 
-
 String getDayStringFrontDayInt(int day) {
   switch (day) {
     case 1:
@@ -51,42 +50,44 @@ String getTime(TimeOfDay time) {
 }
 
 Future<String> getName(int id) async {
-
   String jwt = "";
   await UserSecureStorage.getJWTToken().then((value) => jwt = value!);
 
-  var response = await http.get(Uri.parse("${authenticationIP}get/name/$id"),
-      headers: {
-        'Content-Type': 'application/json',
-        HttpHeaders.authorizationHeader: jwt
-      });
+  var response =
+      await http.get(Uri.parse("$SERVERDOMAIN/user/get/name/$id"), headers: {
+    'Content-Type': 'application/json',
+    // HttpHeaders.authorizationHeader: jwt
+  });
   return response.body;
 }
 
-Future<void> deletePatient(String email,int id) async {
+Future<void> deletePatient(String email, int id) async {
   String jwt = "";
   await UserSecureStorage.getJWTToken().then((value) => jwt = value!);
-  await http.delete(Uri.parse("${authenticationIP}remove/$email"), headers: {
+  await http.delete(Uri.parse("$SERVERDOMAIN/user/remove/$email"), headers: {
     'Content-Type': 'application/json',
     HttpHeaders.authorizationHeader: jwt
   });
-  await http.delete(Uri.parse("${appointmentIP}delete/patient/$id"), headers: {
-    'Content-Type': 'application/json',
-  });
+  await http.delete(Uri.parse("$SERVERDOMAIN/appointment/patient/delete/$id"),
+      headers: {
+        'Content-Type': 'application/json',
+      });
   await http.delete(Uri.parse("${messageIP}delete/user/$id"), headers: {
     'Content-Type': 'application/json',
   });
 }
-Future<void> deleteDoctor(String email,int id) async {
+
+Future<void> deleteDoctor(String email, int id) async {
   String jwt = "";
   await UserSecureStorage.getJWTToken().then((value) => jwt = value!);
-  await http.delete(Uri.parse("${authenticationIP}remove/$email"), headers: {
+  await http.delete(Uri.parse("$SERVERDOMAIN/user/remove/$email"), headers: {
     'Content-Type': 'application/json',
     HttpHeaders.authorizationHeader: jwt
   });
-  await http.delete(Uri.parse("${appointmentIP}delete/doctor/$id"), headers: {
-    'Content-Type': 'application/json',
-  });
+  await http.delete(Uri.parse("$SERVERDOMAIN/appointment/doctor/delete/$id"),
+      headers: {
+        'Content-Type': 'application/json',
+      });
   await http.delete(Uri.parse("${messageIP}delete/user/$id"), headers: {
     'Content-Type': 'application/json',
   });
@@ -98,8 +99,8 @@ void navigate(Widget page, BuildContext context) {
 }
 
 Future deleteAppointment(int id) async {
-  await http.delete(Uri.parse(
-      "${appointmentIP}delete/appointment/$id"));
+  await http.delete(Uri.parse("$SERVERDOMAIN/appointment/health-status/$id"));
+  await http.delete(Uri.parse("$SERVERDOMAIN/appointment/delete/$id"));
 }
 
 Future<String?> alert(String message, BuildContext context) {

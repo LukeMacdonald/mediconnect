@@ -20,7 +20,7 @@ class _ChatMenuPatient extends State<ChatMenuPatient> {
       String id = "";
       await UserSecureStorage.getID().then((value) => id = value!);
       var response = await http.get(
-          Uri.parse("${messageIP}get/message_menu/${int.parse(id)}"),
+          Uri.parse("$SERVERDOMAIN/message/menu/${int.parse(id)}"),
           headers: {'Content-Type': 'application/json'});
       switch (response.statusCode) {
         case 200:

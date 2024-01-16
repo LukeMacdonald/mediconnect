@@ -16,7 +16,7 @@ class _RemoveProfile extends State<RemoveProfile> {
   Future getUsers() async {
     try {
       var response = await http.get(
-          Uri.parse("${authenticationIP}get/users/${widget.role}"),
+          Uri.parse("${SERVERDOMAIN}/get/users/${widget.role}"),
           headers: {'Content-Type': 'application/json'});
       switch (response.statusCode) {
         case 200:
