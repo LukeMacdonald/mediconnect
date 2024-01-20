@@ -1,6 +1,37 @@
 spring:
   application:
     name: service-registry
+  profiles:
+    active: local
+
+server:
+  port: 8761
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9411/api/v2/spans
+
+eureka:
+  instance:
+    preferIpAddress: true
+    hostname: localhost
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+
+---
+
+spring:
+  application:
+    name: service-registry
+  profiles:
+    active: prod
 
 server:
   port: 8761

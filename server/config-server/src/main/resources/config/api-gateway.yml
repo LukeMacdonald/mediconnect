@@ -2,11 +2,13 @@ server:
   port: 8060
 
 eureka:
+  instance:
+    hostname: localhost
   client:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://service-reg:8761/eureka/
+      defaultZone: http://${eureka.instance.hostname}:8761/eureka/
 
 management:
   tracing:
@@ -14,7 +16,7 @@ management:
       probability: 1.0
   zipkin:
     tracing:
-      endpoint: http://zipkin:9411/api/v2/spans
+      endpoint: http://localhost:9411/api/v2/spans
 
 spring:
   cloud:
@@ -40,3 +42,29 @@ spring:
           uri: lb://chat-service
           predicates:
             - Path=/message/**
+
+
+# Kubernetes deployment profile
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+management:
+  tracing:
+    sampling:
+      probability: 0.1
+  zipkin:
+    tracing:
+      endpoint: http://zipkin:9411/api/v2/spans
+
+eureka:
+  instance:
+    preferIpAddress: true
+    hostname: api-gateway
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://service-reg:8761/eureka/

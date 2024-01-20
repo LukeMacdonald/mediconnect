@@ -55,7 +55,12 @@ deploy_docker_image() {
 
 update_kubernetes() {
   echo "Updating Kubernetes configuration..."
-  if kubectl delete -f kubernetes.yaml && kubectl apply -f kubernetes.yaml; then
+
+  # Attempt to delete the resource, ignore errors if the resource doesn't exist
+  kubectl delete -f kubernetes.yaml || true
+
+  # Apply the new configuration
+  if kubectl apply -f kubernetes.yaml; then
     echo "Kubernetes update successful."
   else
     echo "Kubernetes update failed."

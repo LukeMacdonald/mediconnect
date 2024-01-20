@@ -8,6 +8,8 @@ services:
       POSTGRES_USER: luke
       POSTGRES_PASSWORD: abc123
       PGDATA: /data/postgres
+    ports:
+      - "5432:5432"
     volumes:
       - postgres:/data/postgres
     networks:
@@ -35,6 +37,8 @@ services:
     networks:
       - mediconnect
     restart: unless-stopped
+    ports:
+      - "5672:5672"
 
   zipkin:
     container_name: zipkin
@@ -42,6 +46,9 @@ services:
     networks:
       - mediconnect
     restart: unless-stopped
+    ports:
+      - "9411:9411"
+
 
   config-server:
     container_name: config-server

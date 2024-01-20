@@ -1,17 +1,26 @@
 server:
   port: 8081
+# Local development profile
+---
+spring:
+  config:
 
-eureka:
-  instance:
-    # Leave prefer ip address to allow the gateway inside the kubernetes cluster to find this service by it's pod ip
-    preferIpAddress: true
-    # The hostname of the service, to register the pod and turn it easier for the gateway to find it
-    hostname: profile-service
-  client:
-    register-with-eureka: true
-    fetch-registry: true
-    service-url:
-      defaultZone: http://service-reg:8761/eureka/
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/mediconnect
+    username: luke
+    password: abc123
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
 
 management:
   tracing:
@@ -19,9 +28,24 @@ management:
       probability: 1.0
   zipkin:
     tracing:
-      endpoint: http://zipkin:9411/api/v2/spans
+      endpoint: http://localhost:9411/api/v2/spans
 
+eureka:
+  instance:
+    preferIpAddress: true
+    hostname: profile-service
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+# Kubernetes deployment profile
+---
 spring:
+  config:
+    activate:
+      on-profile: prod
   rabbitmq:
     host: rabbitmq
     port: 5672
@@ -37,3 +61,21 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
+
+management:
+  tracing:
+    sampling:
+      probability: 0.1
+  zipkin:
+    tracing:
+      endpoint: http://zipkin:9411/api/v2/spans
+
+eureka:
+  instance:
+    preferIpAddress: true
+    hostname: profile-service
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://service-reg:8761/eureka/

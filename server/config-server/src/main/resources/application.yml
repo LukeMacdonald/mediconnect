@@ -4,5 +4,8 @@ server:
 spring:
   profiles:
     active: native
-
-
+  cloud:
+    config:
+      server:
+        git:
+          default-label: main
