@@ -5,21 +5,20 @@ import lombok.Getter;
 import lombok.Setter;
 
 import jakarta.persistence.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import java.sql.Date;
-import java.util.Collection;
+
 
 
 
 @Entity
 @Table(name = "users")
-public class User implements UserDetails {
+public class User {
 
     @NotNull
     @Id
@@ -121,39 +120,5 @@ public class User implements UserDetails {
             case "admin" -> "ROLE_ADMIN";
             default -> "ERROR";
         };
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
-    }
-
-    @Override
-    public String getUsername() {
-        return this.email;
-    }
-
-    @Override
-    @JsonIgnore
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    @JsonIgnore
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    @JsonIgnore
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    @JsonIgnore
-    public boolean isEnabled() {
-        return true;
     }
 }

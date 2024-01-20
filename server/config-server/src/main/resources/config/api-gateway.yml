@@ -1,0 +1,42 @@
+server:
+  port: 8060
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://service-reg:8761/eureka/
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: http://zipkin:9411/api/v2/spans
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: profile-service
+          uri: lb://profile-service
+          predicates:
+            - Path=/user/**
+        - id: availability-service
+          uri: lb://availability-service
+          predicates:
+            - Path=/availability/**
+        - id: appointment-service
+          uri: lb://appointment-service
+          predicates:
+            - Path=/appointment/**
+        - id: medical-service
+          uri: lb://medical-service
+          predicates:
+            - Path=/medical/**
+        - id: chat-service
+          uri: lb://chat-service
+          predicates:
+            - Path=/message/**

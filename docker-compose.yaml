@@ -1,0 +1,121 @@
+version: '3.8'
+
+services:
+  postgres:
+    container_name: postgres
+    image: postgres
+    environment:
+      POSTGRES_USER: luke
+      POSTGRES_PASSWORD: abc123
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/postgres
+    networks:
+      - mediconnect
+    restart: unless-stopped
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    networks:
+      - mediconnect
+    restart: unless-stopped
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    networks:
+      - mediconnect
+    restart: unless-stopped
+
+  zipkin:
+    container_name: zipkin
+    image: openzipkin/zipkin
+    networks:
+      - mediconnect
+    restart: unless-stopped
+
+  config-server:
+    container_name: config-server
+    image: lukemacca123/mediconnect-config:latest
+    networks:
+      - mediconnect
+    ports:
+      - "8088:8088"
+    restart: unless-stopped
+
+  service-reg:
+    container_name: service-reg
+    image: lukemacca123/mediconnect-eureka:latest
+    networks:
+      - mediconnect
+    restart: unless-stopped
+
+  api-gateway:
+    container_name: api-gateway
+    image: lukemacca123/mediconnect-gateway:latest
+    ports:
+      - "8060:8060"
+    networks:
+      - mediconnect
+    restart: unless-stopped
+
+  profile-service:
+    container_name: profile-service
+    image: lukemacca123/mediconnect-profile:latest
+    networks:
+      - mediconnect
+    restart: unless-stopped
+
+  notification-service:
+    container_name: notification-service
+    image: lukemacca123/mediconnect-notification:latest
+    networks:
+      - mediconnect
+    restart: unless-stopped
+
+  availability-service:
+    container_name: availability-service
+    image: lukemacca123/mediconnect-availability:latest
+    networks:
+      - mediconnect
+    restart: unless-stopped
+
+  appointment-service:
+    container_name: appointment-service
+    image: lukemacca123/mediconnect-appointment:latest
+    networks:
+      - mediconnect
+    restart: unless-stopped
+
+  medical-service:
+    container_name: medical-service
+    image: lukemacca123/mediconnect-medical:latest
+    networks:
+      - mediconnect
+    restart: unless-stopped
+
+  chat-service:
+    container_name: chat-service
+    image: lukemacca123/mediconnect-chat:latest
+    networks:
+      - mediconnect
+    restart: unless-stopped
+
+networks:
+  mediconnect:
+    driver: bridge
+
+volumes:
+  postgres:
+  pgadmin:
+
+

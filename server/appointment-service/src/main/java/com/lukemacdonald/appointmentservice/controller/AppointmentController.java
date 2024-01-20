@@ -23,8 +23,8 @@ public class AppointmentController {
     private final AppointmentService appointmentService;
 
     // Search for appointment based off the doctors ID, the date of the appointment and start_time, determine if it's valid or not
-    @GetMapping(value="/get/{id}/{date}/{start_time}")
-    public Boolean validateAppointment(@PathVariable int id, @PathVariable Date date, @PathVariable String start_time){
+    @GetMapping(value="")
+    public Boolean validateAppointment(@RequestParam int id, @RequestParam Date date, @RequestParam String start_time){
         Appointment validAppoint = appointmentService.findExactAppointment(id, date, start_time);
         return validAppoint != null;
     }
@@ -36,8 +36,8 @@ public class AppointmentController {
     }
 
     // Search and return for docotors that the patients are booked with based on id.
-    @GetMapping(value="/patient/find-doctors/{id}")
-    public List<Integer> BookedDoctorsList(@PathVariable int id){
+    @GetMapping(value="/patient/find-doctors")
+    public List<Integer> BookedDoctorsList(@RequestParam int id){
         List<Appointment> booked_appointments = appointmentService.findPatientAppointments(id);
 
         List<Integer> unique_doctors = new ArrayList<>();
@@ -50,8 +50,8 @@ public class AppointmentController {
 
         return unique_doctors;
     }
-    @GetMapping(value="/doctor/find-patients/{id}")
-    public List<Integer> BookedPatientsList(@PathVariable int id){
+    @GetMapping(value="/doctor/find-patients")
+    public List<Integer> BookedPatientsList(@RequestParam int id){
         List<Appointment> booked_appointments = appointmentService.findDoctorAppointments(id);
         List<Integer> unique_patients = new ArrayList<>();
         for (Appointment appointment : booked_appointments) {
@@ -63,8 +63,8 @@ public class AppointmentController {
     }
 
     // Search for all appointments based off the patient's id
-    @GetMapping(value="/patient/appointments/{id}")
-    public ResponseEntity<?> getAllPatientAppointments(@PathVariable int id){
+    @GetMapping(value="/patient")
+    public ResponseEntity<?> getAllPatientAppointments(@RequestParam int id){
         List<Appointment> upcoming = appointmentService.findPatientAppointments(id);
         if(upcoming.isEmpty()){
             return ResponseEntity.badRequest().body("No Upcoming Appointments");
@@ -75,8 +75,8 @@ public class AppointmentController {
             return ResponseEntity.ok().body(upcoming);
         }
     }
-    @GetMapping(value="/doctor/appointments/{id}")
-    public ResponseEntity<?> getAllDoctorAppointments(@PathVariable int id){
+    @GetMapping(value="/doctor")
+    public ResponseEntity<?> getAllDoctorAppointments(@RequestParam int id){
         List<Appointment> upcoming = appointmentService.findDoctorAppointments(id);
         if(upcoming.isEmpty()){
             return ResponseEntity.badRequest().body("No Upcoming Appointments");
@@ -114,8 +114,8 @@ public class AppointmentController {
     }
 
     // Remove an Appointment by it's ID
-    @DeleteMapping(value = "/delete/{id}")
-    public void deleteAppointment(@PathVariable("id") int id){
+    @DeleteMapping(value = "/delete")
+    public void deleteAppointment(@RequestParam int id){
         appointmentService.delete(id);
     }
 
@@ -130,18 +130,18 @@ public class AppointmentController {
         return ResponseEntity.ok().body("Appointment Updated!");
     }
 
-    @DeleteMapping(value = "/patient/delete/{id}")
-    public void deleteAppointmentByPatient(@PathVariable int id){
+    @DeleteMapping(value = "/patient/delete")
+    public void deleteAppointmentByPatient(@RequestParam int id){
         appointmentService.deletePatientAppointments(id);
     }
-    @DeleteMapping(value = "/doctor/delete/{id}")
-    public void deleteAppointmentByDoctor(@PathVariable int id){
+    @DeleteMapping(value = "/doctor/delete")
+    public void deleteAppointmentByDoctor(@RequestParam int id){
         appointmentService.deleteDoctorAppointments(id);
     }
 
 
-    @GetMapping(value="/health-status/{id}")
-    public ResponseEntity<?> getHealthStatus(@PathVariable("id") int id){
+    @GetMapping(value="/health-status")
+    public ResponseEntity<?> getHealthStatus(@RequestParam int id){
         HealthStatus healthStatus = appointmentService.getStatus(id);
 
         if (healthStatus != null) {
@@ -176,8 +176,8 @@ public class AppointmentController {
 
     }
 
-    @DeleteMapping(value="/health-status/{id}")
-    public ResponseEntity<?> deleteHealthStatus(@PathVariable int id){
+    @DeleteMapping(value="/health-status")
+    public ResponseEntity<?> deleteHealthStatus(@RequestParam int id){
 
         appointmentService.deleteHealthStatus(id);
 

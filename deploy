@@ -1,0 +1,90 @@
+#!/bin/bash
+
+services=("api-gateway" "availability-service" "appointment-service" "config-server" "notification-service" "medical-service" "chat-service" "profile-service" "service-reg")
+repository="lukemacca123/mediconnect"
+
+# Function to build Maven project
+build_maven_project() {
+  local service="$1"
+  echo -n "Building Maven project for ${service}... "
+
+  # Run Maven build with a background process
+  mvn -f "server/${service}" -B package --file "pom.xml" > /dev/null 2>&1 &
+
+  local pid=$!
+  local counter=0
+  local max_seconds=60  # Maximum time to wait in seconds
+
+  while kill -0 "$pid" 2>/dev/null; do
+    if [ "$counter" -ge "$max_seconds" ]; then
+      echo "Timeout reached. Build is taking too long."
+      kill -9 "$pid"  # Forcefully kill the process
+      exit 1
+    fi
+
+    sleep 1
+    echo -n "*"
+    counter=$((counter + 1))
+  done
+
+  wait "$pid"  # Wait for the background process to finish
+  local exit_code=$?
+
+  if [ "$exit_code" -eq 0 ]; then
+    echo -e "\nBuild successful for ${service}."
+  else
+    echo -e "\nBuild failed for ${service}."
+    exit 1
+  fi
+}
+
+# Function to build Docker image
+build_docker_image() {
+  local service="$1"
+  local dockerfile="server/${service}/Dockerfile"
+  echo "Building Docker image for ${service}..."
+  docker build -t "${repository}-${service}" -f "${dockerfile}" "../${service}"
+}
+
+deploy_docker_image() {
+  local service="$1"
+  echo "Pushing Docker image for ${service} to repo ${repository}..."
+  docker tag "${repository}-${service}" "${repository}-${service}:latest"
+  docker push "${repository}-${service}:latest"
+}
+
+update_kubernetes() {
+  echo "Updating Kubernetes configuration..."
+  if kubectl delete -f kubernetes.yaml && kubectl apply -f kubernetes.yaml; then
+    echo "Kubernetes update successful."
+  else
+    echo "Kubernetes update failed."
+    # Add additional error handling or actions if needed
+    # For example, you could exit the script using "exit 1" to indicate failure.
+    exit 1
+  fi
+}
+
+# Build Maven projects
+echo "Building Maven projects..."
+echo "========================="
+for service in "${services[@]}"; do
+  build_maven_project "${service}"
+done
+
+# Build Docker images
+echo "Building Docker images..."
+echo "========================="
+for service in "${services[@]}"; do
+  build_docker_image "${service}"
+done
+
+echo "Deploying Docker images..."
+echo "========================="
+for service in "${services[@]}"; do
+  deploy_docker_image "${service}"
+done
+
+update_kubernetes
+
+echo "Deployment process completed successfully."

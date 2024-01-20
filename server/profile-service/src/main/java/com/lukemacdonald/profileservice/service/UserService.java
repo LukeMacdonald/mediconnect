@@ -1,5 +1,6 @@
 package com.lukemacdonald.profileservice.service;
 
+import com.lukemacdonald.profileservice.model.AuthenticationRequest;
 import com.lukemacdonald.profileservice.model.User;
 import com.lukemacdonald.profileservice.model.Verification;
 import com.lukemacdonald.profileservice.model.enums.Role;
@@ -11,6 +12,10 @@ public interface UserService {
     User saveUser(User user);
     User getUser(String email);
     User getUser(int id);
+
+    User updateUser(User user);
+
+    boolean validate(AuthenticationRequest request);
 
     void deleteUser(User user);
 

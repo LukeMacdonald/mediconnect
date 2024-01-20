@@ -10,12 +10,12 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("message")
+@RequestMapping("messages")
 public class MessageController {
     private final MessageService messageService;
 
-    @GetMapping(value="/get/{senderID}/{receiverID}")
-    public ResponseEntity<?> getMessages(@PathVariable("senderID") int senderID, @PathVariable("receiverID") int receiverID) {
+    @GetMapping(value="")
+    public ResponseEntity<?> getMessages(@RequestParam int senderID, @RequestParam int receiverID) {
         List<Message> messages = messageService.getMessages(senderID,receiverID);
         if(messages.isEmpty()){
             return ResponseEntity.noContent().build();
@@ -23,17 +23,8 @@ public class MessageController {
         return ResponseEntity.ok().body(messages);
     }
 
-    @GetMapping(value="/get/single/{messageID}")
-    public ResponseEntity<?> getMessage(@PathVariable("messageID") int messageID) {
-        Message message = messageService.getMessage(messageID);
-        if(message == null){
-            return ResponseEntity.badRequest().body("Message Not Available");
-        }
-        return ResponseEntity.ok().body(message);
-    }
-
-    @GetMapping(value="/menu/{senderID}")
-    public ResponseEntity<?> getMessageMenu(@PathVariable("senderID") int senderID) {
+    @GetMapping(value="/menu")
+    public ResponseEntity<?> getMessageMenu(@RequestParam int senderID) {
         List<?> individual = messageService.getMessageMenu(senderID);
         if(individual.isEmpty()){
             return ResponseEntity.badRequest().body("No Previous Messages Available");
@@ -45,8 +36,9 @@ public class MessageController {
     public Message sendMessage(@RequestBody Message message) {
         return messageService.saveMessage(message);
     }
-    @GetMapping(value = "/unread/{senderID}/{receiverID}")
-    public ResponseEntity<?> getUnread(@PathVariable("senderID") int senderID, @PathVariable("receiverID") int receiverID){
+
+    @GetMapping(value = "/unread")
+    public ResponseEntity<?> getUnread(@RequestParam("senderID") int senderID, @RequestParam("receiverID") int receiverID){
         Message unread = messageService.getUnread(senderID,receiverID);
         if(unread != null){
             return ResponseEntity.ok().body(unread);
@@ -55,8 +47,8 @@ public class MessageController {
             return ResponseEntity.badRequest().body("Error");
         }
     }
-    @DeleteMapping(value = "/delete/user/{id}")
-    public void deleteUserMessages(@PathVariable("id") int id){
+    @DeleteMapping(value = "")
+    public void deleteUserMessages(@RequestParam("userID") int id){
         messageService.deleteUser(id);
     }
 }

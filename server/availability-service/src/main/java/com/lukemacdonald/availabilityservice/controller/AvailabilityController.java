@@ -21,7 +21,6 @@ public class AvailabilityController {
     public ResponseEntity<?> availability(@RequestBody Availability avail){
 
         int day = avail.getDayOfWeek();
-        System.out.println(avail.getDayOfWeek());
         if(day >= 7 ){
             return ResponseEntity.badRequest().body("Incorrect Entry: Day of Week Entered was To High");
         }
@@ -34,13 +33,17 @@ public class AvailabilityController {
         }
     }
     // Sets an Availability For Doctor
-    @GetMapping(value = "/get/{id}")
-    public List<Availability> doctorsAvailability(@PathVariable("id") int id){
-        return availabilityService.findByDocker(id);
+    @GetMapping(value = "/get")
+    public ResponseEntity<?> doctorsAvailability(@RequestParam int id){
+        List<Availability> availabilities = availabilityService.findByDocker(id);
+        if (availabilities.isEmpty()){
+            return ResponseEntity.status(204).body("No Availabilities");
+        }
+        return ResponseEntity.ok().body(availabilities);
     }
 
-    @GetMapping(value = "/check/{id}/{day}")
-    public ResponseEntity<?> doctorsAvailabilityCheck(@PathVariable("id") int id, @PathVariable int day){
+    @GetMapping(value = "/check")
+    public ResponseEntity<?> doctorsAvailabilityCheck(@RequestParam int id, @RequestParam int day){
         List<Availability> availabilities = availabilityService.findByDoctorAndDay(id, day);
         if (availabilities.isEmpty()){
             return ResponseEntity.status(404).body("No Availabilities Found");
@@ -48,7 +51,6 @@ public class AvailabilityController {
         return ResponseEntity.ok(availabilities);
 
     }
-
 
     @GetMapping("/all")
     public ResponseEntity<List<Availability>> getAll(){

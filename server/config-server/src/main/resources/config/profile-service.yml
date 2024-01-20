@@ -3,26 +3,32 @@ server:
 
 eureka:
   instance:
-    hostname: localhost
+    # Leave prefer ip address to allow the gateway inside the kubernetes cluster to find this service by it's pod ip
+    preferIpAddress: true
+    # The hostname of the service, to register the pod and turn it easier for the gateway to find it
+    hostname: profile-service
   client:
-    serviceUrl:
-      defaultZone: http://${eureka.instance.hostname}:8761/eureka
     register-with-eureka: true
     fetch-registry: true
+    service-url:
+      defaultZone: http://service-reg:8761/eureka/
 
 management:
   tracing:
     sampling:
       probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: http://zipkin:9411/api/v2/spans
 
 spring:
   rabbitmq:
-    host: localhost
+    host: rabbitmq
     port: 5672
     username: guest
     password: guest
   datasource:
-    url: jdbc:postgresql://localhost:5432/mediconnect
+    url: jdbc:postgresql://postgres:5432/mediconnect
     username: luke
     password: abc123
   jpa:

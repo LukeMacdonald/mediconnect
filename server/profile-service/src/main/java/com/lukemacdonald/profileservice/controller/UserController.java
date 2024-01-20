@@ -1,6 +1,5 @@
 package com.lukemacdonald.profileservice.controller;
 
-import com.lukemacdonald.profileservice.config.JwtUtil;
 import com.lukemacdonald.profileservice.model.AuthenticationRequest;
 import com.lukemacdonald.profileservice.model.Doctor;
 import com.lukemacdonald.profileservice.model.User;
@@ -8,17 +7,16 @@ import com.lukemacdonald.profileservice.model.Verification;
 import com.lukemacdonald.profileservice.service.MapValidationErrorService;
 import com.lukemacdonald.profileservice.service.UserService;
 import com.lukemacdonald.profileservice.validation.UserValidator;
+import jakarta.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Email;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,13 +29,10 @@ public class UserController {
 
     private final UserService userService;
 
-    private final AuthenticationManager authenticationManager;
 
     private final UserValidator userValidator;
 
     private final MapValidationErrorService mapValidationErrorService;
-
-    private final JwtUtil jwtUtil;
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody User user, BindingResult result) {
@@ -72,8 +67,8 @@ public class UserController {
     }
 
     // Check Verification Table for email existing
-    @GetMapping(value ="admin/add/doctor/verification/{email}")
-    public ResponseEntity<?>  doctorVerification(@PathVariable("email") String email){
+    @GetMapping(value ="/admin/create-verification")
+    public ResponseEntity<?>  doctorVerification(@RequestParam("email") String email){
 
         Map<String, Object> response = new HashMap<>();
 
@@ -93,49 +88,80 @@ public class UserController {
 
     @PostMapping("/authenticate")
     public ResponseEntity<String> authenticate(@RequestBody AuthenticationRequest request){
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(),request.getPassword())
-        );
-
-        final UserDetails user = userService.getUser(request.getEmail());
-        if (user != null){
-
-
-            return ResponseEntity.ok(jwtUtil.generateToken(user));
+        try{
+            boolean validate = userService.validate(request);
+            if (validate){
+                return ResponseEntity.status(200).body("Login Correct!");
+            }
+            else {
+                return ResponseEntity.status(204).body("Password Incorrect");
+            }
+        } catch (NotFoundException e){
+            return ResponseEntity.status(204).body(e.getMessage());
+        } catch (Exception e){
+            return ResponseEntity.status(400).body("Some Error Has Occurred");
         }
-        return ResponseEntity.status(400).body("Some Error Has Occurred");
+
+
 
     }
 
-    @GetMapping("/get/id/{id}")
-    public User getUserByID(@PathVariable int id) {
-        return userService.getUser(id);
-    }
+    @GetMapping("/id")
+    public ResponseEntity<?> getUserByID(@RequestParam int id) {
+        try {
+            // Validate ID
+            if (id <= 0) {
+                return ResponseEntity.badRequest().body("Invalid user ID");
+            }
 
-    @GetMapping("/get/email/{email}")
-    public ResponseEntity<?> getUserByEmail(@PathVariable String email){
+            User user = userService.getUser(id);
 
-        log.info("Getting user with email");
-
-        User user = userService.getUser(email);
-
-        log.info("Getting user with email {} from database: ", user.getFirstName());
-
-        if (user != null){
             return ResponseEntity.ok().body(user);
+
+        } catch (IllegalArgumentException e) {
+            // Handle validation errors
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (NotFoundException e) {
+            // Handle the case where the user is not found
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            // Handle other unexpected exceptions
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred");
         }
-        return ResponseEntity.status(404).body("User Not Found!");
-
-
     }
 
-    @GetMapping(value = "/get/users/{role}")
-    public ResponseEntity<List<User>> getUsersByRole(@PathVariable String role){
+    @GetMapping("/email")
+    public ResponseEntity<?> getUserByEmail(@RequestParam @Email String email) {
+        try {
+
+            User user = userService.getUser(email);
+
+            if (user != null) {
+                return ResponseEntity.ok().body(user);
+            }
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User Not Found!");
+
+        } catch (IllegalArgumentException e) {
+            // Handle validation errors
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (NotFoundException e) {
+            // Handle the case where the user is not found
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            // Handle other unexpected exceptions
+            e.printStackTrace(); // Log the exception for further analysis
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred");
+        }
+    }
+
+    @GetMapping(value = "/users")
+    public ResponseEntity<List<User>> getUsersByRole(@RequestParam String role){
         return ResponseEntity.ok().body(userService.getUsersByRole(role));
     }
 
-    @GetMapping("/get/name/{id}")
-    public ResponseEntity<String> getUserFullName(@PathVariable int id) {
+    @GetMapping("/name")
+    public ResponseEntity<String> getUserFullName(@RequestParam int id) {
         User user = userService.getUser(id);
 
         if (user == null) {
@@ -167,15 +193,15 @@ public class UserController {
             if (update.getPhoneNumber() != null){
                 user.setPhoneNumber(update.getPhoneNumber());
             }
-            return ResponseEntity.ok().body(userService.saveUser(user));
+            return ResponseEntity.ok().body(userService.updateUser(user));
         }
         else {
             return ResponseEntity.status(404).body("User does not exist in the system!");
         }
     }
 
-    @DeleteMapping(value = "/remove/{email}")
-    public ResponseEntity<String> removeUserByEmail(@PathVariable String email){
+    @DeleteMapping(value = "/remove")
+    public ResponseEntity<String> removeUserByEmail(@RequestParam String email){
         User user = userService.getUser(email);
         if (user == null){
             return ResponseEntity.status(404).body("User does not exist in the system!");
